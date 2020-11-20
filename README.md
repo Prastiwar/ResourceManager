@@ -1,6 +1,6 @@
-# Title
+# RPGDataEditor
 
-***Description***
+***RPGDataEditor is software tool to visualise and edit json files that contains rpg mechanic data like quests, dialogues***
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/Prastiwar/RPGDataEditor.svg?label=Updated&style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/commits/master)
 [![license](https://img.shields.io/github/license/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/blob/master/LICENSE)
