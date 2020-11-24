@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="RPGDataEditor.Wpf.Connection.Views.ConnectionTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Name="CONNECTION"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <StackPanel VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Margin="64">
+            <StackPanel Orientation="Horizontal"
+                        Margin="8">
+                <TextBlock Text="Use FTP connection" />
+                <CheckBox x:Name="IsFtpCheckbox" />
+            </StackPanel>
+            <TextBox Text="{Binding LocationPath}"
+                     DataContext="{Binding Context}"
+                     Margin="0,8,0,8"
+                     MinWidth="126"
+                     materialDesign:HintAssist.Hint="Location path"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+            <StackPanel Visibility="{Binding IsChecked, Source={x:Reference IsFtpCheckbox}, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBox Text="{Binding FtpUserName}"
+                         DataContext="{Binding Context}"
+                         Margin="0,8,0,8"
+                         materialDesign:HintAssist.Hint="Username"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding FtpPassword}"
+                         DataContext="{Binding Context}"
+                         Margin="0,8,0,8"
+                         materialDesign:HintAssist.Hint="Password"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         InputScope="Password" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -8,11 +8,9 @@
     ".NETCoreApp,Version=v3.1": {
       "RPGDataEditor/1.0.0": {
         "dependencies": {
+          "MaterialDesignThemes": "4.0.0-ci2273",
           "Prism.DryIoc": "7.2.0.1422",
-          "RPGDataEditor.Core": "1.0.0",
-          "RPGDataEditor.Modules.ModuleName": "1.0.0",
-          "RPGDataEditor.Services": "1.0.0",
-          "RPGDataEditor.Services.Interfaces": "1.0.0"
+          "RPGDataEditor.Core": "1.0.0"
         },
         "runtime": {
           "RPGDataEditor.dll": {}
@@ -37,8 +35,43 @@
           }
         }
       },
+      "FluentValidation/9.3.0": {
+        "runtime": {
+          "lib/netstandard2.0/FluentValidation.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.3.0.0"
+          }
+        }
+      },
+      "MaterialDesignColors/2.0.0-ci2273": {
+        "runtime": {
+          "lib/netcoreapp3.1/MaterialDesignColors.dll": {
+            "assemblyVersion": "2.0.0.2273",
+            "fileVersion": "2.0.0.2273"
+          }
+        }
+      },
+      "MaterialDesignThemes/4.0.0-ci2273": {
+        "dependencies": {
+          "MaterialDesignColors": "2.0.0-ci2273"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/MaterialDesignThemes.Wpf.dll": {
+            "assemblyVersion": "4.0.0.2273",
+            "fileVersion": "4.0.0.2273"
+          }
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "Newtonsoft.Json/12.0.3": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.3.23909"
+          }
+        }
+      },
       "Prism.Core/7.2.0.1422": {
         "runtime": {
           "lib/netcoreapp3.0/Prism.dll": {
@@ -137,33 +170,12 @@
       },
       "RPGDataEditor.Core/1.0.0": {
         "dependencies": {
+          "FluentValidation": "9.3.0",
+          "Newtonsoft.Json": "12.0.3",
           "Prism.Wpf": "7.2.0.1422"
         },
         "runtime": {
           "RPGDataEditor.Core.dll": {}
-        }
-      },
-      "RPGDataEditor.Modules.ModuleName/1.0.0": {
-        "dependencies": {
-          "Prism.Wpf": "7.2.0.1422",
-          "RPGDataEditor.Core": "1.0.0",
-          "RPGDataEditor.Services.Interfaces": "1.0.0"
-        },
-        "runtime": {
-          "RPGDataEditor.Modules.ModuleName.dll": {}
-        }
-      },
-      "RPGDataEditor.Services/1.0.0": {
-        "dependencies": {
-          "RPGDataEditor.Services.Interfaces": "1.0.0"
-        },
-        "runtime": {
-          "RPGDataEditor.Services.dll": {}
-        }
-      },
-      "RPGDataEditor.Services.Interfaces/1.0.0": {
-        "runtime": {
-          "RPGDataEditor.Services.Interfaces.dll": {}
         }
       }
     }
@@ -188,6 +200,27 @@
       "path": "dryioc.dll/4.0.7",
       "hashPath": "dryioc.dll.4.0.7.nupkg.sha512"
     },
+    "FluentValidation/9.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-C44l6Ih+YwpED/TsXfl6LIq6Z4wLXahstnr6T70uUg1Hs7/bLBKKAo9Nl0sLhVjDE8TA+fF+O3IM4nDrwabcSQ==",
+      "path": "fluentvalidation/9.3.0",
+      "hashPath": "fluentvalidation.9.3.0.nupkg.sha512"
+    },
+    "MaterialDesignColors/2.0.0-ci2273": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-U5Zu272bvZcAQ+11/Y3VucNQb8K+VFs7YwuoM5xv5GskP7SAFXPyscdyfJ8R6bzKZkcOYYJCldGxwd7BRCj2sQ==",
+      "path": "materialdesigncolors/2.0.0-ci2273",
+      "hashPath": "materialdesigncolors.2.0.0-ci2273.nupkg.sha512"
+    },
+    "MaterialDesignThemes/4.0.0-ci2273": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IA3FYazq2qRV4F9p5KlRns+5fxKbfJgmAmbXvdK8AACdN5ytWJWA3zPvU0Eisa2qUjNpWsZmzMsc60MmS48sew==",
+      "path": "materialdesignthemes/4.0.0-ci2273",
+      "hashPath": "materialdesignthemes.4.0.0-ci2273.nupkg.sha512"
+    },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
@@ -201,6 +234,13 @@
       "sha512": "sha512-HvAzpoaIqrmZfsHAN4rLFji0r7YY5TP8r3SdkziXN7qU9KCpRIG+zfcBx+mIri/jkBNqjq4iWIfuYNtFBjSQ/g==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/12.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "path": "newtonsoft.json/12.0.3",
+      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
     },
     "Prism.Core/7.2.0.1422": {
       "type": "package",
@@ -280,21 +320,6 @@
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
     "RPGDataEditor.Core/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "RPGDataEditor.Modules.ModuleName/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "RPGDataEditor.Services/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "RPGDataEditor.Services.Interfaces/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

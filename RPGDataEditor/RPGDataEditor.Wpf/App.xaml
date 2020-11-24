@@ -1,9 +1,57 @@
-﻿<prism:PrismApplication x:Class="RPGDataEditor.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RPGDataEditor"
-             xmlns:prism="http://prismlibrary.com/" >
+﻿<prism:PrismApplication x:Class="RPGDataEditor.Wpf.App"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:prism="http://prismlibrary.com/"
+                        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                        xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark"
+                                             PrimaryColor="DeepOrange"
+                                             SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary>
+                    <converters:VisibilityInvertConverter x:Key="VisibilityInvertConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:BoolToVisibilityConverter x:Key="InvertedBoolToVisibility"
+                                                          Invert="True" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:DataBindingDebugConverter x:Key="DataBindingDebugConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:MethodToCommandConverter x:Key="MethodToCommandConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:GetCommandConverter x:Key="GetCommandConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:BoolToTextWrapConverter x:Key="BoolToTextWrapConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:InvertIntToVisibilityConverter x:Key="InvertIntToVisibilityConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:PathToNameConverter x:Key="PathToNameConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:BindMultiValueConverter x:Key="BindMultiValueConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:GenericTupleConverter x:Key="GenericTupleConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

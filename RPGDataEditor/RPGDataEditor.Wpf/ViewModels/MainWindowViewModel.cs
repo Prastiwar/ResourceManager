@@ -4,15 +4,10 @@ namespace RPGDataEditor.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Prism Application";
+        private string title = "RPG Data Editor";
         public string Title {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
-        }
-
-        public MainWindowViewModel()
-        {
-
+            get => title;
+            set => SetProperty(ref title, value);
         }
     }
 }

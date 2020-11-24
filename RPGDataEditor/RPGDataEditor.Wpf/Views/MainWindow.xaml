@@ -4,8 +4,37 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:core="clr-namespace:RPGDataEditor.Core;assembly=RPGDataEditor.Core"
-        Title="{Binding Title}" Height="350" Width="525" >
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="{Binding Title}"
+        MinHeight="512"
+        MinWidth="648"
+        Width="1024">
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ContentRegion}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <materialDesign:Card Margin="5,5,5,0">
+            <TabControl VerticalAlignment="Stretch"
+                        TabStripPlacement="Top"
+                        BorderThickness="0"
+                        Background="{DynamicResource MaterialDesignDarkBackground}"
+                        Padding="0"
+                        prism:RegionManager.RegionName="{x:Static core:RegionNames.ContentRegion}"
+                        BorderBrush="{x:Null}" />
+        </materialDesign:Card>
+        <TextBlock Grid.Row="1"
+                   Margin="4"
+                   FontSize="8"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource MaterialDesignDarkForeground}"
+                   Text="Version: 1.0.0" />
     </Grid>
 </Window>

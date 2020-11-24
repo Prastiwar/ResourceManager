@@ -1,31 +1,58 @@
-﻿using Prism.Ioc;
-using RPGDataEditor.Views;
-using System.Windows;
+﻿using DryIoc;
+using Newtonsoft.Json;
+using Prism.Ioc;
 using Prism.Modularity;
-using RPGDataEditor.Modules.ModuleName;
-using RPGDataEditor.Services.Interfaces;
-using RPGDataEditor.Services;
+using Prism.Regions;
+using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Views;
+using RPGDataEditor.Wpf.Mvvm;
+using System;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
 
-namespace RPGDataEditor
+namespace RPGDataEditor.Wpf
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App
     {
-        protected override Window CreateShell()
+        private static string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
+        public static string BinaryPath => Path.Combine(Environment.CurrentDirectory + "bin");
+        public static string CacheDirectoryPath {
+            get {
+                string path = Path.Combine(AppRootPath, "cache");
+                Directory.CreateDirectory(path);
+                return path;
+            }
+        }
+
+        public static string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
+
+        protected override Window CreateShell() => Container.Resolve<MainWindow>();
+
+        protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
         {
-            return Container.Resolve<MainWindow>();
+            base.ConfigureRegionAdapterMappings(regionAdapterMappings);
+            regionAdapterMappings.RegisterMapping(typeof(TabControl), Container.Resolve<TabControlAdapter>());
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IMessageService, MessageService>();
+            JsonConvert.DefaultSettings = () => {
+                JsonSerializerSettings settings = new JsonSerializerSettings();
+                // TODO: setup json settings
+                return settings;
+            };
+
+            SessionContext context = new SessionContext();
+            FileInfo sessionFile = new FileInfo(SessionFilePath);
+            if (sessionFile.Exists)
+            {
+                string json = File.ReadAllText(SessionFilePath);
+                context = JsonConvert.DeserializeObject<SessionContext>(json);
+            }
+            containerRegistry.RegisterInstance(context);
         }
 
-        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
-        {
-            moduleCatalog.AddModule<QuestModule>();
-        }
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
     }
 }
