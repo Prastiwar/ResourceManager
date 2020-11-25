@@ -4,6 +4,6 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
     public class NpcTabViewModel : TabViewModel
     {
-        public NpcTabViewModel(SessionContext context) : base(context) { }
+        public NpcTabViewModel(ViewModelContext context) : base(context) { }
     }
 }

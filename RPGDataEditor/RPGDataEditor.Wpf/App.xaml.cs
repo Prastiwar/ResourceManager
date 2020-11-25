@@ -1,9 +1,12 @@
 ﻿using DryIoc;
+using FluentValidation;
 using Newtonsoft.Json;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
 using System;
@@ -37,20 +40,34 @@ namespace RPGDataEditor.Wpf
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            RegisterValidators(containerRegistry);
+
             JsonConvert.DefaultSettings = () => {
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 // TODO: setup json settings
                 return settings;
             };
 
-            SessionContext context = new SessionContext();
+            SessionContext session = new SessionContext();
             FileInfo sessionFile = new FileInfo(SessionFilePath);
             if (sessionFile.Exists)
             {
                 string json = File.ReadAllText(SessionFilePath);
-                context = JsonConvert.DeserializeObject<SessionContext>(json);
+                session = JsonConvert.DeserializeObject<SessionContext>(json);
             }
+            containerRegistry.RegisterInstance(session);
+
+            IValidationProvider validatorProvider = new ValidatorProvider(Container);
+            containerRegistry.RegisterInstance(validatorProvider);
+
+            ViewModelContext context = new ViewModelContext(session, Container.Resolve<IDialogService>(), validatorProvider);
             containerRegistry.RegisterInstance(context);
+        }
+
+        protected void RegisterValidators(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<IValidator<SessionContext>, SessionContextValidator>();
+            ;
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();

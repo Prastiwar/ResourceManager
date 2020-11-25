@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              Name="CONNECTION"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
@@ -14,24 +16,36 @@
                 <TextBlock Text="Use FTP connection" />
                 <CheckBox x:Name="IsFtpCheckbox" />
             </StackPanel>
-            <TextBox Text="{Binding LocationPath}"
-                     DataContext="{Binding Context}"
+            <TextBox Text="{Binding LocationPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     DataContext="{Binding Session}"
                      Margin="0,8,0,8"
                      MinWidth="126"
                      materialDesign:HintAssist.Hint="Location path"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
             <StackPanel Visibility="{Binding IsChecked, Source={x:Reference IsFtpCheckbox}, Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBox Text="{Binding FtpUserName}"
-                         DataContext="{Binding Context}"
+                <TextBox Text="{Binding FtpUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         DataContext="{Binding Session}"
                          Margin="0,8,0,8"
                          materialDesign:HintAssist.Hint="Username"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Text="{Binding FtpPassword}"
-                         DataContext="{Binding Context}"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CatchValidationBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
+                <TextBox Text="{Binding FtpPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         DataContext="{Binding Session}"
                          Margin="0,8,0,8"
                          materialDesign:HintAssist.Hint="Password"
                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                         InputScope="Password" />
+                         InputScope="Password">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CatchValidationBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
             </StackPanel>
         </StackPanel>
     </Grid>

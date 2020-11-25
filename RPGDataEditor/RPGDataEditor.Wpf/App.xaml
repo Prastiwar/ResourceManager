@@ -8,8 +8,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Dark"
-                                             PrimaryColor="DeepOrange"
-                                             SecondaryColor="Lime" />
+                                             PrimaryColor="Orange"
+                                             SecondaryColor="Cyan" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary>
                     <converters:VisibilityInvertConverter x:Key="VisibilityInvertConverter" />

@@ -59,7 +59,7 @@ namespace RPGDataEditor.Wpf.Mvvm
                 NavigationContext context = new NavigationContext(region.NavigationService, new System.Uri(toUri));
                 bool canNavigate = true;
                 canNavigate = removedTabAware == null || await removedTabAware.CanSwitchFrom(context);
-                canNavigate = addedTabAware == null || await addedTabAware.CanSwitchTo(context);
+                canNavigate = canNavigate && (addedTabAware == null || await addedTabAware.CanSwitchTo(context));
                 if (!canNavigate)
                 {
                     int previousTabIndex = e.RemovedItems.Count > 0 ? regionTarget.Items.IndexOf(e.RemovedItems[0]) : -1;

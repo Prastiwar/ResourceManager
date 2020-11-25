@@ -5,9 +5,15 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract class ViewModelBase : BindableBase, IDestructible
     {
-        public ViewModelBase(SessionContext context) => Context = context;
+        public ViewModelBase(ViewModelContext context)
+        {
+            Context = context;
+            Session = context.Session;
+        }
 
-        public SessionContext Context { get; }
+        public ViewModelContext Context { get; }
+
+        public SessionContext Session { get; }
 
         public virtual void Destroy() { }
     }

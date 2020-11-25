@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Mvvm
 {
-    public class SessionContext : BindableClass
+    public class SessionContext : ObservableModel
     {
         private string locationPath = "";
         public string LocationPath {
@@ -52,9 +53,24 @@ namespace RPGDataEditor.Core.Mvvm
 
         public async Task<bool> DeleteFileAsync(string relativePath)
         {
-            FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
-            using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-            return IsResponseSuccess(response);
+            if (IsFtp)
+            {
+                FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
+                using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
+                return IsResponseSuccess(response);
+            }
+            else
+            {
+                try
+                {
+                    File.Delete(relativePath);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         public Task<bool> SaveJsonFileAsync(string relativePath, string json)
@@ -65,7 +81,9 @@ namespace RPGDataEditor.Core.Mvvm
             }
             try
             {
-                File.WriteAllText(Path.Combine(LocationPath, relativePath), json);
+                string path = Path.Combine(LocationPath, relativePath);
+                new FileInfo(relativePath).Directory.Create();
+                File.WriteAllText(path, json);
             }
             catch (Exception ex)
             {

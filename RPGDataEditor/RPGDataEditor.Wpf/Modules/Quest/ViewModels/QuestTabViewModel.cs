@@ -4,6 +4,6 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
     public class QuestTabViewModel : TabViewModel
     {
-        public QuestTabViewModel(SessionContext context) : base(context) { }
+        public QuestTabViewModel(ViewModelContext context) : base(context) { }
     }
 }

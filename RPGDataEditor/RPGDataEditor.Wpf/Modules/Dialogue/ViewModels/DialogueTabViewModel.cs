@@ -12,7 +12,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
     public class DialogueTabViewModel : TabViewModel
     {
-        public DialogueTabViewModel(SessionContext context) : base(context) { }
+        public DialogueTabViewModel(ViewModelContext context) : base(context) { }
 
         private ObservableCollection<DialogueModel> currentCategoryDialogues;
         public ObservableCollection<DialogueModel> CurrentCategoryDialogues {
@@ -47,6 +47,8 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
         private ICommand showCategoryCommand;
         public ICommand ShowCategoryCommand => showCategoryCommand ??= new DelegateCommand<string>(ShowCategory);
 
+        protected const string RelativePath = "dialogues";
+
         public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
         {
             Dialogues = new ObservableCollection<DialogueModel>();
@@ -54,7 +56,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             string[] jsons = new string[0];
             try
             {
-                jsons = await Context.LoadJsonsAsync("dialogs");
+                jsons = await Session.LoadJsonsAsync(RelativePath);
             }
             catch (System.Exception ex)
             {
@@ -75,7 +77,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             DialogueCategories.AddRange(Dialogues.Select(x => x.Category).Distinct());
         }
 
-        protected virtual string GetRelativeFilePath(DialogueModel dialogue) => "dialogs/" + dialogue.GetId() + ".json";
+        protected virtual string GetRelativeFilePath(DialogueModel dialogue) => RelativePath + "/" + dialogue.GetId() + ".json";
 
         public void ShowCategory(string category)
         {
@@ -89,7 +91,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             if (removed)
             {
                 string relativeFilePath = GetRelativeFilePath(dialogue);
-                bool deleted = await Context.DeleteFileAsync(relativeFilePath);
+                bool deleted = await Session.DeleteFileAsync(relativeFilePath);
                 if (deleted)
                 {
                     CurrentCategoryDialogues.Remove(dialogue);
@@ -101,15 +103,21 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             }
         }
 
-        private void CreateDialogue(string category)
+        private async void CreateDialogue(string category)
         {
             DialogueModel newDialogue = new DialogueModel();
             int nextId = Dialogues.Count > 0 ? Dialogues.Max(x => x.GetId()) + 1 : 0;
             newDialogue.SetId(nextId);
             newDialogue.Title = "New dialogue";
             newDialogue.Category = category;
-            Dialogues.Add(newDialogue);
-            CurrentCategoryDialogues.Add(newDialogue);
+            string json = JsonConvert.SerializeObject(newDialogue);
+            string relativeFilePath = GetRelativeFilePath(newDialogue);
+            bool created = await Session.SaveJsonFileAsync(relativeFilePath, json);
+            if (created)
+            {
+                Dialogues.Add(newDialogue);
+                CurrentCategoryDialogues.Add(newDialogue);
+            }
         }
 
         public void CreateCategory()
@@ -142,7 +150,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
                 string relativeFilePath = GetRelativeFilePath(dialogue);
                 dialogue.Category = newCategory;
                 string json = JsonConvert.SerializeObject(dialogue);
-                bool saved = await Context.SaveJsonFileAsync(relativeFilePath, json);
+                bool saved = await Session.SaveJsonFileAsync(relativeFilePath, json);
             }
             return true;
         }
@@ -155,7 +163,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
                 foreach (DialogueModel dialogue in Dialogues.Where(x => string.Compare(x.Category, category) == 0))
                 {
                     string relativeFilePath = GetRelativeFilePath(dialogue);
-                    bool deleted = await Context.DeleteFileAsync(relativeFilePath);
+                    bool deleted = await Session.DeleteFileAsync(relativeFilePath);
                 }
             }
         }

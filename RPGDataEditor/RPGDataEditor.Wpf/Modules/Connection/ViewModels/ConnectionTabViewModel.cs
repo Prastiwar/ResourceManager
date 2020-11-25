@@ -1,4 +1,5 @@
-﻿using Prism.Regions;
+﻿using FluentValidation.Results;
+using Prism.Regions;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
 
@@ -6,22 +7,18 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
     public class ConnectionTabViewModel : TabViewModel
     {
-        public ConnectionTabViewModel(SessionContext context) : base(context) { }
+        public ConnectionTabViewModel(ViewModelContext context) : base(context) { }
 
         public override Task<bool> CanSwitchTo(NavigationContext navigationContext) => Task.FromResult(true);
 
         public override async Task<bool> CanSwitchFrom(NavigationContext navigationContext)
         {
-            bool isValid = await Context.IsValidAsync();
-            if (!isValid)
+            ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
+            if (result.IsValid)
             {
-                // TODO: Show alert to set proper connection
+                Session.SaveSession(App.SessionFilePath);
             }
-            else
-            {
-                Context.SaveSession(App.SessionFilePath);
-            }
-            return isValid;
+            return result.IsValid;
         }
     }
 }

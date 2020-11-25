@@ -57,7 +57,8 @@ namespace RPGDataEditor.Core.Validation
             Status = ValidationStatus.Unvalidated;
         }
 
-        public async Task<ValidationResult> ValidateAsync()
+        /// <summary> Validates then notifies handlers about validation </summary>
+        public async Task<ValidationResult> ValidateNotifyAsync()
         {
             ValidationResult result = await validator.ValidateAsync(instance);
             foreach (KeyValuePair<string, IList<string>> keyValue in CustomErrors)
