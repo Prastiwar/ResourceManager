@@ -29,5 +29,7 @@
             get => requirements;
             set => SetProperty(ref requirements, value ?? new PlayerRequirementModel[0]);
         }
+
+        public override string ToString() => $"(ID: {GetId()}) {Title}";
     }
 }

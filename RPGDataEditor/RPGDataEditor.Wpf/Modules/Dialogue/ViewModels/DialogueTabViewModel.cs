@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Regions;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Collections.ObjectModel;
@@ -47,7 +48,22 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
         private ICommand showCategoryCommand;
         public ICommand ShowCategoryCommand => showCategoryCommand ??= new DelegateCommand<string>(ShowCategory);
 
+        private ICommand openEditorCommand;
+        public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<DialogueModel>(OpenEditor);
+
         protected const string RelativePath = "dialogues";
+
+        private async void OpenEditor(DialogueModel dialogue)
+        {
+            DialogueModel copiedDialogue = (DialogueModel)dialogue.DeepClone();
+            bool save = await Context.DialogService.ShowModelDialogAsync(copiedDialogue);
+            if (save)
+            {
+                //dialogue.CopyValues(copiedDialogue);
+                //string json = JsonConvert.SerializeObject(dialogue);
+                //await Context.Session.SaveJsonFileAsync(GetRelativeFilePath(dialogue), json);
+            }
+        }
 
         public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
         {
@@ -60,7 +76,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             }
             catch (System.Exception ex)
             {
-                // cannot load jsons
+                Context.SnackbarService.Enqueue("Failed to load jsons, you can try again by refreshing tab");
             }
             foreach (string json in jsons)
             {
@@ -71,7 +87,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    // file is corrupted or incorrect
+                    Context.SnackbarService.Enqueue("Found invalid json");
                 }
             }
             DialogueCategories.AddRange(Dialogues.Select(x => x.Category).Distinct());

@@ -1,9 +1,11 @@
-﻿using Prism.Mvvm;
+﻿using RPGDataEditor.Core.Mvvm;
 
 namespace RPGDataEditor.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : ViewModelBase
     {
+        public MainWindowViewModel(ViewModelContext context) : base(context) { }
+
         private string title = "RPG Data Editor";
         public string Title {
             get => title;

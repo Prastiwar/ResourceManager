@@ -5,13 +5,13 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:core="clr-namespace:RPGDataEditor.Core;assembly=RPGDataEditor.Core"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}"
         Title="{Binding Title}"
         MinHeight="512"
         MinWidth="648"
@@ -41,6 +41,13 @@
                         Style="{DynamicResource MaterialDesignFloatingActionAccentButton}"
                         Content="{materialDesign:PackIcon Kind=Refresh, Size=25}"
                         RenderTransformOrigin="0.5, 0.5" />
+                <materialDesign:Snackbar x:Name="MainSnackbar"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalAlignment="Bottom"
+                                         Background="DimGray"
+                                         Foreground="WhiteSmoke"
+                                         MessageQueue="{Binding Context.SnackbarService.MessageQueue}"
+                                         ActionButtonStyle="{DynamicResource MaterialDesignSnackbarActionCustomButton}" />
             </Grid>
         </materialDesign:Card>
         <TextBlock Grid.Row="1"

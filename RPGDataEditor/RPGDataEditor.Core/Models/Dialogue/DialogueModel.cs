@@ -13,7 +13,5 @@
             get => options;
             set => SetProperty(ref options, value ?? new DialogueOptionModel[0]);
         }
-
-        public override string ToString() => $"(ID: {GetId()}) {Title}";
     }
 }

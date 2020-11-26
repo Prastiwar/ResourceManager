@@ -48,6 +48,7 @@
                                 <Button Content="Edit"
                                         Margin="2"
                                         Foreground="{DynamicResource MaterialDesignDarkForeground}"
+                                        Command="{Binding DataContext.OpenEditorCommand, Source={x:Reference CategoryDialoguesList}}"
                                         CommandParameter="{Binding .}" />
                                 <Button Content="Remove"
                                         Margin="2"

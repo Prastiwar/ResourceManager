@@ -2,6 +2,7 @@
 using Prism.Modularity;
 using Prism.Regions;
 using RPGDataEditor.Core;
+using RPGDataEditor.Core.Models;
 using RPGDataEditor.Wpf.Connection.Views;
 using RPGDataEditor.Wpf.Dialogue.Views;
 using RPGDataEditor.Wpf.Npc.Views;
@@ -29,6 +30,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterForNavigation<NpcTab>();
             containerRegistry.RegisterForNavigation<DialogueTab>();
             containerRegistry.RegisterForNavigation<QuestTab>();
+            containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
         }
     }
 }

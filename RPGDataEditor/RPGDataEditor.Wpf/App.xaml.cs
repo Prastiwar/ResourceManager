@@ -6,9 +6,12 @@ using Prism.Modularity;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Core.Serialization;
+using RPGDataEditor.Core.Services;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
+using RPGDataEditor.Wpf.Services;
 using System;
 using System.IO;
 using System.Windows;
@@ -43,7 +46,10 @@ namespace RPGDataEditor.Wpf
             RegisterValidators(containerRegistry);
 
             JsonConvert.DefaultSettings = () => {
-                JsonSerializerSettings settings = new JsonSerializerSettings();
+                JsonSerializerSettings settings = new JsonSerializerSettings {
+                    ContractResolver = new LowercasePropertyResolver()
+                };
+                //settings.Converters.Add(new JsonConverter);
                 // TODO: setup json settings
                 return settings;
             };
@@ -60,7 +66,10 @@ namespace RPGDataEditor.Wpf
             IValidationProvider validatorProvider = new ValidatorProvider(Container);
             containerRegistry.RegisterInstance(validatorProvider);
 
-            ViewModelContext context = new ViewModelContext(session, Container.Resolve<IDialogService>(), validatorProvider);
+            ISnackbarService snackbarService = new SnackbarService();
+            containerRegistry.RegisterInstance(snackbarService);
+
+            ViewModelContext context = new ViewModelContext(session, Container.Resolve<IDialogService>(), validatorProvider, snackbarService);
             containerRegistry.RegisterInstance(context);
         }
 

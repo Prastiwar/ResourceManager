@@ -41,9 +41,16 @@ namespace RPGDataEditor.Core.Mvvm
         {
             if (IsFtp)
             {
-                FtpWebRequest request = CreateFtpRequest(LocationPath, WebRequestMethods.Ftp.PrintWorkingDirectory);
-                using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-                return IsResponseSuccess(response);
+                try
+                {
+                    FtpWebRequest request = CreateFtpRequest(LocationPath, WebRequestMethods.Ftp.PrintWorkingDirectory);
+                    using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
+                    return IsResponseSuccess(response);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
             else
             {

@@ -11,11 +11,9 @@
         <StackPanel VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     Margin="64">
-            <StackPanel Orientation="Horizontal"
-                        Margin="8">
-                <TextBlock Text="Use FTP connection" />
-                <CheckBox x:Name="IsFtpCheckbox" />
-            </StackPanel>
+            <CheckBox x:Name="IsFtpCheckbox"
+                      Margin="8"
+                      Content="Use FTP connection" />
             <TextBox Text="{Binding LocationPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Session}"
                      Margin="0,8,0,8"

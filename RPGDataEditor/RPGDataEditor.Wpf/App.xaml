@@ -3,7 +3,8 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:prism="http://prismlibrary.com/"
                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                        xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters">
+                        xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
+                        xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -11,6 +12,10 @@
                                              PrimaryColor="Orange"
                                              SecondaryColor="Cyan" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
+                <ResourceDictionary>
+                    <converters:RequirementToBuilderConverter x:Key="RequirementToBuilderConverter" />
+                </ResourceDictionary>
                 <ResourceDictionary>
                     <converters:VisibilityInvertConverter x:Key="VisibilityInvertConverter" />
                 </ResourceDictionary>
@@ -51,7 +56,17 @@
                 <ResourceDictionary>
                     <converters:GenericTupleConverter x:Key="GenericTupleConverter" />
                 </ResourceDictionary>
+                <ResourceDictionary>
+                    <Style x:Key="MaterialDesignSnackbarActionCustomButton"
+                           TargetType="Button"
+                           BasedOn="{StaticResource MaterialDesignSnackbarActionButton}">
+                        <Setter Property="Foreground"
+                                Value="WhiteSmoke" />
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
+            <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
