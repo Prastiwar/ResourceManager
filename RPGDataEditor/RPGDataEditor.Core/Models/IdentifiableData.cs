@@ -1,4 +1,7 @@
-﻿namespace RPGDataEditor.Core.Models
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace RPGDataEditor.Core.Models
 {
     public class IdentifiableData : ObservableModel, IIdentifiable
     {
@@ -24,10 +27,10 @@
             set => SetProperty(ref category, value ?? "");
         }
 
-        private PlayerRequirementModel[] requirements = new PlayerRequirementModel[0];
-        public PlayerRequirementModel[] Requirements {
+        private IList<PlayerRequirementModel> requirements = new ObservableCollection<PlayerRequirementModel>();
+        public IList<PlayerRequirementModel> Requirements {
             get => requirements;
-            set => SetProperty(ref requirements, value ?? new PlayerRequirementModel[0]);
+            set => SetProperty(ref requirements, value ?? new ObservableCollection<PlayerRequirementModel>());
         }
 
         public override string ToString() => $"(ID: {GetId()}) {Title}";

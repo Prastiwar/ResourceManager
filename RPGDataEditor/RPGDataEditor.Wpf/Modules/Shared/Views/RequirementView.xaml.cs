@@ -1,13 +1,25 @@
 ﻿using RPGDataEditor.Core.Models;
 using System;
-using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Views
 {
     public partial class RequirementView : UserControl
     {
-        public RequirementView() => InitializeComponent();
+        public RequirementView()
+        {
+            InitializeComponent();
+            DataContextChanged += RequirementView_DataContextChanged;
+        }
+
+        private void RequirementView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is PlayerRequirementBuilder builder)
+            {
+                SetRequirementPanel(builder.Model);
+            }
+        }
 
         private void QuestStage_Selected(object sender, SelectionChangedEventArgs e)
         {
@@ -23,6 +35,19 @@ namespace RPGDataEditor.Wpf.Views
             }
         }
 
+        private void SetRequirementPanel(PlayerRequirementModel model)
+        {
+            bool isDialogue = model is DialogueRequirement;
+            bool isQuest = model is QuestRequirement;
+            bool isItem = model is ItemRequirement;
+            RequirementType.SelectedIndex = isDialogue ? 0 : 
+                                            isQuest ? 1 :
+                                            2;
+            DialogueRequirementPanel.Visibility = isDialogue ? Visibility.Visible : Visibility.Collapsed;
+            QuestRequirementPanel.Visibility = isQuest ? Visibility.Visible : Visibility.Collapsed;
+            ItemRequirementPanel.Visibility = isItem ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         private void RequirementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
@@ -32,9 +57,6 @@ namespace RPGDataEditor.Wpf.Views
                     bool isDialogue = string.Compare(selected.Name, "dialogue", true) == 0;
                     bool isQuest = string.Compare(selected.Name, "quest", true) == 0;
                     bool isItem = string.Compare(selected.Name, "item", true) == 0;
-                    DialogueRequirementPanel.Visibility = isDialogue ? Visibility.Visible : Visibility.Collapsed;
-                    QuestRequirementPanel.Visibility = isQuest ? Visibility.Visible : Visibility.Collapsed;
-                    ItemRequirementPanel.Visibility = isItem ? Visibility.Visible : Visibility.Collapsed;
                     if (DataContext is PlayerRequirementBuilder model)
                     {
                         if (isDialogue)
@@ -49,10 +71,10 @@ namespace RPGDataEditor.Wpf.Views
                         {
                             model.Model = new ItemRequirement();
                         }
+                        SetRequirementPanel(model.Model);
                     }
                 }
             }
         }
     }
-}
 }

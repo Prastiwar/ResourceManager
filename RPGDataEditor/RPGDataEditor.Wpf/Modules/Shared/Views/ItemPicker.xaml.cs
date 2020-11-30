@@ -1,5 +1,8 @@
-﻿using Prism.Services.Dialogs;
-using System;
+﻿using Prism;
+using Prism.Ioc;
+using Prism.Services.Dialogs;
+using RPGDataEditor.Core;
+using RPGDataEditor.Core.Models;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -11,20 +14,61 @@ namespace RPGDataEditor.Wpf.Views
         public ItemPicker()
         {
             InitializeComponent();
-            SelectedValue = "None";
+            DataContextChanged += ItemPicker_DataContextChanged;
         }
 
-        internal IDialogService DialogService { get; set; }
+        public RPGResource Resource { get; set; }
 
-        private void PickItem(object sender, RoutedEventArgs e)
+        public static DependencyProperty EmptyTextProperty = DependencyProperty.Register(nameof(EmptyText), typeof(string), typeof(ItemPicker), new PropertyMetadata("None", OnEmptyTextChanged));
+        private static void OnEmptyTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            DialogService.ShowDialog("ItemWindow", null, null);
+            ItemPicker picker = (d as ItemPicker);
+            if (picker.SelectedIndex == -1)
+            {
+                picker.ItemTextBlock.Text = e.NewValue as string;
+            }
         }
+
+        public string EmptyText {
+            get => (string)GetValue(EmptyTextProperty);
+            set => SetValue(EmptyTextProperty, value);
+        }
+
+        public static DependencyProperty DialogServiceProperty = DependencyProperty.Register(nameof(DialogService), typeof(IDialogService), typeof(ItemPicker));
+        public IDialogService DialogService {
+            get => (IDialogService)GetValue(DialogServiceProperty);
+            set => SetValue(DialogServiceProperty, value);
+        }
+
+        private async void PickItem(object sender, RoutedEventArgs e)
+        {
+            IDialogService service = DialogService ?? (Application.Current as PrismApplicationBase).Container.Resolve<IDialogService>();
+            IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource).Build());
+            if (result.Result == ButtonResult.OK)
+            {
+                object pickedItem = result.Parameters.GetValue<object>(nameof(PickerDialogParameters.PickedItem));
+                SelectedItem = pickedItem;
+            }
+        }
+
+        private void ItemPicker_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => FillSelection();
 
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);
-            ItemTextBlock.Text = SelectedValue.ToString();
+            FillSelection();
+        }
+
+        protected virtual void FillSelection()
+        {
+            if (SelectedIndex < 0)
+            {
+                ItemTextBlock.Text = EmptyText;
+            }
+            if (SelectedItem is IIdentifiable data)
+            {
+                ItemTextBlock.Text = SelectedItem.ToString();
+            }
         }
     }
 }

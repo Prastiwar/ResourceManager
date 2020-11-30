@@ -16,7 +16,7 @@
                     Click="PickItem"
                     Style="{DynamicResource MaterialDesignFlatButton}" />
             <TextBlock x:Name="ItemTextBlock"
-                       Text="{Binding SelectedValue}"
+                       Text="None"
                        Margin="5" />
         </StackPanel>
     </Grid>

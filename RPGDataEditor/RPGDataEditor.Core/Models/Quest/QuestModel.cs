@@ -1,11 +1,14 @@
-﻿namespace RPGDataEditor.Core.Models
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace RPGDataEditor.Core.Models
 {
     public class QuestModel : IdentifiableData
     {
-        private QuestTask[] tasks = new QuestTask[0];
-        public QuestTask[] Tasks {
+        private IList<QuestTask> tasks = new ObservableCollection<QuestTask>();
+        public IList<QuestTask> Tasks {
             get => tasks;
-            set => SetProperty(ref tasks, value ?? new QuestTask[0]);
+            set => SetProperty(ref tasks, value ?? new ObservableCollection<QuestTask>());
         }
 
         private QuestTask completionTask;

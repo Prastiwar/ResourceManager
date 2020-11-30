@@ -7,6 +7,7 @@ using RPGDataEditor.Wpf.Connection.Views;
 using RPGDataEditor.Wpf.Dialogue.Views;
 using RPGDataEditor.Wpf.Npc.Views;
 using RPGDataEditor.Wpf.Quest.Views;
+using RPGDataEditor.Wpf.Views;
 
 namespace RPGDataEditor.Wpf
 {
@@ -31,6 +32,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterForNavigation<DialogueTab>();
             containerRegistry.RegisterForNavigation<QuestTab>();
             containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
+            containerRegistry.RegisterDialog<PickerDialog>(nameof(PickerDialog));
         }
     }
 }

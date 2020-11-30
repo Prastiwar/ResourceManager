@@ -14,6 +14,18 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
                 <ResourceDictionary>
+                    <converters:HexDecColorConverter x:Key="HexDecColorConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:ColorBrushConverter x:Key="ColorBrushConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:ColorStringConverter x:Key="ColorConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converters:IdentifiableToIdConverter x:Key="IdentifiableToIdConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
                     <converters:RequirementToBuilderConverter x:Key="RequirementToBuilderConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>

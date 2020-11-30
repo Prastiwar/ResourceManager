@@ -5,20 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    <Grid>
+    <StackPanel x:Name="MainPanel">
         <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Color: "
-                           Margin="5" />
-                <materialDesign:ColorPicker Color="Black"
-                                            Margin="5" />
-            </StackPanel>
-            <ComboBox materialDesign:HintAssist.Hint="Type"
+            <ComboBox x:Name="TypeComboBox"
+                      materialDesign:HintAssist.Hint="Type"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      SelectedIndex="2"
                       Margin="5"
-                      SelectionChanged="OptionType_Selected"
                       Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
                 <ComboBoxItem Name="Dialogue"
                               Content="Dialogue" />
@@ -28,7 +27,82 @@
                               Content="Quit" />
             </ComboBox>
             <views:ItemPicker x:Name="DialogueOptionPanel"
-                              Visibility="Collapsed"/>
+                              Resource="Dialogue"
+                              SelectedIndex="{Binding NextDialogId}"
+                              Margin="5"
+                              Visibility="Collapsed" />
+            <TextBox DataContext="{Binding Model}"
+                     Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Message"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
+            <TextBox DataContext="{Binding Model}"
+                     Text="{Binding Command, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Command"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
         </StackPanel>
-    </Grid>
+        <StackPanel Orientation="Horizontal"
+                    Margin="5">
+            <TextBlock Text="Color: "
+                       VerticalAlignment="Top"
+                       Margin="5,10,5,5" />
+            <views:MaterialColorPicker Margin="5"
+                                       Color="{Binding Color, Mode=TwoWay, Converter={StaticResource HexDecColorConverter}}" />
+        </StackPanel>
+        <materialDesign:Card HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
+                            Width="16"
+                            Height="16"
+                            Padding="0"
+                            Click="AddRequirement"
+                            Style="{DynamicResource MaterialDesignFlatButton}" />
+                    <TextBlock Text="Requirements"
+                               Margin="5" />
+                </StackPanel>
+                <ListView ItemsSource="{Binding Requirements}"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Card HorizontalAlignment="Stretch"
+                                                 HorizontalContentAlignment="Center"
+                                                 Padding="5">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="{materialDesign:PackIcon Kind=Delete}"
+                                            Click="RemoveRequirement"
+                                            CommandParameter="{Binding .}"
+                                            VerticalAlignment="Top"
+                                            Style="{DynamicResource MaterialDesignFlatButton}"
+                                            Padding="0"
+                                            Margin="0,12,0,0" />
+                                    <views:RequirementView DataContext="{Binding ., Converter={StaticResource RequirementToBuilderConverter}}"
+                                                           Grid.Column="1"
+                                                           HorizontalAlignment="Stretch"
+                                                           HorizontalContentAlignment="Stretch" />
+                                </Grid>
+                            </materialDesign:Card>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </materialDesign:Card>
+    </StackPanel>
 </UserControl>

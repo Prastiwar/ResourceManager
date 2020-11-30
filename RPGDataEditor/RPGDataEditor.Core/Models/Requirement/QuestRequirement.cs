@@ -2,7 +2,7 @@
 {
     public class QuestRequirement : PlayerRequirementModel
     {
-        private int questId;
+        private int questId = -1;
         public int QuestId {
             get => questId;
             set => SetProperty(ref questId, value);

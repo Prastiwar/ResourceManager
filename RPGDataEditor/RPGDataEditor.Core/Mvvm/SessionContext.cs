@@ -99,6 +99,17 @@ namespace RPGDataEditor.Core.Mvvm
             return Task.FromResult(true);
         }
 
+        public async Task<T[]> LoadAsync<T>(string relativePath)
+        {
+            string[] jsons = await LoadJsonsAsync(relativePath);
+            T[] models = new T[jsons.Length];
+            for (int i = 0; i < jsons.Length; i++)
+            {
+                models[i] = JsonConvert.DeserializeObject<T>(jsons[i]);
+            }
+            return models;
+        }
+
         public Task<string[]> LoadJsonsAsync(string relativePath)
         {
             if (IsFtp)
@@ -106,9 +117,14 @@ namespace RPGDataEditor.Core.Mvvm
                 return LoadFtpJsonsAsync(relativePath);
             }
             List<string> jsons = new List<string>();
-            foreach (string file in Directory.EnumerateFiles(Path.Combine(LocationPath, relativePath), "*.json", SearchOption.TopDirectoryOnly))
+            string directoryPath = Path.Combine(LocationPath, relativePath);
+            if (Directory.Exists(directoryPath))
             {
-                jsons.Add(File.ReadAllText(file));
+                IEnumerable<string> files = Directory.EnumerateFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+                foreach (string file in files)
+                {
+                    jsons.Add(File.ReadAllText(file));
+                }
             }
             return Task.FromResult(jsons.ToArray());
         }

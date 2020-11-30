@@ -5,7 +5,22 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
 {
     public partial class DialogueOptionView : UserControl
     {
-        public DialogueOptionView() => InitializeComponent();
+        public DialogueOptionView()
+        {
+            InitializeComponent();
+            DataContextChanged += DialogueOptionView_DataContextChanged;
+            TypeComboBox.SelectionChanged += OptionType_Selected;
+        }
+
+        private void DialogueOptionView_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is DialogueOptionModel model)
+            {
+                TypeComboBox.SelectedIndex = model.NextDialogId == -2 ? 1 :
+                                             model.NextDialogId == -1 ? 2 :
+                                             0;
+            }
+        }
 
         private void OptionType_Selected(object sender, SelectionChangedEventArgs e)
         {
@@ -24,6 +39,26 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
                                              -1;
                     }
                 }
+            }
+        }
+
+        private void AddRequirement(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (DataContext is DialogueOptionModel model)
+            {
+                model.Requirements.Add(new PlayerRequirementBuilder() {
+                    Model = new DialogueRequirement()
+                });
+            }
+        }
+
+        private void RemoveRequirement(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (DataContext is DialogueOptionModel model)
+            {
+                Button btn = (Button)sender;
+                PlayerRequirementModel requirement = (PlayerRequirementModel)btn.DataContext;
+                model.Requirements.Remove(requirement);
             }
         }
     }

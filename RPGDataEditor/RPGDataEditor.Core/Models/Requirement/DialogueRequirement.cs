@@ -2,7 +2,7 @@
 {
     public class DialogueRequirement : PlayerRequirementModel
     {
-        private int dialogueId;
+        private int dialogueId = -1;
         public int DialogueId {
             get => dialogueId;
             set => SetProperty(ref dialogueId, value);

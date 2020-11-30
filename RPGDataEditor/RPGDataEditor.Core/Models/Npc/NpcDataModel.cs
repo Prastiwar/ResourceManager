@@ -1,4 +1,7 @@
-﻿namespace RPGDataEditor.Core.Models
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace RPGDataEditor.Core.Models
 {
     public class NpcDataModel : ObservableModel, IIdentifiable
     {
@@ -72,10 +75,10 @@
             set => SetProperty(ref movementType, value);
         }
 
-        private Position[] paths = new Position[0];
-        public Position[] Paths {
+        private IList<Position> paths = new ObservableCollection<Position>();
+        public IList<Position> Paths {
             get => paths;
-            set => SetProperty(ref paths, value ?? new Position[0]);
+            set => SetProperty(ref paths, value ?? new ObservableCollection<Position>());
         }
 
         private int healthRegen;
@@ -84,10 +87,10 @@
             set => SetProperty(ref healthRegen, value);
         }
 
-        private AttributeDataModel[] attributes = new AttributeDataModel[0];
-        public AttributeDataModel[] Attributes {
+        private IList<AttributeDataModel> attributes = new ObservableCollection<AttributeDataModel>();
+        public IList<AttributeDataModel> Attributes {
             get => attributes;
-            set => SetProperty(ref attributes, value ?? new AttributeDataModel[0]);
+            set => SetProperty(ref attributes, value ?? new ObservableCollection<AttributeDataModel>());
         }
     }
 }

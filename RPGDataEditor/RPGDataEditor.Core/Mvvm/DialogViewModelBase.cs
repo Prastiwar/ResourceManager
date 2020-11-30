@@ -39,13 +39,12 @@ namespace RPGDataEditor.Core.Mvvm
             RequestClose?.Invoke(dialogResult);
         }
 
-        protected Task WaitUntilRequestIsNotNull()
+        protected async Task WaitUntilRequestIsNotNull()
         {
             while (RequestClose == null)
             {
-                Task.Delay(100);
+                await Task.Delay(100);
             }
-            return Task.CompletedTask;
         }
 
         public virtual bool CanCloseDialog() => true;

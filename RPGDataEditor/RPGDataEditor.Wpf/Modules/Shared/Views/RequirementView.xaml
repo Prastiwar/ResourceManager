@@ -20,29 +20,46 @@
                 <ComboBoxItem Name="Item"
                               Content="Item" />
             </ComboBox>
-            <StackPanel x:Name="DialogueRequirementPanel">
+            <StackPanel x:Name="DialogueRequirementPanel"
+                        Margin="5"
+                        Visibility="Collapsed">
                 <views:ItemPicker x:Name="DialoguePicker"
-                                  DataContext="{Binding Model}" />
+                                  Resource="Dialogue"
+                                  DataContext="{Binding Model}"
+                                  SelectedIndex="{Binding DialogueId, Mode=TwoWay}"
+                                  EmptyText="Select Dialogue"
+                                  Margin="5" />
                 <CheckBox Content="Should dialogue be completed?"
                           Margin="5"
                           DataContext="{Binding Model}"
                           IsChecked="{Binding Completed}" />
             </StackPanel>
             <StackPanel x:Name="ItemRequirementPanel"
+                        Margin="5"
                         Visibility="Collapsed">
-                <views:ItemPicker x:Name="ItemPicker" />
+                <views:ItemPicker x:Name="ItemPicker"
+                                  Resource="Item"
+                                  DataContext="{Binding Model}"
+                                  EmptyText="Select Item"
+                                  Margin="5" />
                 <CheckBox Content="Respect Nbt value?"
                           Margin="5"
                           DataContext="{Binding Model}"
                           IsChecked="{Binding RespectNbt}" />
             </StackPanel>
             <StackPanel x:Name="QuestRequirementPanel"
+                        Margin="5"
                         Visibility="Collapsed">
                 <views:ItemPicker x:Name="QuestPicker"
-                                  DataContext="{Binding Model}" />
+                                  Resource="Quest"
+                                  DataContext="{Binding Model}"
+                                  SelectedIndex="{Binding QuestId, Mode=TwoWay}"
+                                  EmptyText="Select Quest"
+                                  Margin="5" />
                 <ComboBox x:Name="StageComboBox"
                           SelectionChanged="QuestStage_Selected"
                           materialDesign:HintAssist.Hint="Stage"
+                          SelectedIndex="0"
                           Margin="5"
                           Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
                     <ComboBoxItem Name="UNKNOWN"

@@ -1,4 +1,7 @@
-﻿namespace RPGDataEditor.Core.Models
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace RPGDataEditor.Core.Models
 {
     public class DialogueModel : IdentifiableData
     {
@@ -8,10 +11,10 @@
             set => SetProperty(ref startQuest, value);
         }
 
-        private DialogueOptionModel[] options = new DialogueOptionModel[0];
-        public DialogueOptionModel[] Options {
+        private IList<DialogueOptionModel> options = new ObservableCollection<DialogueOptionModel>();
+        public IList<DialogueOptionModel> Options {
             get => options;
-            set => SetProperty(ref options, value ?? new DialogueOptionModel[0]);
+            set => SetProperty(ref options, value ?? new ObservableCollection<DialogueOptionModel>());
         }
     }
 }

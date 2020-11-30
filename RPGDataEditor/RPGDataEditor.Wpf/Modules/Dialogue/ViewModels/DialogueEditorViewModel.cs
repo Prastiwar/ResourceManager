@@ -1,6 +1,8 @@
-﻿using Prism.Commands;
+﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Dialogue.ViewModels
@@ -11,15 +13,34 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 
         public override string Title => "Dialogue Editor";
 
-        private ICommand addOptionCommand;
-        public ICommand AddOptionCommand => addOptionCommand ??= new DelegateCommand(AddOption);
+        public ICommand AddOptionCommand => Commands.AddListItemLiCommand(() => Model.Options);
 
-        private void AddOption()
+        public ICommand RemoveOptionCommand => Commands.RemoveListItemLiCommand(() => Model.Options);
+
+        public ICommand AddRequirementCommand => Commands.AddListItemLiCommand(() => Model.Requirements, () => new PlayerRequirementBuilder() { Model = new DialogueRequirement() });
+
+        public ICommand RemoveRequirementCommand => Commands.RemoveListItemLiCommand(() => Model.Requirements);
+
+        public int OptionsCount => Model == null ? 0 : Model.Options.Count;
+
+        public int RequirementsCount => Model == null ? 0 : Model.Requirements.Count;
+
+        protected override Task InitializeAsync(IDialogParameters parameters)
         {
-            DialogueOptionModel[] options = Model.Options;
-            DialogueOptionModel[] newOptions = new DialogueOptionModel[options.Length + 1];
-            newOptions[options.Length] = new DialogueOptionModel();
-            Model.Options = newOptions;
+            base.InitializeAsync(parameters);
+            if (Model.Options is INotifyCollectionChanged optionsNotifier)
+            {
+                optionsNotifier.CollectionChanged += Options_CollectionChanged;
+            }
+            if (Model.Requirements is INotifyCollectionChanged requirementsNotifier)
+            {
+                requirementsNotifier.CollectionChanged += Requirements_CollectionChanged;
+            }
+            return Task.CompletedTask;
         }
+
+        private void Options_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => RaisePropertyChanged(nameof(OptionsCount));
+
+        private void Requirements_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => RaisePropertyChanged(nameof(RequirementsCount));
     }
 }
