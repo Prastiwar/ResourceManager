@@ -13,7 +13,7 @@ namespace RPGDataEditor.Core.Models
 
         private string command = "";
         public string Command {
-            get => message;
+            get => command;
             set => SetProperty(ref command, value ?? "");
         }
 

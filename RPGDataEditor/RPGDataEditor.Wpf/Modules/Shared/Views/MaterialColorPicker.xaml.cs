@@ -44,6 +44,7 @@ namespace RPGDataEditor.Wpf.Views
             {
                 Picker.Color = Color.Add(newColor, Colors.Black);
             }
+            Picker.Color = newColor;
             if (!isTextBoxInput)
             {
                 HexTextBox.Text = GetColor();

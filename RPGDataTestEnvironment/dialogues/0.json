@@ -1,13 +1,13 @@
 {
   "id": 0,
   "startquest": -1,
-  "title": "New dialogue",
-  "message": "msg",
-  "category": "New Category",
+  "title": "Testing dialogue",
+  "message": "Some long dialogue message or can be short too",
+  "category": "Tests",
   "options": [
     {
-      "message": "",
-      "command": "",
+      "message": "I quit",
+      "command": "say bye",
       "nextdialogid": -1,
       "color": -65536,
       "requirements": []

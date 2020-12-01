@@ -31,8 +31,7 @@
                               PickedId="{Binding NextDialogId, Mode=TwoWay}"
                               Margin="5"
                               Visibility="Collapsed" />
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      materialDesign:HintAssist.Hint="Message"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
@@ -40,8 +39,7 @@
                     <behaviors:CatchValidationBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding Command, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox Text="{Binding Command, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      materialDesign:HintAssist.Hint="Command"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
