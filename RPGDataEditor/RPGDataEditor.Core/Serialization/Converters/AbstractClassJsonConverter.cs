@@ -16,15 +16,18 @@ namespace RPGDataEditor.Core.Serialization
             JObject obj = reader.ToJObject();
             string typeName = obj.GetValue<string>("type");
             Type realType = GetObjectType(typeName);
-            return (T)JsonConvert.DeserializeObject(obj.ToString(), realType);
+            serializer.Converters.Remove(this);
+            T item = (T)obj.ToObject(realType, serializer);
+            serializer.Converters.Add(this);
+            return item;
         }
 
         public override void WriteJson(JsonWriter writer, [AllowNull] T value, JsonSerializer serializer)
         {
-            JObject obj = new JObject() {
-                { "type", GetTypeName(value) }
-            };
-            obj.AddAfterSelf(value);
+            serializer.Converters.Remove(this);
+            JObject obj = JObject.FromObject(value, serializer);
+            serializer.Converters.Add(this);
+            obj.AddFirst(new JProperty("type", GetTypeName(value)));
             obj.WriteTo(writer);
         }
 
