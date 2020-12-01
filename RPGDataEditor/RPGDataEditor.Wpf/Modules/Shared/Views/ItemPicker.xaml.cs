@@ -3,13 +3,13 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace RPGDataEditor.Wpf.Views
 {
-    public partial class ItemPicker : Selector
+    public partial class ItemPicker : UserControl
     {
         public ItemPicker()
         {
@@ -19,11 +19,24 @@ namespace RPGDataEditor.Wpf.Views
 
         public RPGResource Resource { get; set; }
 
+        public static DependencyProperty PickedIdProperty = DependencyProperty.Register(nameof(PickedId), typeof(int), typeof(ItemPicker), new PropertyMetadata(-1));
+        public int PickedId {
+            get => (int)GetValue(PickedIdProperty);
+            set => SetValue(PickedIdProperty, value);
+        }
+
+        public static DependencyProperty PickedItemProperty = DependencyProperty.Register(nameof(PickedItem), typeof(IIdentifiable), typeof(ItemPicker), new PropertyMetadata(null, OnPickedItemChanged));
+        private static void OnPickedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ItemPicker).OnPickedItemChanged(e.OldValue, e.NewValue);
+        public IIdentifiable PickedItem {
+            get => (IIdentifiable)GetValue(PickedItemProperty);
+            set => SetValue(PickedItemProperty, value);
+        }
+
         public static DependencyProperty EmptyTextProperty = DependencyProperty.Register(nameof(EmptyText), typeof(string), typeof(ItemPicker), new PropertyMetadata("None", OnEmptyTextChanged));
         private static void OnEmptyTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ItemPicker picker = (d as ItemPicker);
-            if (picker.SelectedIndex == -1)
+            if (picker.PickedItem == null)
             {
                 picker.ItemTextBlock.Text = e.NewValue as string;
             }
@@ -40,34 +53,34 @@ namespace RPGDataEditor.Wpf.Views
             set => SetValue(DialogServiceProperty, value);
         }
 
-        private async void PickItem(object sender, RoutedEventArgs e)
+        private async void PickItem(object sender, RoutedEventArgs e) => await PickItemAsync();
+
+        protected virtual async Task PickItemAsync()
         {
             IDialogService service = DialogService ?? (Application.Current as PrismApplicationBase).Container.Resolve<IDialogService>();
-            IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource).Build());
+            IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource, PickedItem, PickedId).Build()).ConfigureAwait(true);
             if (result.Result == ButtonResult.OK)
             {
-                object pickedItem = result.Parameters.GetValue<object>(nameof(PickerDialogParameters.PickedItem));
-                SelectedItem = pickedItem;
+                IIdentifiable pickedItem = result.Parameters.GetValue<IIdentifiable>(nameof(PickerDialogParameters.PickedItem));
+                PickedItem = pickedItem;
             }
         }
 
-        private void ItemPicker_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => FillSelection();
+        private void ItemPicker_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => OnPickedItemChanged(null, PickedItem);
 
-        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
+        protected virtual void OnPickedItemChanged(object oldValue, object newValue)
         {
-            base.OnSelectionChanged(e);
-            FillSelection();
-        }
-
-        protected virtual void FillSelection()
-        {
-            if (SelectedIndex < 0)
+            if (PickedItem == null)
             {
                 ItemTextBlock.Text = EmptyText;
             }
-            if (SelectedItem is IIdentifiable data)
+            else
             {
-                ItemTextBlock.Text = SelectedItem.ToString();
+                ItemTextBlock.Text = PickedItem.ToString();
+                if (PickedItem is IIdentifiable identifiable)
+                {
+                    PickedId = identifiable.Id;
+                }
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class NullToEmptyStringResolver : DefaultContractResolver
+    public class NullToEmptyStringResolver : DefaultPropertyResolver
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {

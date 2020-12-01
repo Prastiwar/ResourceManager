@@ -1,4 +1,4 @@
-﻿<Selector x:Class="RPGDataEditor.Wpf.Views.ItemPicker"
+﻿<UserControl x:Class="RPGDataEditor.Wpf.Views.ItemPicker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,4 +20,4 @@
                        Margin="5" />
         </StackPanel>
     </Grid>
-</Selector>
+</UserControl>

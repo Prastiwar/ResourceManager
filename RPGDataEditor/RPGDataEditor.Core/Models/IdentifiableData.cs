@@ -6,8 +6,10 @@ namespace RPGDataEditor.Core.Models
     public class IdentifiableData : ObservableModel, IIdentifiable
     {
         private int id;
-        public int GetId() => id;
-        public void SetId(int value) => id = value;
+        public int Id {
+            get => id;
+            set => SetProperty(ref id, value);
+        }
 
         private string title = "";
         public string Title {
@@ -33,6 +35,6 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref requirements, value ?? new ObservableCollection<PlayerRequirementModel>());
         }
 
-        public override string ToString() => $"(ID: {GetId()}) {Title}";
+        public override string ToString() => $"(ID: {Id}) {Title}";
     }
 }

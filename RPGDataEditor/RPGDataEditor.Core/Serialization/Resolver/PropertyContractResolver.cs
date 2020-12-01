@@ -8,7 +8,7 @@ namespace RPGDataEditor.Core.Serialization
 {
     public enum Lettercase { Lowercase, Uppercase }
 
-    public class PropertyContractResolver : DefaultContractResolver
+    public class PropertyContractResolver : DefaultPropertyResolver
     {
         private readonly Dictionary<Type, HashSet<string>> ignored = new Dictionary<Type, HashSet<string>>();
         private readonly Dictionary<Type, Dictionary<string, string>> renamed = new Dictionary<Type, Dictionary<string, string>>();
@@ -83,13 +83,13 @@ namespace RPGDataEditor.Core.Serialization
             {
                 ignoredType = type.BaseType;
             }
-            return ignoredType != null ? ignored[ignoredType].Contains(jsonPropertyName) : false;
+            return ignoredType != null && ignored[ignoredType].Contains(jsonPropertyName);
         }
 
         protected bool IsRenamed(Type fromClass, string jsonPropertyName, out string newJsonPropertyName)
         {
             newJsonPropertyName = null;
-            return renamed.ContainsKey(fromClass) ? renamed[fromClass].TryGetValue(jsonPropertyName, out newJsonPropertyName) : false;
+            return renamed.ContainsKey(fromClass) && renamed[fromClass].TryGetValue(jsonPropertyName, out newJsonPropertyName);
         }
     }
 }

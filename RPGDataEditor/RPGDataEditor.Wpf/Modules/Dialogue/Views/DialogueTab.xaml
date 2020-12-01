@@ -47,12 +47,10 @@
                                         HorizontalAlignment="Stretch">
                                 <Button Content="Edit"
                                         Margin="2"
-                                        Foreground="{DynamicResource MaterialDesignDarkForeground}"
                                         Command="{Binding DataContext.OpenEditorCommand, Source={x:Reference CategoryDialoguesList}}"
                                         CommandParameter="{Binding .}" />
                                 <Button Content="Remove"
                                         Margin="2"
-                                        Foreground="{DynamicResource MaterialDesignDarkForeground}"
                                         Command="{Binding DataContext.RemoveDialogueCommand, Source={x:Reference CategoryDialoguesList}}"
                                         CommandParameter="{Binding .}" />
                                 <TextBlock x:Name="DialogueLabel"
@@ -75,19 +73,16 @@
                                         HorizontalAlignment="Stretch">
                                 <Button Content="Show"
                                         Margin="2"
-                                        Foreground="{DynamicResource MaterialDesignDarkForeground}"
                                         Click="ShowCategory_Click"
                                         Command="{Binding DataContext.ShowCategoryCommand, Source={x:Reference CategoriesList}}"
                                         CommandParameter="{Binding .}" />
                                 <Button Content="Rename"
                                         Margin="2"
-                                        Foreground="{DynamicResource MaterialDesignDarkForeground}"
                                         Tag="{x:Reference EditCategoryPanel}"
                                         CommandParameter="{x:Reference CategoryLabel}"
                                         Click="RenameCategory_Click" />
                                 <Button Content="Remove"
                                         Margin="2"
-                                        Foreground="{DynamicResource MaterialDesignDarkForeground}"
                                         Command="{Binding DataContext.RemoveCategoryCommand, Source={x:Reference CategoriesList}}"
                                         CommandParameter="{Binding .}" />
                                 <TextBlock x:Name="CategoryLabel"

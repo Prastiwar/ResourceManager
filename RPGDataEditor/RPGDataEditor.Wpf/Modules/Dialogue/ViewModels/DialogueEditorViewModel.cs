@@ -2,6 +2,7 @@
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -37,6 +38,16 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
                 requirementsNotifier.CollectionChanged += Requirements_CollectionChanged;
             }
             return Task.CompletedTask;
+        }
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            if (e.PropertyName == nameof(Model))
+            {
+                RaisePropertyChanged(nameof(OptionsCount));
+                RaisePropertyChanged(nameof(RequirementsCount));
+            }
         }
 
         private void Options_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => RaisePropertyChanged(nameof(OptionsCount));

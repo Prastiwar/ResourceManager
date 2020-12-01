@@ -2,8 +2,6 @@
 {
     public interface IIdentifiable
     {
-        int GetId();
-
-        void SetId(int value);
+        public int Id { get; set; }
     }
 }

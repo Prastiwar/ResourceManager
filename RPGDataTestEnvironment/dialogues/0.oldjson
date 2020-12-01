@@ -2,7 +2,7 @@
   "id": 0,
   "startquest": -1,
   "title": "New dialogue",
-  "message": "msg",
+  "message": "Some message",
   "category": "New Category",
   "options": [
     {
@@ -10,7 +10,13 @@
       "command": "",
       "nextdialogid": -1,
       "color": -65536,
-      "requirements": []
+      "requirements": [
+        {
+          "type": "Dialogue",
+          "dialogueid": 0,
+          "completed": true
+        }
+      ]
     }
   ],
   "requirements": []

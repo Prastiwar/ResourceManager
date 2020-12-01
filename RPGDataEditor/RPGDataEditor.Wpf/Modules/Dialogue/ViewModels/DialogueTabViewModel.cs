@@ -59,9 +59,10 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             bool save = await Context.DialogService.ShowModelDialogAsync(copiedDialogue);
             if (save)
             {
-                //dialogue.CopyValues(copiedDialogue);
-                //string json = JsonConvert.SerializeObject(dialogue);
-                //await Context.Session.SaveJsonFileAsync(GetRelativeFilePath(dialogue), json);
+                dialogue.CopyValues(copiedDialogue);
+                string json = JsonConvert.SerializeObject(dialogue);
+                bool saved = await Context.Session.SaveJsonFileAsync(GetRelativeFilePath(dialogue), json);
+                Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save dialogue");
             }
         }
 
@@ -93,7 +94,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             DialogueCategories.AddRange(Dialogues.Select(x => x.Category).Distinct());
         }
 
-        protected virtual string GetRelativeFilePath(DialogueModel dialogue) => RelativePath + "/" + dialogue.GetId() + ".json";
+        protected virtual string GetRelativeFilePath(DialogueModel dialogue) => RelativePath + "/" + dialogue.Id + ".json";
 
         public void ShowCategory(string category)
         {
@@ -122,8 +123,8 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
         private async void CreateDialogue(string category)
         {
             DialogueModel newDialogue = new DialogueModel();
-            int nextId = Dialogues.Count > 0 ? Dialogues.Max(x => x.GetId()) + 1 : 0;
-            newDialogue.SetId(nextId);
+            int nextId = Dialogues.Count > 0 ? Dialogues.Max(x => x.Id) + 1 : 0;
+            newDialogue.Id = nextId;
             newDialogue.Title = "New dialogue";
             newDialogue.Category = category;
             string json = JsonConvert.SerializeObject(newDialogue);

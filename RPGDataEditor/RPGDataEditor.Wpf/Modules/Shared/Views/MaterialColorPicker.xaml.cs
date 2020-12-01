@@ -19,7 +19,8 @@ namespace RPGDataEditor.Wpf.Views
 
         private bool isTextBoxInput;
 
-        public static DependencyProperty ColorProperty = DependencyProperty.Register(nameof(Color), typeof(Color), typeof(MaterialColorPicker), new PropertyMetadata(Colors.Black));
+        public static DependencyProperty ColorProperty = DependencyProperty.Register(nameof(Color), typeof(Color), typeof(MaterialColorPicker), new PropertyMetadata(Colors.Black, OnColorChanged));
+        private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as MaterialColorPicker).Picker_ColorChanged((Color)e.NewValue);
         public Color Color {
             get => (Color)GetValue(ColorProperty);
             set => SetValue(ColorProperty, value);

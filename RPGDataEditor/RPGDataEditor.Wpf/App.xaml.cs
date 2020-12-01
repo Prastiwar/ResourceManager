@@ -47,10 +47,11 @@ namespace RPGDataEditor.Wpf
 
             JsonConvert.DefaultSettings = () => {
                 JsonSerializerSettings settings = new JsonSerializerSettings {
-                    ContractResolver = new LowercasePropertyResolver()
+                    ContractResolver = new PrettyOrderPropertyResolver() { PropertyResolver = new LowercasePropertyResolver() },
+                    Formatting = Formatting.Indented
                 };
-                //settings.Converters.Add(new JsonConverter);
-                // TODO: setup json settings
+                settings.Converters.Add(new QuestTaskJsonConverter());
+                settings.Converters.Add(new PlayerRequirementJsonConverter());
                 return settings;
             };
 

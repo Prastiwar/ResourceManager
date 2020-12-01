@@ -28,7 +28,7 @@
             </ComboBox>
             <views:ItemPicker x:Name="DialogueOptionPanel"
                               Resource="Dialogue"
-                              SelectedIndex="{Binding NextDialogId}"
+                              PickedId="{Binding NextDialogId, Mode=TwoWay}"
                               Margin="5"
                               Visibility="Collapsed" />
             <TextBox DataContext="{Binding Model}"

@@ -3,6 +3,7 @@ using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Wpf.ViewModels
@@ -13,14 +14,14 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         public override string Title => "Resource Picker";
 
-        private object model;
-        public object Model {
+        private IIdentifiable model;
+        public IIdentifiable Model {
             get => model;
             set => SetProperty(ref model, value);
         }
 
-        private IList<object> models;
-        public IList<object> Models {
+        private IList<IIdentifiable> models;
+        public IList<IIdentifiable> Models {
             get => models;
             set => SetProperty(ref models, value);
         }
@@ -44,15 +45,34 @@ namespace RPGDataEditor.Wpf.ViewModels
         protected override async Task InitializeAsync(IDialogParameters parameters)
         {
             RPGResource resource = parameters.GetValue<RPGResource>(nameof(PickerDialogParameters.PickResource));
-            List<object> list = new List<object>();
+            List<IIdentifiable> list = await LoadResourcesAsync(resource);
+            list.Sort(new IdentifiableComparer());
+            Models = list;
+
+            IIdentifiable model = parameters.GetValue<IIdentifiable>(nameof(PickerDialogParameters.PickedItem));
+            int modelId = parameters.GetValue<int>(nameof(PickerDialogParameters.PickedId));
+            if (model == null)
+            {
+                model = Models.FirstOrDefault(x => x.Id == modelId);
+            }
+            else
+            {
+                model = Models.FirstOrDefault(x => x.Id == model.Id);
+            }
+            Model = model ?? Models.First();
+        }
+
+        protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(RPGResource resource)
+        {
+            List<IIdentifiable> list = new List<IIdentifiable>();
             switch (resource)
             {
                 case RPGResource.Quest:
-                    list = new List<object>(await Context.Session.LoadAsync<QuestModel>("quests"));
+                    list = new List<IIdentifiable>(await Context.Session.LoadAsync<QuestModel>("quests"));
                     list.Insert(0, new NullQuest());
                     break;
                 case RPGResource.Dialogue:
-                    list = new List<object>(await Context.Session.LoadAsync<DialogueModel>("dialogues"));
+                    list = new List<IIdentifiable>(await Context.Session.LoadAsync<DialogueModel>("dialogues"));
                     list.Insert(0, new NullDialogue());
                     break;
                 case RPGResource.Item:
@@ -60,36 +80,20 @@ namespace RPGDataEditor.Wpf.ViewModels
                 default:
                     break;
             }
-            Comparer<object> comparer = Comparer<object>.Create((x, y) => {
-                if (x is IIdentifiable identifiableX && y is IIdentifiable identifiableY)
-                {
-                    int xId = identifiableX.GetId();
-                    int yId = identifiableY.GetId();
-                    if (xId == yId)
-                    {
-                        return 0;
-                    }
-                    else if (xId < yId)
-                    {
-                        return -1;
-                    }
-                    return 1;
-                }
-                return 0;
-            });
-            list.Sort(comparer);
-            Models = list;
+            return list;
         }
 
         private interface INullResource { }
 
         private class NullQuest : QuestModel, INullResource
         {
+            public NullQuest() => Id = -1;
             public override string ToString() => "None";
         }
 
         private class NullDialogue : DialogueModel, INullResource
         {
+            public NullDialogue() => Id = -1;
             public override string ToString() => "None";
         }
     }

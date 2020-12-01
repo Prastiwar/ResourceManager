@@ -30,7 +30,10 @@
         </Grid.RowDefinitions>
         <ListView x:Name="ItemListView"
                   ItemsSource="{Binding Models}"
-                  SelectedItem="{Binding Model}">
+                  SelectedItem="{Binding Model, Mode=TwoWay}"
+                  SelectedIndex="0"
+                  SelectionMode="Single"
+                  Loaded="ItemListView_Loaded">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>

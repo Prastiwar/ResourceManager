@@ -26,13 +26,13 @@
                 <views:ItemPicker x:Name="DialoguePicker"
                                   Resource="Dialogue"
                                   DataContext="{Binding Model}"
-                                  SelectedIndex="{Binding DialogueId, Mode=TwoWay}"
+                                  PickedId="{Binding DialogueId, Mode=TwoWay}"
                                   EmptyText="Select Dialogue"
                                   Margin="5" />
                 <CheckBox Content="Should dialogue be completed?"
                           Margin="5"
                           DataContext="{Binding Model}"
-                          IsChecked="{Binding Completed}" />
+                          IsChecked="{Binding Completed, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel x:Name="ItemRequirementPanel"
                         Margin="5"
@@ -45,7 +45,7 @@
                 <CheckBox Content="Respect Nbt value?"
                           Margin="5"
                           DataContext="{Binding Model}"
-                          IsChecked="{Binding RespectNbt}" />
+                          IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel x:Name="QuestRequirementPanel"
                         Margin="5"
@@ -53,7 +53,7 @@
                 <views:ItemPicker x:Name="QuestPicker"
                                   Resource="Quest"
                                   DataContext="{Binding Model}"
-                                  SelectedIndex="{Binding QuestId, Mode=TwoWay}"
+                                  PickedId="{Binding QuestId, Mode=TwoWay}"
                                   EmptyText="Select Quest"
                                   Margin="5" />
                 <ComboBox x:Name="StageComboBox"
