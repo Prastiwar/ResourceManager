@@ -26,9 +26,6 @@
                     <converters:IdentifiableToIdConverter x:Key="IdentifiableToIdConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>
-                    <converters:RequirementToBuilderConverter x:Key="RequirementToBuilderConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
                     <converters:VisibilityInvertConverter x:Key="VisibilityInvertConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>

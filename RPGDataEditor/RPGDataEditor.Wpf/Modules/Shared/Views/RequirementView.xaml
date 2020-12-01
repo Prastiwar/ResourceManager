@@ -25,13 +25,11 @@
                         Visibility="Collapsed">
                 <views:ItemPicker x:Name="DialoguePicker"
                                   Resource="Dialogue"
-                                  DataContext="{Binding Model}"
                                   PickedId="{Binding DialogueId, Mode=TwoWay}"
                                   EmptyText="Select Dialogue"
                                   Margin="5" />
                 <CheckBox Content="Should dialogue be completed?"
                           Margin="5"
-                          DataContext="{Binding Model}"
                           IsChecked="{Binding Completed, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel x:Name="ItemRequirementPanel"
@@ -39,12 +37,10 @@
                         Visibility="Collapsed">
                 <views:ItemPicker x:Name="ItemPicker"
                                   Resource="Item"
-                                  DataContext="{Binding Model}"
                                   EmptyText="Select Item"
                                   Margin="5" />
                 <CheckBox Content="Respect Nbt value?"
                           Margin="5"
-                          DataContext="{Binding Model}"
                           IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel x:Name="QuestRequirementPanel"
@@ -52,7 +48,6 @@
                         Visibility="Collapsed">
                 <views:ItemPicker x:Name="QuestPicker"
                                   Resource="Quest"
-                                  DataContext="{Binding Model}"
                                   PickedId="{Binding QuestId, Mode=TwoWay}"
                                   EmptyText="Select Quest"
                                   Margin="5" />

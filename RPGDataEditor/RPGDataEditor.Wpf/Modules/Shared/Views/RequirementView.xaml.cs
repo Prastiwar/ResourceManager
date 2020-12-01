@@ -13,13 +13,8 @@ namespace RPGDataEditor.Wpf.Views
             DataContextChanged += RequirementView_DataContextChanged;
         }
 
-        private void RequirementView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue is PlayerRequirementBuilder builder)
-            {
-                SetRequirementPanel(builder.Model);
-            }
-        }
+        private void RequirementView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) =>
+            SetRequirementPanel(DataContext as PlayerRequirementModel);
 
         private void QuestStage_Selected(object sender, SelectionChangedEventArgs e)
         {
@@ -27,7 +22,7 @@ namespace RPGDataEditor.Wpf.Views
             {
                 if (e.AddedItems[0] is ComboBoxItem selected)
                 {
-                    if (DataContext is PlayerRequirementBuilder builder && builder.Model is QuestRequirement requirement)
+                    if (DataContext is QuestRequirement requirement)
                     {
                         requirement.Stage = (QuestStage)Enum.Parse(typeof(QuestStage), selected.Name.ToString());
                     }
@@ -40,7 +35,7 @@ namespace RPGDataEditor.Wpf.Views
             bool isDialogue = model is DialogueRequirement;
             bool isQuest = model is QuestRequirement;
             bool isItem = model is ItemRequirement;
-            RequirementType.SelectedIndex = isDialogue ? 0 : 
+            RequirementType.SelectedIndex = isDialogue ? 0 :
                                             isQuest ? 1 :
                                             2;
             DialogueRequirementPanel.Visibility = isDialogue ? Visibility.Visible : Visibility.Collapsed;
@@ -57,21 +52,18 @@ namespace RPGDataEditor.Wpf.Views
                     bool isDialogue = string.Compare(selected.Name, "dialogue", true) == 0;
                     bool isQuest = string.Compare(selected.Name, "quest", true) == 0;
                     bool isItem = string.Compare(selected.Name, "item", true) == 0;
-                    if (DataContext is PlayerRequirementBuilder model)
+
+                    if (isDialogue)
                     {
-                        if (isDialogue)
-                        {
-                            model.Model = new DialogueRequirement();
-                        }
-                        else if (isQuest)
-                        {
-                            model.Model = new QuestRequirement();
-                        }
-                        else if (isItem)
-                        {
-                            model.Model = new ItemRequirement();
-                        }
-                        SetRequirementPanel(model.Model);
+                        DataContext = new DialogueRequirement();
+                    }
+                    else if (isQuest)
+                    {
+                        DataContext = new QuestRequirement();
+                    }
+                    else if (isItem)
+                    {
+                        DataContext = new ItemRequirement();
                     }
                 }
             }

@@ -46,9 +46,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
         {
             if (DataContext is DialogueOptionModel model)
             {
-                model.Requirements.Add(new PlayerRequirementBuilder() {
-                    Model = new DialogueRequirement()
-                });
+                model.Requirements.Add(new DialogueRequirement());
             }
         }
 

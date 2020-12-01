@@ -85,8 +85,8 @@
                                        Margin="5" />
                         </StackPanel>
                         <ListView x:Name="OptionsListView"
-                                  ItemsSource="{Binding Options}"
                                   DataContext="{Binding Model}"
+                                  ItemsSource="{Binding Options}"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch">
                             <ListView.ItemTemplate>
@@ -141,8 +141,8 @@
                                        Margin="5" />
                         </StackPanel>
                         <ListView x:Name="RequirementsListView"
-                                  ItemsSource="{Binding Requirements}"
                                   DataContext="{Binding Model}"
+                                  ItemsSource="{Binding Requirements}"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch">
                             <ListView.ItemTemplate>

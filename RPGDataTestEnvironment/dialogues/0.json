@@ -13,8 +13,8 @@
       "requirements": [
         {
           "type": "Dialogue",
-          "dialogueid": -1,
-          "completed": false
+          "dialogueid": 0,
+          "completed": true
         }
       ]
     }
