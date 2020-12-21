@@ -12,6 +12,12 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             TypeComboBox.SelectionChanged += OptionType_Selected;
         }
 
+        private void ToggleExpandIcon(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            Commands.ToggleExpandIcon(btn);
+        }
+
         private void DialogueOptionView_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is DialogueOptionModel model)

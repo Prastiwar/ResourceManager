@@ -19,5 +19,11 @@
       ]
     }
   ],
-  "requirements": []
+  "requirements": [
+    {
+      "type": "Dialogue",
+      "dialogueid": 0,
+      "completed": true
+    }
+  ]
 }

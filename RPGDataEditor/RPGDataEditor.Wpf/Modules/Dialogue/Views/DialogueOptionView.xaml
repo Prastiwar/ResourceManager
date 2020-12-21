@@ -7,9 +7,11 @@
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             x:Name="This">
     <StackPanel x:Name="MainPanel">
         <StackPanel>
             <ComboBox x:Name="TypeComboBox"
@@ -62,6 +64,14 @@
                              Padding="5">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
+                    <Button Content="{materialDesign:PackIcon Kind=ExpandLess, Size=14}"
+                            Width="16"
+                            Height="16"
+                            Padding="0"
+                            Click="ToggleExpandIcon"
+                            Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                            CommandParameter="{x:Reference RequirementsListView}"
+                            Style="{DynamicResource MaterialDesignFlatButton}" />
                     <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                             Width="16"
                             Height="16"
@@ -71,7 +81,8 @@
                     <TextBlock Text="Requirements"
                                Margin="5" />
                 </StackPanel>
-                <ListView ItemsSource="{Binding Requirements}"
+                <ListView x:Name="RequirementsListView"
+                          ItemsSource="{Binding Requirements}"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch">
                     <ListView.ItemTemplate>

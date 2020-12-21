@@ -3,6 +3,7 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,6 +52,35 @@ namespace RPGDataEditor.Wpf.Views
         public IDialogService DialogService {
             get => (IDialogService)GetValue(DialogServiceProperty);
             set => SetValue(DialogServiceProperty, value);
+        }
+
+        protected override async void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            if (e.Property == PickedIdProperty)
+            {
+                await ReassignItemAsync();
+            }
+        }
+
+        protected async Task ReassignItemAsync()
+        {
+            int id = PickedId;
+            switch (Resource)
+            {
+                case RPGResource.Quest:
+                    QuestModel[] quests = await App.CurrentSession.LoadQuests();
+                    PickedItem = quests.FirstOrDefault(q => q.Id == id);
+                    break;
+                case RPGResource.Dialogue:
+                    DialogueModel[] dialogues = await App.CurrentSession.LoadDialogues();
+                    PickedItem = dialogues.FirstOrDefault(d => d.Id == id);
+                    break;
+                case RPGResource.Item:
+                    break;
+                default:
+                    break;
+            }
         }
 
         private async void PickItem(object sender, RoutedEventArgs e) => await PickItemAsync();

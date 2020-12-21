@@ -68,11 +68,11 @@ namespace RPGDataEditor.Wpf.ViewModels
             switch (resource)
             {
                 case RPGResource.Quest:
-                    list = new List<IIdentifiable>(await Context.Session.LoadAsync<QuestModel>("quests"));
+                    list = new List<IIdentifiable>(await Context.Session.LoadQuests());
                     list.Insert(0, new NullQuest());
                     break;
                 case RPGResource.Dialogue:
-                    list = new List<IIdentifiable>(await Context.Session.LoadAsync<DialogueModel>("dialogues"));
+                    list = new List<IIdentifiable>(await Context.Session.LoadDialogues());
                     list.Insert(0, new NullDialogue());
                     break;
                 case RPGResource.Item:

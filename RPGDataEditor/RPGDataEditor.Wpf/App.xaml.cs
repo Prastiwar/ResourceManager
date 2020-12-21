@@ -33,6 +33,8 @@ namespace RPGDataEditor.Wpf
 
         public static string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
 
+        public static SessionContext CurrentSession { get; private set; }
+
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
@@ -62,6 +64,8 @@ namespace RPGDataEditor.Wpf
                 string json = File.ReadAllText(SessionFilePath);
                 session = JsonConvert.DeserializeObject<SessionContext>(json);
             }
+            CurrentSession = session;
+
             containerRegistry.RegisterInstance(session);
 
             IValidationProvider validatorProvider = new ValidatorProvider(Container);

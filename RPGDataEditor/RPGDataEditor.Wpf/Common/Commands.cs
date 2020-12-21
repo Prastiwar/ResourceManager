@@ -1,7 +1,9 @@
-﻿using Prism.Commands;
+﻿using MaterialDesignThemes.Wpf;
+using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf
@@ -15,5 +17,13 @@ namespace RPGDataEditor.Wpf
         public static ICommand AddListItemLiCommand<T>(Func<IList<T>> getList, Func<T> createInstance) => new DelegateCommand(() => getList().Add(createInstance()));
 
         public static ICommand ToggleVisibilityCommand => new DelegateCommand<FrameworkElement>(x => x.Visibility = x.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
+
+        public static void ToggleExpandIcon(Button btn)
+        {
+            if (btn.Content is PackIcon icon)
+            {
+                icon.Kind = icon.Kind == PackIconKind.ExpandMore ? PackIconKind.ExpandLess : PackIconKind.ExpandMore;
+            }
+        }
     }
 }

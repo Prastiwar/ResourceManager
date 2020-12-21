@@ -162,7 +162,7 @@
                                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                                     Padding="0"
                                                     Margin="0,12,0,0" />
-                                            <views:RequirementView DataContext="{Binding ., Converter={StaticResource RequirementToBuilderConverter}}"
+                                            <views:RequirementView DataContext="{Binding .}"
                                                                    Grid.Column="1"
                                                                    HorizontalAlignment="Stretch"
                                                                    HorizontalContentAlignment="Stretch" />
