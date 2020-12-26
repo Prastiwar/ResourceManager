@@ -89,7 +89,7 @@ namespace RPGDataEditor.Core.Mvvm
             try
             {
                 string path = Path.Combine(LocationPath, relativePath);
-                new FileInfo(relativePath).Directory.Create();
+                new FileInfo(path).Directory.Create();
                 File.WriteAllText(path, json);
             }
             catch (Exception ex)

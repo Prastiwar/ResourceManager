@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class ReachQuestTaskModel : ObservableModel
+    public class ReachQuestTaskModel : QuestTask
     {
         private Position pos;
         public Position Pos {

@@ -6,7 +6,18 @@ namespace RPGDataEditor.Core
 {
     public static class NewtonsoftJsonExtensions
     {
-        public static JObject ToJObject(this JsonReader reader) => reader.Value is string stringValue ? JObject.Parse(stringValue) : JObject.Load(reader);
+        public static JObject ToJObject(this JsonReader reader)
+        {
+            try
+            {
+                JObject obj = reader.Value is string stringValue ? JObject.Parse(stringValue) : JObject.Load(reader);
+                return obj;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
         public static T GetValue<T>(this JObject obj, string name, T defaultValue, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
             => obj.TryGetValue(name, comparison, out JToken value) ? value.ToObject<T>() : defaultValue;

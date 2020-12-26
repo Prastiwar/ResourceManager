@@ -14,6 +14,10 @@ namespace RPGDataEditor.Core.Serialization
         public override T ReadJson(JsonReader reader, Type objectType, [AllowNull] T existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JObject obj = reader.ToJObject();
+            if (obj == null)
+            {
+                return default;
+            }
             string typeName = obj.GetValue<string>("type");
             Type realType = GetObjectType(typeName);
             serializer.Converters.Remove(this);

@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class KillQuestTaskModel : ObservableModel
+    public class KillQuestTaskModel : QuestTask
     {
         private string kill;
         public string Kill {

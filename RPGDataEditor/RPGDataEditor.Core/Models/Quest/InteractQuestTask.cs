@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class InteractQuestTask : ObservableModel
+    public class InteractQuestTask : QuestTask
     {
         private bool completed;
         public bool Completed {

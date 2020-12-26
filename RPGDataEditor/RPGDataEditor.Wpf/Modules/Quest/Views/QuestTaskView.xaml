@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="RPGDataEditor.Wpf.Quest.Views.QuestTaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" >
+        <!--
+    {
+      "type": "EntityInteract",
+      "entity": 0
+    },
+    {
+      "type": "Kill",
+      "kill": "craftpolis:npc",
+      "amount": 1
+    },
+    {
+      "type": "LeftBlockInteract",
+      "pos": {
+        "x": -159,
+        "y": 62,
+        "z": -317
+      }
+    },
+    {
+      "type": "RightBlockInteract",
+      "pos": {
+        "x": -159,
+        "y": 62,
+        "z": -317
+      }
+    },
+    {
+      "type": "RightItemInteract",
+      "respectNbt": true,
+      "nbt": {
+        "Damage": 0
+      }
+    },
+    {
+      "type": "Reach",
+      "pos": {
+        "x": -159.0,
+        "y": 63.0,
+        "z": -317.0
+      },
+      "distance": 1.0
+    }
+    -->
+    <Grid>
+    </Grid>
+</UserControl>

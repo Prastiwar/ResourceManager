@@ -2,12 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              Name="QUEST"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid>
-        <TextBlock Text="some testing"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="24"/>
-    </Grid>
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <views:CategoryTabControl />
 </UserControl>

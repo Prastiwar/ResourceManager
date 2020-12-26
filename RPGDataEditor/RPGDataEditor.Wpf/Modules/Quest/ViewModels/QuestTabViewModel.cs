@@ -1,9 +1,12 @@
-﻿using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Mvvm;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
-    public class QuestTabViewModel : TabViewModel
+    public class QuestTabViewModel : CategorizedTabViewModel<QuestModel>
     {
         public QuestTabViewModel(ViewModelContext context) : base(context) { }
+
+        protected override string RelativePath => "quests";
     }
 }

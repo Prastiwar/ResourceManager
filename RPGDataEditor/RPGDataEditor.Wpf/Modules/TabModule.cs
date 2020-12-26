@@ -32,6 +32,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterForNavigation<DialogueTab>();
             containerRegistry.RegisterForNavigation<QuestTab>();
             containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
+            containerRegistry.RegisterDialog<QuestEditor>(typeof(QuestModel).Name);
             containerRegistry.RegisterDialog<PickerDialog>(nameof(PickerDialog));
         }
     }

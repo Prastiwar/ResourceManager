@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RPGDataEditor.Core.Models
+﻿namespace RPGDataEditor.Core.Models
 {
-    public class BlockInteractQuestTask
+    public class BlockInteractQuestTask : InteractQuestTask
     {
 
         // THERE IS LEFT AND RIGHT
