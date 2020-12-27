@@ -6,65 +6,67 @@
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
-    <Grid>
-        <StackPanel>
-            <ComboBox x:Name="RequirementType"
-                      materialDesign:HintAssist.Hint="Type"
+    <StackPanel>
+        <ComboBox x:Name="RequirementType"
+                  materialDesign:HintAssist.Hint="Type"
+                  Margin="5"
+                  SelectionChanged="RequirementType_SelectionChanged"
+                  Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
+            <ComboBoxItem Name="Dialogue"
+                          Content="Dialogue" />
+            <ComboBoxItem Name="Quest"
+                          Content="Quest" />
+            <ComboBoxItem Name="Item"
+                          Content="Item" />
+        </ComboBox>
+        <StackPanel x:Name="DialogueRequirementPanel"
+                    Margin="5"
+                    Visibility="Collapsed">
+            <views:ItemPicker x:Name="DialoguePicker"
+                              Resource="Dialogue"
+                              PickedId="{Binding DialogueId, Mode=TwoWay}"
+                              EmptyText="Select Dialogue"
+                              Margin="5" />
+            <CheckBox Content="Should dialogue be completed?"
                       Margin="5"
-                      SelectionChanged="RequirementType_SelectionChanged"
-                      Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
-                <ComboBoxItem Name="Dialogue"
-                              Content="Dialogue" />
-                <ComboBoxItem Name="Quest"
-                              Content="Quest" />
-                <ComboBoxItem Name="Item"
-                              Content="Item" />
-            </ComboBox>
-            <StackPanel x:Name="DialogueRequirementPanel"
-                        Margin="5"
-                        Visibility="Collapsed">
-                <views:ItemPicker x:Name="DialoguePicker"
-                                  Resource="Dialogue"
-                                  PickedId="{Binding DialogueId, Mode=TwoWay}"
-                                  EmptyText="Select Dialogue"
-                                  Margin="5" />
-                <CheckBox Content="Should dialogue be completed?"
-                          Margin="5"
-                          IsChecked="{Binding Completed, Mode=TwoWay}" />
-            </StackPanel>
-            <StackPanel x:Name="ItemRequirementPanel"
-                        Margin="5"
-                        Visibility="Collapsed">
-                <views:ItemPicker x:Name="ItemPicker"
-                                  Resource="Item"
-                                  EmptyText="Select Item"
-                                  Margin="5" />
-                <CheckBox Content="Respect Nbt value?"
-                          Margin="5"
-                          IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
-            </StackPanel>
-            <StackPanel x:Name="QuestRequirementPanel"
-                        Margin="5"
-                        Visibility="Collapsed">
-                <views:ItemPicker x:Name="QuestPicker"
-                                  Resource="Quest"
-                                  PickedId="{Binding QuestId, Mode=TwoWay}"
-                                  EmptyText="Select Quest"
-                                  Margin="5" />
-                <ComboBox x:Name="StageComboBox"
-                          SelectionChanged="QuestStage_Selected"
-                          materialDesign:HintAssist.Hint="Stage"
-                          SelectedIndex="0"
-                          Margin="5"
-                          Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
-                    <ComboBoxItem Name="UNKNOWN"
-                                  Content="Not received" />
-                    <ComboBoxItem Name="INPROGRESS"
-                                  Content="In Progress" />
-                    <ComboBoxItem Name="DONE"
-                                  Content="Completed" />
-                </ComboBox>
-            </StackPanel>
+                      IsChecked="{Binding Completed, Mode=TwoWay}" />
         </StackPanel>
-    </Grid>
+        <StackPanel x:Name="ItemRequirementPanel"
+                    Margin="5"
+                    Visibility="Collapsed">
+            <views:ItemPicker x:Name="ItemPicker"
+                              Resource="Item"
+                              EmptyText="Select Item"
+                              Margin="5" />
+            <CheckBox Content="Should respect NBT?"
+                      Margin="5"
+                      IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
+            <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Nbt"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+        </StackPanel>
+        <StackPanel x:Name="QuestRequirementPanel"
+                    Margin="5"
+                    Visibility="Collapsed">
+            <views:ItemPicker x:Name="QuestPicker"
+                              Resource="Quest"
+                              PickedId="{Binding QuestId, Mode=TwoWay}"
+                              EmptyText="Select Quest"
+                              Margin="5" />
+            <ComboBox x:Name="StageComboBox"
+                      SelectionChanged="QuestStage_Selected"
+                      materialDesign:HintAssist.Hint="Stage"
+                      SelectedIndex="0"
+                      Margin="5"
+                      Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
+                <ComboBoxItem Name="UNKNOWN"
+                              Content="Not received" />
+                <ComboBoxItem Name="INPROGRESS"
+                              Content="In Progress" />
+                <ComboBoxItem Name="DONE"
+                              Content="Completed" />
+            </ComboBox>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

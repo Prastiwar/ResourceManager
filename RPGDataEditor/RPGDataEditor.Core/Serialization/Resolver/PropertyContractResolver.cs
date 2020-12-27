@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public enum Lettercase { Lowercase, Uppercase }
+    public enum Lettercase { Default, Lowercase, Uppercase }
 
     public class PropertyContractResolver : DefaultPropertyResolver
     {
@@ -74,14 +74,10 @@ namespace RPGDataEditor.Core.Serialization
 
         protected bool IsIgnored(Type type, string jsonPropertyName)
         {
-            Type ignoredType = null;
-            if (ignored.ContainsKey(type))
+            Type ignoredType = type;
+            while (ignoredType != null && !ignored.ContainsKey(ignoredType))
             {
-                ignoredType = type;
-            }
-            else if (ignored.ContainsKey(type.BaseType))
-            {
-                ignoredType = type.BaseType;
+                ignoredType = ignoredType.BaseType;
             }
             return ignoredType != null && ignored[ignoredType].Contains(jsonPropertyName);
         }
@@ -89,7 +85,12 @@ namespace RPGDataEditor.Core.Serialization
         protected bool IsRenamed(Type fromClass, string jsonPropertyName, out string newJsonPropertyName)
         {
             newJsonPropertyName = null;
-            return renamed.ContainsKey(fromClass) && renamed[fromClass].TryGetValue(jsonPropertyName, out newJsonPropertyName);
+            Type renamedType = fromClass;
+            while (renamedType != null && !renamed.ContainsKey(renamedType))
+            {
+                renamedType = renamedType.BaseType;
+            }
+            return renamedType != null && renamed[renamedType].TryGetValue(jsonPropertyName, out newJsonPropertyName);
         }
     }
 }

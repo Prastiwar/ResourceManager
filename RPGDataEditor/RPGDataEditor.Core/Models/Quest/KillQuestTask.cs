@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class KillQuestTaskModel : QuestTask
+    public class KillQuestTask : QuestTask
     {
         private string kill;
         public string Kill {
@@ -8,7 +8,7 @@
             set => SetProperty(ref kill, value);
         }
 
-        private int amount;
+        private int amount = 1;
         public int Amount {
             get => amount;
             set => SetProperty(ref amount, value);

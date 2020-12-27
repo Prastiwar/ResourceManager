@@ -48,8 +48,10 @@ namespace RPGDataEditor.Wpf
             RegisterValidators(containerRegistry);
 
             JsonConvert.DefaultSettings = () => {
+                PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
+                propResolver.SetAllLetterCase(Lettercase.Lowercase);
                 JsonSerializerSettings settings = new JsonSerializerSettings {
-                    ContractResolver = new PrettyOrderPropertyResolver() { PropertyResolver = new LowercasePropertyResolver() },
+                    ContractResolver = propResolver,
                     Formatting = Formatting.Indented
                 };
                 settings.Converters.Add(new QuestTaskJsonConverter());

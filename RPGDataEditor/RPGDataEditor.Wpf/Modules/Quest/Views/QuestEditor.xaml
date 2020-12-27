@@ -56,6 +56,20 @@
                 </TextBox>
                 <materialDesign:Card HorizontalAlignment="Stretch"
                                      HorizontalContentAlignment="Center"
+                                     DataContext="{Binding Model}"
+                                     Margin="5"
+                                     Padding="5">
+                    <StackPanel>
+                        <TextBlock Text="Choose completion task"
+                                   Margin="5" />
+                        <questViews:QuestTaskView DataContext="{Binding CompletionTask, Mode=TwoWay}"
+                                                  Grid.Column="1"
+                                                  HorizontalAlignment="Stretch"
+                                                  HorizontalContentAlignment="Stretch" />
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center"
                                      Margin="5"
                                      Padding="5">
                     <StackPanel>
@@ -99,7 +113,7 @@
                                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                                     Padding="0"
                                                     Margin="0,12,0,0" />
-                                            <questViews:QuestTaskView DataContext="{Binding .}"
+                                            <questViews:QuestTaskView DataContext="{Binding ., Mode=TwoWay}"
                                                                       Grid.Column="1"
                                                                       HorizontalAlignment="Stretch"
                                                                       HorizontalContentAlignment="Stretch" />

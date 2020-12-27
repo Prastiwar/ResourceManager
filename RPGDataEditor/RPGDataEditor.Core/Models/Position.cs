@@ -1,9 +1,26 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class Position
+    public class Position : ObservableModel
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
+        private int x;
+        public int X {
+            get => x;
+            set => SetProperty(ref x, value);
+
+        }
+
+        private int y;
+        public int Y {
+            get => y;
+            set => SetProperty(ref y, value);
+
+        }
+
+        private int z;
+        public int Z {
+            get => z;
+            set => SetProperty(ref z, value);
+
+        }
     }
 }

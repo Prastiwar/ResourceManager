@@ -2,12 +2,16 @@
 {
     public class BlockInteractQuestTask : InteractQuestTask
     {
+        private bool leftClick;
+        public bool LeftClick {
+            get => leftClick;
+            set => SetProperty(ref leftClick, value);
+        }
 
-        // THERE IS LEFT AND RIGHT
-
-        //public BlockPos getPos()
-        //{
-        //    return pos != null ? pos : (pos = BlockPos.ZERO);
-        //}
+        private Position pos = new Position();
+        public Position Pos {
+            get => pos;
+            set => SetProperty(ref pos, value ?? new Position());
+        }
     }
 }

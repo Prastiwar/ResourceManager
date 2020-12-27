@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="RPGDataEditor.Wpf.Views.BlockPosField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             x:Name="This">
+    <StackPanel x:Name="FieldPanel"
+                Orientation="{Binding Orientation}">
+        <TextBox x:Name="XField"
+                 DataContext="{Binding Position, Mode=OneWay, ElementName=This}"
+                 Text="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 InputScope="Number"
+                 Margin="7"
+                 materialDesign:HintAssist.Hint="X position"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox x:Name="YField"
+                 DataContext="{Binding Position, Mode=OneWay, ElementName=This}"
+                 Text="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 InputScope="Number"
+                 Margin="7"
+                 materialDesign:HintAssist.Hint="Y position"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox x:Name="ZField"
+                 DataContext="{Binding Position, Mode=OneWay, ElementName=This}"
+                 Text="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 InputScope="Number"
+                 Margin="7"
+                 materialDesign:HintAssist.Hint="Z position"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+    </StackPanel>
+</UserControl>

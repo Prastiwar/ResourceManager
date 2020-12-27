@@ -3,15 +3,12 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace RPGDataEditor.Core.Serialization
 {
     /// <summary> Changes order to: 'id' first, iterables last  </summary>
-    public class PrettyOrderPropertyResolver : DefaultContractResolver
+    public class PrettyOrderPropertyResolver : PropertyContractResolver
     {
-        public DefaultPropertyResolver PropertyResolver { get; set; }
-
         protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
         {
             IList<JsonProperty> properties = base.CreateProperties(type, memberSerialization);
@@ -27,8 +24,5 @@ namespace RPGDataEditor.Core.Serialization
             }
             return properties.OrderBy(p => typeof(IEnumerable<object>).IsAssignableFrom(p.PropertyType)).ToList();
         }
-
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-            => PropertyResolver.CreateJsonProperty(member, memberSerialization);
     }
 }

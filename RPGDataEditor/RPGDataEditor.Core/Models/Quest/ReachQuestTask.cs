@@ -1,14 +1,14 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class ReachQuestTaskModel : QuestTask
+    public class ReachQuestTask : QuestTask
     {
-        private Position pos;
+        private Position pos = new Position();
         public Position Pos {
             get => pos;
-            set => SetProperty(ref pos, value);
+            set => SetProperty(ref pos, value ?? new Position());
         }
 
-        private double distance;
+        private double distance = 1;
         public double Distance {
             get => distance;
             set => SetProperty(ref distance, value);

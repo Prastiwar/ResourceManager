@@ -26,10 +26,10 @@
             set => SetProperty(ref count, value);
         }
 
-        //private CompoundNBT nbt;
-        //public CompoundNBT Nbt {
-        //    get => nbt;
-        //    set => SetProperty(ref nbt, value);
-        //}
+        private string nbt;
+        public string Nbt {
+            get => nbt;
+            set => SetProperty(ref nbt, value);
+        }
     }
 }

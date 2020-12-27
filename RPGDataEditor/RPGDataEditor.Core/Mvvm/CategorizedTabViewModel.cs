@@ -82,7 +82,9 @@ namespace RPGDataEditor.Core.Mvvm
             ModelCategories.AddRange(Models.Select(x => x.Category).Distinct());
         }
 
-        protected virtual async void OpenEditor(TModel model)
+        private async void OpenEditor(TModel model) => await OpenEditorAsync(model);
+
+        protected virtual async Task OpenEditorAsync(TModel model)
         {
             TModel copiedModel = (TModel)model.DeepClone();
             bool save = await Context.DialogService.ShowModelDialogAsync(copiedModel);
@@ -103,7 +105,9 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();
 
-        protected virtual async void CreateModel(string category)
+        private async void CreateModel(string category) => await CreateModelAsync(category);
+
+        protected virtual async Task CreateModelAsync(string category)
         {
             TModel newModel = CreateModelInstance();
             int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;
@@ -120,7 +124,9 @@ namespace RPGDataEditor.Core.Mvvm
             }
         }
 
-        protected virtual async void RemoveModel(TModel model)
+        private async void RemoveModel(TModel model) => await RemoveModelAsync(model);
+
+        protected virtual async Task RemoveModelAsync(TModel model)
         {
             bool removed = Models.Remove(model);
             if (removed)

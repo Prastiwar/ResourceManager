@@ -1,7 +1,15 @@
 {
   "id": 0,
-  "completiontask": null,
-  "title": "New model",
+  "completiontask": {
+    "type": "Reach",
+    "pos": {
+      "x": 123,
+      "y": 12310,
+      "z": 2134
+    },
+    "distance": 51.0
+  },
+  "title": "Some fancy quest",
   "message": "",
   "category": "New Category",
   "tasks": [],
