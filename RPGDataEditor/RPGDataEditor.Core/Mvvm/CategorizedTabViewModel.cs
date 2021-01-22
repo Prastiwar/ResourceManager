@@ -54,7 +54,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual string GetRelativeFilePath(TModel model) => RelativePath + "/" + model.Id + ".json";
 
-        public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
+        public override async Task Refresh()
         {
             Models = new ObservableCollection<TModel>();
             ModelCategories = new ObservableCollection<string>();
@@ -81,6 +81,8 @@ namespace RPGDataEditor.Core.Mvvm
             }
             ModelCategories.AddRange(Models.Select(x => x.Category).Distinct());
         }
+
+        public override Task OnNavigatedToAsync(NavigationContext navigationContext) => Refresh();
 
         private async void OpenEditor(TModel model) => await OpenEditorAsync(model);
 

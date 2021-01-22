@@ -65,15 +65,18 @@
         </StackPanel>
         <StackPanel x:Name="ItemInteractQuestTaskPanel"
                     Visibility="Collapsed">
-            <views:ItemPicker Resource="Item"
-                              EmptyText="Select Item"
-                              Margin="5" />
-            <CheckBox Content="Should respect NBT?"
+            <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Item"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+            <CheckBox x:Name="RespectNBTCheckbox"
+                      Content="Should respect NBT?"
                       Margin="5"
                       IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
             <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      materialDesign:HintAssist.Hint="Nbt"
+                     Visibility="{Binding IsChecked, ElementName=RespectNBTCheckbox, Converter={StaticResource BoolToVisibilityConverter}}"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
         </StackPanel>
         <StackPanel x:Name="DialogueQuestTaskPanel"

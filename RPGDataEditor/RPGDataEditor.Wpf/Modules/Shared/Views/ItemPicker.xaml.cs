@@ -76,7 +76,9 @@ namespace RPGDataEditor.Wpf.Views
                     DialogueModel[] dialogues = await App.CurrentSession.LoadDialogues();
                     PickedItem = dialogues.FirstOrDefault(d => d.Id == id);
                     break;
-                case RPGResource.Item:
+                case RPGResource.Npc:
+                    NpcDataModel[] npcs = await App.CurrentSession.LoadNpcs();
+                    PickedItem = npcs.FirstOrDefault(d => d.Id == id);
                     break;
                 default:
                     break;

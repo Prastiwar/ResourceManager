@@ -75,7 +75,9 @@ namespace RPGDataEditor.Wpf.ViewModels
                     list = new List<IIdentifiable>(await Context.Session.LoadDialogues());
                     list.Insert(0, new NullDialogue());
                     break;
-                case RPGResource.Item:
+                case RPGResource.Npc:
+                    list = new List<IIdentifiable>(await Context.Session.LoadNpcs());
+                    list.Insert(0, new NullNpc());
                     break;
                 default:
                     break;
@@ -94,6 +96,12 @@ namespace RPGDataEditor.Wpf.ViewModels
         private class NullDialogue : DialogueModel, INullResource
         {
             public NullDialogue() => Id = -1;
+            public override string ToString() => "None";
+        }
+
+        private class NullNpc : NpcDataModel, INullResource
+        {
+            public NullNpc() => Id = -1;
             public override string ToString() => "None";
         }
     }

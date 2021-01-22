@@ -4,7 +4,6 @@
     {
         Quest,
         Dialogue,
-        Item,
         Npc
     }
 }
