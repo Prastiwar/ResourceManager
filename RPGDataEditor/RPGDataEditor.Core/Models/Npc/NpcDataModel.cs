@@ -94,5 +94,7 @@ namespace RPGDataEditor.Core.Models
             get => attributes;
             set => SetProperty(ref attributes, value ?? new ObservableCollection<AttributeDataModel>());
         }
+
+        public override string ToString() => $"(ID: {Id}) {Name}";
     }
 }

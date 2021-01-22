@@ -36,10 +36,10 @@
                 </TextBox>
                 <TextBox Text="{Binding FtpPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          DataContext="{Binding Session}"
+                         InputScope="Password"
                          Margin="0,8,0,8"
                          materialDesign:HintAssist.Hint="Password"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                         InputScope="Password">
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                     <i:Interaction.Behaviors>
                         <behaviors:CatchValidationBehavior />
                     </i:Interaction.Behaviors>
