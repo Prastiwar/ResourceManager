@@ -58,6 +58,8 @@
                     Visibility="Collapsed">
             <CheckBox Content="Should interact with left click?"
                       Margin="5"
+                      Checked="CheckBox_Checked"
+                      Unchecked="CheckBox_Unchecked"
                       IsChecked="{Binding LeftClick, Mode=TwoWay}" />
             <views:BlockPosField Position="{Binding Pos}"
                                  Orientation="Horizontal"

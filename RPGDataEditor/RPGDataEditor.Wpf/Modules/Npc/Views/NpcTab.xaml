@@ -5,7 +5,7 @@
              Name="NPC"
              prism:ViewModelLocator.AutoWireViewModel="True" >
     <Grid>
-        <TextBlock Text="NPC"
+        <TextBlock Text="NPC editor SOON"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="24"/>

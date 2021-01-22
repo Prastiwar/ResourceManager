@@ -12,6 +12,8 @@ namespace RPGDataEditor.Wpf.Quest.Views
             DataContextChanged += QuestTaskView_DataContextChanged;
         }
 
+        private bool ignoreTaskTypeSelectionChanged;
+
         private void QuestTaskView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) =>
             SetTaskPanel(DataContext as QuestTask);
 
@@ -21,15 +23,17 @@ namespace RPGDataEditor.Wpf.Quest.Views
             bool kill = model is KillQuestTask;
             bool reach = model is ReachQuestTask;
             bool blockInteract = model is BlockInteractQuestTask;
-            bool itemInteract = model is ItemInteractQuestTask;
+            bool itemInteract = model is RightItemInteractQuestTask;
             bool dialogue = model is DialogueQuestTask;
 
+            ignoreTaskTypeSelectionChanged = true;
             TaskType.SelectedIndex = entityInteract ? 0 :
                                      kill ? 1 :
                                      reach ? 2 :
                                      blockInteract ? 4 :
                                      itemInteract ? 5 
                                      : 3;
+            ignoreTaskTypeSelectionChanged = false;
 
             EntityInteractQuestTaskPanel.Visibility = entityInteract ? Visibility.Visible : Visibility.Collapsed;
             KillQuestTaskPanel.Visibility = kill ? Visibility.Visible : Visibility.Collapsed;
@@ -41,6 +45,10 @@ namespace RPGDataEditor.Wpf.Quest.Views
 
         private void TaskType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (ignoreTaskTypeSelectionChanged)
+            {
+                return;
+            }
             if (e.AddedItems.Count > 0)
             {
                 if (e.AddedItems[0] is ComboBoxItem selected)
@@ -66,11 +74,11 @@ namespace RPGDataEditor.Wpf.Quest.Views
                     }
                     else if (blockInteract)
                     {
-                        DataContext = new BlockInteractQuestTask();
+                        DataContext = new RightBlockInteractQuestTask();
                     }
                     else if (itemInteract)
                     {
-                        DataContext = new ItemInteractQuestTask();
+                        DataContext = new RightItemInteractQuestTask();
                     }
                     else if (dialogue)
                     {
@@ -78,6 +86,24 @@ namespace RPGDataEditor.Wpf.Quest.Views
                     }
                 }
             }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Position previousPos = DataContext is BlockInteractQuestTask previousTask ? previousTask.Pos : new Position();
+
+            DataContext = new LeftBlockInteractQuestTask() {
+                Pos = previousPos
+            };
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Position previousPos = DataContext is BlockInteractQuestTask previousTask ? previousTask.Pos : new Position();
+
+            DataContext = new RightBlockInteractQuestTask() {
+                Pos = previousPos
+            };
         }
     }
 }
