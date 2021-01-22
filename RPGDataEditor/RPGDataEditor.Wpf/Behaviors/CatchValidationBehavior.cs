@@ -5,7 +5,6 @@ namespace RPGDataEditor.Wpf.Behaviors
 {
     public class CatchValidationBehavior : CatchValidationBehaviorBase<TextBox>
     {
-
         protected override void OnValidated(FluentValidation.Results.ValidationResult result)
         {
             if (result.IsValid)

@@ -34,16 +34,11 @@
                         <behaviors:CatchValidationBehavior />
                     </i:Interaction.Behaviors>
                 </TextBox>
-                <TextBox Text="{Binding FtpPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         DataContext="{Binding Session}"
-                         InputScope="Password"
-                         Margin="0,8,0,8"
-                         materialDesign:HintAssist.Hint="Password"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBox>
+                <PasswordBox x:Name="FtpPasswordBox" DataContext="{Binding Session}"
+                             PasswordChanged="PasswordBox_PasswordChanged"
+                             Margin="0,8,0,8"
+                             materialDesign:HintAssist.Hint="Password"
+                             Style="{DynamicResource MaterialDesignFloatingHintPasswordBox}" />
             </StackPanel>
         </StackPanel>
     </Grid>
