@@ -9,6 +9,7 @@
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
+             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -48,38 +49,64 @@
                          Margin="5"
                          materialDesign:HintAssist.Hint="Texture"
                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                <!--
-                TODO: Expandable section "sounds"
-                <TextBox DataContext="{Binding Model}"
-                         Text="{Binding DeathSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="5"
-                         materialDesign:HintAssist.Hint="Death Sound Location"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox DataContext="{Binding Model}"
-                         Text="{Binding HurtSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="5"
-                         materialDesign:HintAssist.Hint="Hurt Sound Location"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox DataContext="{Binding Model}"
-                         Text="{Binding AmbientSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="5"
-                         materialDesign:HintAssist.Hint="Ambient Sound Location"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                -->
-                
                 <views:BlockPosField Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Orientation="Horizontal"
                                      Margin="-2" />
+                <materialDesign:Card x:Name="ExpandableLivingSounds"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center"
+                                     Margin="5"
+                                     Padding="5">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
+                                    HorizontalAlignment="Left"
+                                    Width="16"
+                                    Height="16"
+                                    Padding="0"
+                                    Click="ToggleExpandIcon"
+                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                                    CommandParameter="{x:Reference SoundsStackPanel}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <TextBlock Text="Living sound locations"
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+                        <StackPanel x:Name="SoundsStackPanel"
+                                    Visibility="Collapsed">
+                            <TextBox DataContext="{Binding Model}"
+                                     Text="{Binding DeathSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Death Sound Location"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Model}"
+                                     Text="{Binding HurtSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Hurt Sound Location"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Model}"
+                                     Text="{Binding AmbientSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Ambient Sound Location"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
                 <CheckBox x:Name="InvulnerableCheckbox"
                           Margin="5"
                           Content="Invulnerable"
+                          DataContext="{Binding Model}"
                           IsChecked="{Binding Invulnerable}" />
                 <CheckBox x:Name="LookAtPlayerCheckbox"
                           Margin="5"
                           Content="Look At Player"
+                          DataContext="{Binding Model}"
                           IsChecked="{Binding LookAtPlayer}" />
                 <ComboBox x:Name="MovementTypeComboBox"
-                          SelectedItem="{Binding MovementType}">
+                          Margin="5"
+                          DataContext="{Binding Model}"
+                          SelectedItem="{Binding MovementType}"
+                          materialDesign:HintAssist.Hint="Movement Type"
+                          Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
                     <ComboBoxItem Name="STATIC"
                                   Content="STATIC" />
                     <ComboBoxItem Name="WANDER"
@@ -88,41 +115,141 @@
                                   Content="PATH" />
                 </ComboBox>
                 <ListView x:Name="PathListView"
+                          DataContext="{Binding Model}"
                           ItemsSource="{Binding Paths}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <views:BlockPosField Position="{Binding .}"/>
+                            <views:BlockPosField Position="{Binding .}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <!--
-                TODO: Expandable section "job":
-                <ComboBox x:Name="JobComboBox">
-                    <ComboBoxItem Name="GUARD"
-                                  Content="GUARD" />
-                    <ComboBoxItem Name="TRADER"
-                                  Content="TRADER" />
-                </ComboBox>
-                <StackPanel x:Name="GuardStackPanel">
-                </StackPanel>
-                <StackPanel x:Name="TraderStackPanel">
-                </StackPanel>
-                -->
-                
-                <!--
-                TODO: Expandable section "attributes":
-                      "healthRegen": 0,
-                      "name": "minecraft:generic.max_health", "value": 20.0
-                      "name": "minecraft:generic.knockback_resistance", "value": 0.0
-                      "name": "minecraft:generic.movement_speed", "value": 0.5
-                      "name": "minecraft:generic.attack_damage", "value": 2.0
-                      "name": "minecraft:generic.attack_knockback",
-                      "name": "minecraft:generic.attack_speed", "value": 4.0
-                      "name": "minecraft:generic.armor", "value": 0.0
-                      "name": "minecraft:generic.armor_toughness", "value": 0.0
-                      "name": "craftpolis:npc.respawn_time", "value": 5.0
-                -->
-                
+                <materialDesign:Card x:Name="ExpandableJobSection"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center"
+                                     Margin="5"
+                                     Padding="5">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
+                                    HorizontalAlignment="Left"
+                                    Width="16"
+                                    Height="16"
+                                    Padding="0"
+                                    Click="ToggleExpandIcon"
+                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                                    CommandParameter="{x:Reference JobStackPanel}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <ComboBox x:Name="JobComboBox"
+                                      Grid.Column="1"
+                                      Margin="10,0,0,0"
+                                      SelectionChanged="JobComboBox_SelectionChanged"
+                                      materialDesign:HintAssist.Hint="Job Type"
+                                      Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
+                                <ComboBoxItem Name="NONE"
+                                              Content="NONE" />
+                                <ComboBoxItem Name="GUARD"
+                                              Content="GUARD" />
+                                <ComboBoxItem Name="TRADER"
+                                              Content="TRADER" />
+                            </ComboBox>
+                        </Grid>
+                        <StackPanel x:Name="JobStackPanel"
+                                    Visibility="Collapsed">
+                            <StackPanel x:Name="GuardStackPanel"
+                                        Visibility="Collapsed"></StackPanel>
+                            <StackPanel x:Name="TraderStackPanel"
+                                        Visibility="Collapsed"></StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card x:Name="ExpandableAttributes"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center"
+                                     Margin="5"
+                                     Padding="5">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
+                                    HorizontalAlignment="Left"
+                                    Width="16"
+                                    Height="16"
+                                    Padding="0"
+                                    Click="ToggleExpandIcon"
+                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                                    CommandParameter="{x:Reference SoundsStackPanel}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <TextBlock Text="Attributes"
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+                        <StackPanel x:Name="AttributesPanel"
+                                    Visibility="Collapsed">
+                            <TextBox DataContext="{Binding Model}"
+                                     Text="{Binding HealthRegen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Health Regeneration"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="MaxHealthTextBox"
+                                     Text="{Binding MaxHealth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Max Health"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="RespawnTimeTextBox"
+                                     Text="{Binding RespawnTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Respawn Time"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="MovementSpeedTextBox"
+                                     Text="{Binding MovementSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Movement Speed"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="AttackDamageTextBox"
+                                     Text="{Binding AttackDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Attack Damage"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="AttackKnockbackTextBox"
+                                     Text="{Binding AttackKnockback, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Attack Knockback"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="AttackSpeedTextBox"
+                                     Text="{Binding AttackSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Attack Speed"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="ArmorTextBox"
+                                     Text="{Binding Armor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Armor"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="ArmorToughnessTextBox"
+                                     Text="{Binding ArmorToughness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Armor Toughness"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="KnockbackResistanceTextBox"
+                                     Text="{Binding KnockbackResistance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     InputScope="Number"
+                                     materialDesign:HintAssist.Hint="Knockback Resistance"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
                 <!--
                 TODO: Expandable section "dialogue":
                       "talkData": {
