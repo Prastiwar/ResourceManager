@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Prism.Commands;
-using Prism.Regions;
 using RPGDataEditor.Core.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +8,7 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Core.Mvvm
 {
-    public abstract class CategorizedTabViewModel<TModel> : TabViewModel, ICategorizedTabViewModel where TModel : IdentifiableData
+    public abstract class CategorizedTabViewModel<TModel> : IdentifiableTabViewModel<TModel>, ICategorizedTabViewModel where TModel : IdentifiableData
     {
         public CategorizedTabViewModel(ViewModelContext context) : base(context) { }
 
@@ -20,23 +18,11 @@ namespace RPGDataEditor.Core.Mvvm
             protected set => SetProperty(ref currentCategoryModels, value);
         }
 
-        private ObservableCollection<TModel> models;
-        public ObservableCollection<TModel> Models {
-            get => models;
-            protected set => SetProperty(ref models, value);
-        }
-
         private ObservableCollection<string> modelCategories;
         public ObservableCollection<string> ModelCategories {
             get => modelCategories;
             protected set => SetProperty(ref modelCategories, value);
         }
-
-        private ICommand addModelCommand;
-        public ICommand AddModelCommand => addModelCommand ??= new DelegateCommand<string>(CreateModel);
-
-        private ICommand removeModelCommand;
-        public ICommand RemoveModelCommand => removeModelCommand ??= new DelegateCommand<TModel>(RemoveModel);
 
         private ICommand addCategoryCommand;
         public ICommand AddCategoryCommand => addCategoryCommand ??= new DelegateCommand(CreateCategory);
@@ -47,56 +33,11 @@ namespace RPGDataEditor.Core.Mvvm
         private ICommand showCategoryCommand;
         public ICommand ShowCategoryCommand => showCategoryCommand ??= new DelegateCommand<string>(ShowCategory);
 
-        private ICommand openEditorCommand;
-        public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<TModel>(OpenEditor);
-
-        protected abstract string RelativePath { get; }
-
-        protected virtual string GetRelativeFilePath(TModel model) => RelativePath + "/" + model.Id + ".json";
-
         public override async Task Refresh()
         {
-            Models = new ObservableCollection<TModel>();
             ModelCategories = new ObservableCollection<string>();
-            string[] jsons = new string[0];
-            try
-            {
-                jsons = await Session.LoadJsonsAsync(RelativePath);
-            }
-            catch (Exception ex)
-            {
-                Context.SnackbarService.Enqueue("Failed to load jsons, you can try again by refreshing tab");
-            }
-            foreach (string json in jsons)
-            {
-                try
-                {
-                    TModel model = JsonConvert.DeserializeObject<TModel>(json);
-                    Models.Add(model);
-                }
-                catch (Exception ex)
-                {
-                    Context.SnackbarService.Enqueue("Found invalid json");
-                }
-            }
+            await base.Refresh();
             ModelCategories.AddRange(Models.Select(x => x.Category).Distinct());
-        }
-
-        public override Task OnNavigatedToAsync(NavigationContext navigationContext) => Refresh();
-
-        private async void OpenEditor(TModel model) => await OpenEditorAsync(model);
-
-        protected virtual async Task OpenEditorAsync(TModel model)
-        {
-            TModel copiedModel = (TModel)model.DeepClone();
-            bool save = await Context.DialogService.ShowModelDialogAsync(copiedModel);
-            if (save)
-            {
-                model.CopyValues(copiedModel);
-                string json = JsonConvert.SerializeObject(model);
-                bool saved = await Context.Session.SaveJsonFileAsync(GetRelativeFilePath(model), json);
-                Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save model");
-            }
         }
 
         protected virtual void ShowCategory(string category)
@@ -105,45 +46,26 @@ namespace RPGDataEditor.Core.Mvvm
             CurrentCategoryModels.AddRange(Models.Where(x => string.Compare(x.Category, category) == 0));
         }
 
-        protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();
-
-        private async void CreateModel(string category) => await CreateModelAsync(category);
-
-        protected virtual async Task CreateModelAsync(string category)
+        protected override async Task<TModel> CreateModelAsync(string category)
         {
-            TModel newModel = CreateModelInstance();
-            int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;
-            newModel.Id = nextId;
-            newModel.Title = "New model";
-            newModel.Category = category;
-            string json = JsonConvert.SerializeObject(newModel);
-            string relativeFilePath = GetRelativeFilePath(newModel);
-            bool created = await Session.SaveJsonFileAsync(relativeFilePath, json);
-            if (created)
+            TModel newModel = await base.CreateModelAsync(category);
+            if (newModel != null)
             {
-                Models.Add(newModel);
+                newModel.Title = "New model";
+                newModel.Category = category;
                 CurrentCategoryModels.Add(newModel);
             }
+            return newModel;
         }
 
-        private async void RemoveModel(TModel model) => await RemoveModelAsync(model);
-
-        protected virtual async Task RemoveModelAsync(TModel model)
+        protected override async Task<bool> RemoveModelAsync(TModel model)
         {
-            bool removed = Models.Remove(model);
+            bool removed = await base.RemoveModelAsync(model);
             if (removed)
             {
-                string relativeFilePath = GetRelativeFilePath(model);
-                bool deleted = await Session.DeleteFileAsync(relativeFilePath);
-                if (deleted)
-                {
-                    CurrentCategoryModels.Remove(model);
-                }
-                else
-                {
-                    Models.Add(model);
-                }
+                CurrentCategoryModels.Remove(model);
             }
+            return removed;
         }
 
         protected void CreateCategory()

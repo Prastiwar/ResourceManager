@@ -9,5 +9,9 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="24"/>
+        <!--
+        Lista npców
+        Delete/Edit
+        -->
     </Grid>
 </UserControl>

@@ -1,0 +1,168 @@
+﻿<UserControl x:Class="RPGDataEditor.Wpf.Npc.Views.NpcEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Background="#424242"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Style.Setters>
+                <Setter Property="MinHeight"
+                        Value="512" />
+                <Setter Property="MinWidth"
+                        Value="800" />
+            </Style.Setters>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer>
+            <StackPanel Margin="10">
+                <TextBox DataContext="{Binding Model}"
+                         Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="5"
+                         materialDesign:HintAssist.Hint="Name"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CatchValidationBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
+                <TextBox DataContext="{Binding Model}"
+                         Text="{Binding TextureLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="5"
+                         materialDesign:HintAssist.Hint="Texture"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                <!--
+                TODO: Expandable section "sounds"
+                <TextBox DataContext="{Binding Model}"
+                         Text="{Binding DeathSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="5"
+                         materialDesign:HintAssist.Hint="Death Sound Location"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox DataContext="{Binding Model}"
+                         Text="{Binding HurtSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="5"
+                         materialDesign:HintAssist.Hint="Hurt Sound Location"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox DataContext="{Binding Model}"
+                         Text="{Binding AmbientSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="5"
+                         materialDesign:HintAssist.Hint="Ambient Sound Location"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                -->
+                
+                <views:BlockPosField Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Orientation="Horizontal"
+                                     Margin="-2" />
+                <CheckBox x:Name="InvulnerableCheckbox"
+                          Margin="5"
+                          Content="Invulnerable"
+                          IsChecked="{Binding Invulnerable}" />
+                <CheckBox x:Name="LookAtPlayerCheckbox"
+                          Margin="5"
+                          Content="Look At Player"
+                          IsChecked="{Binding LookAtPlayer}" />
+                <ComboBox x:Name="MovementTypeComboBox"
+                          SelectedItem="{Binding MovementType}">
+                    <ComboBoxItem Name="STATIC"
+                                  Content="STATIC" />
+                    <ComboBoxItem Name="WANDER"
+                                  Content="WANDER" />
+                    <ComboBoxItem Name="PATH"
+                                  Content="PATH" />
+                </ComboBox>
+                <ListView x:Name="PathListView"
+                          ItemsSource="{Binding Paths}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <views:BlockPosField Position="{Binding .}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--
+                TODO: Expandable section "job":
+                <ComboBox x:Name="JobComboBox">
+                    <ComboBoxItem Name="GUARD"
+                                  Content="GUARD" />
+                    <ComboBoxItem Name="TRADER"
+                                  Content="TRADER" />
+                </ComboBox>
+                <StackPanel x:Name="GuardStackPanel">
+                </StackPanel>
+                <StackPanel x:Name="TraderStackPanel">
+                </StackPanel>
+                -->
+                
+                <!--
+                TODO: Expandable section "attributes":
+                      "healthRegen": 0,
+                      "name": "minecraft:generic.max_health", "value": 20.0
+                      "name": "minecraft:generic.knockback_resistance", "value": 0.0
+                      "name": "minecraft:generic.movement_speed", "value": 0.5
+                      "name": "minecraft:generic.attack_damage", "value": 2.0
+                      "name": "minecraft:generic.attack_knockback",
+                      "name": "minecraft:generic.attack_speed", "value": 4.0
+                      "name": "minecraft:generic.armor", "value": 0.0
+                      "name": "minecraft:generic.armor_toughness", "value": 0.0
+                      "name": "craftpolis:npc.respawn_time", "value": 5.0
+                -->
+                
+                <!--
+                TODO: Expandable section "dialogue":
+                      "talkData": {
+                         "talkRange": 10,
+                         "interactLines": [
+                           {
+                             "text": "Hello!"
+                           }
+                         ],
+                         "deathLines": [],
+                         "hurtLines": [],
+                         "initationDialogues": [
+                           0
+                         ]
+                       }
+                -->
+                <!--
+                TODO: Expandable section "equipment":
+                    "equipment": {
+                      "chest": "minecraft:diamond_chestplate"
+                    },
+                -->
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="1"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Content="SAVE"
+                    Margin="5"
+                    Command="{Binding CloseDialogCommand}"
+                    CommandParameter="{StaticResource TrueValue}" />
+            <Button Content="CANCEL"
+                    Grid.Column="1"
+                    Margin="5"
+                    Command="{Binding CloseDialogCommand}"
+                    CommandParameter="{StaticResource FalseValue}" />
+        </Grid>
+    </Grid>
+</UserControl>
