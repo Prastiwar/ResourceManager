@@ -250,6 +250,61 @@
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>
+                <materialDesign:Card x:Name="ExpandableEquipment"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center"
+                                     Margin="5"
+                                     Padding="5">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
+                                    HorizontalAlignment="Left"
+                                    Width="16"
+                                    Height="16"
+                                    Padding="0"
+                                    Click="ToggleExpandIcon"
+                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                                    CommandParameter="{x:Reference SoundsStackPanel}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <TextBlock Text="Equipment"
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+                        <StackPanel x:Name="EquipmentPanel"
+                                    DataContext="{Binding Model}"
+                                    Visibility="Collapsed">
+                            <TextBox DataContext="{Binding Equipment}"
+                                     Text="{Binding MainHand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Main Hand"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Equipment}"
+                                     Text="{Binding OffHand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Off Hand"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Equipment}"
+                                     Text="{Binding Head, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Head"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Equipment}"
+                                     Text="{Binding Chest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Chest"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Equipment}"
+                                     Text="{Binding Legs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Legs"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox DataContext="{Binding Equipment}"
+                                     Text="{Binding Feet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     materialDesign:HintAssist.Hint="Feet"
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
                 <!--
                 TODO: Expandable section "dialogue":
                       "talkData": {
@@ -265,12 +320,6 @@
                            0
                          ]
                        }
-                -->
-                <!--
-                TODO: Expandable section "equipment":
-                    "equipment": {
-                      "chest": "minecraft:diamond_chestplate"
-                    },
                 -->
             </StackPanel>
         </ScrollViewer>

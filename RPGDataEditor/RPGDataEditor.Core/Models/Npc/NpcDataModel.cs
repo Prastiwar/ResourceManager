@@ -95,6 +95,12 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref attributes, value ?? new ObservableCollection<AttributeDataModel>());
         }
 
+        private EquipmentModel equipment = new EquipmentModel();
+        public EquipmentModel Equipment {
+            get => equipment;
+            set => SetProperty(ref equipment, value ?? new EquipmentModel());
+        }
+
         public override string ToString() => $"(ID: {Id}) {Name}";
     }
 }
