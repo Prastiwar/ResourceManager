@@ -8,8 +8,9 @@ namespace RPGDataEditor.Wpf.Views
     {
         public BlockPosField() => InitializeComponent();
 
-        public static DependencyProperty OrientationProperty = 
-            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BlockPosField), new PropertyMetadata(Orientation.Horizontal));
+        public static DependencyProperty OrientationProperty =
+            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BlockPosField), new PropertyMetadata(Orientation.Horizontal, OnOrientationChanged));
+        private static void OnOrientationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BlockPosField).FieldPanel.Orientation = (Orientation)e.NewValue;
         public Orientation Orientation {
             get => (Orientation)GetValue(OrientationProperty);
             set => SetValue(OrientationProperty, value);

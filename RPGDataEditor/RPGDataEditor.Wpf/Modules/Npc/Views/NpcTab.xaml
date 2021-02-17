@@ -3,15 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              Name="NPC"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
+             prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
-        <TextBlock Text="NPC editor SOON"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="24"/>
-        <!--
-        Lista npców
-        Delete/Edit
-        -->
+        <ScrollViewer>
+            <StackPanel>
+                <ListView x:Name="NpcsList"
+                          ItemsSource="{Binding Models}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="2"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+                                <Button Content="Edit"
+                                        Margin="2"
+                                        Command="{Binding DataContext.OpenEditorCommand, Source={x:Reference NpcsList}}"
+                                        CommandParameter="{Binding .}" />
+                                <Button Content="Remove"
+                                        Margin="2"
+                                        Command="{Binding DataContext.RemoveModelCommand, Source={x:Reference NpcsList}}"
+                                        CommandParameter="{Binding .}" />
+                                <TextBlock x:Name="ModelLabel"
+                                           Text="{Binding .}"
+                                           Margin="2"
+                                           VerticalAlignment="Center"
+                                           Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                           Foreground="{DynamicResource MaterialDesignDarkForeground}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

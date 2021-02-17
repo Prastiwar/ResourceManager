@@ -2,9 +2,9 @@
 
 namespace RPGDataEditor.Wpf.Npc.Views
 {
-    public partial class NpcEditor : UserControl
+    public partial class NpcDataModelEditor : UserControl
     {
-        public NpcEditor() => InitializeComponent();
+        public NpcDataModelEditor() => InitializeComponent();
 
         private void ToggleExpandIcon(object sender, System.Windows.RoutedEventArgs e)
         {

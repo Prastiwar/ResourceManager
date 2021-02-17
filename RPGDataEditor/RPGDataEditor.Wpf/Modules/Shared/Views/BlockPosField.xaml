@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              x:Name="This">
     <StackPanel x:Name="FieldPanel"
-                Orientation="{Binding Orientation}">
+                Orientation="{Binding Orientation, ElementName=This}">
         <TextBox x:Name="XField"
                  DataContext="{Binding Position, Mode=OneWay, ElementName=This}"
                  Text="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

@@ -3,14 +3,15 @@ using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
-    public class NpcEditorViewModel : ModelDialogViewModel<NpcDataModel>
+    public class NpcDataModelEditorViewModel : ModelDialogViewModel<NpcDataModel>
     {
-        public NpcEditorViewModel(ViewModelContext context) : base(context) { }
+        public NpcDataModelEditorViewModel(ViewModelContext context) : base(context) { }
 
         public override string Title => "Npc Editor";
 
@@ -79,7 +80,26 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
             {
                 optionsNotifier.CollectionChanged += Paths_CollectionChanged;
             }
+            MaxHealth = GetFromAttributes("minecraft:generic.max_health");
+            KnockbackResistance = GetFromAttributes("minecraft:generic.knockback_resistance");
+            MovementSpeed = GetFromAttributes("minecraft:generic.movement_speed");
+            AttackDamage = GetFromAttributes("minecraft:generic.attack_damage");
+            AttackKnockback = GetFromAttributes("minecraft:generic.attack_knockback");
+            AttackSpeed = GetFromAttributes("minecraft:generic.attack_speed");
+            Armor = GetFromAttributes("minecraft:generic.armor");
+            ArmorToughness = GetFromAttributes("minecraft:generic.armor_toughness");
+            RespawnTime = GetFromAttributes("craftpolis:npc.respawn_time");
             return Task.CompletedTask;
+        }
+
+        private double GetFromAttributes(string name)
+        {
+            AttributeDataModel attribute = Model.Attributes.Where(x => x.Name == name).FirstOrDefault();
+            if (attribute != null)
+            {
+                return attribute.Value;
+            }
+            return 0;
         }
 
         public override Task OnDialogClosing(bool result)
