@@ -1,6 +1,6 @@
-﻿using RPGDataEditor.Core.Mvvm;
+﻿using FluentValidation.Results;
+using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Validation;
-using FluentValidation.Results;
 using System;
 using System.Reflection;
 
@@ -8,25 +8,29 @@ namespace RPGDataEditor.Core.Models
 {
     public abstract class ObservableModel : BindableClass, ICopiable, IValidable
     {
-        public virtual bool CopyValues(object fromCopy)
+        public virtual bool CopyValues(object fromCopy) => CopyProperties(fromCopy, (prop) => {
+            PropertyInfo fromCopyProp = fromCopy.GetType().GetProperty(prop.Name);
+            bool canSetValue = prop.SetMethod != null && fromCopyProp != null && fromCopyProp.PropertyType == prop.PropertyType;
+            if (canSetValue)
+            {
+                object value = fromCopyProp.GetValue(fromCopy);
+                prop.SetValue(this, value);
+            }
+        });
+
+        private bool CopyProperties(object fromCopy, Action<PropertyInfo> copyProperty)
         {
             try
             {
-                bool hasRelationship = GetType().IsAssignableFrom(fromCopy.GetType()) || fromCopy.GetType().IsAssignableFrom(GetType());
-                if (!hasRelationship)
+                bool hasCopyRelatioship = GetType().IsAssignableFrom(fromCopy.GetType()) || fromCopy.GetType().IsAssignableFrom(GetType());
+                if (!hasCopyRelatioship)
                 {
                     return false;
                 }
                 PropertyInfo[] props = GetType().GetProperties();
                 foreach (PropertyInfo prop in props)
                 {
-                    PropertyInfo fromCopyProp = fromCopy.GetType().GetProperty(prop.Name);
-                    bool canSetValue = prop.SetMethod != null && fromCopyProp != null && fromCopyProp.PropertyType == prop.PropertyType;
-                    if (canSetValue)
-                    {
-                        object value = fromCopyProp.GetValue(fromCopy);
-                        prop.SetValue(this, value);
-                    }
+                    copyProperty(prop);
                 }
             }
             catch (Exception)
@@ -36,12 +40,7 @@ namespace RPGDataEditor.Core.Models
             return true;
         }
 
-        public virtual object DeepClone()
-        {
-            ObservableModel model = (ObservableModel)Activator.CreateInstance(GetType(), true);
-            model.CopyValues(this);
-            return model;
-        }
+        public virtual object DeepClone() => DeepCopy.DeepCopier.Copy(this, GetType());
 
         public virtual object Clone() => MemberwiseClone();
 
