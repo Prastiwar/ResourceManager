@@ -57,6 +57,7 @@ namespace RPGDataEditor.Wpf
                 settings.Converters.Add(new QuestTaskJsonConverter());
                 settings.Converters.Add(new PlayerRequirementJsonConverter());
                 settings.Converters.Add(new NpcJobJsonConverter());
+                settings.Converters.Add(new NumberCastsConverter());
                 return settings;
             };
 

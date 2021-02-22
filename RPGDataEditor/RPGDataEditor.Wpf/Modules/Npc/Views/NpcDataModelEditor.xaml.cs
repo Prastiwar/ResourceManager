@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using RPGDataEditor.Core.Models;
+using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Npc.Views
 {
@@ -22,8 +23,34 @@ namespace RPGDataEditor.Wpf.Npc.Views
                     bool isTrader = string.Compare(selected.Name, "trader", true) == 0;
                     TraderStackPanel.Visibility = isTrader ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     GuardStackPanel.Visibility = isGuard ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-                    // TODO: Set job to model
+                    ComboBox comboBox = (ComboBox)sender;
+                    if (comboBox.DataContext is NpcDataModel model)
+                    {
+                        if (isGuard)
+                        {
+                            model.Job = new GuardNpcJobModel();
+                        }
+                        else if (isTrader)
+                        {
+                            model.Job = new TraderNpcJobModel();
+                        }
+                        else
+                        {
+                            model.Job = null;
+                        }
+                    }
                 }
+            }
+        }
+
+        private void JobComboBox_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            if (comboBox.DataContext is NpcDataModel model)
+            {
+                comboBox.SelectedIndex = model.Job == null
+                                         ? 0 : model.Job is GuardNpcJobModel
+                                         ? 1 : 2;
             }
         }
     }

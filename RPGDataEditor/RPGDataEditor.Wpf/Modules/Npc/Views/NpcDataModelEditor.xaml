@@ -10,6 +10,8 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
+             xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
+             xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -56,7 +58,7 @@
                     <StackPanel>
                         <TextBlock Text="Spawn location"/>
                         <views:BlockPosField DataContext="{Binding Model}"
-                                             Position="{Binding Pos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Orientation="Horizontal"
                                              Margin="-2" />
                     </StackPanel>
@@ -97,14 +99,8 @@
                                       DataContext="{Binding Model}"
                                       SelectedItem="{Binding MovementType}"
                                       materialDesign:HintAssist.Hint="Movement Type"
-                                      Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
-                                <ComboBoxItem Name="STATIC"
-                                              Content="STATIC" />
-                                <ComboBoxItem Name="WANDER"
-                                              Content="WANDER" />
-                                <ComboBoxItem Name="PATH"
-                                              Content="PATH" />
-                            </ComboBox>
+                                      ItemsSource="{Binding Source={converters:EnumBindingSource {x:Type models:NpcMovement}}}"
+                                      Style="{DynamicResource MaterialDesignFloatingHintComboBox}" />
                         </Grid>
                         <ListView x:Name="PathListView"
                                   Visibility="Collapsed"
@@ -141,6 +137,8 @@
                             <ComboBox x:Name="JobComboBox"
                                       Grid.Column="1"
                                       Margin="10,0,0,0"
+                                      DataContext="{Binding Model}"
+                                      DataContextChanged="JobComboBox_DataContextChanged"
                                       SelectionChanged="JobComboBox_SelectionChanged"
                                       materialDesign:HintAssist.Hint="Job Type"
                                       Style="{DynamicResource MaterialDesignFloatingHintComboBox}">

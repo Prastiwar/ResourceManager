@@ -17,10 +17,10 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref name, value ?? "");
         }
 
-        private Position pos = new Position();
-        public Position Pos {
-            get => pos;
-            set => SetProperty(ref pos, value ?? new Position());
+        private Position position = new Position();
+        public Position Position {
+            get => position;
+            set => SetProperty(ref position, value ?? new Position());
         }
 
         private bool invulnerable;
