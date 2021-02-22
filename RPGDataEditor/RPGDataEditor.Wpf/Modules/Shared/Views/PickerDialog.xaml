@@ -42,6 +42,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Grid Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Rectangle Fill="Black"
+                       Opacity="0.45" />
+            <TextBlock Text="Loading..."
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="32"
+                       Foreground="White" />
+        </Grid>
         <Button Grid.Row="1"
                 Command="{Binding CloseDialogCommand}"
                 CommandParameter="{StaticResource TrueValue}"

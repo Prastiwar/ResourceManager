@@ -53,6 +53,7 @@ namespace RPGDataEditor.Wpf.Mvvm
                 {
                     return;
                 }
+                AttachProperties.SetIsLoading(regionTarget, true);
                 ITabSwitchAsyncAware removedTabAware = GetSwitchAsyncAware(removedTab);
                 ITabSwitchAsyncAware addedTabAware = GetSwitchAsyncAware(addedTab);
                 string toUri = "navigation://" + addedTab.Header;
@@ -72,6 +73,7 @@ namespace RPGDataEditor.Wpf.Mvvm
                 await Notifier.CallAsync<ITabSwitchAsyncAware>(removedTab?.Content, aware => aware.OnNavigatedFromAsync(context));
                 await Notifier.CallAsync<ITabSwitchAsyncAware>(addedTab.DataContext, aware => aware.OnNavigatedToAsync(context));
                 await Notifier.CallAsync<ITabSwitchAsyncAware>(addedTab.Content, aware => aware.OnNavigatedToAsync(context));
+                AttachProperties.SetIsLoading(regionTarget, false);
             };
         }
 

@@ -14,6 +14,12 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         public override string Title => "Resource Picker";
 
+        private bool isLoading;
+        public bool IsLoading {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
+
         private IIdentifiable model;
         public IIdentifiable Model {
             get => model;
@@ -44,6 +50,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected override async Task InitializeAsync(IDialogParameters parameters)
         {
+            IsLoading = true;
             RPGResource resource = parameters.GetValue<RPGResource>(nameof(PickerDialogParameters.PickResource));
             List<IIdentifiable> list = await LoadResourcesAsync(resource);
             list.Sort(new IdentifiableComparer());
@@ -60,6 +67,7 @@ namespace RPGDataEditor.Wpf.ViewModels
                 model = Models.FirstOrDefault(x => x.Id == model.Id);
             }
             Model = model ?? Models.First();
+            IsLoading = false;
         }
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(RPGResource resource)

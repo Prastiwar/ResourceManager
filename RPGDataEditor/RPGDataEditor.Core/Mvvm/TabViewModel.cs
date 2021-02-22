@@ -7,6 +7,12 @@ namespace RPGDataEditor.Core.Mvvm
     {
         public TabViewModel(ViewModelContext context) : base(context) { }
 
+        private bool isLoading;
+        public bool IsLoading {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
+
         public virtual Task OnNavigatedFromAsync(NavigationContext navigationContext) => Task.FromResult(true);
 
         public virtual Task OnNavigatedToAsync(NavigationContext navigationContext) => Task.FromResult(true);

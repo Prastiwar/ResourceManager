@@ -517,7 +517,7 @@
                                                 Padding="0"
                                                 Margin="5,0,0,5"
                                                 VerticalAlignment="Bottom"
-                                                Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
+                                                Command="{Binding DataContext.AddDialogueIdCommand, ElementName=MainGrid}"
                                                 DataContext="{Binding TalkData}"
                                                 CommandParameter="{Binding InitationDialogues}"
                                                 Style="{DynamicResource MaterialDesignFlatButton}" />
@@ -531,11 +531,30 @@
                                               ItemsSource="{Binding InitationDialogues}">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBox Text="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                         Margin="5"
-                                                         InputScope="Number"
-                                                         materialDesign:HintAssist.Hint="Initiation Dialogue Id"
-                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                <materialDesign:Card HorizontalAlignment="Stretch"
+                                                                     HorizontalContentAlignment="Center"
+                                                                     Padding="5">
+                                                    <Grid HorizontalAlignment="Stretch">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Button x:Name="DeleteItemButton"
+                                                                Content="{materialDesign:PackIcon Kind=Delete}"
+                                                                Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
+                                                                Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                CommandParameter="{Binding ., ElementName=DeleteItemButton}"
+                                                                VerticalAlignment="Top"
+                                                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                                                Padding="0"
+                                                                Margin="0,12,0,0" />
+                                                        <views:ItemPicker Grid.Column="1"
+                                                                          Resource="Dialogue"
+                                                                          EmptyText="Select initaition dialogue"
+                                                                          PickedId="{Binding .}" />
+                                                    </Grid>
+                                                </materialDesign:Card>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
                                     </ListView>

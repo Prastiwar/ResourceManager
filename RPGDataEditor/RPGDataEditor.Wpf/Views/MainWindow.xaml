@@ -4,6 +4,7 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:core="clr-namespace:RPGDataEditor.Core;assembly=RPGDataEditor.Core"
+        xmlns:local="clr-namespace:RPGDataEditor.Wpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -50,6 +51,16 @@
                                          ActionButtonStyle="{DynamicResource MaterialDesignSnackbarActionCustomButton}" />
             </Grid>
         </materialDesign:Card>
+        <Grid DataContext="{Binding ElementName=MainTabControl}"
+              Visibility="{Binding Path=(local:AttachProperties.IsLoading), Converter={StaticResource BoolToVisibilityConverter}}">
+            <Rectangle Fill="Black"
+                       Opacity="0.45" />
+            <TextBlock Text="Loading..."
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="32"
+                       Foreground="White" />
+        </Grid>
         <TextBlock Grid.Row="1"
                    Margin="4"
                    FontSize="8"

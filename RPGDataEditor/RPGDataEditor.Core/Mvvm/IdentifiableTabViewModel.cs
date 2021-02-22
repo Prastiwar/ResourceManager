@@ -35,6 +35,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         public override async Task Refresh()
         {
+            IsLoading = true;
             Models = new ObservableCollection<TModel>();
             string[] jsons = new string[0];
             try
@@ -57,6 +58,7 @@ namespace RPGDataEditor.Core.Mvvm
                     Context.SnackbarService.Enqueue("Found invalid json");
                 }
             }
+            IsLoading = false;
         }
 
         public override Task OnNavigatedToAsync(NavigationContext navigationContext) => Refresh();

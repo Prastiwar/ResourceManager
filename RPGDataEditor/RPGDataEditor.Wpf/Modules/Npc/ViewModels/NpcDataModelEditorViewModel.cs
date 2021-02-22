@@ -22,6 +22,8 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public ICommand AddTalkLineCommand => Commands.AddParameterListItemLiCommand<TalkLine>();
         public ICommand RemoveTalkLineCommand => Commands.RemoveItemFromListView();
 
+        public ICommand AddDialogueIdCommand => Commands.AddParameterListItemLiCommand<int>();
+
         private double maxHealth;
         public double MaxHealth {
             get => maxHealth;
