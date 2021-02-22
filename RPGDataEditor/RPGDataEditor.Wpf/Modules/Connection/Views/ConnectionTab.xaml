@@ -13,6 +13,8 @@
                     Margin="64">
             <CheckBox x:Name="IsFtpCheckbox"
                       Margin="8"
+                      DataContext="{Binding Session}"
+                      DataContextChanged="IsFtpCheckbox_DataContextChanged"
                       Content="Use FTP connection" />
             <TextBox Text="{Binding LocationPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Session}"
@@ -34,7 +36,9 @@
                         <behaviors:CatchValidationBehavior />
                     </i:Interaction.Behaviors>
                 </TextBox>
-                <PasswordBox x:Name="FtpPasswordBox" DataContext="{Binding Session}"
+                <PasswordBox x:Name="FtpPasswordBox"
+                             DataContext="{Binding Session}"
+                             DataContextChanged="FtpPasswordBox_DataContextChanged"
                              PasswordChanged="PasswordBox_PasswordChanged"
                              Margin="0,8,0,8"
                              materialDesign:HintAssist.Hint="Password"

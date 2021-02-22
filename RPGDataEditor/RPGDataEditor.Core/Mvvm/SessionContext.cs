@@ -133,17 +133,20 @@ namespace RPGDataEditor.Core.Mvvm
         {
             string[] files = await GetFtpFiles(relativePath);
             List<string> jsons = new List<string>();
+            string directoryPath = Path.Combine(LocationPath, relativePath);
             foreach (string file in files)
             {
                 if (!file.EndsWith(".json"))
                 {
                     continue;
                 }
-                string json = await ReadFtpFile(file);
-                jsons.Add(json);
+                string json = await ReadFtpFile(Path.Combine(directoryPath, file));
+                if (json != null)
+                {
+                    jsons.Add(json);
+                }
             }
             return jsons.ToArray();
-
         }
 
         private async Task<string> ReadFtpFile(string filePath)
@@ -199,7 +202,7 @@ namespace RPGDataEditor.Core.Mvvm
         private bool IsResponseSuccess(FtpWebResponse response)
         {
             int statusCode = (int)response.StatusCode;
-            return statusCode >= 200 && statusCode < 300;
+            return statusCode >= 200 && statusCode < 300 || statusCode == 125 || statusCode == 150;
         }
 
     }
