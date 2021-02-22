@@ -59,6 +59,8 @@
                                      Margin="5"
                                      Padding="5">
                     <views:ItemPicker EmptyText="Select Start Quest"
+                                      DataContext="{Binding Model}"
+                                      PickedId="{Binding StartQuest, Mode=TwoWay}"
                                       Resource="Quest"/>
                 </materialDesign:Card>
                 <materialDesign:Card HorizontalAlignment="Stretch"

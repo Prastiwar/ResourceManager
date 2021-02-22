@@ -20,7 +20,8 @@ namespace RPGDataEditor.Wpf.Views
 
         public RPGResource Resource { get; set; }
 
-        public static DependencyProperty PickedIdProperty = DependencyProperty.Register(nameof(PickedId), typeof(int), typeof(ItemPicker), new PropertyMetadata(-1));
+        public static DependencyProperty PickedIdProperty = DependencyProperty.Register(nameof(PickedId), typeof(int), typeof(ItemPicker), new PropertyMetadata(-1, OnPickedIdChanged));
+        private static void OnPickedIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ItemPicker).OnPickedIdChanged((int)e.OldValue, (int)e.NewValue);
         public int PickedId {
             get => (int)GetValue(PickedIdProperty);
             set => SetValue(PickedIdProperty, value);
@@ -54,17 +55,12 @@ namespace RPGDataEditor.Wpf.Views
             set => SetValue(DialogServiceProperty, value);
         }
 
-        protected override async void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            if (e.Property == PickedIdProperty)
-            {
-                await ReassignItemAsync();
-            }
-        }
+        protected async void OnPickedIdChanged(int oldId, int newId) => await ReassignItemAsync();
 
         protected async Task ReassignItemAsync()
         {
+            LoadingOverlay.Visibility = Visibility.Visible;
+            ItemTextBlock.Text = "Loading...";
             int id = PickedId;
             switch (Resource)
             {
@@ -83,6 +79,7 @@ namespace RPGDataEditor.Wpf.Views
                 default:
                     break;
             }
+            LoadingOverlay.Visibility = Visibility.Collapsed;
         }
 
         private async void PickItem(object sender, RoutedEventArgs e) => await PickItemAsync();

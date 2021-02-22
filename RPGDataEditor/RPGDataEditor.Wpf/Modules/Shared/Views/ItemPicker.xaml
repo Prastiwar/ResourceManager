@@ -19,5 +19,8 @@
                        Text="None"
                        Margin="5" />
         </StackPanel>
+        <Rectangle x:Name="LoadingOverlay"
+                   Fill="Black"
+                   Opacity="0.2" />
     </Grid>
 </UserControl>
