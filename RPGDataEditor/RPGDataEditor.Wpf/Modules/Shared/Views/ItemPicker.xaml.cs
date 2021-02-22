@@ -3,6 +3,7 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +19,12 @@ namespace RPGDataEditor.Wpf.Views
             DataContextChanged += ItemPicker_DataContextChanged;
         }
 
-        public RPGResource Resource { get; set; }
+        public static DependencyProperty ResourceProperty = DependencyProperty.Register(nameof(Resource), typeof(RPGResource?), typeof(ItemPicker), new PropertyMetadata(null, OnResourceChanged));
+        private static void OnResourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ItemPicker).OnResourceChanged((RPGResource?)e.OldValue, (RPGResource?)e.NewValue);
+        public RPGResource? Resource {
+            get => (RPGResource?)GetValue(ResourceProperty);
+            set => SetValue(ResourceProperty, value);
+        }
 
         public static DependencyProperty PickedIdProperty = DependencyProperty.Register(nameof(PickedId), typeof(int), typeof(ItemPicker), new PropertyMetadata(-1, OnPickedIdChanged));
         private static void OnPickedIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ItemPicker).OnPickedIdChanged((int)e.OldValue, (int)e.NewValue);
@@ -57,11 +63,17 @@ namespace RPGDataEditor.Wpf.Views
 
         protected async void OnPickedIdChanged(int oldId, int newId) => await ReassignItemAsync();
 
+        protected async void OnResourceChanged(RPGResource? oldValue, RPGResource? newValue) => await ReassignItemAsync();
+
         protected async Task ReassignItemAsync()
         {
+            int id = PickedId;
+            if (Resource == null || id == -1)
+            {
+                return;
+            }
             LoadingOverlay.Visibility = Visibility.Visible;
             ItemTextBlock.Text = "Loading...";
-            int id = PickedId;
             switch (Resource)
             {
                 case RPGResource.Quest:
@@ -87,7 +99,7 @@ namespace RPGDataEditor.Wpf.Views
         protected virtual async Task PickItemAsync()
         {
             IDialogService service = DialogService ?? (Application.Current as PrismApplicationBase).Container.Resolve<IDialogService>();
-            IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource, PickedItem, PickedId).Build()).ConfigureAwait(true);
+            IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource.Value, PickedItem, PickedId).Build()).ConfigureAwait(true);
             if (result.Result == ButtonResult.OK)
             {
                 IIdentifiable pickedItem = result.Parameters.GetValue<IIdentifiable>(nameof(PickerDialogParameters.PickedItem));
