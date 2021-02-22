@@ -23,6 +23,9 @@
                     <converters:ColorStringConverter x:Key="ColorConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>
+                    <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
                     <converters:IdentifiableToIdConverter x:Key="IdentifiableToIdConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>

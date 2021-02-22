@@ -2,36 +2,42 @@
   "id": 0,
   "name": "Testerro",
   "position": {
-    "x": -164.0,
-    "y": 63.0,
-    "z": -321.0
+    "x": -164,
+    "y": 63,
+    "z": -322
   },
   "invulnerable": true,
-  "lookAtPlayer": false,
-  "movementType": "WANDER",
-  "healthRegen": 0,
-  "deathSoundLocation": "",
-  "hurtSoundLocation": "",
-  "ambientSoundLocation": "",
-  "textureLocation": "http://novask.in/3513543151.png",
-  "talkData": {
-    "talkRange": 10,
-    "interactLines": [
+  "lookatplayer": false,
+  "talkdata": {
+    "talkrange": 10,
+    "initationdialogues": [
+      0
+    ],
+    "interactlines": [
       {
-        "text": "Hello!"
+        "text": "Hello!",
+        "soundlocation": null
       }
     ],
-    "deathLines": [],
-    "hurtLines": [],
-    "initationDialogues": [
-      0
-    ]
+    "hurtlines": [],
+    "deathlines": []
   },
   "job": {
     "type": "Guard"
   },
+  "deathsoundlocation": "",
+  "hurtsoundlocation": "",
+  "ambientsoundlocation": "",
+  "texturelocation": "http://novask.in/3513543151.png",
+  "movementtype": 1,
+  "healthregen": 0,
   "equipment": {
-    "chest": "minecraft:diamond_chestplate"
+    "chest": "minecraft:diamond_chestplate",
+    "head": null,
+    "mainhand": null,
+    "offhand": null,
+    "feet": null,
+    "legs": null
   },
   "paths": [
     {
@@ -54,10 +60,6 @@
     {
       "name": "minecraft:generic.max_health",
       "value": 20.0
-    },
-    {
-      "name": "minecraft:generic.follow_range",
-      "value": 32.0
     },
     {
       "name": "minecraft:generic.knockback_resistance",

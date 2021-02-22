@@ -8,5 +8,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public NpcTabViewModel(ViewModelContext context) : base(context) { }
 
         protected override string RelativePath => "npcs";
+
+        protected override string GetRelativeFilePath(NpcDataModel model) => RelativePath + $"/{model.Id}_{model.Name}.json";
     }
 }

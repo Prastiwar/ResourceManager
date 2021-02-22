@@ -19,6 +19,9 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public ICommand RemovePathCommand => Commands.RemoveListItemLiCommand(() => Model.Paths);
         public int PathsCount => Model == null ? 0 : Model.Paths.Count;
 
+        public ICommand AddTalkLineCommand => Commands.AddParameterListItemLiCommand<TalkLine>();
+        public ICommand RemoveTalkLineCommand => Commands.RemoveItemFromListView();
+
         private double maxHealth;
         public double MaxHealth {
             get => maxHealth;

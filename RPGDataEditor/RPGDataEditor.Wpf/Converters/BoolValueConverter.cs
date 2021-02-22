@@ -59,4 +59,13 @@ namespace RPGDataEditor.Wpf.Converters
             FalseValue = Visibility.Collapsed;
         }
     }
+
+    public class BoolToIntegerConverter : BoolValueConverter<int>
+    {
+        public BoolToIntegerConverter()
+        {
+            TrueValue = 1;
+            FalseValue = 0;
+        }
+    }
 }
