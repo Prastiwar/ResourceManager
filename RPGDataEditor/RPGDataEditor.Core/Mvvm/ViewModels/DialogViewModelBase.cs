@@ -59,6 +59,7 @@ namespace RPGDataEditor.Core.Mvvm
             }
             catch (Exception ex)
             {
+                Logger.Error("Couldn't initialize dialog", ex);
                 RaiseRequestClose(new DialogResult(ButtonResult.Abort, new DialogParametersBuilder() { Exception = ex }.Build()));
             }
         }

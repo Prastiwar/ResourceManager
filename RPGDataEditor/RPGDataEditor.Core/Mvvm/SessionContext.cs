@@ -45,10 +45,15 @@ namespace RPGDataEditor.Core.Mvvm
                 {
                     FtpWebRequest request = CreateFtpRequest(LocationPath, WebRequestMethods.Ftp.PrintWorkingDirectory);
                     using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-                    return IsResponseSuccess(response);
+                    if (!IsResponseSuccess(response))
+                    {
+                        Logger.ErrorFtp(response);
+                    }
+                    return true;
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error("Session Validation error", ex);
                     return false;
                 }
             }
@@ -64,7 +69,12 @@ namespace RPGDataEditor.Core.Mvvm
             {
                 FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
                 using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-                return IsResponseSuccess(response);
+                if(!IsResponseSuccess(response))
+                {
+                    Logger.ErrorFtp(response);
+                    return false;
+                }
+                return true;
             }
             else
             {
@@ -74,6 +84,7 @@ namespace RPGDataEditor.Core.Mvvm
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error("Couldn't delete json file", ex);
                     return false;
                 }
                 return true;
@@ -94,6 +105,7 @@ namespace RPGDataEditor.Core.Mvvm
             }
             catch (Exception ex)
             {
+                Logger.Error("Couldn't save json file", ex);
                 return Task.FromResult(false);
             }
             return Task.FromResult(true);
@@ -155,6 +167,7 @@ namespace RPGDataEditor.Core.Mvvm
             using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
             if (!IsResponseSuccess(response))
             {
+                Logger.ErrorFtp(response);
                 return null;
             }
             using StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -167,6 +180,7 @@ namespace RPGDataEditor.Core.Mvvm
             using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
             if (!IsResponseSuccess(response))
             {
+                Logger.ErrorFtp(response);
                 return new string[0];
             }
             using StreamReader reader = new StreamReader(response.GetResponseStream());
@@ -186,7 +200,12 @@ namespace RPGDataEditor.Core.Mvvm
                 requestStream.Write(fileContents, 0, fileContents.Length);
             }
             using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-            return IsResponseSuccess(response);
+            if (IsResponseSuccess(response))
+            {
+                return true;
+            }
+            Logger.ErrorFtp(response);
+            return false;
         }
 
         private FtpWebRequest CreateFtpRequestRaw(string ftpPath, string method)

@@ -5,6 +5,7 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
@@ -34,6 +35,10 @@ namespace RPGDataEditor.Wpf
         public static string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
 
         public static SessionContext CurrentSession { get; private set; }
+
+        public App() => DispatcherUnhandledException += App_DispatcherUnhandledException;
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) => Logger.Error("Unhandled exception", e.Exception);
 
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 

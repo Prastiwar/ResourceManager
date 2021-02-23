@@ -44,6 +44,7 @@ namespace RPGDataEditor.Core.Mvvm
             }
             catch (Exception ex)
             {
+                Logger.Error("Failed to load jsons, class: " + GetType().Name, ex);
                 Context.SnackbarService.Enqueue("Failed to load jsons, you can try again by refreshing tab");
             }
             foreach (string json in jsons)
@@ -55,6 +56,7 @@ namespace RPGDataEditor.Core.Mvvm
                 }
                 catch (Exception ex)
                 {
+                    Logger.Error("Invalid json", ex);
                     Context.SnackbarService.Enqueue("Found invalid json");
                 }
             }

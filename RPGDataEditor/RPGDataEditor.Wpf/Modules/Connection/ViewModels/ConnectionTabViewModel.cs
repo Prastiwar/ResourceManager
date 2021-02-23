@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using Prism.Regions;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
 
@@ -16,7 +17,14 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
             if (result.IsValid)
             {
-                Session.SaveSession(App.SessionFilePath);
+                try
+                {
+                    Session.SaveSession(App.SessionFilePath);
+                }
+                catch (System.Exception ex)
+                {
+                    Logger.Error("Couldn't save session", ex);
+                }
             }
             return result.IsValid;
         }
