@@ -3,7 +3,6 @@ using Prism.Ioc;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;

@@ -8,13 +8,23 @@ namespace RPGDataEditor.Core.Models
         private int id;
         public int Id {
             get => id;
-            set => SetProperty(ref id, value);
+            set {
+                if (SetProperty(ref id, value))
+                {
+                    RaisePropertyChanged(nameof(RepresentableString));
+                }
+            }
         }
 
         private string title = "";
         public string Title {
             get => title;
-            set => SetProperty(ref title, value ?? "");
+            set {
+                if (SetProperty(ref title, value ?? ""))
+                {
+                    RaisePropertyChanged(nameof(RepresentableString));
+                }
+            }
         }
 
         private string message = "";
@@ -35,6 +45,8 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref requirements, value ?? new ObservableCollection<PlayerRequirementModel>());
         }
 
-        public override string ToString() => $"(ID: {Id}) {Title}";
+        public string RepresentableString => $"(ID: {Id}) {Title}";
+
+        public override string ToString() => RepresentableString;
     }
 }

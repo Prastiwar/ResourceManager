@@ -68,13 +68,15 @@ namespace RPGDataEditor.Core.Mvvm
             if (IsFtp)
             {
                 FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
-                using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-                if(!IsResponseSuccess(response))
+                using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
                 {
-                    Logger.ErrorFtp(response);
-                    return false;
+                    if (!IsResponseSuccess(response))
+                    {
+                        Logger.ErrorFtp(response);
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
             }
             else
             {
@@ -199,13 +201,15 @@ namespace RPGDataEditor.Core.Mvvm
             {
                 requestStream.Write(fileContents, 0, fileContents.Length);
             }
-            using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-            if (IsResponseSuccess(response))
+            using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
             {
-                return true;
+                if (IsResponseSuccess(response))
+                {
+                    return true;
+                }
+                Logger.ErrorFtp(response);
+                return false;
             }
-            Logger.ErrorFtp(response);
-            return false;
         }
 
         private FtpWebRequest CreateFtpRequestRaw(string ftpPath, string method)
@@ -213,6 +217,7 @@ namespace RPGDataEditor.Core.Mvvm
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpPath);
             request.Credentials = new NetworkCredential(FtpUserName, FtpPassword);
             request.Method = method;
+            request.KeepAlive = false;
             return request;
         }
 

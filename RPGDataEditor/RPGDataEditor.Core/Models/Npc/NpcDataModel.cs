@@ -8,13 +8,23 @@ namespace RPGDataEditor.Core.Models
         private int id;
         public int Id {
             get => id;
-            set => SetProperty(ref id, value);
+            set {
+                if (SetProperty(ref id, value))
+                {
+                    RaisePropertyChanged(nameof(RepresentableString));
+                }
+            }
         }
 
         private string name = "";
         public string Name {
             get => name;
-            set => SetProperty(ref name, value ?? "");
+            set {
+                if (SetProperty(ref name, value ?? ""))
+                {
+                    RaisePropertyChanged(nameof(RepresentableString));
+                }
+            }
         }
 
         private Position position = new Position();
@@ -101,6 +111,8 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref equipment, value ?? new EquipmentModel());
         }
 
-        public override string ToString() => $"(ID: {Id}) {Name}";
+        public string RepresentableString => $"(ID: {Id}) {Name}";
+
+        public override string ToString() => RepresentableString;
     }
 }
