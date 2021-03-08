@@ -6,6 +6,7 @@ using Prism.Modularity;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
+using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
@@ -55,6 +56,8 @@ namespace RPGDataEditor.Wpf
             JsonConvert.DefaultSettings = () => {
                 PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
                 propResolver.SetAllLetterCase(Lettercase.Lowercase);
+                propResolver.IgnoreProperty(typeof(IdentifiableData), nameof(IdentifiableData.RepresentableString));
+                propResolver.IgnoreProperty(typeof(NpcDataModel), nameof(NpcDataModel.RepresentableString));
                 JsonSerializerSettings settings = new JsonSerializerSettings {
                     ContractResolver = propResolver,
                     Formatting = Formatting.Indented
