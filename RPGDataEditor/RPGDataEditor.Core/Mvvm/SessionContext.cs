@@ -29,6 +29,12 @@ namespace RPGDataEditor.Core.Mvvm
             set => SetProperty(ref ftpPassword, value ?? "");
         }
 
+        private OptionsData options = new OptionsData();
+        public OptionsData Options {
+            get => options;
+            set => SetProperty(ref options, value ?? new OptionsData());
+        }
+
         public void SaveSession(string path)
         {
             string json = JsonConvert.SerializeObject(this);

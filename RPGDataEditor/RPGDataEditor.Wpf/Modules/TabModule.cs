@@ -7,6 +7,7 @@ using RPGDataEditor.Wpf.Connection.Views;
 using RPGDataEditor.Wpf.Dialogue.Views;
 using RPGDataEditor.Wpf.Npc.Views;
 using RPGDataEditor.Wpf.Quest.Views;
+using RPGDataEditor.Wpf.Settings.Views;
 using RPGDataEditor.Wpf.Views;
 
 namespace RPGDataEditor.Wpf
@@ -23,6 +24,7 @@ namespace RPGDataEditor.Wpf
             regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(NpcTab));
             regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(DialogueTab));
             regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(QuestTab));
+            regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(SettingsTab));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
@@ -31,6 +33,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterForNavigation<NpcTab>();
             containerRegistry.RegisterForNavigation<DialogueTab>();
             containerRegistry.RegisterForNavigation<QuestTab>();
+            containerRegistry.RegisterForNavigation<SettingsTab>();
             containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
             containerRegistry.RegisterDialog<NpcDataModelEditor>(typeof(NpcDataModel).Name);
             containerRegistry.RegisterDialog<QuestEditor>(typeof(QuestModel).Name);
