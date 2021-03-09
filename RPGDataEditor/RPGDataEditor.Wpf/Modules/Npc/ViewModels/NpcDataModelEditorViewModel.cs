@@ -23,6 +23,9 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public ICommand RemoveTalkLineCommand => Commands.RemoveItemFromListView();
 
         public ICommand AddDialogueIdCommand => Commands.AddParameterListItemLiCommand<int>();
+        
+        public ICommand AddTradeItemCommand => Commands.AddListItemLiCommand(() => ((TraderNpcJobModel)Model.Job).Items);
+        public ICommand RemoveTradeItemCommand => Commands.RemoveItemFromListView();
 
         private double maxHealth;
         public double MaxHealth {

@@ -195,7 +195,120 @@
                             <StackPanel x:Name="GuardStackPanel"
                                         Visibility="Collapsed"></StackPanel>
                             <StackPanel x:Name="TraderStackPanel"
-                                        Visibility="Collapsed"></StackPanel>
+                                        Visibility="Collapsed">
+                                <materialDesign:Card Margin="5"
+                                                     DataContext="{Binding Model}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
+                                                    Width="16"
+                                                    Height="16"
+                                                    Padding="0"
+                                                    Click="ToggleExpandIcon"
+                                                    Margin="5,0,0,2"
+                                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                                                    CommandParameter="{x:Reference TradeItemListView}"
+                                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                                            <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
+                                                    Width="16"
+                                                    Height="16"
+                                                    Padding="0"
+                                                    Margin="5,0,0,4"
+                                                    VerticalAlignment="Bottom"
+                                                    Command="{Binding DataContext.AddTradeItemCommand, ElementName=MainGrid}"
+                                                    DataContext="{Binding Job}"
+                                                    CommandParameter="{Binding Items}"
+                                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                                            <TextBlock Text="{Binding ItemsSource.Count, ElementName=TradeItemListView, StringFormat='({0}) Trade items'}"
+                                                       VerticalAlignment="Bottom"
+                                                       Margin="5,2,2,5" />
+                                        </StackPanel>
+                                        <ListView x:Name="TradeItemListView"
+                                                  Visibility="Collapsed"
+                                                  DataContext="{Binding Job}"
+                                                  ItemsSource="{Binding Items}">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <materialDesign:Card HorizontalAlignment="Stretch"
+                                                                         Margin="5"
+                                                                         Padding="5">
+                                                        <StackPanel>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Button x:Name="ExpandTradeItemButton"
+                                                                        Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
+                                                                        HorizontalAlignment="Left"
+                                                                        Width="16"
+                                                                        VerticalAlignment="Bottom"
+                                                                        Height="16"
+                                                                        Padding="0"
+                                                                        Margin="3,0,3,5"
+                                                                        Click="ToggleExpandIcon"
+                                                                        Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
+                                                                        CommandParameter="{x:Reference TradeItemPanel}"
+                                                                        Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                                <Button x:Name="DeleteTradeItemButton"
+                                                                        Content="{materialDesign:PackIcon Kind=Delete}"
+                                                                        Grid.Column="1"
+                                                                        Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                        Command="{Binding DataContext.RemoveTradeItemCommand, ElementName=MainGrid}"
+                                                                        CommandParameter="{Binding ., ElementName=DeleteTradeItemButton}"
+                                                                        VerticalAlignment="Top"
+                                                                        Style="{DynamicResource MaterialDesignFlatButton}"
+                                                                        Padding="0"
+                                                                        Margin="0,12,0,0" />
+                                                                <TextBlock Text="{Binding Item}"
+                                                                           Grid.Column="2"
+                                                                           VerticalAlignment="Bottom"
+                                                                           Margin="5,2,2,5" />
+                                                            </Grid>
+                                                            <StackPanel x:Name="TradeItemPanel"
+                                                                        Visibility="Collapsed">
+                                                                <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                         Margin="5"
+                                                                         materialDesign:HintAssist.Hint="Item resource location"
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                                    <i:Interaction.Behaviors>
+                                                                        <behaviors:CatchValidationBehavior />
+                                                                    </i:Interaction.Behaviors>
+                                                                </TextBox>
+                                                                <TextBox Text="{Binding Buy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                         InputScope="Number"
+                                                                         Margin="5"
+                                                                         materialDesign:HintAssist.Hint="Buy price"
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                <TextBox Text="{Binding Sell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                         InputScope="Number"
+                                                                         Margin="5"
+                                                                         materialDesign:HintAssist.Hint="Sell price"
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                <TextBox Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                         InputScope="Number"
+                                                                         Margin="5"
+                                                                         materialDesign:HintAssist.Hint="Count"
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                         Margin="5"
+                                                                         materialDesign:HintAssist.Hint="NBT"
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                                    <i:Interaction.Behaviors>
+                                                                        <behaviors:CatchValidationBehavior />
+                                                                    </i:Interaction.Behaviors>
+                                                                </TextBox>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </materialDesign:Card>
+                                                   
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>

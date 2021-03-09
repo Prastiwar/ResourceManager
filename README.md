@@ -38,3 +38,19 @@ See also the list of [contributors](https://github.com/Prastiwar/RPGDataEditor/c
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/Prastiwar/RPGDataEditor/blob/master/LICENSE) file for details.
+
+## TODO
+
+- [ ] Search field in NPC tab (search by name or id)
+- [ ] Try to speed up loading files and resources
+(maybe do not load all files at once, load just names, when edit is clicked, then modes should be loaded)
+- [ ] Do not allow to put characters in number inputs
+- [ ] NPC TAB - when Job Type is NONE, expandable button should be hided
+- [ ] NPC TAB - validate - name should not be empty, texture should be resource location or valid url, sound locations should be valid resource location
+- [ ] TradeItem - validate - item should be resource location or valid url, count > 0
+- [ ] TalkLine - validate - Sound location should be valid resource location
+- [ ] Dialogue - add allow ESC to close option
+- [ ] Dialogue - validate - Title and message should not be empty
+- [ ] Quest - validate - Title, message and CompletionTask should not be empty
+- [ ] QuestTask - validate - Item and Kill should be valid resource location
+- [ ] On saving json, backup should be made
