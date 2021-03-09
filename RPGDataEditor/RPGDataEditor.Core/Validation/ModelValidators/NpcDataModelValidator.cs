@@ -8,8 +8,7 @@ namespace RPGDataEditor.Core.Validation
         public NpcDataModelValidator()
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage("Npc name should not be empty");
-            RuleFor(x => x.TextureLocation).NotEmpty().WithMessage("Title cannot be empty")
-                                           .Must(x => ValidationExtensions.IsResourceLocation(x) || ValidationExtensions.IsUrl(x))
+            RuleFor(x => x.TextureLocation).Must(x => ValidationExtensions.IsResourceLocation(x) || ValidationExtensions.IsUrl(x))
                                            .WithMessage("This is not valid url or resource location");
             RuleFor(x => x.AmbientSoundLocation).ResourceLocation().WithMessage("This is not valid resource location");
             RuleFor(x => x.DeathSoundLocation).ResourceLocation().WithMessage("This is not valid resource location");

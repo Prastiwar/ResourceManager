@@ -50,7 +50,11 @@
                          Text="{Binding TextureLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Margin="5"
                          materialDesign:HintAssist.Hint="Texture"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CatchValidationBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
                 <materialDesign:Card HorizontalAlignment="Stretch"
                                      HorizontalContentAlignment="Center"
                                      Margin="5"

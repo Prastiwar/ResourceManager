@@ -1,10 +1,11 @@
 ﻿using Prism.Services.Dialogs;
+using RPGDataEditor.Core.Validation;
 using System;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Mvvm
 {
-    public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase
+    public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase where TModel : IValidable
     {
         public ModelDialogViewModel(ViewModelContext context) : base(context) { }
 
@@ -28,7 +29,15 @@ namespace RPGDataEditor.Core.Mvvm
 
         public virtual Task OnDialogClosing(bool result) => Task.FromResult(true);
 
-        protected virtual Task<bool> ShouldCancelAsync(bool result) => Task.FromResult(false);
+        protected virtual async Task<bool> ShouldCancelAsync(bool result)
+        {
+            if (result)
+            {
+                FluentValidation.Results.ValidationResult validationResult = await Context.ValidationProvider.ValidateAsync(Model);
+                return !validationResult.IsValid;
+            }
+            return false;
+        }
 
         protected override Task InitializeAsync(IDialogParameters parameters)
         {

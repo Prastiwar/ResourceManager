@@ -93,7 +93,12 @@ namespace RPGDataEditor.Wpf
         protected void RegisterValidators(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IValidator<SessionContext>, SessionContextValidator>();
-            ;
+            containerRegistry.Register<IValidator<NpcDataModel>, NpcDataModelValidator>();
+            containerRegistry.Register<IValidator<QuestModel>, QuestModelValidator>();
+            containerRegistry.Register<IValidator<DialogueModel>, DialogueModelValidator>();
+            containerRegistry.Register<IValidator<TalkLine>, TalkLineValidator>();
+            containerRegistry.Register<IValidator<TradeItemModel>, TradeItemModelValidator>();
+            containerRegistry.Register<IValidator<QuestTask>, QuestTaskValidator>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();

@@ -3,9 +3,9 @@ using RPGDataEditor.Core.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class TradeItemValidator : AbstractValidator<TradeItemModel>
+    public class TradeItemModelValidator : AbstractValidator<TradeItemModel>
     {
-        public TradeItemValidator()
+        public TradeItemModelValidator()
         {
             RuleFor(x => x.Item).NotEmpty().WithMessage("Item cannot be empty")
                                 .ResourceLocation().WithMessage("This is not valid resource location");
