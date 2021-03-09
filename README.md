@@ -41,7 +41,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
-- [ ] Search field in NPC tab (search by name or id)
 - [ ] Try to speed up loading files and resources
 (maybe do not load all files at once, load just names, when edit is clicked, then modes should be loaded)
 - [ ] Do not allow to put characters in number inputs
