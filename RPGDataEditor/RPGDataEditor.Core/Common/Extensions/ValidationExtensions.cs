@@ -18,7 +18,7 @@ namespace RPGDataEditor.Core
 
         public static bool IsJson(string value)
         {
-            if (value == null)
+            if (string.IsNullOrEmpty(value))
             {
                 return true;
             }
@@ -42,7 +42,7 @@ namespace RPGDataEditor.Core
 
         public static bool IsResourceLocation(object obj)
         {
-            if (obj == null)
+            if (obj == null || obj.ToString() == "")
             {
                 return true;
             }

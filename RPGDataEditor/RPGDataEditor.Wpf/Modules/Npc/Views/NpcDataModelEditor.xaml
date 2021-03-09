@@ -12,6 +12,7 @@
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
              xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
+             xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -273,48 +274,46 @@
                                                             </Grid>
                                                             <StackPanel x:Name="TradeItemPanel"
                                                                         Visibility="Collapsed">
-                                                                <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                         Margin="5"
+                                                                <TextBox Margin="5"
                                                                          materialDesign:HintAssist.Hint="Item resource location"
                                                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                    <i:Interaction.Behaviors>
-                                                                        <behaviors:CatchValidationBehavior />
-                                                                    </i:Interaction.Behaviors>
+                                                                    <TextBox.Text>
+                                                                        <Binding Path="Item"
+                                                                                 Mode="TwoWay"
+                                                                                 UpdateSourceTrigger="PropertyChanged">
+                                                                            <Binding.ValidationRules>
+                                                                                <validation:ResourceLocationRule />
+                                                                            </Binding.ValidationRules>
+                                                                        </Binding>
+                                                                    </TextBox.Text>
                                                                 </TextBox>
                                                                 <TextBox Text="{Binding Buy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                          InputScope="Number"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="Buy price"
-                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                    <i:Interaction.Behaviors>
-                                                                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                                                                    </i:Interaction.Behaviors>
-                                                                </TextBox>
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
                                                                 <TextBox Text="{Binding Sell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                          InputScope="Number"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="Sell price"
-                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                    <i:Interaction.Behaviors>
-                                                                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                                                                    </i:Interaction.Behaviors>
-                                                                </TextBox>
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
                                                                 <TextBox Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                          InputScope="Number"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="Count"
-                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                    <i:Interaction.Behaviors>
-                                                                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                                                                    </i:Interaction.Behaviors>
-                                                                </TextBox>
-                                                                <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                         Margin="5"
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                <TextBox Margin="5"
                                                                          materialDesign:HintAssist.Hint="NBT"
                                                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                    <i:Interaction.Behaviors>
-                                                                        <behaviors:CatchValidationBehavior />
-                                                                    </i:Interaction.Behaviors>
+                                                                    <TextBox.Text>
+                                                                        <Binding Path="Nbt"
+                                                                                 Mode="TwoWay"
+                                                                                 UpdateSourceTrigger="PropertyChanged">
+                                                                            <Binding.ValidationRules>
+                                                                                <validation:JsonRule />
+                                                                            </Binding.ValidationRules>
+                                                                        </Binding>
+                                                                    </TextBox.Text>
                                                                 </TextBox>
                                                             </StackPanel>
                                                         </StackPanel>
@@ -565,10 +564,19 @@
                                                      materialDesign:HintAssist.Hint="Talk Text"
                                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
                                             <TextBox Grid.Column="2"
-                                                     Text="{Binding SoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      Margin="5"
                                                      materialDesign:HintAssist.Hint="Sound Location"
-                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                <TextBox.Text>
+                                                    <Binding Path="SoundLocation"
+                                                             Mode="TwoWay"
+                                                             UpdateSourceTrigger="PropertyChanged">
+                                                        <Binding.ValidationRules>
+                                                            <validation:ResourceLocationRule />
+                                                        </Binding.ValidationRules>
+                                                    </Binding>
+                                                </TextBox.Text>
+                                            </TextBox>
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>

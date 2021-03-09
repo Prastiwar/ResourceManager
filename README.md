@@ -43,7 +43,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 - [ ] Try to speed up loading files and resources
 (maybe do not load all files at once, load just names, when edit is clicked, then modes should be loaded)
-- [ ] TradeItem - validate - item should be resource location or valid url, count > 0
-- [ ] TalkLine - validate - Sound location should be valid resource location
 - [ ] QuestTask - validate - Item and Kill should be valid resource location
 - [ ] On saving json, backup should be made

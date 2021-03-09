@@ -27,11 +27,11 @@ namespace RPGDataEditor.Wpf.Behaviors
                 ValidationError validationError = new ValidationError(new InvalidValidationRule(), binding) {
                     ErrorContent = errorText
                 };
-                Validation.MarkInvalid(binding, validationError);
+                System.Windows.Controls.Validation.MarkInvalid(binding, validationError);
             }
             else
             {
-                Validation.ClearInvalid(binding);
+                System.Windows.Controls.Validation.ClearInvalid(binding);
             }
         }
     }
