@@ -280,17 +280,29 @@
                                                                          InputScope="Number"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="Buy price"
-                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                                    <i:Interaction.Behaviors>
+                                                                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                                                                    </i:Interaction.Behaviors>
+                                                                </TextBox>
                                                                 <TextBox Text="{Binding Sell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                          InputScope="Number"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="Sell price"
-                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                                    <i:Interaction.Behaviors>
+                                                                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                                                                    </i:Interaction.Behaviors>
+                                                                </TextBox>
                                                                 <TextBox Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                          InputScope="Number"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="Count"
-                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                                    <i:Interaction.Behaviors>
+                                                                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                                                                    </i:Interaction.Behaviors>
+                                                                </TextBox>
                                                                 <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                          Margin="5"
                                                                          materialDesign:HintAssist.Hint="NBT"
@@ -302,7 +314,6 @@
                                                             </StackPanel>
                                                         </StackPanel>
                                                     </materialDesign:Card>
-                                                   
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
@@ -334,65 +345,115 @@
                         <StackPanel x:Name="AttributesPanel"
                                     Visibility="Collapsed">
                             <TextBox DataContext="{Binding Model}"
-                                     Text="{Binding HealthRegen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding HealthRegen, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Health Regeneration"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0.0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="MaxHealthTextBox"
-                                     Text="{Binding MaxHealth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding MaxHealth, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Max Health"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0.0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="RespawnTimeTextBox"
-                                     Text="{Binding RespawnTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding RespawnTime, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Respawn Time"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="MovementSpeedTextBox"
-                                     Text="{Binding MovementSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding MovementSpeed, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Movement Speed"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="AttackDamageTextBox"
-                                     Text="{Binding AttackDamage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding AttackDamage, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Attack Damage"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="AttackKnockbackTextBox"
-                                     Text="{Binding AttackKnockback, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding AttackKnockback, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Attack Knockback"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="AttackSpeedTextBox"
-                                     Text="{Binding AttackSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding AttackSpeed, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Attack Speed"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="ArmorTextBox"
-                                     Text="{Binding Armor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding Armor, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Armor"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="ArmorToughnessTextBox"
-                                     Text="{Binding ArmorToughness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding ArmorToughness, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Armor Toughness"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <TextBox x:Name="KnockbackResistanceTextBox"
-                                     Text="{Binding KnockbackResistance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Text="{Binding KnockbackResistance, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Knockback Resistance"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                                     IsPrecise="true" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>
@@ -512,7 +573,11 @@
                                      Margin="5"
                                      InputScope="Number"
                                      materialDesign:HintAssist.Hint="Talk Range"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                                </i:Interaction.Behaviors>
+                            </TextBox>
                             <materialDesign:Card Margin="5">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">

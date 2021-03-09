@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d"
              x:Name="This">
     <StackPanel x:Name="FieldPanel"
@@ -14,20 +16,32 @@
                  InputScope="Number"
                  Margin="7"
                  materialDesign:HintAssist.Hint="X position"
-                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:NumericFieldBehaviour EmptyValue="0" />
+            </i:Interaction.Behaviors>
+        </TextBox>
         <TextBox x:Name="YField"
                  DataContext="{Binding Position, ElementName=This}"
                  Text="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  InputScope="Number"
                  Margin="7"
                  materialDesign:HintAssist.Hint="Y position"
-                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:NumericFieldBehaviour EmptyValue="0" />
+            </i:Interaction.Behaviors>
+        </TextBox>
         <TextBox x:Name="ZField"
                  DataContext="{Binding Position, ElementName=This}"
                  Text="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  InputScope="Number"
                  Margin="7"
                  materialDesign:HintAssist.Hint="Z position"
-                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:NumericFieldBehaviour EmptyValue="0" />
+            </i:Interaction.Behaviors>
+        </TextBox>
     </StackPanel>
 </UserControl>

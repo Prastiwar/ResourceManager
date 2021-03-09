@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              mc:Ignorable="d">
     <StackPanel>
         <ComboBox x:Name="TaskType"
@@ -41,7 +43,11 @@
                      Margin="5"
                      InputScope="Number"
                      materialDesign:HintAssist.Hint="Amount"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                </i:Interaction.Behaviors>
+            </TextBox>
         </StackPanel>
         <StackPanel x:Name="ReachQuestTaskPanel"
                     Visibility="Collapsed">
@@ -52,7 +58,11 @@
                      Margin="5"
                      InputScope="Number"
                      materialDesign:HintAssist.Hint="Distance"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                </i:Interaction.Behaviors>
+            </TextBox>
         </StackPanel>
         <StackPanel x:Name="BlockInteractQuestTaskPanel"
                     Visibility="Collapsed">
