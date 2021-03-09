@@ -11,6 +11,12 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref startQuest, value);
         }
 
+        private bool allowEscape = false;
+        public bool AllowEscape {
+            get => allowEscape;
+            set => SetProperty(ref allowEscape, value);
+        }
+
         private IList<DialogueOptionModel> options = new ObservableCollection<DialogueOptionModel>();
         public IList<DialogueOptionModel> Options {
             get => options;

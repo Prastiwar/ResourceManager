@@ -171,6 +171,7 @@
                                     Height="16"
                                     Padding="0"
                                     Click="ToggleExpandIcon"
+                                    IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
                                     Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
                                     CommandParameter="{x:Reference JobStackPanel}"
                                     Style="{DynamicResource MaterialDesignFlatButton}" />

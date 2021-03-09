@@ -26,6 +26,10 @@
                     <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>
+                    <converters:StringToBoolConverter x:Key="InvertStringToBoolConverter"
+                                                      Invert="True"/>
+                </ResourceDictionary>
+                <ResourceDictionary>
                     <converters:IdentifiableToIdConverter x:Key="IdentifiableToIdConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>
