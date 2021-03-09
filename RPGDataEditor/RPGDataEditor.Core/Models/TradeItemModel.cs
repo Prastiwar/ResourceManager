@@ -23,7 +23,7 @@
         private int count;
         public int Count {
             get => count;
-            set => SetProperty(ref count, value);
+            set => SetProperty(ref count, value < 1 ? 1 : value);
         }
 
         private string nbt;
