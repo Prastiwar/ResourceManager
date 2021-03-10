@@ -67,6 +67,7 @@ namespace RPGDataEditor.Wpf.Mvvm
                     cancelSelection = true;
                     regionTarget.SelectedIndex = previousTabIndex;
                     cancelSelection = false;
+                    AttachProperties.SetIsLoading(regionTarget, false);
                     return;
                 }
                 await Notifier.CallAsync<ITabSwitchAsyncAware>(removedTab?.DataContext, aware => aware.OnNavigatedFromAsync(context));
