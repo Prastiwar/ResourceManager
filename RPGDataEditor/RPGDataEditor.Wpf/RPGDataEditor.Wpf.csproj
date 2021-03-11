@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>RPGDataEditor.Wpf</AssemblyName>
+    <ApplicationIcon>rpgdataeditor.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.5.2" />

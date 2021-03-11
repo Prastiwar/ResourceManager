@@ -32,7 +32,7 @@ namespace RPGDataEditor.Wpf.Npc.Views
                 return true;
             }
             string name = SearchTextBox.Text;
-            NpcDataModel npc = (NpcDataModel)item;
+            SimpleIdentifiableData npc = (SimpleIdentifiableData)item;
             if (int.TryParse(name, out int id))
             {
                 return npc.Id == id;
