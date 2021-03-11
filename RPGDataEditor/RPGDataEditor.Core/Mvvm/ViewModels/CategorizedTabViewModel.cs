@@ -12,6 +12,8 @@ namespace RPGDataEditor.Core.Mvvm
     {
         public CategorizedTabViewModel(ViewModelContext context) : base(context) { }
 
+        private string currentCategory;
+
         private ObservableCollection<TModel> currentCategoryModels;
         public ObservableCollection<TModel> CurrentCategoryModels {
             get => currentCategoryModels;
@@ -42,6 +44,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual void ShowCategory(string category)
         {
+            currentCategory = category;
             CurrentCategoryModels = new ObservableCollection<TModel>();
             CurrentCategoryModels.AddRange(Models.Where(x => string.Compare(x.Category, category) == 0));
         }
@@ -52,7 +55,7 @@ namespace RPGDataEditor.Core.Mvvm
             if (newModel != null)
             {
                 newModel.Title = "New model";
-                newModel.Category = "Uncategorized"; // TODO: there should be actual category
+                newModel.Category = currentCategory;
                 CurrentCategoryModels.Add(newModel);
             }
             return newModel;
