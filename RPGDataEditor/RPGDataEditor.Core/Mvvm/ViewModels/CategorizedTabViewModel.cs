@@ -46,13 +46,13 @@ namespace RPGDataEditor.Core.Mvvm
             CurrentCategoryModels.AddRange(Models.Where(x => string.Compare(x.Category, category) == 0));
         }
 
-        protected override async Task<TModel> CreateModelAsync(string category)
+        protected override async Task<TModel> CreateModelAsync()
         {
-            TModel newModel = await base.CreateModelAsync(category);
+            TModel newModel = await base.CreateModelAsync();
             if (newModel != null)
             {
                 newModel.Title = "New model";
-                newModel.Category = category;
+                newModel.Category = "Uncategorized"; // TODO: there should be actual category
                 CurrentCategoryModels.Add(newModel);
             }
             return newModel;

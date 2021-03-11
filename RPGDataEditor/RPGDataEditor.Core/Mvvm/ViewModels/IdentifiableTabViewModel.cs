@@ -21,7 +21,7 @@ namespace RPGDataEditor.Core.Mvvm
         }
 
         private ICommand addModelCommand;
-        public ICommand AddModelCommand => addModelCommand ??= new DelegateCommand<string>(CreateModel);
+        public ICommand AddModelCommand => addModelCommand ??= new DelegateCommand(CreateModel);
 
         private ICommand removeModelCommand;
         public ICommand RemoveModelCommand => removeModelCommand ??= new DelegateCommand<TModel>(RemoveModel);
@@ -82,9 +82,9 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();
 
-        private async void CreateModel(string category) => await CreateModelAsync(category);
-
-        protected virtual async Task<TModel> CreateModelAsync(string category)
+        private async void CreateModel() => await CreateModelAsync();
+        
+        protected virtual async Task<TModel> CreateModelAsync()
         {
             TModel newModel = CreateModelInstance();
             int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;

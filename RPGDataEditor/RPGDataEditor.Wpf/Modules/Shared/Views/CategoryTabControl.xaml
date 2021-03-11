@@ -26,8 +26,7 @@
             <Button Grid.Column="1"
                     Content="Create new"
                     Visibility="{Binding Visibility, Source={x:Reference CategoryModelList}}"
-                    Command="{Binding AddModelCommand}"
-                    CommandParameter="{Binding Tag, Source={x:Reference CategoryModelList}}" />
+                    Command="{Binding AddModelCommand}"/>
         </Grid>
         <ScrollViewer Grid.Row="1">
             <StackPanel>
