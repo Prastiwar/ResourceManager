@@ -96,7 +96,6 @@ namespace RPGDataEditor.Wpf
             containerRegistry.Register<IValidator<NpcDataModel>, NpcDataModelValidator>();
             containerRegistry.Register<IValidator<QuestModel>, QuestModelValidator>();
             containerRegistry.Register<IValidator<DialogueModel>, DialogueModelValidator>();
-            containerRegistry.Register<IValidator<QuestTask>, QuestTaskValidator>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();

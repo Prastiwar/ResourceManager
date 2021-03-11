@@ -16,11 +16,11 @@ namespace RPGDataEditor.Core
         public static IRuleBuilderOptions<T, TProperty> Json<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
             => ruleBuilder.Must(x => IsJson(x.ToString()));
 
-        public static bool IsJson(string value)
+        public static bool IsJson(string value, bool allowNull = true)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return true;
+                return allowNull;
             }
             value = value.Trim();
             bool isJsonObject = value.StartsWith("{") && value.EndsWith("}");
@@ -40,22 +40,22 @@ namespace RPGDataEditor.Core
             return false;
         }
 
-        public static bool IsResourceLocation(object obj)
+        public static bool IsResourceLocation(object obj, bool allowNull = true)
         {
             if (obj == null || obj.ToString() == "")
             {
-                return true;
+                return allowNull;
             }
             string value = obj.ToString();
             string[] parts = value.Split(':', System.StringSplitOptions.RemoveEmptyEntries);
             return parts.Length == 2;
         }
 
-        public static bool IsUrl(object obj)
+        public static bool IsUrl(object obj, bool allowNull = true)
         {
             if (obj == null)
             {
-                return true;
+                return allowNull;
             }
             string value = obj.ToString();
             return new UrlAttribute().IsValid(value);

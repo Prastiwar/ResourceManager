@@ -11,7 +11,7 @@ namespace RPGDataEditor.Core.Validation
     /// </summary>
     public class CheckValidValidator : PropertyValidator
     {
-        public CheckValidValidator(string errorMessage) : base(errorMessage) { }
+        public CheckValidValidator() : base() { }
 
         public bool IsPropertyValid { get; protected set; }
 

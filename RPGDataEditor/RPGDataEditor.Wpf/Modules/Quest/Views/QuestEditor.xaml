@@ -11,6 +11,7 @@
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:questViews="clr-namespace:RPGDataEditor.Wpf.Quest.Views"
+             xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -59,6 +60,13 @@
                                      DataContext="{Binding Model}"
                                      Margin="5"
                                      Padding="5">
+                    <materialDesign:Card.Tag>
+                        <Binding Path="CompletionTask">
+                            <Binding.ValidationRules>
+                                <validation:ValidQuestTaskRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:Card.Tag>
                     <StackPanel>
                         <TextBlock Text="Choose completion task"
                                    Margin="5" />

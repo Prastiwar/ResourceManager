@@ -43,5 +43,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 - [ ] Try to speed up loading files and resources
 (maybe do not load all files at once, load just names, when edit is clicked, then modes should be loaded)
-- [ ] QuestTask - validate - Item and Kill should be valid resource location
 - [ ] On saving json, backup should be made

@@ -7,6 +7,7 @@
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
              mc:Ignorable="d">
     <StackPanel>
         <ComboBox x:Name="TaskType"
@@ -35,10 +36,20 @@
         </StackPanel>
         <StackPanel x:Name="KillQuestTaskPanel"
                     Visibility="Collapsed">
-            <TextBox Text="{Binding Kill, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
+            <TextBox Margin="5"
                      materialDesign:HintAssist.Hint="Kill target"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <TextBox.Text>
+                    <Binding Path="Kill"
+                             Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:ResourceLocationRule ValidatesOnTargetUpdated="True"
+                                                             AllowNull="False" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <TextBox Text="{Binding Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      InputScope="Number"
@@ -77,19 +88,38 @@
         </StackPanel>
         <StackPanel x:Name="ItemInteractQuestTaskPanel"
                     Visibility="Collapsed">
-            <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
+            <TextBox Margin="5"
                      materialDesign:HintAssist.Hint="Item"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <TextBox.Text>
+                    <Binding Path="Item"
+                             Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:ResourceLocationRule ValidatesOnTargetUpdated="True"
+                                                             AllowNull="False" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <CheckBox x:Name="RespectNBTCheckbox"
                       Content="Should respect NBT?"
                       Margin="5"
                       IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
-            <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
+            <TextBox Margin="5"
                      materialDesign:HintAssist.Hint="Nbt"
                      Visibility="{Binding IsChecked, ElementName=RespectNBTCheckbox, Converter={StaticResource BoolToVisibilityConverter}}"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <TextBox.Text>
+                    <Binding Path="Nbt"
+                             Mode="TwoWay"
+                             UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:JsonRule ValidatesOnTargetUpdated="True" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </StackPanel>
         <StackPanel x:Name="DialogueQuestTaskPanel"
                     Visibility="Collapsed">

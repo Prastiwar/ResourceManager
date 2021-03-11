@@ -6,7 +6,7 @@ namespace RPGDataEditor.Core.Validation
 {
     public class UniquePropertyValidator<T, TProperty> : PropertyValidator
     {
-        public UniquePropertyValidator(IEnumerable<T> repository) : base(nameof(UniquePropertyValidator<T, TProperty>)) => Repository = repository;
+        public UniquePropertyValidator(IEnumerable<T> repository) : base() => Repository = repository;
 
         public IEnumerable<T> Repository { get; }
 
@@ -28,5 +28,7 @@ namespace RPGDataEditor.Core.Validation
             });
             return isUnique;
         }
+
+        protected override string GetDefaultMessageTemplate() => nameof(UniquePropertyValidator<T, TProperty>);
     }
 }

@@ -11,7 +11,7 @@
         private int amount = 1;
         public int Amount {
             get => amount;
-            set => SetProperty(ref amount, value);
+            set => SetProperty(ref amount, value < 1 ? 1 : value);
         }
 
         private int counter;

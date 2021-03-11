@@ -6,14 +6,16 @@ namespace RPGDataEditor.Wpf.Validation
 {
     public class ResourceLocationRule : ValidationRule
     {
+        public bool AllowNull { get; set; } = true;
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (value == null)
+            bool isResourceLocation = AllowNull;
+            if (value != null)
             {
-                return ValidationResult.ValidResult;
+                string val = value.ToString();
+                isResourceLocation = ValidationExtensions.IsResourceLocation(val, AllowNull);
             }
-            string val = value.ToString();
-            bool isResourceLocation = ValidationExtensions.IsResourceLocation(val);
             return new ValidationResult(isResourceLocation, "This is not valid resource location");
         }
     }
