@@ -37,7 +37,8 @@
                            HorizontalAlignment="Center" />
                 <ListView x:Name="CategoryModelList"
                           Visibility="Collapsed"
-                          ItemsSource="{Binding CurrentCategoryModels}">
+                          Tag="{Binding CurrentCategory}"
+                          ItemsSource="{Binding Models}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
@@ -63,7 +64,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <ListView x:Name="CategoriesList"
-                          ItemsSource="{Binding ModelCategories}">
+                          ItemsSource="{Binding Categories}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"

@@ -83,7 +83,7 @@ namespace RPGDataEditor.Core.Mvvm
         protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();
 
         private async void CreateModel() => await CreateModelAsync();
-        
+
         protected virtual async Task<TModel> CreateModelAsync()
         {
             TModel newModel = CreateModelInstance();

@@ -41,6 +41,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
-- [ ] Try to speed up loading files and resources
-(maybe do not load all files at once, load just names, when edit is clicked, then modes should be loaded)
+- [ ] Improve resources loading time
 - [ ] On saving json, backup should be made

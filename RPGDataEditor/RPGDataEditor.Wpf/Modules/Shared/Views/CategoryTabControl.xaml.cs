@@ -1,11 +1,54 @@
 ﻿using RPGDataEditor.Core.Mvvm;
+using System;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Views
 {
     public partial class CategoryTabControl : UserControl
     {
-        public CategoryTabControl() => InitializeComponent();
+        public CategoryTabControl()
+        {
+            InitializeComponent();
+            DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(ListView));
+            dpd.AddValueChanged(CategoryModelList, OnModelListBindingChanged);
+            DependencyPropertyDescriptor tagDpd = DependencyPropertyDescriptor.FromProperty(TagProperty, typeof(FrameworkElement));
+            tagDpd.AddValueChanged(CategoryModelList, OnModelListTagBindingChanged);
+        }
+
+        private void OnModelListTagBindingChanged(object sender, EventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(CategoryModelList.ItemsSource);
+            if (view != null)
+            {
+                view.Refresh();
+            }
+        }
+
+        private void OnModelListBindingChanged(object sender, EventArgs e)
+        {
+            ICollectionView view = CollectionViewSource.GetDefaultView(CategoryModelList.ItemsSource);
+            if (view != null)
+            {
+                view.Filter = CategoryFilter;
+            }
+        }
+
+        private bool CategoryFilter(object item)
+        {
+            if (CategoryModelList.Tag is string tag)
+            {
+                if (string.IsNullOrEmpty(tag))
+                {
+                    return true;
+                }
+                dynamic categorizedItem = item;
+                return categorizedItem.Category.CompareTo(tag) == 0;
+            }
+            return true;
+        }
 
         private void RenameCategory_Click(object sender, System.Windows.RoutedEventArgs e)
         {

@@ -86,18 +86,46 @@ namespace RPGDataEditor.Core.Mvvm
 
         public Task<string> GetJsonAsync(string relativePath) => ReadFtpFile(Path.Combine(LocationPath, relativePath));
 
+
         public async Task<string[]> GetJsonsAsync(string relativePath)
         {
             string[] files = await GetJsonFiles(relativePath);
             List<string> jsons = new List<string>();
-            foreach (string file in files)
+            //if (files.Length >= 100)
+            //{
+            //    TransformBlock<string, string> getCustomerBlock = new TransformBlock<string, string>(async file => await ReadFtpFile(file),
+            //        new ExecutionDataflowBlockOptions {
+            //            MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded
+            //        });
+            //    ActionBlock<string> writeCustomerBlock = new ActionBlock<string>(json => {
+            //        if (json != null)
+            //        {
+            //            jsons.Add(json);
+            //        }
+            //    });
+            //    getCustomerBlock.LinkTo(writeCustomerBlock, new DataflowLinkOptions {
+            //        PropagateCompletion = true
+            //    });
+            //    foreach (string file in files)
+            //    {
+            //        getCustomerBlock.Post(file);
+            //    }
+            //    getCustomerBlock.Complete();
+            //    await writeCustomerBlock.Completion;
+            //}
+            //else
+            //{
+            Task<string>[] tasks = files.Select(file => ReadFtpFile(file)).ToArray();
+            await Task.WhenAll(tasks);
+            foreach (Task<string> task in tasks)
             {
-                string json = await ReadFtpFile(file);
+                string json = await task;
                 if (json != null)
                 {
                     jsons.Add(json);
                 }
             }
+            //}
             return jsons.ToArray();
         }
 

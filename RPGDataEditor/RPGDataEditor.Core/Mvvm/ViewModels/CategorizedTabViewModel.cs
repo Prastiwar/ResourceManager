@@ -13,17 +13,15 @@ namespace RPGDataEditor.Core.Mvvm
         public CategorizedTabViewModel(ViewModelContext context) : base(context) { }
 
         private string currentCategory;
-
-        private ObservableCollection<TModel> currentCategoryModels;
-        public ObservableCollection<TModel> CurrentCategoryModels {
-            get => currentCategoryModels;
-            protected set => SetProperty(ref currentCategoryModels, value);
+        public string CurrentCategory {
+            get => currentCategory;
+            protected set => SetProperty(ref currentCategory, value);
         }
 
-        private ObservableCollection<string> modelCategories;
-        public ObservableCollection<string> ModelCategories {
-            get => modelCategories;
-            protected set => SetProperty(ref modelCategories, value);
+        private ObservableCollection<string> categories;
+        public ObservableCollection<string> Categories {
+            get => categories;
+            protected set => SetProperty(ref categories, value);
         }
 
         private ICommand addCategoryCommand;
@@ -37,17 +35,12 @@ namespace RPGDataEditor.Core.Mvvm
 
         public override async Task Refresh()
         {
-            ModelCategories = new ObservableCollection<string>();
+            Categories = new ObservableCollection<string>();
             await base.Refresh();
-            ModelCategories.AddRange(Models.Select(x => x.Category).Distinct());
+            Categories.AddRange(Models.Select(x => x.Category).Distinct());
         }
 
-        protected virtual void ShowCategory(string category)
-        {
-            currentCategory = category;
-            CurrentCategoryModels = new ObservableCollection<TModel>();
-            CurrentCategoryModels.AddRange(Models.Where(x => string.Compare(x.Category, category) == 0));
-        }
+        protected virtual void ShowCategory(string category) => CurrentCategory = category;
 
         protected override async Task<TModel> CreateModelAsync()
         {
@@ -55,47 +48,36 @@ namespace RPGDataEditor.Core.Mvvm
             if (newModel != null)
             {
                 newModel.Title = "New model";
-                newModel.Category = currentCategory;
-                CurrentCategoryModels.Add(newModel);
+                newModel.Category = CurrentCategory;
             }
             return newModel;
-        }
-
-        protected override async Task<bool> RemoveModelAsync(TModel model)
-        {
-            bool removed = await base.RemoveModelAsync(model);
-            if (removed)
-            {
-                CurrentCategoryModels.Remove(model);
-            }
-            return removed;
         }
 
         protected void CreateCategory()
         {
             string newName = "New Category";
             int i = 1;
-            while (ModelCategories.IndexOf(newName) != -1)
+            while (Categories.IndexOf(newName) != -1)
             {
                 newName = $"New Category ({i})";
                 i++;
             }
-            ModelCategories.Add(newName);
+            Categories.Add(newName);
         }
 
         public async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
         {
-            if (ModelCategories.IndexOf(newCategory) != -1)
+            if (Categories.IndexOf(newCategory) != -1)
             {
                 return false;
             }
-            int oldCategoryIndex = ModelCategories.IndexOf(oldCategory);
-            bool removed = ModelCategories.Remove(oldCategory);
+            int oldCategoryIndex = Categories.IndexOf(oldCategory);
+            bool removed = Categories.Remove(oldCategory);
             if (!removed)
             {
                 return false;
             }
-            ModelCategories.Insert(oldCategoryIndex, newCategory);
+            Categories.Insert(oldCategoryIndex, newCategory);
             foreach (TModel model in Models.Where(x => string.Compare(x.Category, oldCategory) == 0))
             {
                 string relativeFilePath = GetRelativeFilePath(model);
@@ -108,7 +90,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected async void RemoveCategory(string category)
         {
-            bool removed = ModelCategories.Remove(category);
+            bool removed = Categories.Remove(category);
             if (removed)
             {
                 foreach (TModel model in Models.Where(x => string.Compare(x.Category, category) == 0))

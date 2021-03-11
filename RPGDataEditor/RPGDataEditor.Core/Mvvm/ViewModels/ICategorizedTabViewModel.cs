@@ -6,7 +6,7 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public interface ICategorizedTabViewModel
     {
-        public ObservableCollection<string> ModelCategories { get; }
+        public ObservableCollection<string> Categories { get; }
 
         Task<bool> RenameCategoryAsync(string oldCategory, string newCategory);
 

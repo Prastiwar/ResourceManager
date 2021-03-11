@@ -3,6 +3,7 @@ using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Mvvm
@@ -67,11 +68,12 @@ namespace RPGDataEditor.Core.Mvvm
             };
         }
 
-        protected sealed override SimpleIdentifiableData CreateModelInstance() => Activator.CreateInstance<SimpleIdentifiableData>();
-
         protected override Task<SimpleIdentifiableData> CreateModelAsync()
         {
             SimpleIdentifiableData newModel = CreateModelInstance();
+            int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;
+            newModel.Name = "New Model";
+            newModel.Id = nextId;
             Models.Add(newModel);
             return Task.FromResult(newModel);
         }
