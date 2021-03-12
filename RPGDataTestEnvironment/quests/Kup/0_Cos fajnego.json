@@ -3,11 +3,11 @@
   "completionTask": {
     "type": "Kill",
     "kill": "minecraft:zombie",
-    "amount": 1
+    "amount": 2
   },
   "title": "Cos fajnego",
   "message": "Helko",
-  "category": "Dupsko",
+  "category": "Kup",
   "tasks": [],
   "requirements": []
 }

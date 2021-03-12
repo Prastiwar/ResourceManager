@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Newtonsoft.Json;
+using Prism.Commands;
 using RPGDataEditor.Core.Models;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -100,7 +101,7 @@ namespace RPGDataEditor.Core.Mvvm
             Categories.Add(newName);
         }
 
-        public async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
+        public virtual async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
         {
             if (Categories.IndexOf(newCategory) != -1)
             {
@@ -115,10 +116,32 @@ namespace RPGDataEditor.Core.Mvvm
             Categories.Insert(oldCategoryIndex, newCategory);
             foreach (SimpleIdentifiableData model in Models.Where(x => string.Compare((x as SimpleCategorizedData).Category, oldCategory) == 0))
             {
-                string relativeFilePath = GetRelativeFilePath(model);
-                (model as SimpleCategorizedData).Category = newCategory;
-                //string json = JsonConvert.SerializeObject(model);
-                //bool saved = await Session.SaveJsonFileAsync(relativeFilePath, json);
+                try
+                {
+                    string relativeFilePath = GetRelativeFilePath(model);
+                    (model as SimpleCategorizedData).Category = newCategory;
+                    string newPath = GetRelativeFilePath(model);
+
+                    string exactModelJson = await Session.GetJsonAsync(relativeFilePath);
+                    TModel exactModel = JsonConvert.DeserializeObject<TModel>(exactModelJson);
+                    exactModel.Category = newCategory;
+
+                    string newJson = JsonConvert.SerializeObject(exactModel);
+                    bool saved = await Session.SaveJsonFileAsync(newPath, newJson);
+                    if (saved)
+                    {
+                        bool deleted = await Session.DeleteFileAsync(relativeFilePath);
+                        if (!deleted)
+                        {
+                            Context.SnackbarService.Enqueue("Couldn't delete model " + model.Name);
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Logger.Error("One of models couldn't be renamed", ex);
+                    Context.SnackbarService.Enqueue("Model couldn't be renamed " + model.Name);
+                }
             }
             return true;
         }
@@ -132,6 +155,10 @@ namespace RPGDataEditor.Core.Mvvm
                 {
                     string relativeFilePath = GetRelativeFilePath(model);
                     bool deleted = await Session.DeleteFileAsync(relativeFilePath);
+                    if (!deleted)
+                    {
+                        Context.SnackbarService.Enqueue("Couldn't delete model " + model.Name);
+                    }
                 }
             }
         }

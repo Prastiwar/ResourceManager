@@ -2,6 +2,7 @@
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Serialization;
+using System;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels
@@ -14,7 +15,25 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {
-            System.Func<JsonSerializerSettings> cachedSettings = JsonConvert.DefaultSettings;
+            Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
+            EditorResults results = await base.OpenEditorAsync(model);
+            JsonConvert.DefaultSettings = cachedSettings;
+            return results;
+        }
+
+        public override async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
+        {
+            Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
+            bool renamed = await base.RenameCategoryAsync(oldCategory, newCategory);
+            JsonConvert.DefaultSettings = cachedSettings;
+            return renamed;
+        }
+
+        /// <summary> Adds ignore properties to default JsonSerializerSettings </summary>
+        /// <returns> Previous default JsonSerializerSettings </returns>
+        private Func<JsonSerializerSettings> IgnoreTasksProgress()
+        {
+            Func<JsonSerializerSettings> cachedSettings = JsonConvert.DefaultSettings;
             JsonConvert.DefaultSettings = () => {
                 JsonSerializerSettings settings = cachedSettings();
                 if (settings.ContractResolver is PropertyContractResolver resolver)
@@ -25,9 +44,7 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
                 }
                 return settings;
             };
-            EditorResults results = await base.OpenEditorAsync(model);
-            JsonConvert.DefaultSettings = cachedSettings;
-            return results;
+            return cachedSettings;
         }
 
         protected override QuestModel CreateNewExactModel(SimpleIdentifiableData model) => new QuestModel() {
