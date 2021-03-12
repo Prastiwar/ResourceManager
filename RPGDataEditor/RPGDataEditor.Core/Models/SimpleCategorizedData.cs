@@ -2,10 +2,10 @@
 {
     public class SimpleCategorizedData : SimpleIdentifiableData
     {
-        private string category = "";
+        private string category = "Uncategorized";
         public string Category {
             get => category;
-            set => SetProperty(ref category, value ?? "");
+            set => SetProperty(ref category, string.IsNullOrWhiteSpace(value) ? "Uncategorized" : value);
         }
     }
 }

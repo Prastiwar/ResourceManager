@@ -1,0 +1,86 @@
+{
+  "id": 1,
+  "name": "Bob",
+  "title": "Handlarz",
+  "position": {
+    "x": -297,
+    "y": 66,
+    "z": -500
+  },
+  "invulnerable": true,
+  "lookAtPlayer": true,
+  "talkData": {
+    "talkRange": 10,
+    "initationDialogues": [
+      0
+    ],
+    "interactLines": [],
+    "hurtLines": [],
+    "deathLines": []
+  },
+  "job": {
+    "type": "Trader",
+    "items": [
+      {
+        "item": "craftpolis:camp",
+        "buy": 100000,
+        "sell": 5000,
+        "count": 1,
+        "nbt": null
+      }
+    ]
+  },
+  "deathSoundLocation": "",
+  "hurtSoundLocation": "",
+  "ambientSoundLocation": "",
+  "textureLocation": "",
+  "movementType": 0,
+  "healthRegen": 0,
+  "equipment": {
+    "chest": "minecraft:",
+    "head": "minecraft:",
+    "mainHand": "",
+    "offHand": "",
+    "feet": "minecraft:",
+    "legs": "minecraft:"
+  },
+  "paths": [],
+  "attributes": [
+    {
+      "name": "minecraft:generic.max_health",
+      "value": 20.0
+    },
+    {
+      "name": "minecraft:generic.knockback_resistance",
+      "value": 0.0
+    },
+    {
+      "name": "minecraft:generic.movement_speed",
+      "value": 0.6
+    },
+    {
+      "name": "minecraft:generic.attack_damage",
+      "value": 2.0
+    },
+    {
+      "name": "minecraft:generic.attack_knockback",
+      "value": 0.0
+    },
+    {
+      "name": "minecraft:generic.attack_speed",
+      "value": 4.0
+    },
+    {
+      "name": "minecraft:generic.armor",
+      "value": 0.0
+    },
+    {
+      "name": "minecraft:generic.armor_toughness",
+      "value": 0.0
+    },
+    {
+      "name": "craftpolis:npc.respawn_time",
+      "value": 5.0
+    }
+  ]
+}

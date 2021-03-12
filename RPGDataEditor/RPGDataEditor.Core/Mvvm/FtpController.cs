@@ -144,7 +144,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         public async Task<string[]> GetJsonFiles(string relativePath)
         {
-            FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.ListDirectory);
+            FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.ListDirectoryDetails);
             using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
             if (!IsResponseSuccess(response))
             {
@@ -154,9 +154,24 @@ namespace RPGDataEditor.Core.Mvvm
             using StreamReader reader = new StreamReader(response.GetResponseStream());
             string names = reader.ReadToEnd();
             List<string> files = names.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).ToList();
-            files.RemoveAll(file => !file.EndsWith(".json"));
-            string directoryPath = Path.Combine(LocationPath, relativePath);
-            return files.Select(file => Path.Combine(directoryPath, file)).ToArray();
+            List<string> fileNames = new List<string>(files.Count);
+            foreach (string file in files)
+            {
+                bool isDirectory = file[0] == 'd';
+                string fileName = file.Split(new char[] { ' ' }, 9, StringSplitOptions.RemoveEmptyEntries)[8];
+                if (isDirectory)
+                {
+                    string[] subFiles = await GetJsonFiles(Path.Combine(relativePath, fileName));
+                    fileNames.AddRange(subFiles);
+                } 
+                else if(!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                {
+                    string directoryPath = Path.Combine(LocationPath, relativePath);
+                    string filePath = Path.Combine(directoryPath, fileName);
+                    fileNames.Add(filePath);
+                }
+            }
+            return fileNames.ToArray();
         }
 
         private FtpWebRequest CreateFtpRequestRaw(string ftpPath, string method)

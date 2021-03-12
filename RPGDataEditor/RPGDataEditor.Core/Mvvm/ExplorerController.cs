@@ -21,7 +21,8 @@ namespace RPGDataEditor.Core.Mvvm
         {
             try
             {
-                File.Delete(relativePath);
+                string filePath = Path.Combine(LocationPath, relativePath);
+                File.Delete(filePath);
             }
             catch (Exception ex)
             {
@@ -67,7 +68,7 @@ namespace RPGDataEditor.Core.Mvvm
         public Task<string[]> GetJsonFiles(string relativePath)
         {
             string directoryPath = Path.Combine(LocationPath, relativePath);
-            return Task.FromResult(Directory.EnumerateFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly).ToArray());
+            return Task.FromResult(Directory.EnumerateFiles(directoryPath, "*.json", SearchOption.AllDirectories).ToArray());
         }
 
     }

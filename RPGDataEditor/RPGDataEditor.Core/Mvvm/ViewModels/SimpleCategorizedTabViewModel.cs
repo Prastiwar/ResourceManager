@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
+﻿using Prism.Commands;
 using RPGDataEditor.Core.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -35,30 +33,28 @@ namespace RPGDataEditor.Core.Mvvm
             protected set => SetProperty(ref currentCategory, value);
         }
 
+        protected override string GetRelativeFilePath(SimpleIdentifiableData model)
+        {
+            SimpleCategorizedData categorizedData = (SimpleCategorizedData)model;
+            return $"{RelativePath}/{categorizedData.Category}/{model.Id}_{model.Name}.json";
+        }
+
         public override async Task Refresh()
         {
             Categories = new ObservableCollection<string>();
-            Models = new ObservableCollection<SimpleIdentifiableData>();
-            IsLoading = true;
-            try
-            {
-                string[] files = await Session.GetFilesAsync(RelativePath);
-                foreach (string file in files)
-                {
-                    SimpleIdentifiableData newModel = await CreateSimpleCategorizedModelAsync(file);
-                    Models.Add(newModel);
-                }
-                Categories.AddRange(Models.Select(x => (x as SimpleCategorizedData).Category).Distinct());
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Failed to load files, class: " + GetType().Name, ex);
-                Context.SnackbarService.Enqueue("Failed to load files, you can try again by refreshing tab");
-            }
-            IsLoading = false;
+            await base.Refresh();
+            Categories.AddRange(Models.Select(x => (x as SimpleCategorizedData).Category).Distinct());
         }
 
-        protected virtual void ShowCategory(string category) => CurrentCategory = category;
+        protected override Task OnSavingAsync(SimpleIdentifiableData model, EditorResults results)
+        {
+            if (results.Success)
+            {
+                TModel exactModel = (TModel)results.Model;
+                (model as SimpleCategorizedData).Name = exactModel.Title;
+            }
+            return Task.CompletedTask;
+        }
 
         protected override async Task<SimpleIdentifiableData> CreateModelAsync()
         {
@@ -71,9 +67,26 @@ namespace RPGDataEditor.Core.Mvvm
                     Category = CurrentCategory
                 };
                 Models.Add(categorizedData);
+                return categorizedData;
             }
             return null;
         }
+
+        protected override SimpleIdentifiableData CreateSimpleModel(string file)
+        {
+            SimpleIdentifiableData data = base.CreateSimpleModel(file);
+            string relativePath = Path.GetRelativePath(Session.LocationPath, file);
+            string category = Path.GetRelativePath(RelativePath, Path.GetDirectoryName(relativePath));
+            return new SimpleCategorizedData() {
+                Id = data.Id,
+                Name = data.Name,
+                Category = category
+            };
+        }
+
+        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData();
+
+        protected virtual void ShowCategory(string category) => CurrentCategory = category;
 
         protected void CreateCategory()
         {
@@ -122,27 +135,6 @@ namespace RPGDataEditor.Core.Mvvm
                 }
             }
         }
-
-        protected virtual async Task<SimpleIdentifiableData> CreateSimpleCategorizedModelAsync(string file)
-        {
-            SimpleIdentifiableData data = CreateSimpleModel(file);
-            string relativePath = Path.GetRelativePath(Session.LocationPath, file);
-            string json = await Session.GetJsonAsync(relativePath);
-            string categoryJson = "category\":";
-            int categoryIndex = json.IndexOf(categoryJson);
-            int categoryValueStartIndex = json.IndexOf('"', categoryIndex + categoryJson.Length) + 1;
-            int categoryValueEndIndex = json.IndexOf('"', categoryValueStartIndex);
-            string category = json[categoryValueStartIndex..categoryValueEndIndex];
-            return new SimpleCategorizedData() {
-                Id = data.Id,
-                Name = data.Name,
-                Category = category
-            };
-        }
-
-        protected sealed override SimpleIdentifiableData CreateSimpleModel(string file) => base.CreateSimpleModel(file);
-
-        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData();
 
     }
 }

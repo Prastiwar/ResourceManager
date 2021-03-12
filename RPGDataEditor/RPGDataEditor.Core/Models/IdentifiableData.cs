@@ -33,10 +33,10 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref message, value ?? "");
         }
 
-        private string category = "";
+        private string category = "Uncategorized";
         public string Category {
             get => category;
-            set => SetProperty(ref category, value ?? "");
+            set => SetProperty(ref category, string.IsNullOrWhiteSpace(value) ? "Uncategorized" : value);
         }
 
         private IList<PlayerRequirementModel> requirements = new ObservableCollection<PlayerRequirementModel>();

@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public enum Lettercase { Default, Lowercase, Uppercase }
+    public enum Lettercase { Default, Lowercase, Uppercase, CamelCase }
 
     public class PropertyContractResolver : DefaultPropertyResolver
     {
@@ -54,6 +54,10 @@ namespace RPGDataEditor.Core.Serialization
             {
                 property.PropertyName = newJsonPropertyName;
             }
+            if (string.IsNullOrEmpty(property.PropertyName))
+            {
+                throw new InvalidOperationException();
+            }
             switch (lettercase)
             {
                 case Lettercase.Lowercase:
@@ -61,6 +65,9 @@ namespace RPGDataEditor.Core.Serialization
                     break;
                 case Lettercase.Uppercase:
                     property.PropertyName = property.PropertyName.ToUpper();
+                    break;
+                case Lettercase.CamelCase:
+                    property.PropertyName = char.ToLower(property.PropertyName[0]) + property.PropertyName[1..];
                     break;
                 default:
                     break;

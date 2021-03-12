@@ -67,7 +67,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         private async void OpenEditor(TModel model) => await OpenEditorAsync(model);
 
-        protected virtual async Task OpenEditorAsync(TModel model)
+        protected virtual async Task<EditorResults> OpenEditorAsync(TModel model)
         {
             TModel copiedModel = (TModel)model.DeepClone();
             bool save = await Context.DialogService.ShowModelDialogAsync(copiedModel);
@@ -78,6 +78,7 @@ namespace RPGDataEditor.Core.Mvvm
                 bool saved = await Context.Session.SaveJsonFileAsync(GetRelativeFilePath(model), json);
                 Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save model");
             }
+            return new EditorResults(copiedModel, save);
         }
 
         protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();

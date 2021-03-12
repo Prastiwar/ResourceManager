@@ -1,6 +1,6 @@
 # RPGDataEditor
 
-***RPGDataEditor is software tool to visualise and edit json files that contains rpg mechanic data like quests, dialogues***
+***RPGDataEditor is software tool to visualise and edit json files that contains rpg mechanic data like quests and dialogues***
 
 [![GitHub last commit](https://img.shields.io/github/last-commit/Prastiwar/RPGDataEditor.svg?label=Updated&style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/commits/master)
 [![license](https://img.shields.io/github/license/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/blob/master/LICENSE)
@@ -42,4 +42,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 ## TODO
 
 - [ ] Improve resources loading time
-- [ ] On saving json, backup should be made
+- [ ] Check app version on launch
+- [ ] Add option "make backup on json save"
+- [ ] Add option "create backup"
+- [ ] Support Databases

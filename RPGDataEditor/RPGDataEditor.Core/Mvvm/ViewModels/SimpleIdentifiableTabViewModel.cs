@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Mvvm
 {
-    public abstract class SimpleIdentifiableTabViewModel<TModel> : IdentifiableTabViewModel<SimpleIdentifiableData> where TModel : ObservableModel, IIdentifiable
+    public abstract partial class SimpleIdentifiableTabViewModel<TModel> : IdentifiableTabViewModel<SimpleIdentifiableData> where TModel : ObservableModel, IIdentifiable
     {
         public SimpleIdentifiableTabViewModel(ViewModelContext context) : base(context) { }
+
+        protected override string GetRelativeFilePath(SimpleIdentifiableData model) => RelativePath + $"/{model.Id}_{model.Name}.json";
 
         public override async Task Refresh()
         {
@@ -33,18 +35,62 @@ namespace RPGDataEditor.Core.Mvvm
             IsLoading = false;
         }
 
-        protected override async Task OpenEditorAsync(SimpleIdentifiableData model)
+        protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {
             string filePath = GetRelativeFilePath(model);
-            string readJson = await Session.GetJsonAsync(filePath);
-            TModel actualModel = JsonConvert.DeserializeObject<TModel>(readJson);
-            bool save = await Context.DialogService.ShowModelDialogAsync(actualModel);
-            if (save)
+            TModel actualModel = await RetrieveModel(model);
+            if (actualModel == null)
             {
+                return new EditorResults(null, false);
+            }
+
+            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(actualModel);
+            EditorResults results = new EditorResults(actualModel, saveRequested);
+            if (saveRequested)
+            {
+                await OnSavingAsync(model, results);
+                if (!results.Success)
+                {
+                    return results;
+                }
+                string newFilePath = GetRelativeFilePath(model);
                 string saveJson = JsonConvert.SerializeObject(actualModel);
-                bool saved = await Context.Session.SaveJsonFileAsync(filePath, saveJson);
+                bool saved = await Context.Session.SaveJsonFileAsync(newFilePath, saveJson);
+                if (saved && filePath.CompareTo(newFilePath) != 0)
+                {
+                    bool deleted = await Context.Session.DeleteFileAsync(filePath);
+                    if (!deleted)
+                    {
+                        Context.SnackbarService.Enqueue("Couldn't delete old model");
+                    }
+                }
                 Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save model");
             }
+            return results;
+        }
+
+        protected virtual TModel CreateNewExactModel(SimpleIdentifiableData model) => null;
+
+        protected virtual Task OnSavingAsync(SimpleIdentifiableData model, EditorResults results) => Task.CompletedTask;
+
+        protected virtual async Task<TModel> RetrieveModel(SimpleIdentifiableData model)
+        {
+            string filePath = GetRelativeFilePath(model);
+            TModel actualModel = null;
+            try
+            {
+                string readJson = await Session.GetJsonAsync(filePath);
+                actualModel = JsonConvert.DeserializeObject<TModel>(readJson);
+            }
+            catch (Exception ex)
+            {
+                actualModel = CreateNewExactModel(model);
+                if (actualModel == null)
+                {
+                    Logger.Error("Couldn't retrieve model " + typeof(TModel), ex);
+                }
+            }
+            return actualModel;
         }
 
         protected virtual SimpleIdentifiableData CreateSimpleModel(string file)

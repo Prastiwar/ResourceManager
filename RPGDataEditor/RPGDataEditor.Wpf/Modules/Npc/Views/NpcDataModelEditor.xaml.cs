@@ -21,8 +21,7 @@ namespace RPGDataEditor.Wpf.Npc.Views
                 {
                     bool isGuard = string.Compare(selected.Name, "guard", true) == 0;
                     bool isTrader = string.Compare(selected.Name, "trader", true) == 0;
-                    TraderStackPanel.Visibility = isTrader ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-                    GuardStackPanel.Visibility = isGuard ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    RefreshJobPanelVisibility(selected.Name);
                     ComboBox comboBox = (ComboBox)sender;
                     if (comboBox.DataContext is NpcDataModel model)
                     {
@@ -43,15 +42,26 @@ namespace RPGDataEditor.Wpf.Npc.Views
             }
         }
 
+        private void RefreshJobPanelVisibility(string jobName)
+        {
+            bool isGuard = string.Compare(jobName, "guard", true) == 0;
+            bool isTrader = string.Compare(jobName, "trader", true) == 0;
+            TraderStackPanel.Visibility = isTrader ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            GuardStackPanel.Visibility = isGuard ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+        }
+
         private void JobComboBox_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
+            comboBox.SelectionChanged -= JobComboBox_SelectionChanged;
             if (comboBox.DataContext is NpcDataModel model)
             {
                 comboBox.SelectedIndex = model.Job == null
                                          ? 0 : model.Job is GuardNpcJobModel
                                          ? 1 : 2;
+                RefreshJobPanelVisibility((comboBox.SelectedItem as ComboBoxItem).Name);
             }
+            comboBox.SelectionChanged += JobComboBox_SelectionChanged;
         }
     }
 }

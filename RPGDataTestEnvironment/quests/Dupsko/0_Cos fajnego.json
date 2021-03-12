@@ -1,0 +1,13 @@
+{
+  "id": 0,
+  "completionTask": {
+    "type": "Kill",
+    "kill": "minecraft:zombie",
+    "amount": 1
+  },
+  "title": "Cos fajnego",
+  "message": "Helko",
+  "category": "Dupsko",
+  "tasks": [],
+  "requirements": []
+}

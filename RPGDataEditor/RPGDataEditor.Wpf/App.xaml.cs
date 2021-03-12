@@ -55,9 +55,8 @@ namespace RPGDataEditor.Wpf
 
             JsonConvert.DefaultSettings = () => {
                 PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
-                propResolver.SetAllLetterCase(Lettercase.Lowercase);
+                propResolver.SetAllLetterCase(Lettercase.CamelCase);
                 propResolver.IgnoreProperty(typeof(IdentifiableData), nameof(IdentifiableData.RepresentableString));
-                propResolver.IgnoreProperty(typeof(NpcDataModel), nameof(NpcDataModel.RepresentableString));
                 JsonSerializerSettings settings = new JsonSerializerSettings {
                     ContractResolver = propResolver,
                     Formatting = Formatting.Indented
