@@ -50,36 +50,52 @@ namespace RPGDataEditor.Core.Mvvm
 
         public async Task<bool> DeleteFileAsync(string relativePath)
         {
-            FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
-            using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
+            try
             {
-                if (!IsResponseSuccess(response))
+                FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
+                using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
                 {
-                    Logger.ErrorFtp(response);
-                    return false;
+                    if (!IsResponseSuccess(response))
+                    {
+                        Logger.ErrorFtp(response);
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Deleting file threw exception", ex);
+                return false;
             }
         }
 
         public async Task<bool> SaveJsonAsync(string relativePath, string json)
         {
-            FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.UploadFile);
-
-            byte[] fileContents = Encoding.UTF8.GetBytes(json);
-            request.ContentLength = fileContents.Length;
-
-            using (Stream requestStream = await request.GetRequestStreamAsync())
+            try
             {
-                requestStream.Write(fileContents, 0, fileContents.Length);
-            }
-            using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
-            {
-                if (IsResponseSuccess(response))
+                FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.UploadFile);
+
+                byte[] fileContents = Encoding.UTF8.GetBytes(json);
+                request.ContentLength = fileContents.Length;
+
+                using (Stream requestStream = await request.GetRequestStreamAsync())
                 {
-                    return true;
+                    requestStream.Write(fileContents, 0, fileContents.Length);
                 }
-                Logger.ErrorFtp(response);
+                using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
+                {
+                    if (IsResponseSuccess(response))
+                    {
+                        return true;
+                    }
+                    Logger.ErrorFtp(response);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Saving file threw exception", ex);
                 return false;
             }
         }
@@ -163,8 +179,8 @@ namespace RPGDataEditor.Core.Mvvm
                 {
                     string[] subFiles = await GetJsonFiles(Path.Combine(relativePath, fileName));
                     fileNames.AddRange(subFiles);
-                } 
-                else if(!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                }
+                else if (!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                 {
                     string directoryPath = Path.Combine(LocationPath, relativePath);
                     string filePath = Path.Combine(directoryPath, fileName);
