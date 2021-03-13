@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using RPGDataEditor.Core.Models;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -23,7 +22,7 @@ namespace RPGDataEditor.Core.Mvvm
             get => ftpUserName;
             set {
                 SetProperty(ref ftpUserName, value ?? "");
-                ftpController.FtpUserName = ftpUserName;
+                ftpController.UserName = ftpUserName;
             }
         }
 
@@ -32,7 +31,7 @@ namespace RPGDataEditor.Core.Mvvm
             get => ftpPassword;
             set {
                 SetProperty(ref ftpPassword, value ?? "");
-                ftpController.FtpPassword = ftpPassword;
+                ftpController.Password = ftpPassword;
             }
         }
 

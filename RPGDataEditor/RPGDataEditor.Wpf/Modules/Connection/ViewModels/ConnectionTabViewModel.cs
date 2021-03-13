@@ -28,5 +28,17 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             }
             return result.IsValid;
         }
+
+        public override Task OnNavigatedToAsync(NavigationContext navigationContext)
+        {
+            // TODO: Invoke on connection lost
+            return Task.CompletedTask;
+        }
+
+        public override Task OnNavigatedFromAsync(NavigationContext navigationContext)
+        {
+            // TODO: Invoke on connection established
+            return Task.CompletedTask;
+        }
     }
 }

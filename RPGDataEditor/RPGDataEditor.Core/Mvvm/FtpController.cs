@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using FluentFTP;
+using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,84 +15,106 @@ namespace RPGDataEditor.Core.Mvvm
         private string locationPath = "";
         public string LocationPath {
             get => locationPath;
-            set => SetProperty(ref locationPath, value ?? "");
+            set {
+                SetProperty(ref locationPath, value ?? "");
+                string host = locationPath;
+                try
+                {
+                    if (host.StartsWith("ftp://"))
+                    {
+                        host = host[(host.IndexOf("ftp://") + "ftp://".Length)..];
+                    }
+                    int slashIndex = host.Replace('\\', '/').IndexOf('/');
+                    if (slashIndex >= 0)
+                    {
+                        RelativeLocationPath = host[slashIndex..];
+                        host = host.Substring(0, slashIndex + 1);
+                    }
+                    client.Host = host;
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidDataException("Value is not valid path", ex);
+                }
+            }
         }
 
-        private string ftpUserName = "";
-        public string FtpUserName {
-            get => ftpUserName;
-            set => SetProperty(ref ftpUserName, value ?? "");
+        public string relativeLocationPath;
+        public string RelativeLocationPath {
+            get => relativeLocationPath;
+            protected set {
+                if (!value.StartsWith('/'))
+                {
+                    value = value.Insert(0, "/");
+                }
+                SetProperty(ref relativeLocationPath, value);
+            }
         }
 
-        private string ftpPassword = "";
-        public string FtpPassword {
-            get => ftpPassword;
-            set => SetProperty(ref ftpPassword, value ?? "");
+        private string userName = "";
+        public string UserName {
+            get => userName;
+            set {
+                SetProperty(ref userName, value ?? "");
+                client.Credentials.UserName = userName;
+            }
         }
+
+        private string password = "";
+        public string Password {
+            get => password;
+            set {
+                SetProperty(ref password, value ?? "");
+                client.Credentials.Password = password;
+            }
+        }
+
+        private readonly FtpClient client = new FtpClient() {
+            Credentials = new NetworkCredential(),
+            BulkListing = true
+        };
 
         public async Task<bool> IsValidAsync()
         {
             try
             {
-                FtpWebRequest request = CreateFtpRequest(LocationPath, WebRequestMethods.Ftp.PrintWorkingDirectory);
-                using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-                if (!IsResponseSuccess(response))
-                {
-                    Logger.ErrorFtp(response);
-                }
-                return true;
+                await client.ConnectAsync();
+                await client.DisconnectAsync();
             }
             catch (Exception ex)
             {
                 Logger.Error("Session Validation error", ex);
                 return false;
             }
+            return true;
         }
 
         public async Task<bool> DeleteFileAsync(string relativePath)
         {
             try
             {
-                FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.DeleteFile);
-                using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
-                {
-                    if (!IsResponseSuccess(response))
-                    {
-                        Logger.ErrorFtp(response);
-                        return false;
-                    }
-                    return true;
-                }
+                await EnsureConnectedAsync();
+                string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+                await client.DeleteFileAsync(targetPath);
             }
             catch (Exception ex)
             {
                 Logger.Error("Deleting file threw exception", ex);
                 return false;
             }
+            return true;
         }
 
         public async Task<bool> SaveJsonAsync(string relativePath, string json)
         {
             try
             {
-                FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.UploadFile);
-
+                await EnsureConnectedAsync();
+                MemoryStream stream = new MemoryStream();
                 byte[] fileContents = Encoding.UTF8.GetBytes(json);
-                request.ContentLength = fileContents.Length;
-
-                using (Stream requestStream = await request.GetRequestStreamAsync())
-                {
-                    requestStream.Write(fileContents, 0, fileContents.Length);
-                }
-                using (FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync())
-                {
-                    if (IsResponseSuccess(response))
-                    {
-                        return true;
-                    }
-                    Logger.ErrorFtp(response);
-                    return false;
-                }
+                string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+                FtpStatus status = await client.UploadAsync(fileContents, targetPath, FtpRemoteExists.Overwrite, true);
+                return status.IsSuccess();
             }
             catch (Exception ex)
             {
@@ -100,38 +123,11 @@ namespace RPGDataEditor.Core.Mvvm
             }
         }
 
-        public Task<string> GetJsonAsync(string relativePath) => ReadFtpFile(Path.Combine(LocationPath, relativePath));
-
-
         public async Task<string[]> GetJsonsAsync(string relativePath)
         {
             string[] files = await GetJsonFiles(relativePath);
             List<string> jsons = new List<string>();
-            //if (files.Length >= 100)
-            //{
-            //    TransformBlock<string, string> getCustomerBlock = new TransformBlock<string, string>(async file => await ReadFtpFile(file),
-            //        new ExecutionDataflowBlockOptions {
-            //            MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded
-            //        });
-            //    ActionBlock<string> writeCustomerBlock = new ActionBlock<string>(json => {
-            //        if (json != null)
-            //        {
-            //            jsons.Add(json);
-            //        }
-            //    });
-            //    getCustomerBlock.LinkTo(writeCustomerBlock, new DataflowLinkOptions {
-            //        PropagateCompletion = true
-            //    });
-            //    foreach (string file in files)
-            //    {
-            //        getCustomerBlock.Post(file);
-            //    }
-            //    getCustomerBlock.Complete();
-            //    await writeCustomerBlock.Completion;
-            //}
-            //else
-            //{
-            Task<string>[] tasks = files.Select(file => ReadFtpFile(file)).ToArray();
+            Task<string>[] tasks = files.Select(file => GetJsonAsync(file)).ToArray();
             await Task.WhenAll(tasks);
             foreach (Task<string> task in tasks)
             {
@@ -141,70 +137,39 @@ namespace RPGDataEditor.Core.Mvvm
                     jsons.Add(json);
                 }
             }
-            //}
             return jsons.ToArray();
         }
 
-        private async Task<string> ReadFtpFile(string filePath)
+        public async Task<string> GetJsonAsync(string relativePath)
         {
-            FtpWebRequest request = CreateFtpRequestRaw(filePath, WebRequestMethods.Ftp.DownloadFile);
-            using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-            if (!IsResponseSuccess(response))
+            await EnsureConnectedAsync();
+            string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+            byte[] bytes = await client.DownloadAsync(targetPath, default);
+            if (bytes == null)
             {
-                Logger.ErrorFtp(response);
+                Logger.Error("Couldn't download file at " + relativePath);
                 return null;
             }
-            using StreamReader reader = new StreamReader(response.GetResponseStream());
-            return reader.ReadToEnd();
+            string content = Encoding.UTF8.GetString(bytes);
+            return content;
         }
 
         public async Task<string[]> GetJsonFiles(string relativePath)
         {
-            FtpWebRequest request = CreateFtpRequest(relativePath, WebRequestMethods.Ftp.ListDirectoryDetails);
-            using FtpWebResponse response = (FtpWebResponse)await request.GetResponseAsync();
-            if (!IsResponseSuccess(response))
-            {
-                Logger.ErrorFtp(response);
-                return new string[0];
-            }
-            using StreamReader reader = new StreamReader(response.GetResponseStream());
-            string names = reader.ReadToEnd();
-            List<string> files = names.Split("\r\n", StringSplitOptions.RemoveEmptyEntries).ToList();
-            List<string> fileNames = new List<string>(files.Count);
-            foreach (string file in files)
-            {
-                bool isDirectory = file[0] == 'd';
-                string fileName = file.Split(new char[] { ' ' }, 9, StringSplitOptions.RemoveEmptyEntries)[8];
-                if (isDirectory)
-                {
-                    string[] subFiles = await GetJsonFiles(Path.Combine(relativePath, fileName));
-                    fileNames.AddRange(subFiles);
-                }
-                else if (!fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
-                {
-                    string directoryPath = Path.Combine(LocationPath, relativePath);
-                    string filePath = Path.Combine(directoryPath, fileName);
-                    fileNames.Add(filePath);
-                }
-            }
-            return fileNames.ToArray();
+            await EnsureConnectedAsync();
+            MemoryStream stream = new MemoryStream();
+            string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+            FtpListItem[] items = await client.GetListingAsync(targetPath, FtpListOption.Recursive);
+            return items.Where(item => item.Type == FtpFileSystemObjectType.File)
+                        .Select(item => item.FullName).ToArray();
         }
 
-        private FtpWebRequest CreateFtpRequestRaw(string ftpPath, string method)
+        protected async Task EnsureConnectedAsync()
         {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpPath);
-            request.Credentials = new NetworkCredential(FtpUserName, FtpPassword);
-            request.Method = method;
-            request.KeepAlive = false;
-            return request;
-        }
-
-        private FtpWebRequest CreateFtpRequest(string relativePath, string method) => CreateFtpRequestRaw(Path.Combine(LocationPath, relativePath), method);
-
-        private bool IsResponseSuccess(FtpWebResponse response)
-        {
-            int statusCode = (int)response.StatusCode;
-            return statusCode >= 200 && statusCode < 300 || statusCode == 125 || statusCode == 150;
+            if (!client.IsConnected)
+            {
+                await client.ConnectAsync();
+            }
         }
     }
 }

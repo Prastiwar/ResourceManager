@@ -23,6 +23,12 @@ namespace RPGDataEditor.Wpf
 {
     public partial class App
     {
+        public App()
+        {
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            Exit += App_Exit;
+        }
+
         private static string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
         public static string BinaryPath => Path.Combine(Environment.CurrentDirectory + "bin");
         public static string CacheDirectoryPath {
@@ -37,9 +43,12 @@ namespace RPGDataEditor.Wpf
 
         public static SessionContext CurrentSession { get; private set; }
 
-        public App() => DispatcherUnhandledException += App_DispatcherUnhandledException;
-
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) => Logger.Error("Unhandled exception", e.Exception);
+
+        private void App_Exit(object sender, ExitEventArgs e)
+        {
+            // TODO: Invoke on connection lost
+        }
 
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 

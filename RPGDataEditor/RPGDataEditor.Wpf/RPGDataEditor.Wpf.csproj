@@ -7,6 +7,7 @@
     <ApplicationIcon>rpgdataeditor.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FluentFTP" Version="33.0.3" />
     <PackageReference Include="FluentValidation" Version="9.5.2" />
     <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

@@ -41,6 +41,7 @@ namespace RPGDataEditor.Core.Mvvm
             TModel actualModel = await RetrieveModel(model);
             if (actualModel == null)
             {
+                Context.SnackbarService.Enqueue("Couldn't open editor for this model");
                 return new EditorResults(null, false);
             }
 

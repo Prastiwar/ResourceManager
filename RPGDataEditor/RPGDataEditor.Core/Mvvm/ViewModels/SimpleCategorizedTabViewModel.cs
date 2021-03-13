@@ -77,7 +77,9 @@ namespace RPGDataEditor.Core.Mvvm
         {
             SimpleIdentifiableData data = base.CreateSimpleModel(file);
             string relativePath = Path.GetRelativePath(Session.LocationPath, file);
-            string category = Path.GetRelativePath(RelativePath, Path.GetDirectoryName(relativePath));
+            int lastDimIndex = file.LastIndexOf('/');
+            int categoryStartIndex = file.LastIndexOf('/', lastDimIndex - 1) + 1;
+            string category = file[categoryStartIndex..lastDimIndex];
             return new SimpleCategorizedData() {
                 Id = data.Id,
                 Name = data.Name,

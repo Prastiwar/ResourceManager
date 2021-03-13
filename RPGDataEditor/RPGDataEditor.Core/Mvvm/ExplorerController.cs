@@ -37,7 +37,7 @@ namespace RPGDataEditor.Core.Mvvm
             try
             {
                 string path = Path.Combine(LocationPath, relativePath);
-                new FileInfo(path).Directory.Create();
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllText(path, json);
             }
             catch (Exception ex)
@@ -68,7 +68,7 @@ namespace RPGDataEditor.Core.Mvvm
         public Task<string[]> GetJsonFiles(string relativePath)
         {
             string directoryPath = Path.Combine(LocationPath, relativePath);
-            return Task.FromResult(Directory.EnumerateFiles(directoryPath, "*.json", SearchOption.AllDirectories).ToArray());
+            return Task.FromResult(Directory.EnumerateFiles(directoryPath, "*.json", SearchOption.AllDirectories).Select(path => path.Replace("\\", "/")).ToArray());
         }
 
     }
