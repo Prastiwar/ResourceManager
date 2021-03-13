@@ -14,6 +14,7 @@ using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Services;
+using RPGDataEditor.Wpf.Views;
 using System;
 using System.IO;
 using System.Windows;
@@ -96,6 +97,16 @@ namespace RPGDataEditor.Wpf
 
             ViewModelContext context = new ViewModelContext(session, Container.Resolve<IDialogService>(), validatorProvider, snackbarService);
             containerRegistry.RegisterInstance(context);
+
+            containerRegistry.RegisterInstance<IAppLifetimeService>(new AppLifetimeService());
+
+            AppVersionChecker versionChecker = new AppVersionChecker() {
+                VersionPath = "https://github.com/Prastiwar/RPGDataEditor/version.json",
+                ActualVersion = new AppVersion("1.0.0") 
+            };
+            containerRegistry.RegisterInstance(versionChecker);
+
+            containerRegistry.RegisterDialog<UpdateDialog>(nameof(UpdateDialog));
         }
 
         protected void RegisterValidators(IContainerRegistry containerRegistry)

@@ -44,6 +44,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 - [ ] Improve resources loading time
 - [ ] Add option "make backup on json save"
 - [ ] Add option "create backup"
-- [ ] Check app version on launch
 - [ ] Add custom serializers to increase performance
 - [ ] Support Databases

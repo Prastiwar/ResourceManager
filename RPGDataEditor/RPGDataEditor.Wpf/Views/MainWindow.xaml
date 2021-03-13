@@ -6,6 +6,7 @@
         xmlns:core="clr-namespace:RPGDataEditor.Core;assembly=RPGDataEditor.Core"
         xmlns:local="clr-namespace:RPGDataEditor.Wpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -17,6 +18,11 @@
         MinHeight="512"
         MinWidth="648"
         Width="1024">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

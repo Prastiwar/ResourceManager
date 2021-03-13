@@ -13,7 +13,7 @@ namespace RPGDataEditor.Core
         public AppVersion ActualVersion { get; set; }
 
         /// <summary> Sends request to VersionPath to get json file with version </summary>
-        /// <returns> True if version is up to date </returns>
+        /// <returns> True if version is up to date or couldn't check version </returns>
         public async Task<bool> CheckVersionAsync()
         {
             HttpClient client = new HttpClient();
@@ -22,6 +22,10 @@ namespace RPGDataEditor.Core
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, VersionPath);
 
             HttpResponseMessage response = await client.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return true;
+            }
             using (Stream s = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
             using (StreamReader sr = new StreamReader(s))
             using (JsonReader reader = new JsonTextReader(sr))
