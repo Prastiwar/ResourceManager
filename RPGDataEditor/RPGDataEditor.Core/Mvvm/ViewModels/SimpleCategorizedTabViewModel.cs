@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Prism.Commands;
 using RPGDataEditor.Core.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -33,6 +34,8 @@ namespace RPGDataEditor.Core.Mvvm
             get => currentCategory;
             protected set => SetProperty(ref currentCategory, value);
         }
+
+        private async void RemoveCategory(string category) => await RemoveCategoryAsync(category);
 
         protected override string GetRelativeFilePath(SimpleIdentifiableData model)
         {
@@ -148,7 +151,7 @@ namespace RPGDataEditor.Core.Mvvm
             return true;
         }
 
-        protected async void RemoveCategory(string category)
+        public virtual async Task<bool> RemoveCategoryAsync(string category)
         {
             bool removed = Categories.Remove(category);
             if (removed)
@@ -163,6 +166,7 @@ namespace RPGDataEditor.Core.Mvvm
                     }
                 }
             }
+            return removed;
         }
 
     }

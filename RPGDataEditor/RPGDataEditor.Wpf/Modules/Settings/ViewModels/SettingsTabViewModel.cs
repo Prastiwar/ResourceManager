@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Regions;
-using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
@@ -29,45 +27,8 @@ namespace RPGDataEditor.Wpf.Settings.ViewModels
             {
                 return;
             }
-            try
-            {
-                string relativePath = null;
-                string backupPath = null;
-                switch (resource)
-                {
-                    case RPGResource.Quest:
-                        relativePath = "quests";
-                        backupPath = Session.Options.QuestsBackupPath;
-                        break;
-                    case RPGResource.Dialogue:
-                        relativePath = "dialogues";
-                        backupPath = Session.Options.DialoguesBackupPath;
-                        break;
-                    case RPGResource.Npc:
-                        relativePath = "npcs";
-                        backupPath = Session.Options.NpcBackupPath;
-                        break;
-                    default:
-                        break;
-                }
-                if (relativePath != null)
-                {
-                    if (string.IsNullOrEmpty(backupPath))
-                    {
-                        Context.SnackbarService.Enqueue("Can't make backup at invalid path");
-                        return;
-                    }
-                    string[] jsons = await Session.GetCurrentController().GetJsonsAsync(relativePath);
-                    string backupJson = JsonConvert.SerializeObject(jsons);
-                    bool saved = await Session.SaveJsonFileAsync(backupPath, backupJson);
-                    Context.SnackbarService.Enqueue(saved ? "Created backup succesfully" : "There was a problem while creating backup");
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Logger.Error("Couldn't make backup", ex);
-                Context.SnackbarService.Enqueue("Couldn't make backup");
-            }
+            bool saved = await Session.CreateBackupAsync(resource);
+            Context.SnackbarService.Enqueue(saved ? "Created backup succesfully" : "There was a problem while creating backup");
         }
     }
 }

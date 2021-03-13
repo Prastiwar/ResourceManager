@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RPGDataEditor.Core.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -48,6 +49,56 @@ namespace RPGDataEditor.Core.Mvvm
         public bool IsFtp => LocationPath.StartsWith("ftp:");
 
         public IJsonFilesController GetCurrentController() => IsFtp ? (IJsonFilesController)ftpController : explorerController;
+
+        public async void OnResourceChanged(RPGResource resource)
+        {
+            if (Options.BackupOnSaving)
+            {
+                await CreateBackupAsync(resource);
+            }
+        }
+
+        public async Task<bool> CreateBackupAsync(RPGResource resource)
+        {
+            try
+            {
+                string relativePath = null;
+                string backupPath = null;
+                switch (resource)
+                {
+                    case RPGResource.Quest:
+                        relativePath = "quests";
+                        backupPath = Options.QuestsBackupPath;
+                        break;
+                    case RPGResource.Dialogue:
+                        relativePath = "dialogues";
+                        backupPath = Options.DialoguesBackupPath;
+                        break;
+                    case RPGResource.Npc:
+                        relativePath = "npcs";
+                        backupPath = Options.NpcBackupPath;
+                        break;
+                    default:
+                        break;
+                }
+                if (relativePath != null)
+                {
+                    if (string.IsNullOrEmpty(backupPath))
+                    {
+                        return false;
+                    }
+                    string[] jsons = await GetCurrentController().GetJsonsAsync(relativePath);
+                    string backupJson = JsonConvert.SerializeObject(jsons);
+                    bool saved = await SaveJsonFileAsync(backupPath, backupJson);
+                    return saved;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Couldn't make backup", ex);
+            }
+            return false;
+        }
 
         public void SaveSession(string path)
         {

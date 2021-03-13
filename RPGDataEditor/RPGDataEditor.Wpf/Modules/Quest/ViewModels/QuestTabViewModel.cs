@@ -18,6 +18,10 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
             Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
             EditorResults results = await base.OpenEditorAsync(model);
             JsonConvert.DefaultSettings = cachedSettings;
+            if (results.Success)
+            {
+                Session.OnResourceChanged(RPGResource.Quest);
+            }
             return results;
         }
 
@@ -26,7 +30,22 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
             Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
             bool renamed = await base.RenameCategoryAsync(oldCategory, newCategory);
             JsonConvert.DefaultSettings = cachedSettings;
+            Session.OnResourceChanged(RPGResource.Quest);
             return renamed;
+        }
+
+        protected override async Task<bool> RemoveModelAsync(SimpleIdentifiableData model)
+        {
+            bool result = await base.RemoveModelAsync(model);
+            Session.OnResourceChanged(RPGResource.Quest);
+            return result;
+        }
+
+        public override async Task<bool> RemoveCategoryAsync(string category)
+        {
+            bool result = await base.RemoveCategoryAsync(category);
+            Session.OnResourceChanged(RPGResource.Quest);
+            return result;
         }
 
         /// <summary> Adds ignore properties to default JsonSerializerSettings </summary>
