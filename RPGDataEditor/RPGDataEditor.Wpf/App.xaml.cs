@@ -101,7 +101,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance<IAppLifetimeService>(new AppLifetimeService());
 
             AppVersionChecker versionChecker = new AppVersionChecker() {
-                VersionPath = "https://github.com/Prastiwar/RPGDataEditor/version.json",
+                VersionPath = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json",
                 ActualVersion = new AppVersion("1.0.0") 
             };
             containerRegistry.RegisterInstance(versionChecker);

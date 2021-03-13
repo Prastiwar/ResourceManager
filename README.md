@@ -43,6 +43,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 - [ ] Improve resources loading time
 - [ ] Add option "make backup on json save"
-- [ ] Add option "create backup"
-- [ ] Add custom serializers to increase performance
+- [ ] Add custom serializers to increased performance
+- [ ] Refactor Session and controllers (for upcoming database support)
 - [ ] Support Databases

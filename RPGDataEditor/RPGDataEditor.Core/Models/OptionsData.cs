@@ -1,6 +1,4 @@
-﻿using RPGDataEditor.Core.Models;
-
-namespace RPGDataEditor.Core.Mvvm
+﻿namespace RPGDataEditor.Core.Models
 {
     public class OptionsData : ObservableModel
     {
@@ -26,6 +24,12 @@ namespace RPGDataEditor.Core.Mvvm
         public bool PrettyPrint {
             get => prettyPrint;
             set => SetProperty(ref prettyPrint, value);
+        }
+
+        private bool backupOnSaving;
+        public bool BackupOnSaving {
+            get => backupOnSaving;
+            set => SetProperty(ref backupOnSaving, value);
         }
     }
 }

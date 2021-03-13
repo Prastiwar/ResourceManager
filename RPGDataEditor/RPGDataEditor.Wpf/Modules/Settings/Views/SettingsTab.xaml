@@ -5,21 +5,37 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
              Name="SETTINGS"
-             prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-        <StackPanel VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    DataContext="{Binding Session}"
-                    Margin="64">
-            <CheckBox x:Name="IsPrettyJsonCheckbox"
-                      Margin="8"
-                      DataContext="{Binding Options}"
-                      IsChecked="{Binding PrettyPrint}"
-                      Content="Should jsons be pretty printing?" />
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Background="{DynamicResource MaterialDesignDarkBackground}"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto">
+    <StackPanel VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                DataContext="{Binding Session}"
+                Margin="64">
+        <CheckBox x:Name="IsPrettyJsonCheckbox"
+                  Margin="8"
+                  DataContext="{Binding Options}"
+                  IsChecked="{Binding PrettyPrint}"
+                  Content="Should jsons be pretty printing?" />
+        <CheckBox Margin="8"
+                  DataContext="{Binding Options}"
+                  IsChecked="{Binding BackupOnSaving}"
+                  Content="Should create backup after saving each model?" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="CREATE"
+                    Margin="5"
+                    Command="{Binding DataContext.CreateBackupCommand, ElementName=SETTINGS}"
+                    CommandParameter="{x:Static models:RPGResource.Npc}" />
             <TextBox Text="{Binding NpcBackupPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Options}"
-                     Margin="0,8,0,8"
+                     Margin="8,8,8,8"
                      MinWidth="126"
                      materialDesign:HintAssist.Hint="Npc backup file path (Relative to connection path)"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
@@ -27,9 +43,15 @@
                     <behaviors:CatchValidationBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="CREATE"
+                    Margin="5"
+                    Command="{Binding DataContext.CreateBackupCommand, ElementName=SETTINGS}"
+                    CommandParameter="{x:Static models:RPGResource.Dialogue}" />
             <TextBox Text="{Binding DialoguesBackupPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Options}"
-                     Margin="0,8,0,8"
+                     Margin="8,8,8,8"
                      MinWidth="126"
                      materialDesign:HintAssist.Hint="Dialogues backup file path (Relative to connection path)"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
@@ -37,9 +59,15 @@
                     <behaviors:CatchValidationBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="CREATE"
+                    Margin="5"
+                    Command="{Binding DataContext.CreateBackupCommand, ElementName=SETTINGS}"
+                    CommandParameter="{x:Static models:RPGResource.Quest}" />
             <TextBox Text="{Binding QuestsBackupPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Options}"
-                     Margin="0,8,0,8"
+                     Margin="8,8,8,8"
                      MinWidth="126"
                      materialDesign:HintAssist.Hint="Quests backup file path (Relative to connection path)"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
@@ -48,5 +76,5 @@
                 </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>
-    </Grid>
+    </StackPanel>
 </UserControl>
