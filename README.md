@@ -41,7 +41,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
+- [ ] Fix requirements loading, validate it
 - [ ] Improve resources loading time
-- [ ] Add custom serializers to increased performance
 - [ ] Refactor Session and controllers (for upcoming database support)
 - [ ] Support Databases

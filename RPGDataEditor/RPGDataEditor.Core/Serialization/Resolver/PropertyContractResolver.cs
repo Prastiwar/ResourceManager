@@ -67,7 +67,7 @@ namespace RPGDataEditor.Core.Serialization
                     property.PropertyName = property.PropertyName.ToUpper();
                     break;
                 case Lettercase.CamelCase:
-                    property.PropertyName = char.ToLower(property.PropertyName[0]) + property.PropertyName[1..];
+                    property.PropertyName = property.PropertyName.ToFirstLower();
                     break;
                 default:
                     break;

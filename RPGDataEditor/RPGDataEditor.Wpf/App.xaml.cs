@@ -71,10 +71,24 @@ namespace RPGDataEditor.Wpf
                     ContractResolver = propResolver,
                     Formatting = Formatting.Indented
                 };
-                settings.Converters.Add(new QuestTaskJsonConverter());
                 settings.Converters.Add(new PlayerRequirementJsonConverter());
-                settings.Converters.Add(new NpcJobJsonConverter());
                 settings.Converters.Add(new NumberCastsConverter());
+
+                settings.Converters.Add(new NpcJobJsonConverter());
+                settings.Converters.Add(new EquipmentModelJsonConverter());
+                settings.Converters.Add(new NpcDataModelJsonConverter());
+                settings.Converters.Add(new TradeItemModelJsonConverter());
+                settings.Converters.Add(new AttributeDataModelJsonConverter());
+
+                settings.Converters.Add(new PositionJsonConverter());
+
+                settings.Converters.Add(new QuestTaskJsonConverter());
+                settings.Converters.Add(new QuestDataJsonConverter());
+
+                settings.Converters.Add(new DialogueModelJsonConverter());
+                settings.Converters.Add(new DialogueOptionModelJsonConverter());
+                settings.Converters.Add(new TalkDataModelJsonConverter());
+                settings.Converters.Add(new TalkLineJsonConverter());
                 return settings;
             };
 
@@ -102,7 +116,7 @@ namespace RPGDataEditor.Wpf
 
             AppVersionChecker versionChecker = new AppVersionChecker() {
                 VersionPath = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json",
-                ActualVersion = new AppVersion("1.0.0") 
+                ActualVersion = new AppVersion("1.0.0")
             };
             containerRegistry.RegisterInstance(versionChecker);
 
