@@ -43,5 +43,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 - [ ] Fix requirements loading, validate it
 - [ ] Improve resources loading time
+- [ ] Improve generic data (separate Minecraft data)
 - [ ] Refactor Session and controllers (for upcoming database support)
 - [ ] Support Databases

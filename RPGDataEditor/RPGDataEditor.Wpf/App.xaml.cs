@@ -71,8 +71,8 @@ namespace RPGDataEditor.Wpf
                     ContractResolver = propResolver,
                     Formatting = Formatting.Indented
                 };
-                settings.Converters.Add(new PlayerRequirementJsonConverter());
                 settings.Converters.Add(new NumberCastsConverter());
+                settings.Converters.Add(new PlayerRequirementJsonConverter());
 
                 settings.Converters.Add(new NpcJobJsonConverter());
                 settings.Converters.Add(new EquipmentModelJsonConverter());

@@ -7,14 +7,14 @@ namespace RPGDataEditor.Core
 {
     public static class ValidationExtensions
     {
-        public static IRuleBuilderOptions<T, TProperty> ResourceLocation<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
-            => ruleBuilder.Must(x => IsResourceLocation(x));
+        public static IRuleBuilderOptions<T, TProperty> ResourceLocation<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
+            => ruleBuilder.Must(x => IsResourceLocation(x, allowNull));
 
-        public static IRuleBuilderOptions<T, TProperty> Url<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
-            => ruleBuilder.Must(x => IsUrl(x));
+        public static IRuleBuilderOptions<T, TProperty> Url<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
+            => ruleBuilder.Must(x => IsUrl(x, allowNull));
 
-        public static IRuleBuilderOptions<T, TProperty> Json<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
-            => ruleBuilder.Must(x => IsJson(x.ToString()));
+        public static IRuleBuilderOptions<T, TProperty> Json<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
+            => ruleBuilder.Must(x => IsJson(x.ToString(), allowNull));
 
         public static bool IsJson(string value, bool allowNull = true)
         {

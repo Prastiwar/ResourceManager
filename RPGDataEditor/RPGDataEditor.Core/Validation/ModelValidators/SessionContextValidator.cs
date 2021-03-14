@@ -16,9 +16,7 @@ namespace RPGDataEditor.Core.Validation
             RuleFor(x => x.FtpUserName).NotEmpty().WithMessage("Username cannot be empty").When(context => context.IsFtp);
             RuleFor(x => x.FtpPassword).NotEmpty().WithMessage("Password cannot be empty").When(context => context.IsFtp);
 
-            RuleFor(x => x.Options.NpcBackupPath).NotEmpty().WithMessage("Backup path cannot be empty when BackupOnSaving is enabled").When(x => x.Options.BackupOnSaving);
-            RuleFor(x => x.Options.DialoguesBackupPath).NotEmpty().WithMessage("Backup path cannot be empty when BackupOnSaving is enabled").When(x => x.Options.BackupOnSaving);
-            RuleFor(x => x.Options.QuestsBackupPath).NotEmpty().WithMessage("Backup path cannot be empty when BackupOnSaving is enabled").When(x => x.Options.BackupOnSaving);
+            RuleFor(x => x.Options).SetValidator(new OptionsDataValidator());
         }
     }
 }
