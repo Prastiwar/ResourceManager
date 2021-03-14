@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
@@ -18,7 +19,7 @@ namespace RPGDataEditor.Core.Serialization
                 int color = obj.GetValue<int>(nameof(DialogueOptionModel.Color), 0);
                 string command = obj.GetValue<string>(nameof(DialogueOptionModel.Command));
                 string message = obj.GetValue<string>(nameof(DialogueOptionModel.Message));
-                IList<PlayerRequirementModel> requirements = obj.GetValue<IList<PlayerRequirementModel>>(nameof(DialogueOptionModel.Requirements));
+                IList<PlayerRequirementModel> requirements = obj.GetValue<ObservableCollection<PlayerRequirementModel>>(nameof(DialogueOptionModel.Requirements));
                 DialogueOptionModel model = new DialogueOptionModel() {
                     NextDialogId = nextDialogId,
                     Message = message,

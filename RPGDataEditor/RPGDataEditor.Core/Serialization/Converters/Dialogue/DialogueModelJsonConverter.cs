@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
@@ -20,8 +21,8 @@ namespace RPGDataEditor.Core.Serialization
                 string category = obj.GetValue<string>(nameof(DialogueModel.Category));
                 bool allowEscape = obj.GetValue(nameof(DialogueModel.AllowEscape), false);
                 int startQuest = obj.GetValue(nameof(DialogueModel.StartQuest), -1);
-                IList<PlayerRequirementModel> requirements = obj.GetValue<IList<PlayerRequirementModel>>(nameof(DialogueModel.Requirements));
-                IList<DialogueOptionModel> options = obj.GetValue<IList<DialogueOptionModel>>(nameof(DialogueModel.Options));
+                IList<PlayerRequirementModel> requirements = obj.GetValue<ObservableCollection<PlayerRequirementModel>>(nameof(DialogueModel.Requirements));
+                IList<DialogueOptionModel> options = obj.GetValue<ObservableCollection<DialogueOptionModel>>(nameof(DialogueModel.Options));
                 DialogueModel model = new DialogueModel() {
                     Id = id,
                     Title = title,

@@ -88,7 +88,7 @@
                                     Padding="0"
                                     Command="{Binding AddOptionCommand}"
                                     Style="{DynamicResource MaterialDesignFlatButton}" />
-                            <TextBlock Text="{Binding OptionsCount, StringFormat='Options ({0})'}"
+                            <TextBlock Text="{Binding ItemsSource.Count, ElementName=OptionsListView, StringFormat='({0}) Options'}"
                                        Margin="5" />
                         </StackPanel>
                         <ListView x:Name="OptionsListView"
@@ -144,7 +144,7 @@
                                     Padding="0"
                                     Command="{Binding AddRequirementCommand}"
                                     Style="{DynamicResource MaterialDesignFlatButton}" />
-                            <TextBlock Text="{Binding RequirementsCount, StringFormat='Requirements ({0})'}"
+                            <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
                                        Margin="5" />
                         </StackPanel>
                         <ListView x:Name="RequirementsListView"

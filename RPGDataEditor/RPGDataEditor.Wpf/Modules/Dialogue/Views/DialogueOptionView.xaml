@@ -78,7 +78,7 @@
                             Padding="0"
                             Click="AddRequirement"
                             Style="{DynamicResource MaterialDesignFlatButton}" />
-                    <TextBlock Text="Requirements"
+                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
                                Margin="5" />
                 </StackPanel>
                 <ListView x:Name="RequirementsListView"

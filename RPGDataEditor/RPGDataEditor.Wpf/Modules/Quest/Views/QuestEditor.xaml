@@ -96,7 +96,8 @@
                                     Padding="0"
                                     Command="{Binding AddTaskCommand}"
                                     Style="{DynamicResource MaterialDesignFlatButton}" />
-                            <TextBlock Text="{Binding TasksCount, StringFormat='Tasks ({0})'}"
+                            <TextBlock Text="{Binding Count, StringFormat='({0}) Tasks'}"
+                                       DataContext="{Binding ItemsSource, ElementName=TasksListView}"
                                        Margin="5" />
                         </StackPanel>
                         <ListView x:Name="TasksListView"
@@ -152,7 +153,7 @@
                                     Padding="0"
                                     Command="{Binding AddRequirementCommand}"
                                     Style="{DynamicResource MaterialDesignFlatButton}" />
-                            <TextBlock Text="{Binding RequirementsCount, StringFormat='Requirements ({0})'}"
+                            <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
                                        Margin="5" />
                         </StackPanel>
                         <ListView x:Name="RequirementsListView"

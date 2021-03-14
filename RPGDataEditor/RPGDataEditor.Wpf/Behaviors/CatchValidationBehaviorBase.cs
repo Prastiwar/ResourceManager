@@ -18,7 +18,7 @@ namespace RPGDataEditor.Wpf.Behaviors
             AssociatedObject.DataContextChanged += Bindable_DataContextChanged;
             if (AssociatedObject.DataContext is IValidable validable)
             {
-                validable.OnValidated += Validable_OnValidated;
+                validable.Validated += Validable_OnValidated;
             }
         }
 
@@ -28,7 +28,7 @@ namespace RPGDataEditor.Wpf.Behaviors
             AssociatedObject.DataContextChanged -= Bindable_DataContextChanged;
             if (AssociatedObject.DataContext is IValidable validable)
             {
-                validable.OnValidated -= Validable_OnValidated;
+                validable.Validated -= Validable_OnValidated;
             }
         }
 
@@ -36,8 +36,8 @@ namespace RPGDataEditor.Wpf.Behaviors
         {
             if (AssociatedObject.DataContext is IValidable validable)
             {
-                validable.OnValidated -= Validable_OnValidated; // prevent event duplication
-                validable.OnValidated += Validable_OnValidated;
+                validable.Validated -= Validable_OnValidated; // prevent event duplication
+                validable.Validated += Validable_OnValidated;
             }
         }
 
@@ -48,7 +48,7 @@ namespace RPGDataEditor.Wpf.Behaviors
             // Detach this event when binding context was changed
             if (AssociatedObject.DataContext != sender)
             {
-                ((IValidable)sender).OnValidated -= Validable_OnValidated;
+                ((IValidable)sender).Validated -= Validable_OnValidated;
                 return;
             }
             OnValidated(e);
@@ -75,7 +75,14 @@ namespace RPGDataEditor.Wpf.Behaviors
             {
                 foreach (ValidationFailure failure in errors)
                 {
-                    if (failure.PropertyName == propertyName)
+                    string propertyPath = failure.PropertyName;
+                    if (propertyPath.CompareTo(propertyName) == 0)
+                    {
+                        return failure.ErrorMessage;
+                    }
+                    string latestName = propertyPath.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+                    string latestPropertyName = propertyName.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+                    if (latestName.CompareTo(latestPropertyName) == 0)
                     {
                         return failure.ErrorMessage;
                     }

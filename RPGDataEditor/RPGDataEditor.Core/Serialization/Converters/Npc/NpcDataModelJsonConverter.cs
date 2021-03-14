@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
@@ -22,11 +23,11 @@ namespace RPGDataEditor.Core.Serialization
                 bool invulnerable = obj.GetValue(nameof(NpcDataModel.Invulnerable), true);
                 bool lookAtPlayer = obj.GetValue(nameof(NpcDataModel.LookAtPlayer), false);
                 int healthRegen = obj.GetValue(nameof(NpcDataModel.HealthRegen), 1);
-                IList<AttributeDataModel> attributes = obj.GetValue<IList<AttributeDataModel>>(nameof(NpcDataModel.Attributes));
+                IList<AttributeDataModel> attributes = obj.GetValue<ObservableCollection<AttributeDataModel>>(nameof(NpcDataModel.Attributes));
                 EquipmentModel equipment = obj.GetValue<EquipmentModel>(nameof(NpcDataModel.Equipment));
                 NpcJobModel job = obj.GetValue<NpcJobModel>(nameof(NpcDataModel.Job));
                 NpcMovement movementType = Enum.Parse<NpcMovement>(obj.GetValue(nameof(NpcDataModel.MovementType), NpcMovement.STATIC.ToString()));
-                IList<Position> paths = obj.GetValue<IList<Position>>(nameof(NpcDataModel.Paths));
+                IList<Position> paths = obj.GetValue<ObservableCollection<Position>>(nameof(NpcDataModel.Paths));
                 TalkDataModel talkData = obj.GetValue<TalkDataModel>(nameof(NpcDataModel.TalkData));
                 string ambientSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.AmbientSoundLocation));
                 string deathSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.DeathSoundLocation));

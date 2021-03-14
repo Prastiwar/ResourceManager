@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
@@ -19,8 +20,8 @@ namespace RPGDataEditor.Core.Serialization
                 string message = obj.GetValue<string>(nameof(QuestModel.Message));
                 string category = obj.GetValue<string>(nameof(QuestModel.Category));
                 QuestTask completionTask = obj.GetValue<QuestTask>(nameof(QuestModel.CompletionTask));
-                IList<QuestTask> tasks = obj.GetValue<IList<QuestTask>>(nameof(QuestModel.Tasks));
-                IList<PlayerRequirementModel> requirements = obj.GetValue<IList<PlayerRequirementModel>>(nameof(QuestModel.Requirements));
+                IList<QuestTask> tasks = obj.GetValue<ObservableCollection<QuestTask>>(nameof(QuestModel.Tasks));
+                IList<PlayerRequirementModel> requirements = obj.GetValue<ObservableCollection<PlayerRequirementModel>>(nameof(QuestModel.Requirements));
                 QuestModel model = new QuestModel() {
                     Id = id,
                     Title = title,

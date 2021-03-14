@@ -11,7 +11,8 @@ namespace RPGDataEditor.Core.Models
         public virtual bool CopyValues(object fromCopy) => CopyProperties(fromCopy, (prop) => {
             PropertyInfo fromCopyProp = fromCopy.GetType().GetProperty(prop.Name);
             bool canSetValue = prop.SetMethod != null && fromCopyProp != null && fromCopyProp.PropertyType == prop.PropertyType;
-            if (canSetValue)
+            bool canGetValue = fromCopyProp.GetMethod != null;
+            if (canSetValue && canGetValue)
             {
                 object value = fromCopyProp.GetValue(fromCopy);
                 prop.SetValue(this, value);
@@ -44,8 +45,25 @@ namespace RPGDataEditor.Core.Models
 
         public virtual object Clone() => MemberwiseClone();
 
-        public event EventHandler<ValidationResult> OnValidated;
+        public event EventHandler<ValidationResult> Validated;
 
-        public void NotifyValidate(ValidationResult result) => OnValidated?.Invoke(this, result);
+        public virtual void NotifyValidate(ValidationResult result)
+        {
+            OnValidated(this, result);
+            foreach (PropertyInfo property in GetType().GetProperties())
+            {
+                if (property.GetMethod == null)
+                {
+                    continue;
+                }
+                object value = property.GetValue(this);
+                if (value is IValidable validableObject)
+                {
+                    validableObject.NotifyValidate(result);
+                }
+            }
+        }
+
+        protected void OnValidated(object sender, ValidationResult result) => Validated?.Invoke(sender, result);
     }
 }

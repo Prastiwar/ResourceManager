@@ -7,6 +7,6 @@ namespace RPGDataEditor.Core.Validation
     {
         void NotifyValidate(ValidationResult result);
 
-        event EventHandler<ValidationResult> OnValidated;
+        event EventHandler<ValidationResult> Validated;
     }
 }
