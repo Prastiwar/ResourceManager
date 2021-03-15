@@ -104,8 +104,7 @@ namespace DeepCopy
                 return (T)existingCopy;
             }
 
-            Array originalArray = array as Array;
-            if (originalArray == null)
+            if (!(array is Array originalArray))
             {
                 throw new InvalidCastException($"Cannot cast non-array type {array?.GetType()} to Array.");
             }
@@ -122,7 +121,7 @@ namespace DeepCopy
             Array copyArray = Array.CreateInstance(elementType, lengths);
             context.RecordCopy(originalArray, copyArray);
 
-            if (DeepCopier.CopyPolicy.IsImmutable(elementType))
+            if (DeepCopier.copyPolicy.IsImmutable(elementType))
             {
                 Array.Copy(originalArray, copyArray, originalArray.Length);
             }
@@ -140,7 +139,7 @@ namespace DeepCopy
                 for (int n = 0; n < rank; n++)
                 {
                     int offset = k / sizes[n];
-                    k = k - offset * sizes[n];
+                    k -= offset * sizes[n];
                     index[n] = offset;
                 }
                 object original = originalArray.GetValue(index);

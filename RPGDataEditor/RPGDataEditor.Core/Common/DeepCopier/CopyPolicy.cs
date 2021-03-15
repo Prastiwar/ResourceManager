@@ -222,11 +222,13 @@ namespace DeepCopy
         private sealed class AssignableFromEqualityComparer : IEqualityComparer<Type>
         {
             public static AssignableFromEqualityComparer Instance { get; } = new AssignableFromEqualityComparer();
-            private static readonly Type ObjectType = typeof(object);
+            
+            private static readonly Type objectType = typeof(object);
+
             public bool Equals(Type x, Type y)
             {
                 // We can't reason about object
-                if (x == ObjectType || y == ObjectType)
+                if (x == objectType || y == objectType)
                 {
                     return false;
                 }

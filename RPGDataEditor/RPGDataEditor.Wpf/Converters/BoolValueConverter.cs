@@ -18,12 +18,12 @@ namespace RPGDataEditor.Wpf.Converters
         public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => ConvertToBool(value);
 
         protected T ConvertoToGeneric(object value) => !Invert
-                                                    ? (value is bool ? (bool)value ? TrueValue : FalseValue : FalseValue)
-                                                    : (value is bool ? (bool)value ? FalseValue : TrueValue : TrueValue);
+                                                    ? (value is bool boolean ? boolean ? TrueValue : FalseValue : FalseValue)
+                                                    : (value is bool boolean1 ? boolean1 ? FalseValue : TrueValue : TrueValue);
 
         protected bool ConvertToBool(object value) => !Invert
-                                                 ? (value is T val1 ? EqualityComparer<T>.Default.Equals(val1, TrueValue) ? true : false : false)
-                                                 : (value is T val2 ? EqualityComparer<T>.Default.Equals(val2, TrueValue) ? false : true : true);
+                                                 ? (value is T val1 && EqualityComparer<T>.Default.Equals(val1, TrueValue))
+                                                 : (!(value is T val2) || (!EqualityComparer<T>.Default.Equals(val2, TrueValue)));
 
     }
 

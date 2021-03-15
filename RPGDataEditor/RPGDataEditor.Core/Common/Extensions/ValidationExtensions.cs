@@ -14,7 +14,7 @@ namespace RPGDataEditor.Core
             => ruleBuilder.Must(x => IsUrl(x, allowNull));
 
         public static IRuleBuilderOptions<T, TProperty> Json<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
-            => ruleBuilder.Must(x => IsJson(x.ToString(), allowNull));
+            => ruleBuilder.Must(x => IsJson(x?.ToString(), allowNull));
 
         public static bool IsJson(string value, bool allowNull = true)
         {

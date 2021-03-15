@@ -47,13 +47,13 @@ namespace DeepCopy
             GetTypeFromHandle = GetFuncCall(() => Type.GetTypeFromHandle(typeof(Type).TypeHandle));
             CopyInner = GetFuncCall(() => DeepCopier.Copy(default(object), default(CopyContext))).GetGenericMethodDefinition();
             TryGetCopy = typeof(CopyContext).GetMethod("TryGetCopy");
-            RecordObject = GetActionCall((CopyContext ctx) => ctx.RecordCopy(default(object), default(object)));
+            RecordObject = GetActionCall((CopyContext ctx) => ctx.RecordCopy(default, default));
 
-            CopyArrayRank1Shallow = GetFuncCall(() => ArrayCopier.CopyArrayRank1Shallow(default(object[]), default(CopyContext))).GetGenericMethodDefinition();
-            CopyArrayRank1 = GetFuncCall(() => ArrayCopier.CopyArrayRank1(default(object[]), default(CopyContext))).GetGenericMethodDefinition();
+            CopyArrayRank1Shallow = GetFuncCall(() => ArrayCopier.CopyArrayRank1Shallow(default(object[]), default)).GetGenericMethodDefinition();
+            CopyArrayRank1 = GetFuncCall(() => ArrayCopier.CopyArrayRank1(default(object[]), default)).GetGenericMethodDefinition();
 
-            CopyArrayRank2Shallow = GetFuncCall(() => ArrayCopier.CopyArrayRank2Shallow(default(object[,]), default(CopyContext))).GetGenericMethodDefinition();
-            CopyArrayRank2 = GetFuncCall(() => ArrayCopier.CopyArrayRank2(default(object[,]), default(CopyContext))).GetGenericMethodDefinition();
+            CopyArrayRank2Shallow = GetFuncCall(() => ArrayCopier.CopyArrayRank2Shallow(default(object[,]), default)).GetGenericMethodDefinition();
+            CopyArrayRank2 = GetFuncCall(() => ArrayCopier.CopyArrayRank2(default(object[,]), default)).GetGenericMethodDefinition();
 
             MethodInfo GetActionCall<T>(Expression<Action<T>> expression) => (expression.Body as MethodCallExpression)?.Method ?? throw new ArgumentException("Expression type unsupported.");
 

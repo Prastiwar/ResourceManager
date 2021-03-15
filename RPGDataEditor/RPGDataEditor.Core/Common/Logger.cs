@@ -6,11 +6,11 @@ namespace RPGDataEditor.Core
 {
     public static class Logger
     {
-        private static string getFilePath() => $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
+        private static string GetFilePath() => $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
 
         private static string GetTemplatedMessage(string message) => $"[{DateTime.Now.ToString("HH:MM:ss")}]: {message}";
 
-        private static void WriteRaw(string message) => System.IO.File.AppendAllText(getFilePath(), message);
+        private static void WriteRaw(string message) => System.IO.File.AppendAllText(GetFilePath(), message);
 
         private static void Write(string message) => WriteRaw(GetTemplatedMessage(message));
 

@@ -8,13 +8,13 @@ namespace DeepCopy
     /// </summary>
     public static class DeepCopier
     {
-        internal static readonly CopyPolicy CopyPolicy = new CopyPolicy();
-        internal static readonly MethodInfos MethodInfos = new MethodInfos();
-        private static readonly ThreadLocal<CopyContext> Context = new ThreadLocal<CopyContext>(() => new CopyContext());
+        internal static readonly CopyPolicy copyPolicy = new CopyPolicy();
+        internal static readonly MethodInfos methodInfos = new MethodInfos();
+        private static readonly ThreadLocal<CopyContext> copyContext = new ThreadLocal<CopyContext>(() => new CopyContext());
 
         public static object Copy(object original, Type toType)
         {
-            CopyContext context = Context.Value;
+            CopyContext context = copyContext.Value;
             try
             {
                 return RawCopierGenerator.Copy(original, toType, context);
@@ -33,7 +33,7 @@ namespace DeepCopy
         /// <returns>A deep copy of the provided object.</returns>
         public static T Copy<T>(T original)
         {
-            CopyContext context = Context.Value;
+            CopyContext context = copyContext.Value;
             try
             {
                 return CopierGenerator<T>.Copy(original, context);

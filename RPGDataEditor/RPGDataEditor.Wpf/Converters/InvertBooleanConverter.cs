@@ -6,7 +6,7 @@ namespace RPGDataEditor.Wpf.Converters
 {
     public class InvertBooleanConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is bool origin ? !origin : false;
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value is bool origin ? !origin : false;
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is bool origin && !origin;
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value is bool origin && !origin;
     }
 }

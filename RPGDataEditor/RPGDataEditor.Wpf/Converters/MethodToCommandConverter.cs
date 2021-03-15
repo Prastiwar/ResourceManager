@@ -35,14 +35,14 @@ namespace RPGDataEditor.Wpf.Converters
             ParameterInfo[] parameters = method.GetParameters();
             if (parameters.Length == 0)
             {
-                return new DelegateCommand(() => { method.Invoke(instance, null); });
+                return new DelegateCommand(() => method.Invoke(instance, null));
             }
             else if (parameters.Length == 1)
             {
                 Type paramType = parameters[0].ParameterType;
                 Type[] paramTypeArray = new Type[] { paramType };
                 Type commandType = typeof(DelegateCommand<>).MakeGenericType(paramTypeArray);
-                Action<object> action = (obj) => { method.Invoke(instance, new object[] { obj }); };
+                Action<object> action = (obj) => method.Invoke(instance, new object[] { obj });
                 return (ICommand)Activator.CreateInstance(commandType, action);
             }
             else

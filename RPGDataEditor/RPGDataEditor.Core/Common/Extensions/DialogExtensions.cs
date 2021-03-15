@@ -39,9 +39,7 @@ namespace RPGDataEditor.Core
             TaskCompletionSource<IDialogResult> tcs = new TaskCompletionSource<IDialogResult>();
             try
             {
-                dialogService.ShowDialog(name, parameters, (result) => {
-                    tcs.TrySetResult(result);
-                });
+                dialogService.ShowDialog(name, parameters, (result) => tcs.TrySetResult(result));
             }
             catch (Exception ex)
             {
@@ -55,9 +53,7 @@ namespace RPGDataEditor.Core
             TaskCompletionSource<T> tcs = new TaskCompletionSource<T>();
             try
             {
-                dialogService.ShowDialog(name, parameters, (result) => {
-                    tcs.SetResult(result.Parameters.GetValue<T>(string.IsNullOrEmpty(resultName) ? typeof(T).Name : resultName));
-                });
+                dialogService.ShowDialog(name, parameters, (result) => tcs.SetResult(result.Parameters.GetValue<T>(string.IsNullOrEmpty(resultName) ? typeof(T).Name : resultName)));
             }
             catch (Exception ex)
             {
@@ -71,9 +67,7 @@ namespace RPGDataEditor.Core
             TaskCompletionSource<T> tcs = new TaskCompletionSource<T>();
             try
             {
-                dialogService.ShowDialog(name, null, (result) => {
-                    tcs.SetResult(result.Parameters.GetValue<T>(typeof(T).Name));
-                });
+                dialogService.ShowDialog(name, null, (result) => tcs.SetResult(result.Parameters.GetValue<T>(typeof(T).Name)));
             }
             catch (Exception ex)
             {
