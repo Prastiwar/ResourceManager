@@ -57,7 +57,7 @@
                      Visibility="{Binding IsChecked, ElementName=RespectNBTCheckbox, Converter={StaticResource BoolToVisibilityConverter}}"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
+                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=(local:AttachProperties.ValidableObject), ElementName=ThisRequirementView}" />
                 </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>

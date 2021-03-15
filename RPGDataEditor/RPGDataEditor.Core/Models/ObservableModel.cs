@@ -2,6 +2,8 @@
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Validation;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace RPGDataEditor.Core.Models
@@ -47,21 +49,36 @@ namespace RPGDataEditor.Core.Models
 
         public event EventHandler<ValidationResult> Validated;
 
-        public virtual void NotifyValidate(ValidationResult result)
+        private void CallOnEach<T>(object root, Action<T> action)
         {
-            OnValidated(this, result);
-            foreach (PropertyInfo property in GetType().GetProperties())
+            foreach (PropertyInfo property in root.GetType().GetProperties())
             {
-                if (property.GetMethod == null)
+                if (property.GetMethod == null || property.GetCustomAttribute<NotValidableAttribute>() != null)
                 {
                     continue;
                 }
                 object value = property.GetValue(this);
-                if (value is IValidable validableObject)
+                if (value is T tValue)
                 {
-                    validableObject.NotifyValidate(result);
+                    action(tValue);
+                }
+                if (value is IEnumerable enumerable && !(enumerable is IEnumerable<char>))
+                {
+                    foreach (object item in enumerable)
+                    {
+                        if (item is T tItem)
+                        {
+                            action(tItem);
+                        }
+                    }
                 }
             }
+        }
+
+        public virtual void NotifyValidate(ValidationResult result)
+        {
+            OnValidated(this, result);
+            CallOnEach<IValidable>(this, validable => validable.NotifyValidate(result));
         }
 
         protected void OnValidated(object sender, ValidationResult result) => Validated?.Invoke(sender, result);

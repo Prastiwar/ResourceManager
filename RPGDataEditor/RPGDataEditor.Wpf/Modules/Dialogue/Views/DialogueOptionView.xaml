@@ -105,7 +105,6 @@
                                     <views:RequirementView DataContext="{Binding ., Mode=TwoWay}"
                                                            TypeChange="RequirementView_TypeChange"
                                                            local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
-                                                           ValidableContext="{Binding DataContext, ElementName=RequirementsListView}"
                                                            Grid.Column="1"
                                                            HorizontalAlignment="Stretch"
                                                            HorizontalContentAlignment="Stretch" />
