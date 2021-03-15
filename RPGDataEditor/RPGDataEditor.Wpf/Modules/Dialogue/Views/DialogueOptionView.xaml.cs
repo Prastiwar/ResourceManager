@@ -65,5 +65,37 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
                 model.Requirements.Remove(requirement);
             }
         }
+
+        private void RequirementView_TypeChange(object sender, Wpf.Views.RequirementView.ChangeTypeEventArgs e)
+        {
+            if (DataContext is DialogueOptionModel model)
+            {
+                bool isDialogue = string.Compare(e.TargetType, "dialogue", true) == 0;
+                bool isQuest = string.Compare(e.TargetType, "quest", true) == 0;
+                bool isItem = string.Compare(e.TargetType, "item", true) == 0;
+                PlayerRequirementModel newModel = null;
+                if (isDialogue)
+                {
+                    newModel = new DialogueRequirement();
+                }
+                else if (isQuest)
+                {
+                    newModel = new QuestRequirement();
+                }
+                else if (isItem)
+                {
+                    newModel = new ItemRequirement();
+                }
+                if (newModel != null)
+                {
+                    int index = model.Requirements.IndexOf(e.Requirement);
+                    if (index > -1)
+                    {
+                        model.Requirements.RemoveAt(index);
+                        model.Requirements.Insert(index, newModel);
+                    }
+                }
+            }
+        }
     }
 }

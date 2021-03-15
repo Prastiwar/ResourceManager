@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using RPGDataEditor.Core.Validation;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -12,47 +14,65 @@ namespace RPGDataEditor.Wpf.Behaviors
     {
         public string PropertyName { get; set; }
 
+        public static DependencyProperty ValidableContextProperty =
+            DependencyProperty.Register(nameof(ValidableContext), typeof(IValidable), typeof(CatchValidationBehaviorBase<T>), new PropertyMetadata(null, OnValidableContextChanged));
+
+        public IValidable ValidableContext {
+            get => (IValidable)GetValue(ValidableContextProperty);
+            set => SetValue(ValidableContextProperty, value);
+        }
+
+        private static void OnValidableContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            CatchValidationBehaviorBase<T> behavior = (CatchValidationBehaviorBase<T>)d;
+            if (e.OldValue is IValidable oldValidable)
+            {
+                oldValidable.Validated -= behavior.Validable_OnValidated;
+            }
+            if (e.NewValue is IValidable newValidable)
+            {
+                newValidable.Validated -= behavior.Validable_OnValidated; // prevent event duplication
+                newValidable.Validated += behavior.Validable_OnValidated;
+            }
+        }
+
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.DataContextChanged += Bindable_DataContextChanged;
-            if (AssociatedObject.DataContext is IValidable validable)
+            bool hasBinding = BindingOperations.GetBindingExpression(this, ValidableContextProperty) != null;
+            if (!hasBinding)
             {
-                validable.Validated += Validable_OnValidated;
+                if (ValidableContext == null)
+                {
+                    ValidableContext = AssociatedObject.DataContext as IValidable;
+                    AssociatedObject.DataContextChanged += AssociatedObject_DataContextChanged;
+                }
+                if (ValidableContext == null)
+                {
+                    ValidableContext = AssociatedObject.GetValue(AttachProperties.ValidableObjectProperty) as IValidable;
+                    DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(AttachProperties.ValidableObjectProperty, AssociatedType);
+                    dpd.AddValueChanged(AssociatedObject, OnValidableObjectChanged);
+                }
             }
         }
+
+        private void AssociatedObject_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => OnValidableContextChanged(this, e);
+
+        private void OnValidableObjectChanged(object sender, EventArgs e)
+            => ValidableContext = AssociatedObject.GetValue(AttachProperties.ValidableObjectProperty) as IValidable;
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            AssociatedObject.DataContextChanged -= Bindable_DataContextChanged;
-            if (AssociatedObject.DataContext is IValidable validable)
+            if (ValidableContext != null)
             {
-                validable.Validated -= Validable_OnValidated;
-            }
-        }
-
-        private void Bindable_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (AssociatedObject.DataContext is IValidable validable)
-            {
-                validable.Validated -= Validable_OnValidated; // prevent event duplication
-                validable.Validated += Validable_OnValidated;
+                ValidableContext.Validated -= Validable_OnValidated;
             }
         }
 
         protected abstract void OnValidated(ValidationResult result);
 
-        private void Validable_OnValidated(object sender, ValidationResult e)
-        {
-            // Detach this event when binding context was changed
-            if (AssociatedObject.DataContext != sender)
-            {
-                ((IValidable)sender).Validated -= Validable_OnValidated;
-                return;
-            }
-            OnValidated(e);
-        }
+        private void Validable_OnValidated(object sender, ValidationResult e) => OnValidated(e);
 
         protected string GetCatchProperty()
         {
@@ -80,9 +100,9 @@ namespace RPGDataEditor.Wpf.Behaviors
                     {
                         return failure.ErrorMessage;
                     }
-                    string latestName = propertyPath.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-                    string latestPropertyName = propertyName.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-                    if (latestName.CompareTo(latestPropertyName) == 0)
+                    string laValidationContextName = propertyPath.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+                    string laValidationContextPropertyName = propertyName.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
+                    if (laValidationContextName.CompareTo(laValidationContextPropertyName) == 0)
                     {
                         return failure.ErrorMessage;
                     }

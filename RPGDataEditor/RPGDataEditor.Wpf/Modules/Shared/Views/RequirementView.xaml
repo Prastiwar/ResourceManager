@@ -6,7 +6,9 @@
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             x:Name="ThisRequirementView"
              mc:Ignorable="d">
     <StackPanel>
         <ComboBox x:Name="RequirementType"
@@ -36,12 +38,13 @@
         <StackPanel x:Name="ItemRequirementPanel"
                     Margin="5"
                     Visibility="Collapsed">
-            <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox x:Name="ItemTextBox"
+                     Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      materialDesign:HintAssist.Hint="Item"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
+                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=(local:AttachProperties.ValidableObject), ElementName=ThisRequirementView}"/>
                 </i:Interaction.Behaviors>
             </TextBox>
             <CheckBox x:Name="RespectNBTCheckbox"
