@@ -35,8 +35,15 @@
                               Visibility="Collapsed" />
             <TextBox Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
+                     local:AttachProperties.ValidablePathFormat="Options[{0}]"
                      materialDesign:HintAssist.Hint="Message"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <local:AttachProperties.ValidablePathValues>
+                    <MultiBinding Converter="{StaticResource BindingListConverter}">
+                        <Binding Path="(ItemsControl.AlternationIndex)"
+                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                    </MultiBinding>
+                </local:AttachProperties.ValidablePathValues>
                 <i:Interaction.Behaviors>
                     <behaviors:CatchValidationBehavior />
                 </i:Interaction.Behaviors>
@@ -84,6 +91,7 @@
                 <ListView x:Name="RequirementsListView"
                           ItemsSource="{Binding Requirements}"
                           HorizontalAlignment="Stretch"
+                          AlternationCount="{StaticResource MaxIntValue}"
                           HorizontalContentAlignment="Stretch">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -102,12 +110,23 @@
                                             Style="{DynamicResource MaterialDesignFlatButton}"
                                             Padding="0"
                                             Margin="0,12,0,0" />
-                                    <views:RequirementView DataContext="{Binding ., Mode=TwoWay}"
+                                    <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
+                                    <views:RequirementView DataContext="{Binding .}"
                                                            TypeChange="RequirementView_TypeChange"
+                                                           local:AttachProperties.ValidablePathFormat="Options[{0}].Requirements[{1}]"
                                                            local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
                                                            Grid.Column="1"
                                                            HorizontalAlignment="Stretch"
-                                                           HorizontalContentAlignment="Stretch" />
+                                                           HorizontalContentAlignment="Stretch">
+                                        <local:AttachProperties.ValidablePathValues>
+                                            <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                <Binding Path="(ItemsControl.AlternationIndex)"
+                                                         RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}, AncestorLevel=2}" />
+                                                <Binding Path="(ItemsControl.AlternationIndex)"
+                                                         RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                            </MultiBinding>
+                                        </local:AttachProperties.ValidablePathValues>
+                                    </views:RequirementView>
                                 </Grid>
                             </materialDesign:Card>
                         </DataTemplate>

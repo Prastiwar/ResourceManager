@@ -12,7 +12,13 @@ namespace RPGDataEditor.Wpf.Behaviors
 {
     public abstract class CatchValidationBehaviorBase<T> : Behavior<T> where T : FrameworkElement
     {
-        public string PropertyName { get; set; }
+        public static DependencyProperty PropertyNameProperty =
+            DependencyProperty.Register(nameof(PropertyName), typeof(string), typeof(CatchValidationBehaviorBase<T>));
+
+        public string PropertyName {
+            get => (string)GetValue(PropertyNameProperty);
+            set => SetValue(PropertyNameProperty, value);
+        }
 
         public static DependencyProperty ValidableContextProperty =
             DependencyProperty.Register(nameof(ValidableContext), typeof(IValidable), typeof(CatchValidationBehaviorBase<T>), new PropertyMetadata(null, OnValidableContextChanged));
@@ -82,6 +88,20 @@ namespace RPGDataEditor.Wpf.Behaviors
                 Binding binding = BindingOperations.GetBinding(AssociatedObject, System.Windows.Controls.TextBox.TextProperty);
                 catchProperty = binding?.Path.Path;
             }
+            string pathFormat = AttachProperties.GetValidablePathFormat(AssociatedObject);
+            if (!string.IsNullOrEmpty(pathFormat))
+            {
+                IList<object> values = AttachProperties.GetValidablePathValues(AssociatedObject);
+                if (values == null)
+                {
+                    catchProperty = pathFormat + "." + catchProperty;
+                }
+                else
+                {
+                    string path = string.Format(pathFormat, values.ToArray());
+                    catchProperty = path + "." + catchProperty;
+                }
+            }
             return catchProperty;
         }
 
@@ -97,12 +117,6 @@ namespace RPGDataEditor.Wpf.Behaviors
                 {
                     string propertyPath = failure.PropertyName;
                     if (propertyPath.CompareTo(propertyName) == 0)
-                    {
-                        return failure.ErrorMessage;
-                    }
-                    string laValidationContextName = propertyPath.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-                    string laValidationContextPropertyName = propertyName.Split('.', System.StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-                    if (laValidationContextName.CompareTo(laValidationContextPropertyName) == 0)
                     {
                         return failure.ErrorMessage;
                     }

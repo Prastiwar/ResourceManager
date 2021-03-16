@@ -45,6 +45,7 @@
                              UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <validation:ResourceLocationRule ValidatesOnTargetUpdated="True"
+                                                             ValidationStep="UpdatedValue"
                                                              AllowNull="False" />
                         </Binding.ValidationRules>
                     </Binding>
@@ -97,6 +98,7 @@
                              UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <validation:ResourceLocationRule ValidatesOnTargetUpdated="True"
+                                                             ValidationStep="UpdatedValue"
                                                              AllowNull="False" />
                         </Binding.ValidationRules>
                     </Binding>
@@ -115,7 +117,8 @@
                              Mode="TwoWay"
                              UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
-                            <validation:JsonRule ValidatesOnTargetUpdated="True" />
+                            <validation:JsonRule ValidatesOnTargetUpdated="True"
+                                                 ValidationStep="UpdatedValue" />
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>

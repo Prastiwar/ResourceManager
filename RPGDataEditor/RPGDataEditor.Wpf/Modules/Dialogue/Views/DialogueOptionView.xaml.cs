@@ -1,5 +1,7 @@
 ﻿using RPGDataEditor.Core.Models;
+using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Dialogue.Views
 {
@@ -78,6 +80,11 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
                     {
                         model.Requirements.RemoveAt(index);
                         model.Requirements.Insert(index, newModel);
+                    }
+                    ICollectionView view = CollectionViewSource.GetDefaultView(RequirementsListView.ItemsSource);
+                    if (view != null)
+                    {
+                        view.Refresh();
                     }
                 }
             }

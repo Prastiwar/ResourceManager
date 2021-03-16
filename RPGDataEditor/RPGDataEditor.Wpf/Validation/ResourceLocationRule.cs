@@ -4,11 +4,11 @@ using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Validation
 {
-    public class ResourceLocationRule : ValidationRule
+    public class ResourceLocationRule : ValidationRuleBase
     {
         public bool AllowNull { get; set; } = true;
 
-        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        protected override ValidationResult ValidateValue(object value, CultureInfo cultureInfo)
         {
             bool isResourceLocation = AllowNull;
             if (value != null)

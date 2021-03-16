@@ -1,6 +1,8 @@
 ﻿using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
+using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Quest.Views
 {
@@ -26,6 +28,11 @@ namespace RPGDataEditor.Wpf.Quest.Views
                     {
                         vm.Model.Requirements.RemoveAt(index);
                         vm.Model.Requirements.Insert(index, newModel);
+                    }
+                    ICollectionView view = CollectionViewSource.GetDefaultView(RequirementsListView.ItemsSource);
+                    if (view != null)
+                    {
+                        view.Refresh();
                     }
                 }
             }

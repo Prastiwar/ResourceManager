@@ -122,7 +122,7 @@
                                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                                     Padding="0"
                                                     Margin="0,12,0,0" />
-                                            <questViews:QuestTaskView DataContext="{Binding ., Mode=TwoWay}"
+                                            <questViews:QuestTaskView DataContext="{Binding .}"
                                                                       Grid.Column="1"
                                                                       HorizontalAlignment="Stretch"
                                                                       HorizontalContentAlignment="Stretch" />
@@ -159,6 +159,7 @@
                         <ListView x:Name="RequirementsListView"
                                   DataContext="{Binding Model}"
                                   ItemsSource="{Binding Requirements}"
+                                  AlternationCount="{StaticResource MaxIntValue}"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch">
                             <ListView.ItemTemplate>
@@ -181,9 +182,17 @@
                                             <views:RequirementView DataContext="{Binding .}"
                                                                    Grid.Column="1"
                                                                    TypeChange="RequirementView_TypeChange"
+                                                                   local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
                                                                    local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
                                                                    HorizontalAlignment="Stretch"
-                                                                   HorizontalContentAlignment="Stretch" />
+                                                                   HorizontalContentAlignment="Stretch" >
+                                                <local:AttachProperties.ValidablePathValues>
+                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                        <Binding Path="(ItemsControl.AlternationIndex)"
+                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                                    </MultiBinding>
+                                                </local:AttachProperties.ValidablePathValues>
+                                            </views:RequirementView>
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>

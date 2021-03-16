@@ -41,6 +41,8 @@
             <TextBox x:Name="ItemTextBox"
                      Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
+                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), ElementName=ThisRequirementView}"
+                     local:AttachProperties.ValidablePathValues="{Binding Path=(local:AttachProperties.ValidablePathValues), ElementName=ThisRequirementView}"
                      materialDesign:HintAssist.Hint="Item"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
@@ -53,6 +55,8 @@
                       IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
             <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
+                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), ElementName=ThisRequirementView}"
+                     local:AttachProperties.ValidablePathValues="{Binding Path=(local:AttachProperties.ValidablePathValues), ElementName=ThisRequirementView}"
                      materialDesign:HintAssist.Hint="Nbt"
                      Visibility="{Binding IsChecked, ElementName=RespectNBTCheckbox, Converter={StaticResource BoolToVisibilityConverter}}"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">

@@ -5,9 +5,9 @@ using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Validation
 {
-    public class ValidQuestTaskRule : ValidationRule
+    public class ValidQuestTaskRule : ValidationRuleBase
     {
-        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        protected override ValidationResult ValidateValue(object value, CultureInfo cultureInfo)
         {
             if (value == null)
             {
