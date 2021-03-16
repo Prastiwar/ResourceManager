@@ -1,6 +1,5 @@
 ﻿using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
-using System;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core

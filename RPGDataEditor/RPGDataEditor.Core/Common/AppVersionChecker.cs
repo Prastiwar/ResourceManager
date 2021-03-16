@@ -41,7 +41,7 @@ namespace RPGDataEditor.Core
                     return value.Version == ActualVersion.Version;
                 }
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 // most likely there is no internet connection
                 return true;
