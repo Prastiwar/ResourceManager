@@ -17,6 +17,9 @@
                     <converters:BindingListConverter x:Key="BindingListConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>
+                    <converters:CombinePropertyPathConverter x:Key="CombinePropertyPathConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
                     <converters:HexDecColorConverter x:Key="HexDecColorConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>

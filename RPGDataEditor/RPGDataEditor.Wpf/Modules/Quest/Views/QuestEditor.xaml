@@ -60,13 +60,6 @@
                                      DataContext="{Binding Model}"
                                      Margin="5"
                                      Padding="5">
-                    <materialDesign:Card.Tag>
-                        <Binding Path="CompletionTask">
-                            <Binding.ValidationRules>
-                                <validation:ValidQuestTaskRule />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </materialDesign:Card.Tag>
                     <StackPanel>
                         <TextBlock Text="Choose completion task"
                                    Margin="5" />
@@ -104,6 +97,7 @@
                                   DataContext="{Binding Model}"
                                   ItemsSource="{Binding Tasks}"
                                   HorizontalAlignment="Stretch"
+                                  AlternationCount="{StaticResource MaxIntValue}"
                                   HorizontalContentAlignment="Stretch">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
@@ -124,8 +118,17 @@
                                                     Margin="0,12,0,0" />
                                             <questViews:QuestTaskView DataContext="{Binding .}"
                                                                       Grid.Column="1"
+                                                                      local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
+                                                                      local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListView}"
                                                                       HorizontalAlignment="Stretch"
-                                                                      HorizontalContentAlignment="Stretch" />
+                                                                      HorizontalContentAlignment="Stretch">
+                                                <local:AttachProperties.ValidablePathValues>
+                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                        <Binding Path="(ItemsControl.AlternationIndex)"
+                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                                    </MultiBinding>
+                                                </local:AttachProperties.ValidablePathValues>
+                                            </questViews:QuestTaskView>
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>
@@ -185,7 +188,7 @@
                                                                    local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
                                                                    local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
                                                                    HorizontalAlignment="Stretch"
-                                                                   HorizontalContentAlignment="Stretch" >
+                                                                   HorizontalContentAlignment="Stretch">
                                                 <local:AttachProperties.ValidablePathValues>
                                                     <MultiBinding Converter="{StaticResource BindingListConverter}">
                                                         <Binding Path="(ItemsControl.AlternationIndex)"

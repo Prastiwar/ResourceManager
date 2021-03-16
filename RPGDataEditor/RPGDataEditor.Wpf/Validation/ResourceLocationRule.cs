@@ -1,4 +1,5 @@
 ﻿using RPGDataEditor.Core;
+using RPGDataEditor.Core.Validation;
 using System.Globalization;
 using System.Windows.Controls;
 
@@ -16,7 +17,7 @@ namespace RPGDataEditor.Wpf.Validation
                 string val = value.ToString();
                 isResourceLocation = ValidationExtensions.IsResourceLocation(val, AllowNull);
             }
-            return new ValidationResult(isResourceLocation, "This is not valid resource location");
+            return new ValidationResult(isResourceLocation, CustomMessages.ResourceLocation);
         }
     }
 }

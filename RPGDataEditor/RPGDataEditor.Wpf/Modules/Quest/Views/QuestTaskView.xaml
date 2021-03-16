@@ -5,9 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
+             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
+             x:Name="ThisTaskView"
              mc:Ignorable="d">
     <StackPanel>
         <ComboBox x:Name="TaskType"
@@ -36,20 +38,15 @@
         </StackPanel>
         <StackPanel x:Name="KillQuestTaskPanel"
                     Visibility="Collapsed">
-            <TextBox Margin="5"
+            <TextBox Text="{Binding Kill, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), ElementName=ThisTaskView}"
+                     local:AttachProperties.ValidablePathValues="{Binding Path=(local:AttachProperties.ValidablePathValues), ElementName=ThisTaskView}"
                      materialDesign:HintAssist.Hint="Kill target"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <TextBox.Text>
-                    <Binding Path="Kill"
-                             Mode="TwoWay"
-                             UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <validation:ResourceLocationRule ValidatesOnTargetUpdated="True"
-                                                             ValidationStep="UpdatedValue"
-                                                             AllowNull="False" />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=(local:AttachProperties.ValidableObject), ElementName=ThisTaskView}" />
+                </i:Interaction.Behaviors>
             </TextBox>
             <TextBox Text="{Binding Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
@@ -89,39 +86,30 @@
         </StackPanel>
         <StackPanel x:Name="ItemInteractQuestTaskPanel"
                     Visibility="Collapsed">
-            <TextBox Margin="5"
+            <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), ElementName=ThisTaskView}"
+                     local:AttachProperties.ValidablePathValues="{Binding Path=(local:AttachProperties.ValidablePathValues), ElementName=ThisTaskView}"
                      materialDesign:HintAssist.Hint="Item"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <TextBox.Text>
-                    <Binding Path="Item"
-                             Mode="TwoWay"
-                             UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <validation:ResourceLocationRule ValidatesOnTargetUpdated="True"
-                                                             ValidationStep="UpdatedValue"
-                                                             AllowNull="False" />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=(local:AttachProperties.ValidableObject), ElementName=ThisTaskView}" />
+                </i:Interaction.Behaviors>
             </TextBox>
             <CheckBox x:Name="RespectNBTCheckbox"
                       Content="Should respect NBT?"
                       Margin="5"
                       IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
-            <TextBox Margin="5"
+            <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), ElementName=ThisTaskView}"
+                     local:AttachProperties.ValidablePathValues="{Binding Path=(local:AttachProperties.ValidablePathValues), ElementName=ThisTaskView}"
                      materialDesign:HintAssist.Hint="Nbt"
                      Visibility="{Binding IsChecked, ElementName=RespectNBTCheckbox, Converter={StaticResource BoolToVisibilityConverter}}"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <TextBox.Text>
-                    <Binding Path="Nbt"
-                             Mode="TwoWay"
-                             UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <validation:JsonRule ValidatesOnTargetUpdated="True"
-                                                 ValidationStep="UpdatedValue" />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=(local:AttachProperties.ValidableObject), ElementName=ThisTaskView}" />
+                </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>
         <StackPanel x:Name="DialogueQuestTaskPanel"

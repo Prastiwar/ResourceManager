@@ -20,7 +20,7 @@
             set => SetProperty(ref sell, value);
         }
 
-        private int count;
+        private int count = 1;
         public int Count {
             get => count;
             set => SetProperty(ref count, value < 1 ? 1 : value);

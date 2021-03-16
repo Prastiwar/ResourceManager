@@ -7,7 +7,7 @@ namespace RPGDataEditor.Core.Validation
     {
         public TalkLineValidator()
         {
-            RuleFor(x => x.Text).NotEmpty().WithMessage(CustomMessages.Empty);
+            RuleFor(x => x.Text).NotEmpty().WithMessage(CustomMessages.Empty).When(x => string.IsNullOrEmpty(x.SoundLocation));
             RuleFor(x => x.SoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
         }
     }

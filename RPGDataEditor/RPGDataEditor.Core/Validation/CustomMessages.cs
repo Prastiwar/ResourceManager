@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Core.Validation
 {
-    internal static class CustomMessages
+    public static class CustomMessages
     {
         public const string ResourceLocation = "This is not valid Resource Location";
         public const string Json = "This is not valid JSON";
