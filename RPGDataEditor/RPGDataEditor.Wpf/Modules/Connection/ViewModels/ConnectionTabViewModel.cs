@@ -19,7 +19,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             {
                 try
                 {
-                    Session.SaveSession(App.SessionFilePath);
+                    Session.SaveSession(RPGDataEditorApp.SessionFilePath);
                 }
                 catch (System.Exception ex)
                 {
