@@ -138,6 +138,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance<IValidationProvider>(new ValidatorProvider(Container));
             containerRegistry.RegisterInstance<ISnackbarService>(new SnackbarService());
             containerRegistry.RegisterInstance<IAppLifetimeService>(new AppLifetimeService());
+            containerRegistry.RegisterInstance<IRequirementProvider>(new DefaultRequirementProvider());
         }
 
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)

@@ -21,6 +21,7 @@ namespace RPGDataEditor.Wpf
 
         public static ICommand AddListItemLiCommand<T>(Func<IList<T>> getList, Func<T> createInstance) => new DelegateCommand(() => getList().Add(createInstance()));
 
+        /// <summary> Gets Button (sender) as parameter and gets ListView from its Tag to remove item retrieved from button's DataContext </summary>
         public static ICommand RemoveItemFromListView() => new DelegateCommand<Button>(x => {
             if (x.Tag is ListView listView)
             {
@@ -31,6 +32,7 @@ namespace RPGDataEditor.Wpf
             }
         });
 
+        /// <summary> Gets FrameworkElement as parameter and toggles its visibility </summary>
         public static ICommand ToggleVisibilityCommand => new DelegateCommand<FrameworkElement>(x => x.Visibility = x.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
 
         public static void ToggleExpandIcon(Button btn)

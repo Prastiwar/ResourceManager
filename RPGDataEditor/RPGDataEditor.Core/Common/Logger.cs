@@ -6,13 +6,11 @@ namespace RPGDataEditor.Core
 {
     public static class Logger
     {
-        private static string GetFilePath() => $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
+        private static readonly string defaultFilePath = $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
 
-        private static string GetTemplatedMessage(string message) => $"[{DateTime.Now.ToString("HH:MM:ss")}]: {message}";
+        public static string FilePath { get; set; } = defaultFilePath;
 
-        private static void WriteRaw(string message) => System.IO.File.AppendAllText(GetFilePath(), message);
-
-        private static void Write(string message) => WriteRaw(GetTemplatedMessage(message));
+        public static string Template { get; set; } = $"[{DateTime.Now.ToString("HH:MM:ss")}]: {{0}}";
 
         public static void Error(string message, Exception exception = null)
         {
@@ -30,5 +28,11 @@ namespace RPGDataEditor.Core
             => Write(message + $" FilePath: {sourceFilePath}; Line: {sourceLineNumber}; Member: {memberName}");
 
         public static void ErrorFtp(FtpWebResponse response) => LogTrace($"FTP Error, Status code: {response.StatusCode}");
+
+        private static string GetTemplatedMessage(string message) => string.Format(Template, message);
+
+        private static void WriteRaw(string message) => System.IO.File.AppendAllText(FilePath, message);
+
+        private static void Write(string message) => WriteRaw(GetTemplatedMessage(message));
     }
 }

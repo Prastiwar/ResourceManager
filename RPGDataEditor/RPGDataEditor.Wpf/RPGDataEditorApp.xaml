@@ -88,8 +88,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <x:Static x:Key="MaxIntValue"
-                      Member="sys:Int32.MaxValue"
-                      />
+                      Member="sys:Int32.MaxValue" />
             <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
             <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
         </ResourceDictionary>

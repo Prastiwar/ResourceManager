@@ -1,7 +1,5 @@
 ﻿using Prism.Ioc;
-using Prism.Modularity;
 using Prism.Regions;
-using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Wpf.Connection.Views;
 using RPGDataEditor.Wpf.Dialogue.Views;
@@ -9,35 +7,29 @@ using RPGDataEditor.Wpf.Npc.Views;
 using RPGDataEditor.Wpf.Quest.Views;
 using RPGDataEditor.Wpf.Settings.Views;
 using RPGDataEditor.Wpf.Views;
+using System;
 
 namespace RPGDataEditor.Wpf
 {
-    public class TabModule : IModule
+    public class TabModule : RegionTabModuleBase
     {
-        private readonly IRegionManager regionManager;
+        public TabModule(IRegionManager regionManager) : base(regionManager) { }
 
-        public TabModule(IRegionManager regionManager) => this.regionManager = regionManager;
+        protected override Type[] GetTabTypes() => new Type[] {
+                typeof(ConnectionTab),
+                typeof(NpcTab),
+                typeof(DialogueTab),
+                typeof(QuestTab),
+                typeof(SettingsTab)
+            };
 
-        public void OnInitialized(IContainerProvider containerProvider)
+        protected override void RegisterDialogs(IContainerRegistry containerRegistry)
         {
-            regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(ConnectionTab));
-            regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(NpcTab));
-            regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(DialogueTab));
-            regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(QuestTab));
-            regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(SettingsTab));
-        }
-
-        public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterForNavigation<ConnectionTab>();
-            containerRegistry.RegisterForNavigation<NpcTab>();
-            containerRegistry.RegisterForNavigation<DialogueTab>();
-            containerRegistry.RegisterForNavigation<QuestTab>();
-            containerRegistry.RegisterForNavigation<SettingsTab>();
             containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
             containerRegistry.RegisterDialog<NpcDataModelEditor>(typeof(NpcDataModel).Name);
             containerRegistry.RegisterDialog<QuestEditor>(typeof(QuestModel).Name);
             containerRegistry.RegisterDialog<PickerDialog>(nameof(PickerDialog));
         }
+
     }
 }

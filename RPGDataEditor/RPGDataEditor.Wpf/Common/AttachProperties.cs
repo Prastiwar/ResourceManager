@@ -1,7 +1,6 @@
 ﻿using RPGDataEditor.Core.Validation;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf
 {

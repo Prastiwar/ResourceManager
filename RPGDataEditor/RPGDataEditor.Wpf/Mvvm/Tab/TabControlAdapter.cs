@@ -2,6 +2,7 @@
 using RPGDataEditor.Core.Mvvm;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,35 +12,16 @@ namespace RPGDataEditor.Wpf.Mvvm
     {
         public TabControlAdapter(IRegionBehaviorFactory regionBehaviorFactory) : base(regionBehaviorFactory) { }
 
-        private TabControl regionTarget;
+        protected TabControl RegionTarget { get; private set; }
 
-        private bool cancelSelection;
-
-        private void OnTabsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (UserControl item in e.NewItems)
-                {
-                    regionTarget.Items.Add(CreateTabItem(item));
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (UserControl item in e.OldItems)
-                {
-                    TabItem tabTodelete = regionTarget.Items.OfType<TabItem>().FirstOrDefault(n => n.Content == item);
-                    regionTarget.Items.Remove(tabTodelete);
-                }
-            }
-        }
+        protected bool CancelSelection { get; set; }
 
         protected override void Adapt(IRegion region, TabControl regionTarget)
         {
-            this.regionTarget = regionTarget;
+            RegionTarget = regionTarget;
             region.Views.CollectionChanged += OnTabsChanged;
             regionTarget.SelectionChanged += async (s, e) => {
-                if(cancelSelection)
+                if (CancelSelection)
                 {
                     return;
                 }
@@ -54,19 +36,15 @@ namespace RPGDataEditor.Wpf.Mvvm
                     return;
                 }
                 AttachProperties.SetIsLoading(regionTarget, true);
-                ITabSwitchAsyncAware removedTabAware = GetSwitchAsyncAware(removedTab);
-                ITabSwitchAsyncAware addedTabAware = GetSwitchAsyncAware(addedTab);
                 string toUri = "navigation://" + addedTab.Header;
                 NavigationContext context = new NavigationContext(region.NavigationService, new System.Uri(toUri));
-                bool canNavigate = true;
-                canNavigate = removedTabAware == null || await removedTabAware.CanSwitchFrom(context);
-                canNavigate = canNavigate && (addedTabAware == null || await addedTabAware.CanSwitchTo(context));
+                bool canNavigate = await CanNavigateAsync(removedTab, addedTab, context);
                 if (!canNavigate)
                 {
                     int previousTabIndex = e.RemovedItems.Count > 0 ? regionTarget.Items.IndexOf(e.RemovedItems[0]) : -1;
-                    cancelSelection = true;
+                    CancelSelection = true;
                     regionTarget.SelectedIndex = previousTabIndex;
-                    cancelSelection = false;
+                    CancelSelection = false;
                     AttachProperties.SetIsLoading(regionTarget, false);
                     return;
                 }
@@ -78,21 +56,50 @@ namespace RPGDataEditor.Wpf.Mvvm
             };
         }
 
-        private ITabSwitchAsyncAware GetSwitchAsyncAware(TabItem item) => item?.Content is FrameworkElement el ? el.DataContext as ITabSwitchAsyncAware : null;
+        protected virtual void OnTabsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (UserControl item in e.NewItems)
+                {
+                    RegionTarget.Items.Add(CreateTabItem(item));
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (UserControl item in e.OldItems)
+                {
+                    TabItem tabTodelete = RegionTarget.Items.OfType<TabItem>().FirstOrDefault(n => n.Content == item);
+                    RegionTarget.Items.Remove(tabTodelete);
+                }
+            }
+        }
 
-        protected TabItem CreateTabItem(UserControl control)
+        protected virtual async Task<bool> CanNavigateAsync(TabItem fromTab, TabItem toTab, NavigationContext context)
+        {
+            ITabSwitchAsyncAware removedTabAware = GetSwitchAsyncAware(fromTab);
+            ITabSwitchAsyncAware addedTabAware = GetSwitchAsyncAware(toTab);
+            bool canNavigate = removedTabAware == null || await removedTabAware.CanSwitchFrom(context);
+            canNavigate = canNavigate && (addedTabAware == null || await addedTabAware.CanSwitchTo(context));
+            return canNavigate;
+        }
+
+        protected virtual TabItem CreateTabItem(UserControl control)
         {
             TabItem item = new TabItem {
                 Header = control.Name,
                 Content = control,
                 Width = 100,
                 Height = 48,
-                Padding = new System.Windows.Thickness(2)
+                Padding = new Thickness(2)
             };
-            item.SetResourceReference(TabItem.StyleProperty, "MaterialDesignNavigationRailTabItem");
+            item.SetResourceReference(FrameworkElement.StyleProperty, "MaterialDesignNavigationRailTabItem");
             return item;
         }
 
         protected override IRegion CreateRegion() => new SingleActiveRegion();
+
+        private ITabSwitchAsyncAware GetSwitchAsyncAware(TabItem item)
+            => item?.Content is FrameworkElement el ? el.DataContext as ITabSwitchAsyncAware : null;
     }
 }

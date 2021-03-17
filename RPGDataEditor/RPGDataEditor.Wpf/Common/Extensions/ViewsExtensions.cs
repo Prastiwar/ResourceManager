@@ -1,5 +1,8 @@
+using Prism;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Wpf.Views;
+using System.Windows;
 
 namespace RPGDataEditor.Wpf
 {
@@ -7,23 +10,14 @@ namespace RPGDataEditor.Wpf
     {
         public static PlayerRequirementModel CreateRequirement(this RequirementView.ChangeTypeEventArgs e)
         {
-            bool isDialogue = string.Compare(e.TargetType, "dialogue", true) == 0;
-            bool isQuest = string.Compare(e.TargetType, "quest", true) == 0;
-            bool isItem = string.Compare(e.TargetType, "item", true) == 0;
-            PlayerRequirementModel newModel = null;
-            if (isDialogue)
+            if (Application.Current is PrismApplicationBase prismApp)
             {
-                newModel = new DialogueRequirement();
+                if (prismApp.Container.Resolve(typeof(IRequirementProvider)) is IRequirementProvider provider)
+                {
+                    return provider.CreateRequirement(e.TargetType);
+                }
             }
-            else if (isQuest)
-            {
-                newModel = new QuestRequirement();
-            }
-            else if (isItem)
-            {
-                newModel = new ItemRequirement();
-            }
-            return newModel;
+            return null;
         }
     }
 }
