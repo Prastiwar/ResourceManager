@@ -2,8 +2,14 @@
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class McTradeItemModel : TradeItemModel
+    public class ItemRequirement : Core.Models.ItemRequirement
     {
+        private bool respectNbt;
+        public bool RespectNbt {
+            get => respectNbt;
+            set => SetProperty(ref respectNbt, value);
+        }
+
         private string nbt;
         public string Nbt {
             get => nbt;

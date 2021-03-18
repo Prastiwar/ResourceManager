@@ -4,61 +4,53 @@ using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class NpcDataModelJsonConverter : JsonConverter<NpcDataModel>
+    public class NpcDataModelJsonConverter : ExtendableJsonConverter<NpcDataModel>
     {
-        public override NpcDataModel ReadJson(JsonReader reader, Type objectType, [AllowNull] NpcDataModel existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override NpcDataModel ReadJObject(Type objectType, JObject obj)
         {
-            if (reader.TokenType == JsonToken.StartObject)
-            {
-                JObject obj = JObject.Load(reader);
-                int id = obj.GetValue(nameof(NpcDataModel.Id), -1);
-                string name = obj.GetValue<string>(nameof(NpcDataModel.Name));
-                string title = obj.GetValue<string>(nameof(NpcDataModel.Title));
-                string textureLocation = obj.GetValue<string>(nameof(NpcDataModel.TextureLocation));
-                Position position = obj.GetValue<Position>(nameof(NpcDataModel.Position));
-                bool invulnerable = obj.GetValue(nameof(NpcDataModel.Invulnerable), true);
-                bool lookAtPlayer = obj.GetValue(nameof(NpcDataModel.LookAtPlayer), false);
-                int healthRegen = obj.GetValue(nameof(NpcDataModel.HealthRegen), 1);
-                IList<AttributeDataModel> attributes = obj.GetValue<ObservableCollection<AttributeDataModel>>(nameof(NpcDataModel.Attributes));
-                EquipmentModel equipment = obj.GetValue<EquipmentModel>(nameof(NpcDataModel.Equipment));
-                NpcJobModel job = obj.GetValue<NpcJobModel>(nameof(NpcDataModel.Job));
-                NpcMovement movementType = Enum.Parse<NpcMovement>(obj.GetValue(nameof(NpcDataModel.MovementType), NpcMovement.STATIC.ToString()));
-                IList<Position> paths = obj.GetValue<ObservableCollection<Position>>(nameof(NpcDataModel.Paths));
-                TalkDataModel talkData = obj.GetValue<TalkDataModel>(nameof(NpcDataModel.TalkData));
-                string ambientSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.AmbientSoundLocation));
-                string deathSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.DeathSoundLocation));
-                string hurtSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.HurtSoundLocation));
-                NpcDataModel model = new NpcDataModel() {
-                    Id = id,
-                    Name = name,
-                    Title = title,
-                    TextureLocation = textureLocation,
-                    Position = position,
-                    Invulnerable = invulnerable,
-                    LookAtPlayer = lookAtPlayer,
-                    HealthRegen = healthRegen,
-                    Attributes = attributes,
-                    Equipment = equipment,
-                    Job = job,
-                    MovementType = movementType,
-                    Paths = paths,
-                    TalkData = talkData,
-                    AmbientSoundLocation = ambientSoundLocation,
-                    DeathSoundLocation = deathSoundLocation,
-                    HurtSoundLocation = hurtSoundLocation
-                };
-                return model;
-            }
-            return null;
+            int id = obj.GetValue(nameof(NpcDataModel.Id), -1);
+            string name = obj.GetValue<string>(nameof(NpcDataModel.Name));
+            string title = obj.GetValue<string>(nameof(NpcDataModel.Title));
+            string textureLocation = obj.GetValue<string>(nameof(NpcDataModel.TextureLocation));
+            Position position = obj.GetValue<Position>(nameof(NpcDataModel.Position));
+            bool invulnerable = obj.GetValue(nameof(NpcDataModel.Invulnerable), true);
+            bool lookAtPlayer = obj.GetValue(nameof(NpcDataModel.LookAtPlayer), false);
+            int healthRegen = obj.GetValue(nameof(NpcDataModel.HealthRegen), 1);
+            IList<AttributeDataModel> attributes = obj.GetValue<ObservableCollection<AttributeDataModel>>(nameof(NpcDataModel.Attributes));
+            EquipmentModel equipment = obj.GetValue<EquipmentModel>(nameof(NpcDataModel.Equipment));
+            NpcJobModel job = obj.GetValue<NpcJobModel>(nameof(NpcDataModel.Job));
+            NpcMovement movementType = Enum.Parse<NpcMovement>(obj.GetValue(nameof(NpcDataModel.MovementType), NpcMovement.STATIC.ToString()));
+            IList<Position> paths = obj.GetValue<ObservableCollection<Position>>(nameof(NpcDataModel.Paths));
+            TalkDataModel talkData = obj.GetValue<TalkDataModel>(nameof(NpcDataModel.TalkData));
+            string ambientSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.AmbientSoundLocation));
+            string deathSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.DeathSoundLocation));
+            string hurtSoundLocation = obj.GetValue<string>(nameof(NpcDataModel.HurtSoundLocation));
+            NpcDataModel model = new NpcDataModel() {
+                Id = id,
+                Name = name,
+                Title = title,
+                TextureLocation = textureLocation,
+                Position = position,
+                Invulnerable = invulnerable,
+                LookAtPlayer = lookAtPlayer,
+                HealthRegen = healthRegen,
+                Attributes = attributes,
+                Equipment = equipment,
+                Job = job,
+                MovementType = movementType,
+                Paths = paths,
+                TalkData = talkData,
+                AmbientSoundLocation = ambientSoundLocation,
+                DeathSoundLocation = deathSoundLocation,
+                HurtSoundLocation = hurtSoundLocation
+            };
+            return model;
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] NpcDataModel value, JsonSerializer serializer)
-        {
-            JObject obj = new JObject() {
+        public override JObject ToJObject(NpcDataModel value, JsonSerializer serializer) => new JObject() {
                 { nameof(NpcDataModel.Id).ToFirstLower(), value.Id },
                 { nameof(NpcDataModel.Name).ToFirstLower(), value.Name },
                 { nameof(NpcDataModel.Title).ToFirstLower(), value.Title },
@@ -77,7 +69,5 @@ namespace RPGDataEditor.Core.Serialization
                 { nameof(NpcDataModel.DeathSoundLocation).ToFirstLower(), value.DeathSoundLocation },
                 { nameof(NpcDataModel.HurtSoundLocation).ToFirstLower(), value.HurtSoundLocation }
             };
-            obj.WriteTo(writer);
-        }
     }
 }

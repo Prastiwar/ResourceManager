@@ -4,14 +4,8 @@ using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class McTalkDataModel : TalkDataModel
+    public class TalkDataModel : Core.Models.TalkDataModel
     {
-        private IList<int> initationDialogues = new ObservableCollection<int>();
-        public IList<int> InitationDialogues {
-            get => initationDialogues;
-            set => SetProperty(ref initationDialogues, value ?? new ObservableCollection<int>());
-        }
-
         private IList<TalkLine> interactLines = new ObservableCollection<TalkLine>();
         public IList<TalkLine> InteractLines {
             get => interactLines;

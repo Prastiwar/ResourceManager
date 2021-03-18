@@ -4,44 +4,34 @@ using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class TalkDataModelJsonConverter : JsonConverter<TalkDataModel>
+    public class TalkDataModelJsonConverter : ExtendableJsonConverter<TalkDataModel>
     {
-        public override TalkDataModel ReadJson(JsonReader reader, Type objectType, [AllowNull] TalkDataModel existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override TalkDataModel ReadJObject(Type objectType, JObject obj)
         {
-            if (reader.TokenType == JsonToken.StartObject)
-            {
-                JObject obj = JObject.Load(reader);
-                int talkRange = obj.GetValue<int>(nameof(TalkDataModel.TalkRange), 0);
-                IList<TalkLine> interactLines = obj.GetValue<ObservableCollection<TalkLine>>(nameof(TalkDataModel.InteractLines));
-                IList<TalkLine> deathLines = obj.GetValue<ObservableCollection<TalkLine>>(nameof(TalkDataModel.DeathLines));
-                IList<TalkLine> hurtLines = obj.GetValue<ObservableCollection<TalkLine>>(nameof(TalkDataModel.HurtLines));
-                IList<int> initiationDialogues = obj.GetValue<ObservableCollection<int>>(nameof(TalkDataModel.InitationDialogues));
-                TalkDataModel model = new TalkDataModel() {
-                    TalkRange = talkRange,
-                    InteractLines = interactLines,
-                    DeathLines = deathLines,
-                    HurtLines = hurtLines,
-                    InitationDialogues = initiationDialogues
-                };
-                return model;
-            }
-            return null;
+            int talkRange = obj.GetValue<int>(nameof(TalkDataModel.TalkRange), 0);
+            IList<TalkLine> interactLines = obj.GetValue<ObservableCollection<TalkLine>>(nameof(TalkDataModel.InteractLines));
+            IList<TalkLine> deathLines = obj.GetValue<ObservableCollection<TalkLine>>(nameof(TalkDataModel.DeathLines));
+            IList<TalkLine> hurtLines = obj.GetValue<ObservableCollection<TalkLine>>(nameof(TalkDataModel.HurtLines));
+            IList<int> initationDialogues = obj.GetValue<ObservableCollection<int>>(nameof(TalkDataModel.InitationDialogues));
+            TalkDataModel model = new TalkDataModel() {
+                TalkRange = talkRange,
+                InteractLines = interactLines,
+                DeathLines = deathLines,
+                HurtLines = hurtLines,
+                InitationDialogues = initationDialogues
+            };
+            return model;
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] TalkDataModel value, JsonSerializer serializer)
-        {
-            JObject obj = new JObject() {
+        public override JObject ToJObject(TalkDataModel value, JsonSerializer serializer) => new JObject() {
                 { nameof(TalkDataModel.TalkRange).ToFirstLower(), value.TalkRange },
                 { nameof(TalkDataModel.InteractLines).ToFirstLower(), JArray.FromObject(value.InteractLines) },
                 { nameof(TalkDataModel.DeathLines).ToFirstLower(), JArray.FromObject(value.DeathLines) },
                 { nameof(TalkDataModel.HurtLines).ToFirstLower(), JArray.FromObject(value.HurtLines) },
                 { nameof(TalkDataModel.InitationDialogues).ToFirstLower(), JArray.FromObject(value.InitationDialogues) },
             };
-            obj.WriteTo(writer);
-        }
     }
 }

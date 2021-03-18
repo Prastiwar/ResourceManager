@@ -1,8 +1,6 @@
-﻿using RPGDataEditor.Core.Models;
-
-namespace RPGDataEditor.Minecraft.Models
+﻿namespace RPGDataEditor.Minecraft.Models
 {
-    public class McDialogueModel : DialogueModel
+    public class DialogueModel : Core.Models.DialogueModel
     {
         private bool allowEscape = false;
         public bool AllowEscape {

@@ -2,35 +2,25 @@
 using Newtonsoft.Json.Linq;
 using RPGDataEditor.Core.Models;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class AttributeDataModelJsonConverter : JsonConverter<AttributeDataModel>
+    public class AttributeDataModelJsonConverter : ExtendableJsonConverter<AttributeDataModel>
     {
-        public override AttributeDataModel ReadJson(JsonReader reader, Type objectType, [AllowNull] AttributeDataModel existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override AttributeDataModel ReadJObject(Type objectType, JObject obj)
         {
-            if (reader.TokenType == JsonToken.StartObject)
-            {
-                JObject obj = JObject.Load(reader);
-                string name = obj.GetValue<string>(nameof(AttributeDataModel.Name));
-                double value = obj.GetValue<double>(nameof(AttributeDataModel.Value), 0.0);
-                AttributeDataModel model = new AttributeDataModel() {
-                    Name = name,
-                    Value = value
-                };
-                return model;
-            }
-            return null;
+            string name = obj.GetValue<string>(nameof(AttributeDataModel.Name));
+            double value = obj.GetValue<double>(nameof(AttributeDataModel.Value), 0.0);
+            AttributeDataModel model = new AttributeDataModel() {
+                Name = name,
+                Value = value
+            };
+            return model;
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] AttributeDataModel value, JsonSerializer serializer)
-        {
-            JObject obj = new JObject() {
+        public override JObject ToJObject(AttributeDataModel value, JsonSerializer serializer) => new JObject() {
                 { nameof(AttributeDataModel.Name).ToFirstLower(), value.Name },
                 { nameof(AttributeDataModel.Value).ToFirstLower(), value.Value }
             };
-            obj.WriteTo(writer);
-        }
     }
 }

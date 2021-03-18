@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class McNpcDataModel : NpcDataModel
+    public class NpcDataModel : Core.Models.NpcDataModel
     {
         private string title = "";
         public string Title {

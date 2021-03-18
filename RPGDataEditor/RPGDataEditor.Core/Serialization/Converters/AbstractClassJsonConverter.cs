@@ -7,9 +7,11 @@ namespace RPGDataEditor.Core.Serialization
 {
     public class AbstractClassJsonConverter<T> : JsonConverter<T>
     {
-        protected string namespaceName;
+        public AbstractClassJsonConverter(params string[] namespaceNames) => NamespaceNames = namespaceNames ?? throw new ArgumentNullException(nameof(namespaceNames));
 
-        public AbstractClassJsonConverter(string namespaceName) => this.namespaceName = namespaceName;
+        protected string[] NamespaceNames { get; set; }
+
+        protected virtual string Suffix { get; }
 
         public override T ReadJson(JsonReader reader, Type objectType, [AllowNull] T existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
@@ -35,8 +37,22 @@ namespace RPGDataEditor.Core.Serialization
             obj.WriteTo(writer);
         }
 
-        protected virtual string GetTypeName(T src) => src.GetType().Name;
+        protected virtual string GetTypeName(T src) => string.IsNullOrEmpty(Suffix) ? src.GetType().Name 
+                                                                                    : src.GetType().Name.Replace(Suffix, "");
 
-        protected virtual Type GetObjectType(string type) => Type.GetType(namespaceName + "." + type);
+        protected virtual Type GetObjectType(string type)
+        {
+            string suffixType = string.IsNullOrEmpty(Suffix) ? "." + type 
+                                                             : "." + type + Suffix;
+            foreach (string namespaceName in NamespaceNames)
+            {
+                Type foundType = Type.GetType(namespaceName + suffixType);
+                if (foundType != null)
+                {
+                    return foundType;
+                }
+            }
+            return null;
+        }
     }
 }
