@@ -19,6 +19,28 @@ namespace RPGDataEditor.Core
             set => Set(value);
         }
 
+        public DialogParametersBuilder WithResult(bool isSuccess) 
+        {
+            IsSuccess = isSuccess;
+            return this;
+        }
+
+        public DialogParametersBuilder WithException(Exception exception) 
+        {
+            Exception = exception;
+            return this;
+        }
+
+        public DialogParameters Build()
+        {
+            DialogParameters parameters = new DialogParameters();
+            foreach (KeyValuePair<string, object> pair in properties)
+            {
+                parameters.Add(pair.Key, pair.Value);
+            }
+            return parameters;
+        }
+
         protected T Get<T>([CallerMemberName] string propertyName = null)
         {
             if (properties.TryGetValue(propertyName, out object value))
@@ -37,16 +59,6 @@ namespace RPGDataEditor.Core
         {
             variable = value;
             properties[propertyName] = value;
-        }
-
-        public DialogParameters Build()
-        {
-            DialogParameters parameters = new DialogParameters();
-            foreach (KeyValuePair<string, object> pair in properties)
-            {
-                parameters.Add(pair.Key, pair.Value);
-            }
-            return parameters;
         }
     }
 }

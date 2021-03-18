@@ -1,6 +1,6 @@
 using RPGDataEditor.Core.Models;
 
-namespace RPGDataEditor.Core
+namespace RPGDataEditor.Core.Providers
 {
     public class DefaultRequirementProvider : IRequirementProvider
     {

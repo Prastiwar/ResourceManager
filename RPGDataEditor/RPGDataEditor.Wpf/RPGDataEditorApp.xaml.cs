@@ -10,6 +10,7 @@ using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
+using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
@@ -19,6 +20,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using RPGDataEditor.Wpf.Providers;
 
 namespace RPGDataEditor.Wpf
 {
@@ -107,6 +109,7 @@ namespace RPGDataEditor.Wpf
         }
 
         protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Session,
+                                                                                            Container.Resolve<IResourceProvider>(),
                                                                                             Container.Resolve<IDialogService>(),
                                                                                             Container.Resolve<IValidationProvider>(),
                                                                                             Container.Resolve<ISnackbarService>());
@@ -120,20 +123,26 @@ namespace RPGDataEditor.Wpf
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
 
-            RegisterValidators(containerRegistry);
-            RegisterServices(containerRegistry);
-            RegisterDialogs(containerRegistry);
-
             Session = CreateSession();
             containerRegistry.RegisterInstance(Session);
 
-            containerRegistry.RegisterInstance(CreateViewModelContext());
+            RegisterValidators(containerRegistry);
+            RegisterServices(containerRegistry);
+            RegisterProviders(containerRegistry);
+            RegisterDialogs(containerRegistry);
 
             containerRegistry.RegisterInstance(CreateVersionChecker());
-        }
 
-        protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
-            => containerRegistry.RegisterDialog<UpdateDialog>(nameof(UpdateDialog));
+            containerRegistry.RegisterInstance(CreateViewModelContext());
+        }
+            
+        protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<IValidator<SessionContext>, SessionContextValidator>();
+            containerRegistry.Register<IValidator<NpcDataModel>, NpcDataModelValidator>();
+            containerRegistry.Register<IValidator<QuestModel>, QuestModelValidator>();
+            containerRegistry.Register<IValidator<DialogueModel>, DialogueModelValidator>();
+        }
 
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
         {
@@ -143,13 +152,11 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance<IRequirementProvider>(new DefaultRequirementProvider());
         }
 
-        protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.Register<IValidator<SessionContext>, SessionContextValidator>();
-            containerRegistry.Register<IValidator<NpcDataModel>, NpcDataModelValidator>();
-            containerRegistry.Register<IValidator<QuestModel>, QuestModelValidator>();
-            containerRegistry.Register<IValidator<DialogueModel>, DialogueModelValidator>();
-        }
+        protected virtual void RegisterProviders(IContainerRegistry containerRegistry) 
+            => containerRegistry.RegisterInstance<IResourceProvider>(new ResourceProvider(Session));
+
+        protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
+            => containerRegistry.RegisterDialog<UpdateDialog>(nameof(UpdateDialog));
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
     }

@@ -40,7 +40,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             if (!isCancelled)
             {
                 await OnDialogClosing(result).ConfigureAwait(true);
-                Close(new PickerDialogParameters(Model is INullResource ? null : Model) { IsSuccess = result }.Build());
+                Close(new PickerDialogParameters(Model is INullResource ? null : Model).WithResult(result).Build());
             }
         }
 
@@ -72,19 +72,16 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(RPGResource resource)
         {
-            List<IIdentifiable> list = new List<IIdentifiable>();
+            List<IIdentifiable> list = (await Context.ResourceProvider.LoadResourcesAsync((int)resource)).ToList();
             switch (resource)
             {
                 case RPGResource.Quest:
-                    list = new List<IIdentifiable>(await Context.Session.LoadQuests());
                     list.Insert(0, new NullQuest());
                     break;
                 case RPGResource.Dialogue:
-                    list = new List<IIdentifiable>(await Context.Session.LoadDialogues());
                     list.Insert(0, new NullDialogue());
                     break;
                 case RPGResource.Npc:
-                    list = new List<IIdentifiable>(await Context.Session.LoadNpcs());
                     list.Insert(0, new NullNpc());
                     break;
                 default:

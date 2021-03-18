@@ -83,7 +83,7 @@ namespace RPGDataEditor.Core.Mvvm
             }
             catch (Exception ex)
             {
-                Logger.Error("Session Validation error", ex);
+                Logger.Error("FTP validation error", ex);
                 return false;
             }
             return true;

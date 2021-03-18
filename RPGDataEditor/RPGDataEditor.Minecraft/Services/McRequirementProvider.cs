@@ -1,4 +1,4 @@
-using RPGDataEditor.Core;
+using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Minecraft.Models;
 
 namespace RPGDataEditor.Minecraft
