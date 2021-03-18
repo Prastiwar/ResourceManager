@@ -32,9 +32,11 @@ namespace RPGDataEditor.Wpf
 
         public static new RPGDataEditorApp Current => Application.Current as RPGDataEditorApp;
 
-        private static string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
-        public static string BinaryPath => Path.Combine(Environment.CurrentDirectory + "bin");
-        public static string CacheDirectoryPath {
+        protected string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
+        
+        protected string BinaryPath => Path.Combine(Environment.CurrentDirectory + "bin");
+        
+        protected virtual string CacheDirectoryPath {
             get {
                 string path = Path.Combine(AppRootPath, "cache");
                 Directory.CreateDirectory(path);
@@ -42,9 +44,9 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        public static string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
+        public virtual string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
 
-        public static SessionContext CurrentSession { get; private set; }
+        public SessionContext Session { get; private set; }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Logger.Error("Unhandled exception", e.Exception);
@@ -104,7 +106,7 @@ namespace RPGDataEditor.Wpf
             return session;
         }
 
-        protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(CurrentSession,
+        protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Session,
                                                                                             Container.Resolve<IDialogService>(),
                                                                                             Container.Resolve<IValidationProvider>(),
                                                                                             Container.Resolve<ISnackbarService>());
@@ -122,8 +124,8 @@ namespace RPGDataEditor.Wpf
             RegisterServices(containerRegistry);
             RegisterDialogs(containerRegistry);
 
-            CurrentSession = CreateSession();
-            containerRegistry.RegisterInstance(CurrentSession);
+            Session = CreateSession();
+            containerRegistry.RegisterInstance(Session);
 
             containerRegistry.RegisterInstance(CreateViewModelContext());
 

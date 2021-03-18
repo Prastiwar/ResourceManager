@@ -15,8 +15,8 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj" />
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
     <ProjectReference Include="..\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj" />
   </ItemGroup>
 </Project>

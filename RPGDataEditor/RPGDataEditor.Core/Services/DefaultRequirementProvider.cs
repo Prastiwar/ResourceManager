@@ -4,7 +4,7 @@ namespace RPGDataEditor.Core
 {
     public class DefaultRequirementProvider : IRequirementProvider
     {
-        public PlayerRequirementModel CreateRequirement(string name)
+        public virtual PlayerRequirementModel CreateRequirement(string name)
         {
             PlayerRequirementModel newModel = null;
             bool isDialogue = string.Compare(name, "dialogue", true) == 0;

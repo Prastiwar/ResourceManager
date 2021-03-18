@@ -76,15 +76,15 @@ namespace RPGDataEditor.Wpf.Views
             switch (Resource)
             {
                 case RPGResource.Quest:
-                    QuestModel[] quests = await RPGDataEditorApp.CurrentSession.LoadQuests();
+                    QuestModel[] quests = await RPGDataEditorApp.Current.Session.LoadQuests();
                     PickedItem = quests.FirstOrDefault(q => q.Id == id);
                     break;
                 case RPGResource.Dialogue:
-                    DialogueModel[] dialogues = await RPGDataEditorApp.CurrentSession.LoadDialogues();
+                    DialogueModel[] dialogues = await RPGDataEditorApp.Current.Session.LoadDialogues();
                     PickedItem = dialogues.FirstOrDefault(d => d.Id == id);
                     break;
                 case RPGResource.Npc:
-                    NpcDataModel[] npcs = await RPGDataEditorApp.CurrentSession.LoadNpcs();
+                    NpcDataModel[] npcs = await RPGDataEditorApp.Current.Session.LoadNpcs();
                     PickedItem = npcs.FirstOrDefault(d => d.Id == id);
                     break;
                 default:

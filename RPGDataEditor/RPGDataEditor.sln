@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Core", "RPGDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGDataEditor.Minecraft", "RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj", "{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGDataEditor.Minecraft.Wpf", "RPGDataEditor.Data\RPGDataEditor.Minecraft.Wpf.csproj", "{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBA}") = "RPGDataEditor.Minecraft.Wpf", "RPGDataEditor.Minecraft.Wpf\RPGDataEditor.Minecraft.Wpf.csproj", "{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
