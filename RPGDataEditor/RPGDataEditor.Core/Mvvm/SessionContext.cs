@@ -1,40 +1,28 @@
 ﻿using Newtonsoft.Json;
 using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Services;
+using RPGDataEditor.Core.Connection;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using RPGDataEditor.Core.Providers;
 
 namespace RPGDataEditor.Core.Mvvm
 {
     public class SessionContext : ObservableModel
     {
-        private string locationPath = "";
-        public string LocationPath {
-            get => locationPath;
-            set {
-                SetProperty(ref locationPath, value ?? "");
-                ftpController.LocationPath = locationPath;
-                explorerController.LocationPath = locationPath;
+        public SessionContext() { }
+
+        public SessionContext(string sessionFilePath)
+        {
+            if (string.IsNullOrEmpty(sessionFilePath))
+            {
+                throw new ArgumentException($"'{nameof(sessionFilePath)}' cannot be null or empty.", nameof(sessionFilePath));
             }
+            SessionFilePath = sessionFilePath;
         }
 
-        private string ftpUserName = "";
-        public string FtpUserName {
-            get => ftpUserName;
-            set {
-                SetProperty(ref ftpUserName, value ?? "");
-                ftpController.UserName = ftpUserName;
-            }
-        }
-
-        private string ftpPassword = "";
-        public string FtpPassword {
-            get => ftpPassword;
-            set {
-                SetProperty(ref ftpPassword, value ?? "");
-                ftpController.Password = ftpPassword;
-            }
-        }
+        protected string SessionFilePath { get; set; }
 
         private OptionsData options = new OptionsData();
         public OptionsData Options {
@@ -42,13 +30,32 @@ namespace RPGDataEditor.Core.Mvvm
             set => SetProperty(ref options, value ?? new OptionsData());
         }
 
-        private readonly FtpController ftpController = new FtpController();
+        public Task ConnectAsync() => Task.CompletedTask;
 
-        private readonly ExplorerController explorerController = new ExplorerController();
+        public Task DisconnectAsync() => Task.CompletedTask;
 
-        public bool IsFtp => LocationPath.StartsWith("ftp:");
+        private IConnectionService connectionService;
+        public IConnectionService ConnectionService {
+            get => connectionService;
+            set => SetProperty(ref connectionService, value ?? throw new ArgumentNullException(nameof(ConnectionService)));
+        }
 
-        public IJsonFilesController GetCurrentController() => IsFtp ? (IJsonFilesController)ftpController : explorerController;
+        private IConnectionProvider connectionProvider;
+        public IConnectionProvider ConnectionProvider {
+            get => connectionProvider;
+            set => SetProperty(ref connectionProvider, value ?? throw new ArgumentNullException(nameof(ConnectionService)));
+        }
+
+        public void SetConnection(string name)
+        {
+            IConnectionService newConnection = ConnectionProvider.GetConnectionService(name);
+            if (newConnection.GetType() != ConnectionService.GetType())
+            {
+                ConnectionService = newConnection;
+            }
+        }
+
+        public IJsonFilesController GetCurrentController() => ConnectionService as IJsonFilesController;
 
         public async void OnResourceChanged(RPGResource resource)
         {
@@ -100,10 +107,18 @@ namespace RPGDataEditor.Core.Mvvm
             return false;
         }
 
-        public void SaveSession(string path)
+        public void SaveSession()
         {
             string json = JsonConvert.SerializeObject(this);
-            File.WriteAllText(path, json);
+            File.WriteAllText(SessionFilePath, json);
+        }
+
+        public SessionContext LoadSession()
+        {
+            string json = File.ReadAllText(SessionFilePath);
+            SessionContext session = JsonConvert.DeserializeObject<SessionContext>(json);
+            session.SessionFilePath = SessionFilePath;
+            return session;
         }
 
         public Task<bool> IsValidAsync() => GetCurrentController().IsValidAsync();

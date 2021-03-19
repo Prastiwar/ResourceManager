@@ -17,9 +17,15 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
             if (result.IsValid)
             {
+                bool connected = await Session.ConnectionService.ConnectAsync();
+                if(!connected)
+                {
+                    Context.SnackbarService.Enqueue("Connection lost");
+                    return false;
+                }
                 try
                 {
-                    Session.SaveSession(RPGDataEditorApp.Current.SessionFilePath);
+                    Session.SaveSession();
                 }
                 catch (System.Exception ex)
                 {
@@ -29,16 +35,8 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             return result.IsValid;
         }
 
-        public override Task OnNavigatedToAsync(NavigationContext navigationContext)
-        {
-            // TODO: Invoke on connection lost
-            return Task.CompletedTask;
-        }
+        public override async Task OnNavigatedToAsync(NavigationContext navigationContext) => await Session.DisconnectAsync();
 
-        public override Task OnNavigatedFromAsync(NavigationContext navigationContext)
-        {
-            // TODO: Invoke on connection established
-            return Task.CompletedTask;
-        }
+        public override async Task OnNavigatedFromAsync(NavigationContext navigationContext) => await Session.ConnectAsync();
     }
 }

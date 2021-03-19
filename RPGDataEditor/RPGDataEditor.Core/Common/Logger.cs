@@ -31,7 +31,7 @@ namespace RPGDataEditor.Core
 
         private static string GetTemplatedMessage(string message) => string.Format(Template, message);
 
-        private static void WriteRaw(string message) => System.IO.File.AppendAllText(FilePath, message);
+        private static void WriteRaw(string message) => System.IO.File.AppendAllText(FilePath, message + "\n");
 
         private static void Write(string message) => WriteRaw(GetTemplatedMessage(message));
     }

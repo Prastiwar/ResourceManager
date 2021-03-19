@@ -32,6 +32,9 @@
                     <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
                 </ResourceDictionary>
                 <ResourceDictionary>
+                    <converters:StringCompareToVisibilityConverter x:Key="StringCompareToVisibilityConverter" />
+                </ResourceDictionary>
+                <ResourceDictionary>
                     <converters:StringToBoolConverter x:Key="InvertStringToBoolConverter"
                                                       Invert="True"/>
                 </ResourceDictionary>

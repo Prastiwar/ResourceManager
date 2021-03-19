@@ -14,6 +14,7 @@ namespace RPGDataEditor.Wpf.Converters
             return Invert ? !equal : equal;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException("Convert bool to proper string value is not suppoerted");
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
+            => throw new NotSupportedException("Convert bool to proper string value is not suppoerted");
     }
 }

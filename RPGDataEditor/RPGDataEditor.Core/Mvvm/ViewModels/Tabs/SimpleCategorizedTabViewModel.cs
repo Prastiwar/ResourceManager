@@ -79,7 +79,6 @@ namespace RPGDataEditor.Core.Mvvm
         protected override SimpleIdentifiableData CreateSimpleModel(string file)
         {
             SimpleIdentifiableData data = base.CreateSimpleModel(file);
-            string relativePath = Path.GetRelativePath(Session.LocationPath, file);
             int lastDimIndex = file.LastIndexOf('/');
             int categoryStartIndex = file.LastIndexOf('/', lastDimIndex - 1) + 1;
             string category = file[categoryStartIndex..lastDimIndex];

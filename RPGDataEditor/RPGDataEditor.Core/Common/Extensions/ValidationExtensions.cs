@@ -16,6 +16,19 @@ namespace RPGDataEditor.Core
         public static IRuleBuilderOptions<T, TProperty> Json<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
             => ruleBuilder.Must(x => IsJson(x?.ToString(), allowNull));
 
+        public static IRuleBuilderOptions<T, TProperty> NoException<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, Action> action)
+        => ruleBuilder.Must(x => {
+            try
+            {
+                action.Invoke(x).Invoke();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        });
+
         public static bool IsJson(string value, bool allowNull = true)
         {
             if (string.IsNullOrEmpty(value))

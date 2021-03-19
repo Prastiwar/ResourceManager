@@ -1,5 +1,6 @@
 ﻿using FluentFTP;
 using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,16 +9,16 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Mvvm
+namespace RPGDataEditor.Core.Connection
 {
-    public class FtpController : ObservableModel, IJsonFilesController
+    public class FtpController : ObservableModel, IJsonFilesController, IConnectionService
     {
-        private string locationPath = "";
-        public string LocationPath {
-            get => locationPath;
+        private string host = "";
+        public string Host {
+            get => host;
             set {
-                SetProperty(ref locationPath, value ?? "");
-                string host = locationPath;
+                SetProperty(ref this.host, value ?? "");
+                string host = this.host;
                 try
                 {
                     if (host.StartsWith("ftp://"))
@@ -27,7 +28,7 @@ namespace RPGDataEditor.Core.Mvvm
                     int slashIndex = host.Replace('\\', '/').IndexOf('/');
                     if (slashIndex >= 0)
                     {
-                        RelativeLocationPath = host[slashIndex..];
+                        RelativePath = host[slashIndex..];
                         host = host.Substring(0, slashIndex + 1);
                     }
                     client.Host = host;
@@ -39,15 +40,15 @@ namespace RPGDataEditor.Core.Mvvm
             }
         }
 
-        public string relativeLocationPath;
-        public string RelativeLocationPath {
-            get => relativeLocationPath;
-            protected set {
+        private string relativePath = "";
+        public string RelativePath {
+            get => relativePath;
+            set {
                 if (!value.StartsWith('/'))
                 {
                     value = value.Insert(0, "/");
                 }
-                SetProperty(ref relativeLocationPath, value);
+                SetProperty(ref relativePath, value);
             }
         }
 
@@ -66,6 +67,15 @@ namespace RPGDataEditor.Core.Mvvm
             set {
                 SetProperty(ref password, value ?? "");
                 client.Credentials.Password = password;
+            }
+        }
+
+        private int port = 0;
+        public int Port {
+            get => port;
+            set {
+                SetProperty(ref port, value);
+                client.Port = port;
             }
         }
 
@@ -94,7 +104,7 @@ namespace RPGDataEditor.Core.Mvvm
             try
             {
                 await EnsureConnectedAsync();
-                string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+                string targetPath = Path.Combine(RelativePath, relativePath);
                 await client.DeleteFileAsync(targetPath);
             }
             catch (Exception ex)
@@ -112,7 +122,7 @@ namespace RPGDataEditor.Core.Mvvm
                 await EnsureConnectedAsync();
                 MemoryStream stream = new MemoryStream();
                 byte[] fileContents = Encoding.UTF8.GetBytes(json);
-                string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+                string targetPath = Path.Combine(RelativePath, relativePath);
                 FtpStatus status = await client.UploadAsync(fileContents, targetPath, FtpRemoteExists.Overwrite, true);
                 return status.IsSuccess();
             }
@@ -143,7 +153,7 @@ namespace RPGDataEditor.Core.Mvvm
         public async Task<string> GetJsonAsync(string relativePath)
         {
             await EnsureConnectedAsync();
-            string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+            string targetPath = Path.Combine(RelativePath, relativePath);
             byte[] bytes = await client.DownloadAsync(targetPath, default);
             if (bytes == null)
             {
@@ -158,7 +168,7 @@ namespace RPGDataEditor.Core.Mvvm
         {
             await EnsureConnectedAsync();
             MemoryStream stream = new MemoryStream();
-            string targetPath = Path.Combine(RelativeLocationPath, relativePath);
+            string targetPath = Path.Combine(RelativePath, relativePath);
             FtpListItem[] items = await client.GetListingAsync(targetPath, FtpListOption.Recursive);
             return items.Where(item => item.Type == FtpFileSystemObjectType.File)
                         .Select(item => item.FullName).ToArray();
@@ -170,6 +180,34 @@ namespace RPGDataEditor.Core.Mvvm
             {
                 await client.ConnectAsync();
             }
+        }
+
+        public async Task<bool> ConnectAsync()
+        {
+            try
+            {
+                await client.ConnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Couldn't connect to FTP", ex);
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> DisconnectAsync()
+        {
+            try
+            {
+                await client.DisconnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Couldn't disconnect from FTP", ex);
+                return false;
+            }
+            return true;
         }
     }
 }

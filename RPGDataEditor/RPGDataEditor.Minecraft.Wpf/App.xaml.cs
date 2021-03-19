@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Newtonsoft.Json;
 using Prism.Ioc;
-using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Wpf;
+using RPGDataEditor.Core.Providers;
+using RPGDataEditor.Core.Mvvm;
 
 namespace RPGDataEditor.Minecraft.Wpf
 {
@@ -15,6 +16,7 @@ namespace RPGDataEditor.Minecraft.Wpf
             PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
             propResolver.SetAllLetterCase(Lettercase.CamelCase);
             propResolver.IgnoreProperty(typeof(IdentifiableData), nameof(IdentifiableData.RepresentableString));
+            propResolver.IgnoreProperty(typeof(SessionContext), nameof(SessionContext.ConnectionProvider));
             JsonSerializerSettings settings = new JsonSerializerSettings {
                 ContractResolver = propResolver,
                 Formatting = Formatting.Indented
@@ -37,12 +39,14 @@ namespace RPGDataEditor.Minecraft.Wpf
             settings.Converters.Add(new Serialization.DialogueOptionModelJsonConverter());
             settings.Converters.Add(new Serialization.TalkDataModelJsonConverter());
             settings.Converters.Add(new Serialization.TalkLineJsonConverter());
+            
+            settings.Converters.Add(new ConnectionJsonConverter());
             return settings;
         }
 
-        protected override void RegisterServices(IContainerRegistry containerRegistry)
+        protected override void RegisterProviders(IContainerRegistry containerRegistry)
         {
-            base.RegisterServices(containerRegistry);
+            base.RegisterProviders(containerRegistry);
             containerRegistry.RegisterInstance<IRequirementProvider>(new McRequirementProvider());
         }
 

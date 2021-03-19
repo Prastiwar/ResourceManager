@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Mvvm
+namespace RPGDataEditor.Core.Connection
 {
     public interface IJsonFilesController
     {
-        string LocationPath { get; set; }
-
         Task<bool> IsValidAsync();
 
         Task<bool> DeleteFileAsync(string relativePath);

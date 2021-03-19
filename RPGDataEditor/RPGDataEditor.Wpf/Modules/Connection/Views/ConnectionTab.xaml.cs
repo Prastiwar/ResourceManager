@@ -1,4 +1,6 @@
-﻿using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Core.Connection;
+using RPGDataEditor.Core.Mvvm;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Connection.Views
@@ -7,29 +9,60 @@ namespace RPGDataEditor.Wpf.Connection.Views
     {
         public ConnectionTab() => InitializeComponent();
 
-        private void PasswordBox_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (DataContext != null)
+            if (FtpPasswordBox.DataContext != null)
             {
-                ((dynamic)FtpPasswordBox.DataContext).FtpPassword = FtpPasswordBox.Password;
+                ((dynamic)FtpPasswordBox.DataContext).Password = FtpPasswordBox.Password;
             }
         }
 
-        private void FtpPasswordBox_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        private void FtpPasswordBox_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox box = (PasswordBox)sender;
-            if (box.DataContext is SessionContext context)
+            if (e.NewValue != null)
             {
-                box.Password = context.FtpPassword;
+                PasswordBox box = (PasswordBox)sender;
+                if (box.DataContext != null)
+                {
+                    box.Password = ((dynamic)box.DataContext).Password;
+                }
             }
         }
 
-        private void IsFtpCheckbox_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        private void ConnectionComboBox_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            CheckBox box = (CheckBox)sender;
+            ComboBox box = (ComboBox)sender;
             if (box.DataContext is SessionContext context)
             {
-                box.IsChecked = context.IsFtp;
+                box.SelectionChanged -= ConnectionComboBox_SelectionChanged;
+                if (context.ConnectionService is ExplorerController)
+                {
+                    box.SelectedIndex = 0;
+                }
+                else if (context.ConnectionService is FtpController ftp)
+                {
+                    box.SelectedIndex = 1;
+                }
+                // else if (context.ConnectionService is MssqlController)
+                // {
+                //     box.SelectedIndex = 2;
+                // }
+                box.SelectionChanged += ConnectionComboBox_SelectionChanged;
+            }
+        }
+
+        private void ConnectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                if (e.AddedItems[0] is ComboBoxItem selected)
+                {
+                    ComboBox comboBox = (ComboBox)sender;
+                    if (comboBox.DataContext is SessionContext context)
+                    {
+                        context.SetConnection(selected.Name);
+                    }
+                }
             }
         }
     }

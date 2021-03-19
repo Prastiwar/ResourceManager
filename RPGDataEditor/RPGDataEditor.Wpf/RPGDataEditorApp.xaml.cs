@@ -35,9 +35,9 @@ namespace RPGDataEditor.Wpf
         public static new RPGDataEditorApp Current => Application.Current as RPGDataEditorApp;
 
         protected string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
-        
+
         protected string BinaryPath => Path.Combine(Environment.CurrentDirectory + "bin");
-        
+
         protected virtual string CacheDirectoryPath {
             get {
                 string path = Path.Combine(AppRootPath, "cache");
@@ -46,17 +46,14 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        public virtual string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
+        protected virtual string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
 
         public SessionContext Session { get; private set; }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Logger.Error("Unhandled exception", e.Exception);
 
-        protected virtual void OnExit(object sender, ExitEventArgs e)
-        {
-            // TODO: Invoke on connection lost
-        }
+        protected virtual async void OnExit(object sender, ExitEventArgs e) => await Session.DisconnectAsync();
 
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
@@ -71,6 +68,7 @@ namespace RPGDataEditor.Wpf
             PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
             propResolver.SetAllLetterCase(Lettercase.CamelCase);
             propResolver.IgnoreProperty(typeof(IdentifiableData), nameof(IdentifiableData.RepresentableString));
+            propResolver.IgnoreProperty(typeof(SessionContext), nameof(SessionContext.ConnectionProvider));
             JsonSerializerSettings settings = new JsonSerializerSettings {
                 ContractResolver = propResolver,
                 Formatting = Formatting.Indented
@@ -93,17 +91,18 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new DialogueOptionModelJsonConverter());
             settings.Converters.Add(new TalkDataModelJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
+            
+            settings.Converters.Add(new ConnectionJsonConverter());
             return settings;
         }
 
         protected virtual SessionContext CreateSession()
         {
-            SessionContext session = new SessionContext();
+            SessionContext session = new SessionContext(SessionFilePath);
             FileInfo sessionFile = new FileInfo(SessionFilePath);
             if (sessionFile.Exists)
             {
-                string json = File.ReadAllText(SessionFilePath);
-                session = JsonConvert.DeserializeObject<SessionContext>(json);
+                session = session.LoadSession();
             }
             return session;
         }
@@ -123,7 +122,15 @@ namespace RPGDataEditor.Wpf
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
 
-            Session = CreateSession();
+            try
+            {
+                Session = CreateSession();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Couldn't load session", ex);
+                throw;
+            }
             containerRegistry.RegisterInstance(Session);
 
             RegisterValidators(containerRegistry);
@@ -134,8 +141,13 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance(CreateVersionChecker());
 
             containerRegistry.RegisterInstance(CreateViewModelContext());
+
+            OnRegistrationFinished(containerRegistry);
         }
-            
+
+        protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry) 
+            => Session.ConnectionProvider = Container.Resolve<IConnectionProvider>();
+
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IValidator<SessionContext>, SessionContextValidator>();
@@ -146,14 +158,17 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance<IValidationProvider>(new ValidatorProvider(Container));
             containerRegistry.RegisterInstance<ISnackbarService>(new SnackbarService());
             containerRegistry.RegisterInstance<IAppLifetimeService>(new AppLifetimeService());
-            containerRegistry.RegisterInstance<IRequirementProvider>(new DefaultRequirementProvider());
         }
 
-        protected virtual void RegisterProviders(IContainerRegistry containerRegistry) 
-            => containerRegistry.RegisterInstance<IResourceProvider>(new ResourceProvider(Session));
+        protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterInstance<IValidationProvider>(new ValidatorProvider(Container));
+            containerRegistry.RegisterInstance<IRequirementProvider>(new DefaultRequirementProvider());
+            containerRegistry.RegisterInstance<IResourceProvider>(new ResourceProvider(Session));
+            containerRegistry.RegisterInstance<IConnectionProvider>(new DefaultConnectionProvider());
+        }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
             => containerRegistry.RegisterDialog<UpdateDialog>(nameof(UpdateDialog));
