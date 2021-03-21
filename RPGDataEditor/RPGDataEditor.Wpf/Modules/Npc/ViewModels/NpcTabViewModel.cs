@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Core;
+using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
 
@@ -6,9 +7,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
     public class NpcTabViewModel : SimpleIdentifiableTabViewModel<NpcDataModel>
     {
-        public NpcTabViewModel(ViewModelContext context) : base(context) { }
-
-        protected override string RelativePath => "npcs";
+        public NpcTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
 
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {

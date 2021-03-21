@@ -1,7 +1,18 @@
-﻿namespace RPGDataEditor.Core.Models
+﻿using System;
+
+namespace RPGDataEditor.Core.Models
 {
     public class SimpleIdentifiableData : ObservableModel, IIdentifiable
     {
+        public SimpleIdentifiableData(Type realType) => RealType = realType;
+
+        public Type RealType { get; }
+
+        object IIdentifiable.Id {
+            get => Id;
+            set => Id = (int)value;
+        }
+
         private int id;
         public int Id {
             get => id;

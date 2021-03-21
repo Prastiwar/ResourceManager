@@ -40,7 +40,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             if (!isCancelled)
             {
                 await OnDialogClosing(result).ConfigureAwait(true);
-                Close(new PickerDialogParameters(Model is INullResource ? null : Model).WithResult(result).Build());
+                Close(new PickerDialogParameters(Model is NullResource ? null : Model).WithResult(result).Build());
             }
         }
 
@@ -60,7 +60,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             int modelId = parameters.GetValue<int>(nameof(PickerDialogParameters.PickedId));
             if (model == null)
             {
-                model = Models.FirstOrDefault(x => x.Id == modelId);
+                model = Models.FirstOrDefault(x => (int)x.Id == modelId);
             }
             else
             {
@@ -72,41 +72,20 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(RPGResource resource)
         {
-            List<IIdentifiable> list = (await Context.ResourceProvider.LoadResourcesAsync((int)resource)).ToList();
-            switch (resource)
-            {
-                case RPGResource.Quest:
-                    list.Insert(0, new NullQuest());
-                    break;
-                case RPGResource.Dialogue:
-                    list.Insert(0, new NullDialogue());
-                    break;
-                case RPGResource.Npc:
-                    list.Insert(0, new NullNpc());
-                    break;
-                default:
-                    break;
-            }
+            List<IIdentifiable> list = (await Session.Client.GetAllAsync((int)resource)).ToList();
+            list.Insert(0, new NullResource());
             return list;
         }
 
-        private interface INullResource { }
-
-        private class NullQuest : QuestModel, INullResource
+        private class NullResource : IIdentifiable
         {
-            public NullQuest() => Id = -1;
-            public override string ToString() => "None";
-        }
+            public NullResource() => Id = -1;
 
-        private class NullDialogue : DialogueModel, INullResource
-        {
-            public NullDialogue() => Id = -1;
-            public override string ToString() => "None";
-        }
+            public object Id {
+                get => -1;
+                set { }
+            }
 
-        private class NullNpc : NpcDataModel, INullResource
-        {
-            public NullNpc() => Id = -1;
             public override string ToString() => "None";
         }
     }

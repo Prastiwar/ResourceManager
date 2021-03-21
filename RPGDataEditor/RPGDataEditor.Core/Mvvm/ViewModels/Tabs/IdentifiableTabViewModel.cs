@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Regions;
 using RPGDataEditor.Core.Models;
 using System;
@@ -12,7 +11,7 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract class IdentifiableTabViewModel<TModel> : TabViewModel where TModel : ObservableModel, IIdentifiable
     {
-        public IdentifiableTabViewModel(ViewModelContext context) : base(context) { }
+        public IdentifiableTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context) => ResourceConverter = resourceConverter;
 
         private ObservableCollection<TModel> models;
         public ObservableCollection<TModel> Models {
@@ -29,36 +28,21 @@ namespace RPGDataEditor.Core.Mvvm
         private ICommand openEditorCommand;
         public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<TModel>(OpenEditor);
 
-        protected abstract string RelativePath { get; }
-
-        protected virtual string GetRelativeFilePath(TModel model) => RelativePath + "/" + model.Id + ".json";
+        protected ITypeToResourceConverter ResourceConverter { get; }
 
         public override async Task Refresh()
         {
             IsLoading = true;
             Models = new ObservableCollection<TModel>();
-            string[] jsons = new string[0];
             try
             {
-                jsons = await Session.LoadJsonsAsync(RelativePath);
+                IIdentifiable[] foundModels = await Session.Client.GetAllAsync(ResourceConverter.ToResource(typeof(TModel)));
+                Models.AddRange(foundModels.Select(resource => resource as TModel));
             }
             catch (Exception ex)
             {
                 Logger.Error("Failed to load jsons, class: " + GetType().Name, ex);
                 Context.SnackbarService.Enqueue("Failed to load jsons, you can try again by refreshing tab");
-            }
-            foreach (string json in jsons)
-            {
-                try
-                {
-                    TModel model = JsonConvert.DeserializeObject<TModel>(json);
-                    Models.Add(model);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error("Invalid json", ex);
-                    Context.SnackbarService.Enqueue("Found invalid json");
-                }
             }
             IsLoading = false;
         }
@@ -69,16 +53,18 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual async Task<EditorResults> OpenEditorAsync(TModel model)
         {
-            TModel copiedModel = (TModel)model.DeepClone();
-            bool save = await Context.DialogService.ShowModelDialogAsync(copiedModel);
+            TModel newModel = (TModel)model.DeepClone();
+            bool save = await Context.DialogService.ShowModelDialogAsync(newModel);
             if (save)
             {
-                model.CopyValues(copiedModel);
-                string json = JsonConvert.SerializeObject(model);
-                bool saved = await Context.Session.SaveJsonFileAsync(GetRelativeFilePath(model), json);
+                bool saved = await Context.Session.Client.UpdateAsync(model, newModel);
+                if (saved)
+                {
+                    model.CopyValues(newModel);
+                }
                 Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save model");
             }
-            return new EditorResults(copiedModel, save);
+            return new EditorResults(newModel, save);
         }
 
         protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();
@@ -88,11 +74,9 @@ namespace RPGDataEditor.Core.Mvvm
         protected virtual async Task<TModel> CreateModelAsync()
         {
             TModel newModel = CreateModelInstance();
-            int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;
+            int nextId = Models.Count > 0 ? Models.Max(x => (int)x.Id) + 1 : 0;
             newModel.Id = nextId;
-            string json = JsonConvert.SerializeObject(newModel);
-            string relativeFilePath = GetRelativeFilePath(newModel);
-            bool created = await Session.SaveJsonFileAsync(relativeFilePath, json);
+            bool created = await Session.Client.CreateAsync(newModel);
             if (created)
             {
                 Models.Add(newModel);
@@ -108,8 +92,7 @@ namespace RPGDataEditor.Core.Mvvm
             bool removed = Models.Remove(model);
             if (removed)
             {
-                string relativeFilePath = GetRelativeFilePath(model);
-                bool deleted = await Session.DeleteFileAsync(relativeFilePath);
+                bool deleted = await Session.Client.DeleteAsync(model);
                 if (!deleted)
                 {
                     Models.Add(model);

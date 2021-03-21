@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Serialization;
@@ -9,9 +10,7 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
     public class QuestTabViewModel : SimpleCategorizedTabViewModel<QuestModel>
     {
-        public QuestTabViewModel(ViewModelContext context) : base(context) { }
-
-        protected override string RelativePath => "quests";
+        public QuestTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
 
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {
@@ -67,7 +66,7 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
         }
 
         protected override QuestModel CreateNewExactModel(SimpleIdentifiableData model) => new QuestModel() {
-            Id = model.Id,
+            Id = (int)model.Id,
             Title = model.Name,
             Category = (model as SimpleCategorizedData).Category
         };

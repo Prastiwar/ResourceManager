@@ -17,7 +17,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         public virtual Task OnNavigatedToAsync(NavigationContext navigationContext) => Task.FromResult(true);
 
-        public virtual Task<bool> CanSwitchTo(NavigationContext navigationContext) => Session.IsValidAsync();
+        public virtual Task<bool> CanSwitchTo(NavigationContext navigationContext) => Session.Client.ConnectAsync();
 
         public virtual Task<bool> CanSwitchFrom(NavigationContext navigationContext) => Task.FromResult(true);
 

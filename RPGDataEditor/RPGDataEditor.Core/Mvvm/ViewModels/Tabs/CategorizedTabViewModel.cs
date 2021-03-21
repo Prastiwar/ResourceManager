@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
+﻿using Prism.Commands;
 using RPGDataEditor.Core.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract class CategorizedTabViewModel<TModel> : IdentifiableTabViewModel<TModel>, ICategorizedTabViewModel where TModel : IdentifiableData
     {
-        public CategorizedTabViewModel(ViewModelContext context) : base(context) { }
+        public CategorizedTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
 
         private string currentCategory;
         public string CurrentCategory {
@@ -80,10 +79,9 @@ namespace RPGDataEditor.Core.Mvvm
             Categories.Insert(oldCategoryIndex, newCategory);
             foreach (TModel model in Models.Where(x => string.Compare(x.Category, oldCategory) == 0))
             {
-                string relativeFilePath = GetRelativeFilePath(model);
+                IIdentifiable oldModel = await Session.Client.GetAsync(model);
                 model.Category = newCategory;
-                string json = JsonConvert.SerializeObject(model);
-                bool saved = await Session.SaveJsonFileAsync(relativeFilePath, json);
+                bool saved = await Session.Client.UpdateAsync(oldModel, model);
             }
             return true;
         }
@@ -95,8 +93,7 @@ namespace RPGDataEditor.Core.Mvvm
             {
                 foreach (TModel model in Models.Where(x => string.Compare(x.Category, category) == 0))
                 {
-                    string relativeFilePath = GetRelativeFilePath(model);
-                    bool deleted = await Session.DeleteFileAsync(relativeFilePath);
+                    bool deleted = await Session.Client.DeleteAsync(model);
                 }
             }
         }

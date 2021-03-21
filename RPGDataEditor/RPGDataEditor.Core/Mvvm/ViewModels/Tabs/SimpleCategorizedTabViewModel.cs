@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Prism.Commands;
 using RPGDataEditor.Core.Models;
-using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,7 +10,7 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract class SimpleCategorizedTabViewModel<TModel> : SimpleIdentifiableTabViewModel<TModel>, ICategorizedTabViewModel where TModel : IdentifiableData
     {
-        public SimpleCategorizedTabViewModel(ViewModelContext context) : base(context) { }
+        public SimpleCategorizedTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
 
         private ICommand addCategoryCommand;
         public ICommand AddCategoryCommand => addCategoryCommand ??= new DelegateCommand(CreateCategory);
@@ -37,12 +35,6 @@ namespace RPGDataEditor.Core.Mvvm
 
         private async void RemoveCategory(string category) => await RemoveCategoryAsync(category);
 
-        protected override string GetRelativeFilePath(SimpleIdentifiableData model)
-        {
-            SimpleCategorizedData categorizedData = (SimpleCategorizedData)model;
-            return $"{RelativePath}/{categorizedData.Category}/{model.Id}_{model.Name}.json";
-        }
-
         public override async Task Refresh()
         {
             Categories = new ObservableCollection<string>();
@@ -65,7 +57,7 @@ namespace RPGDataEditor.Core.Mvvm
             SimpleIdentifiableData newModel = await base.CreateModelAsync();
             if (newModel != null)
             {
-                SimpleCategorizedData categorizedData = new SimpleCategorizedData() {
+                SimpleCategorizedData categorizedData = new SimpleCategorizedData(typeof(TModel)) {
                     Name = newModel.Name,
                     Id = newModel.Id,
                     Category = CurrentCategory
@@ -82,14 +74,14 @@ namespace RPGDataEditor.Core.Mvvm
             int lastDimIndex = file.LastIndexOf('/');
             int categoryStartIndex = file.LastIndexOf('/', lastDimIndex - 1) + 1;
             string category = file[categoryStartIndex..lastDimIndex];
-            return new SimpleCategorizedData() {
+            return new SimpleCategorizedData(typeof(TModel)) {
                 Id = data.Id,
                 Name = data.Name,
                 Category = category
             };
         }
 
-        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData();
+        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData(typeof(TModel));
 
         protected virtual void ShowCategory(string category) => CurrentCategory = category;
 
@@ -122,23 +114,15 @@ namespace RPGDataEditor.Core.Mvvm
             {
                 try
                 {
-                    string relativeFilePath = GetRelativeFilePath(model);
                     (model as SimpleCategorizedData).Category = newCategory;
-                    string newPath = GetRelativeFilePath(model);
+                    TModel oldModel = (TModel)await Session.Client.GetAsync(model);
+                    TModel newModel = oldModel;
+                    newModel.Category = newCategory;
 
-                    string exactModelJson = await Session.GetJsonAsync(relativeFilePath);
-                    TModel exactModel = JsonConvert.DeserializeObject<TModel>(exactModelJson);
-                    exactModel.Category = newCategory;
-
-                    string newJson = JsonConvert.SerializeObject(exactModel);
-                    bool saved = await Session.SaveJsonFileAsync(newPath, newJson);
-                    if (saved)
+                    bool saved = await Session.Client.UpdateAsync(oldModel, newModel);
+                    if (!saved)
                     {
-                        bool deleted = await Session.DeleteFileAsync(relativeFilePath);
-                        if (!deleted)
-                        {
-                            Context.SnackbarService.Enqueue("Couldn't delete model " + model.Name);
-                        }
+                        Context.SnackbarService.Enqueue("Couldn't save model " + model.Name);
                     }
                 }
                 catch (System.Exception ex)
@@ -157,8 +141,7 @@ namespace RPGDataEditor.Core.Mvvm
             {
                 foreach (SimpleIdentifiableData model in Models.Where(x => string.Compare((x as SimpleCategorizedData).Category, category) == 0))
                 {
-                    string relativeFilePath = GetRelativeFilePath(model);
-                    bool deleted = await Session.DeleteFileAsync(relativeFilePath);
+                    bool deleted = await Session.Client.DeleteAsync(model);
                     if (!deleted)
                     {
                         Context.SnackbarService.Enqueue("Couldn't delete model " + model.Name);

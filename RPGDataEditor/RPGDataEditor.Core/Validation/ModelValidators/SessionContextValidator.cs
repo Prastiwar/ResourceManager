@@ -7,7 +7,7 @@ namespace RPGDataEditor.Core.Validation
     {
         public SessionContextValidator()
         {
-            RuleFor(x => x.ConnectionService).SetValidator(new ConnectionValidator());
+            RuleFor(x => x.Client).SetValidator(new ConnectionValidator());
             RuleFor(x => x.Options).SetValidator(new OptionsDataValidator());
         }
     }

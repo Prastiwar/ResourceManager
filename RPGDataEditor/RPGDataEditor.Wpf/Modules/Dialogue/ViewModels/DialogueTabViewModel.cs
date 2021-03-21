@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Core;
+using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
 
@@ -6,12 +7,10 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
     public class DialogueTabViewModel : SimpleCategorizedTabViewModel<DialogueModel>
     {
-        public DialogueTabViewModel(ViewModelContext context) : base(context) { }
-
-        protected override string RelativePath => "dialogues";
+        public DialogueTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
 
         protected override DialogueModel CreateNewExactModel(SimpleIdentifiableData model) => new DialogueModel() {
-            Id = model.Id,
+            Id = (int)model.Id,
             Title = model.Name,
             Category = (model as SimpleCategorizedData).Category
         };

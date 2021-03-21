@@ -17,7 +17,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
             if (result.IsValid)
             {
-                bool connected = await Session.ConnectionService.ConnectAsync();
+                bool connected = await Session.Client.ConnectAsync();
                 if(!connected)
                 {
                     Context.SnackbarService.Enqueue("Connection lost");
@@ -35,8 +35,8 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             return result.IsValid;
         }
 
-        public override async Task OnNavigatedToAsync(NavigationContext navigationContext) => await Session.DisconnectAsync();
+        public override async Task OnNavigatedToAsync(NavigationContext navigationContext) => await Session.Client.DisconnectAsync();
 
-        public override async Task OnNavigatedFromAsync(NavigationContext navigationContext) => await Session.ConnectAsync();
+        public override async Task OnNavigatedFromAsync(NavigationContext navigationContext) => await Session.Client.ConnectAsync();
     }
 }

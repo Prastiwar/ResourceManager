@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Data.csproj" />
   </ItemGroup>
 
 </Project>

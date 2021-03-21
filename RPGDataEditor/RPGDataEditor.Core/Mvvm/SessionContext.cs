@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Services;
 using RPGDataEditor.Core.Connection;
+using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Providers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using RPGDataEditor.Core.Providers;
 
 namespace RPGDataEditor.Core.Mvvm
 {
@@ -30,32 +29,26 @@ namespace RPGDataEditor.Core.Mvvm
             set => SetProperty(ref options, value ?? new OptionsData());
         }
 
-        public Task ConnectAsync() => Task.CompletedTask;
-
-        public Task DisconnectAsync() => Task.CompletedTask;
-
-        private IConnectionService connectionService;
-        public IConnectionService ConnectionService {
-            get => connectionService;
-            set => SetProperty(ref connectionService, value ?? throw new ArgumentNullException(nameof(ConnectionService)));
+        private IResourceClient client;
+        public IResourceClient Client {
+            get => client;
+            set => SetProperty(ref client, value ?? throw new ArgumentNullException(nameof(Client)));
         }
 
-        private IConnectionProvider connectionProvider;
-        public IConnectionProvider ConnectionProvider {
-            get => connectionProvider;
-            set => SetProperty(ref connectionProvider, value ?? throw new ArgumentNullException(nameof(ConnectionService)));
+        private IClientProvider clientProvider;
+        public IClientProvider ClientProvider {
+            get => clientProvider;
+            set => SetProperty(ref clientProvider, value ?? throw new ArgumentNullException(nameof(ClientProvider)));
         }
 
         public void SetConnection(string name)
         {
-            IConnectionService newConnection = ConnectionProvider.GetConnectionService(name);
-            if (newConnection.GetType() != ConnectionService.GetType())
+            IResourceClient newClient = ClientProvider.GetClient(name);
+            if (Client == null || newClient.GetType() != Client.GetType())
             {
-                ConnectionService = newConnection;
+                Client = newClient;
             }
         }
-
-        public IJsonFilesController GetCurrentController() => ConnectionService as IJsonFilesController;
 
         public async void OnResourceChanged(RPGResource resource)
         {
@@ -65,7 +58,7 @@ namespace RPGDataEditor.Core.Mvvm
             }
         }
 
-        public async Task<bool> CreateBackupAsync(RPGResource resource)
+        public Task<bool> CreateBackupAsync(RPGResource resource)
         {
             try
             {
@@ -92,19 +85,16 @@ namespace RPGDataEditor.Core.Mvvm
                 {
                     if (string.IsNullOrEmpty(backupPath))
                     {
-                        return false;
+                        return Task.FromResult(false);
                     }
-                    string[] jsons = await GetCurrentController().GetJsonsAsync(relativePath);
-                    string backupJson = JsonConvert.SerializeObject(jsons);
-                    bool saved = await SaveJsonFileAsync(backupPath, backupJson);
-                    return saved;
+                    return Client.CreateBackupAsync((int)resource, backupPath);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error("Couldn't make backup", ex);
             }
-            return false;
+            return Task.FromResult(false);
         }
 
         public void SaveSession()
@@ -119,29 +109,6 @@ namespace RPGDataEditor.Core.Mvvm
             SessionContext session = JsonConvert.DeserializeObject<SessionContext>(json);
             session.SessionFilePath = SessionFilePath;
             return session;
-        }
-
-        public Task<bool> IsValidAsync() => GetCurrentController().IsValidAsync();
-
-        public Task<bool> DeleteFileAsync(string relativePath) => GetCurrentController().DeleteFileAsync(relativePath);
-
-        public Task<bool> SaveJsonFileAsync(string relativePath, string json) => GetCurrentController().SaveJsonAsync(relativePath, json);
-
-        public Task<string[]> GetFilesAsync(string relativePath) => GetCurrentController().GetJsonFiles(relativePath);
-
-        public Task<string> GetJsonAsync(string relativePath) => GetCurrentController().GetJsonAsync(relativePath);
-
-        public Task<string[]> LoadJsonsAsync(string relativePath) => GetCurrentController().GetJsonsAsync(relativePath);
-
-        public async Task<T[]> LoadAsync<T>(string relativePath)
-        {
-            string[] jsons = await LoadJsonsAsync(relativePath);
-            T[] models = new T[jsons.Length];
-            for (int i = 0; i < jsons.Length; i++)
-            {
-                models[i] = JsonConvert.DeserializeObject<T>(jsons[i]);
-            }
-            return models;
         }
 
     }

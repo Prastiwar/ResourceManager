@@ -2,6 +2,6 @@
 {
     public interface IIdentifiable
     {
-        public int Id { get; set; }
+        public object Id { get; set; }
     }
 }

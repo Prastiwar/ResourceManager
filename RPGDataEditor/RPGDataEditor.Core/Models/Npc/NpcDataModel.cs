@@ -5,6 +5,11 @@ namespace RPGDataEditor.Core.Models
 {
     public class NpcDataModel : ObservableModel, IIdentifiable
     {
+        object IIdentifiable.Id {
+            get => Id;
+            set => Id = (int)value;
+        }
+
         private int id;
         public int Id {
             get => id;

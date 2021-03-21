@@ -73,23 +73,8 @@ namespace RPGDataEditor.Wpf.Views
             }
             LoadingOverlay.Visibility = Visibility.Visible;
             ItemTextBlock.Text = "Loading...";
-            switch (Resource)
-            {
-                case RPGResource.Quest:
-                    QuestModel[] quests = await RPGDataEditorApp.Current.Session.LoadQuests();
-                    PickedItem = quests.FirstOrDefault(q => q.Id == id);
-                    break;
-                case RPGResource.Dialogue:
-                    DialogueModel[] dialogues = await RPGDataEditorApp.Current.Session.LoadDialogues();
-                    PickedItem = dialogues.FirstOrDefault(d => d.Id == id);
-                    break;
-                case RPGResource.Npc:
-                    NpcDataModel[] npcs = await RPGDataEditorApp.Current.Session.LoadNpcs();
-                    PickedItem = npcs.FirstOrDefault(d => d.Id == id);
-                    break;
-                default:
-                    break;
-            }
+            IIdentifiable[] resources = await RPGDataEditorApp.Current.Session.Client.GetAllAsync((int)Resource);
+            PickedItem = resources.FirstOrDefault(q => (int)q.Id == id);
             LoadingOverlay.Visibility = Visibility.Collapsed;
         }
 
@@ -119,7 +104,7 @@ namespace RPGDataEditor.Wpf.Views
                 ItemTextBlock.Text = PickedItem.ToString();
                 if (PickedItem is IIdentifiable identifiable)
                 {
-                    PickedId = identifiable.Id;
+                    PickedId = (int)identifiable.Id;
                 }
             }
         }

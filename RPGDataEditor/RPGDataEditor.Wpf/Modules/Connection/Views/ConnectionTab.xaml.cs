@@ -24,7 +24,14 @@ namespace RPGDataEditor.Wpf.Connection.Views
                 PasswordBox box = (PasswordBox)sender;
                 if (box.DataContext != null)
                 {
-                    box.Password = ((dynamic)box.DataContext).Password;
+                    try
+                    {
+                        box.Password = ((dynamic)box.DataContext).Password;
+                    }
+                    catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException ex)
+                    {
+                        System.Diagnostics.Debug.Print(ex.Message);
+                    }
                 }
             }
         }
@@ -35,18 +42,18 @@ namespace RPGDataEditor.Wpf.Connection.Views
             if (box.DataContext is SessionContext context)
             {
                 box.SelectionChanged -= ConnectionComboBox_SelectionChanged;
-                if (context.ConnectionService is ExplorerController)
+                if (context.Client is ExplorerResourceClient)
                 {
                     box.SelectedIndex = 0;
                 }
-                else if (context.ConnectionService is FtpController ftp)
+                else if (context.Client is FtpResourceClient)
                 {
                     box.SelectedIndex = 1;
                 }
-                // else if (context.ConnectionService is MssqlController)
-                // {
-                //     box.SelectedIndex = 2;
-                // }
+                else if (context.Client is MssqlResourceClient)
+                {
+                    box.SelectedIndex = 2;
+                }
                 box.SelectionChanged += ConnectionComboBox_SelectionChanged;
             }
         }

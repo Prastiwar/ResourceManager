@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -10,9 +9,7 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract partial class SimpleIdentifiableTabViewModel<TModel> : IdentifiableTabViewModel<SimpleIdentifiableData> where TModel : ObservableModel, IIdentifiable
     {
-        public SimpleIdentifiableTabViewModel(ViewModelContext context) : base(context) { }
-
-        protected override string GetRelativeFilePath(SimpleIdentifiableData model) => RelativePath + $"/{model.Id}_{model.Name}.json";
+        public SimpleIdentifiableTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
 
         public override async Task Refresh()
         {
@@ -20,7 +17,7 @@ namespace RPGDataEditor.Core.Mvvm
             Models = new ObservableCollection<SimpleIdentifiableData>();
             try
             {
-                string[] files = await Session.GetFilesAsync(RelativePath);
+                string[] files = await Session.Client.GetAllLocationsAsync(ResourceConverter.ToResource(typeof(TModel)));
                 foreach (string file in files)
                 {
                     SimpleIdentifiableData newModel = CreateSimpleModel(file);
@@ -37,16 +34,16 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {
-            string filePath = GetRelativeFilePath(model);
-            TModel actualModel = await RetrieveModel(model);
-            if (actualModel == null)
+            TModel oldModel = await RetrieveModel(model);
+            if (oldModel == null)
             {
                 Context.SnackbarService.Enqueue("Couldn't open editor for this model");
                 return new EditorResults(null, false);
             }
 
-            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(actualModel);
-            EditorResults results = new EditorResults(actualModel, saveRequested);
+            TModel newModel = oldModel.DeepClone<TModel>();
+            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newModel);
+            EditorResults results = new EditorResults(newModel, saveRequested);
             if (saveRequested)
             {
                 await OnSavingAsync(model, results);
@@ -54,17 +51,7 @@ namespace RPGDataEditor.Core.Mvvm
                 {
                     return results;
                 }
-                string newFilePath = GetRelativeFilePath(model);
-                string saveJson = JsonConvert.SerializeObject(actualModel);
-                bool saved = await Context.Session.SaveJsonFileAsync(newFilePath, saveJson);
-                if (saved && filePath.CompareTo(newFilePath) != 0)
-                {
-                    bool deleted = await Context.Session.DeleteFileAsync(filePath);
-                    if (!deleted)
-                    {
-                        Context.SnackbarService.Enqueue("Couldn't delete old model");
-                    }
-                }
+                bool saved = await Context.Session.Client.UpdateAsync(oldModel, newModel);
                 Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save model");
             }
             return results;
@@ -76,12 +63,10 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual async Task<TModel> RetrieveModel(SimpleIdentifiableData model)
         {
-            string filePath = GetRelativeFilePath(model);
             TModel actualModel = null;
             try
             {
-                string readJson = await Session.GetJsonAsync(filePath);
-                actualModel = JsonConvert.DeserializeObject<TModel>(readJson);
+                actualModel = (TModel)await Session.Client.GetAsync(model);
             }
             catch (Exception ex)
             {
@@ -109,7 +94,7 @@ namespace RPGDataEditor.Core.Mvvm
                 }
                 name = fileName[(index + 1)..];
             }
-            return new SimpleIdentifiableData() {
+            return new SimpleIdentifiableData(typeof(TModel)) {
                 Id = id,
                 Name = name
             };
@@ -118,7 +103,7 @@ namespace RPGDataEditor.Core.Mvvm
         protected override Task<SimpleIdentifiableData> CreateModelAsync()
         {
             SimpleIdentifiableData newModel = CreateModelInstance();
-            int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;
+            int nextId = Models.Count > 0 ? Models.Max(x => (int)x.Id) + 1 : 0;
             newModel.Name = "New Model";
             newModel.Id = nextId;
             Models.Add(newModel);

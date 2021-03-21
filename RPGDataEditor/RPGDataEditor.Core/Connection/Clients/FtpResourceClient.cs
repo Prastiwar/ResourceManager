@@ -1,6 +1,6 @@
 ﻿using FluentFTP;
+using Newtonsoft.Json;
 using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +11,14 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Connection
 {
-    public class FtpController : ObservableModel, IJsonFilesController, IConnectionService
+    public class FtpResourceClient : ObservableModel, IContentResourceClient
     {
+        public FtpResourceClient(IResourceToPathConverter pathConverter, IResourceToTypeConverter typeConverter)
+        {
+            this.pathConverter = pathConverter;
+            this.typeConverter = typeConverter;
+        }
+
         private string host = "";
         public string Host {
             get => host;
@@ -31,7 +37,7 @@ namespace RPGDataEditor.Core.Connection
                         RelativePath = host[slashIndex..];
                         host = host.Substring(0, slashIndex + 1);
                     }
-                    client.Host = host;
+                    Client.Host = host;
                 }
                 catch (Exception ex)
                 {
@@ -57,7 +63,7 @@ namespace RPGDataEditor.Core.Connection
             get => userName;
             set {
                 SetProperty(ref userName, value ?? "");
-                client.Credentials.UserName = userName;
+                Client.Credentials.UserName = userName;
             }
         }
 
@@ -66,7 +72,7 @@ namespace RPGDataEditor.Core.Connection
             get => password;
             set {
                 SetProperty(ref password, value ?? "");
-                client.Credentials.Password = password;
+                Client.Credentials.Password = password;
             }
         }
 
@@ -75,37 +81,57 @@ namespace RPGDataEditor.Core.Connection
             get => port;
             set {
                 SetProperty(ref port, value);
-                client.Port = port;
+                Client.Port = port;
             }
         }
 
-        private readonly FtpClient client = new FtpClient() {
+        protected FtpClient Client { get; } = new FtpClient() {
             Credentials = new NetworkCredential(),
             BulkListing = true
         };
 
-        public async Task<bool> IsValidAsync()
+        private readonly IResourceToPathConverter pathConverter;
+
+        private readonly IResourceToTypeConverter typeConverter;
+
+        public async Task<bool> UpdateAsync(IIdentifiable oldResource, IIdentifiable newResource)
+        {
+            bool saved = await SaveJsonAsync(newResource);
+            if (saved)
+            {
+                await DeleteAsync(oldResource);
+            }
+            return saved;
+        }
+
+        public Task<bool> CreateAsync(IIdentifiable resource) => SaveJsonAsync(resource);
+
+        public async Task<bool> CreateBackupAsync(int resource, string filePath)
         {
             try
             {
-                await client.ConnectAsync();
-                await client.DisconnectAsync();
+                if (string.IsNullOrEmpty(filePath))
+                {
+                    return false;
+                }
+                IIdentifiable[] jsons = await GetAllAsync(resource);
+                string backupJson = JsonConvert.SerializeObject(jsons);
+                return await SaveJsonAsync(backupJson, filePath);
             }
             catch (Exception ex)
             {
-                Logger.Error("FTP validation error", ex);
-                return false;
+                Logger.Error("Couldn't make backup", ex);
             }
-            return true;
+            return false;
         }
 
-        public async Task<bool> DeleteFileAsync(string relativePath)
+        public async Task<bool> DeleteAsync(IIdentifiable resource)
         {
             try
             {
                 await EnsureConnectedAsync();
-                string targetPath = Path.Combine(RelativePath, relativePath);
-                await client.DeleteFileAsync(targetPath);
+                string targetPath = Path.Combine(RelativePath, pathConverter.ToRelativePath(resource));
+                await Client.DeleteFileAsync(targetPath);
             }
             catch (Exception ex)
             {
@@ -115,15 +141,49 @@ namespace RPGDataEditor.Core.Connection
             return true;
         }
 
-        public async Task<bool> SaveJsonAsync(string relativePath, string json)
+        public Task<string> GetContentAsync(IIdentifiable resource) => GetContentAsync(pathConverter.ToRelativePath(resource));
+
+        public async Task<IIdentifiable> GetAsync(IIdentifiable resource)
+        {
+            string json = await GetContentAsync(pathConverter.ToRelativePath(resource));
+            return JsonConvert.DeserializeObject(json, typeConverter.GetResourceType(resource)) as IIdentifiable;
+        }
+
+        public Task<string[]> GetAllContentAsync(int resource) => GetJsonsAsync(pathConverter.ToRelativeRoot(resource));
+
+        public async Task<IIdentifiable[]> GetAllAsync(int resource)
+        {
+            string[] jsons = await GetAllContentAsync(resource);
+            return jsons.Select(json => JsonConvert.DeserializeObject(json, typeConverter.GetResourceType(resource)) as IIdentifiable).ToArray();
+        }
+
+        public Task<string[]> GetAllLocationsAsync(int resource) => GetFiles(pathConverter.ToRelativeRoot(resource));
+
+        public Task<string> GetLocationAsync(IIdentifiable resource) => Task.FromResult(pathConverter.ToRelativePath(resource));
+
+        public Task<bool> SaveJsonAsync(IIdentifiable resource)
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(resource);
+                string targetPath = Path.Combine(RelativePath, pathConverter.ToRelativePath(resource));
+                return SaveJsonAsync(json, targetPath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Saving file threw exception", ex);
+                return Task.FromResult(false);
+            }
+        }
+
+        public async Task<bool> SaveJsonAsync(string json, string targetPath)
         {
             try
             {
                 await EnsureConnectedAsync();
                 MemoryStream stream = new MemoryStream();
                 byte[] fileContents = Encoding.UTF8.GetBytes(json);
-                string targetPath = Path.Combine(RelativePath, relativePath);
-                FtpStatus status = await client.UploadAsync(fileContents, targetPath, FtpRemoteExists.Overwrite, true);
+                FtpStatus status = await Client.UploadAsync(fileContents, targetPath, FtpRemoteExists.Overwrite, true);
                 return status.IsSuccess();
             }
             catch (Exception ex)
@@ -135,9 +195,9 @@ namespace RPGDataEditor.Core.Connection
 
         public async Task<string[]> GetJsonsAsync(string relativePath)
         {
-            string[] files = await GetJsonFiles(relativePath);
+            string[] files = await GetFiles(relativePath);
             List<string> jsons = new List<string>();
-            Task<string>[] tasks = files.Select(file => GetJsonAsync(file)).ToArray();
+            Task<string>[] tasks = files.Select(file => GetContentAsync(file)).ToArray();
             await Task.WhenAll(tasks);
             foreach (Task<string> task in tasks)
             {
@@ -150,11 +210,11 @@ namespace RPGDataEditor.Core.Connection
             return jsons.ToArray();
         }
 
-        public async Task<string> GetJsonAsync(string relativePath)
+        protected async Task<string> GetContentAsync(string relativePath)
         {
             await EnsureConnectedAsync();
             string targetPath = Path.Combine(RelativePath, relativePath);
-            byte[] bytes = await client.DownloadAsync(targetPath, default);
+            byte[] bytes = await Client.DownloadAsync(targetPath, default);
             if (bytes == null)
             {
                 Logger.Error("Couldn't download file at " + relativePath);
@@ -164,21 +224,21 @@ namespace RPGDataEditor.Core.Connection
             return content;
         }
 
-        public async Task<string[]> GetJsonFiles(string relativePath)
+        protected async Task<string[]> GetFiles(string relativePath)
         {
             await EnsureConnectedAsync();
             MemoryStream stream = new MemoryStream();
             string targetPath = Path.Combine(RelativePath, relativePath);
-            FtpListItem[] items = await client.GetListingAsync(targetPath, FtpListOption.Recursive);
+            FtpListItem[] items = await Client.GetListingAsync(targetPath, FtpListOption.Recursive);
             return items.Where(item => item.Type == FtpFileSystemObjectType.File)
                         .Select(item => item.FullName).ToArray();
         }
 
         protected async Task EnsureConnectedAsync()
         {
-            if (!client.IsConnected)
+            if (!Client.IsConnected)
             {
-                await client.ConnectAsync();
+                await Client.ConnectAsync();
             }
         }
 
@@ -186,7 +246,7 @@ namespace RPGDataEditor.Core.Connection
         {
             try
             {
-                await client.ConnectAsync();
+                await Client.ConnectAsync();
             }
             catch (Exception ex)
             {
@@ -200,7 +260,7 @@ namespace RPGDataEditor.Core.Connection
         {
             try
             {
-                await client.DisconnectAsync();
+                await Client.DisconnectAsync();
             }
             catch (Exception ex)
             {

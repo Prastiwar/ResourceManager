@@ -8,8 +8,8 @@ namespace RPGDataEditor.Wpf
     {
         public override int Compare([AllowNull] IIdentifiable x, [AllowNull] IIdentifiable y)
         {
-            int xId = x.Id;
-            int yId = y.Id;
+            int xId = (int)x.Id;
+            int yId = (int)y.Id;
             if (xId == yId)
             {
                 return 0;

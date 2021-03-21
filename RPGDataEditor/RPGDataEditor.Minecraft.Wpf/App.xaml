@@ -1,9 +1,8 @@
-﻿<rpg:RPGDataEditorApp x:Class="RPGDataEditor.Minecraft.Wpf.App"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:prism="clr-namespace:RPGDataEditor.Wpf"
-                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
+﻿<rpg:RpgDataEditorApplication x:Class="RPGDataEditor.Minecraft.Wpf.App"
+                              xmlns:rpg="clr-namespace:RPGDataEditor.Wpf;assembly=RPGDataEditor.Wpf"
+                              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;RPGDataEditorApp.xaml" />
     </Application.Resources>
-</rpg:RPGDataEditorApp>
+</rpg:RpgDataEditorApplication>
