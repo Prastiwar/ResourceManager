@@ -7,10 +7,13 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
     public class DialogueTabViewModel : SimpleCategorizedTabViewModel<DialogueModel>
     {
-        public DialogueTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
+        public DialogueTabViewModel(ViewModelContext context,
+                                    ITypeToResourceConverter resourceConverter,
+                                    ILocationToSimpleResourceConverter simpleResourceConverter)
+            : base(context, resourceConverter, simpleResourceConverter) { }
 
         protected override DialogueModel CreateNewExactModel(SimpleIdentifiableData model) => new DialogueModel() {
-            Id = (int)model.Id,
+            Id = model.Id,
             Title = model.Name,
             Category = (model as SimpleCategorizedData).Category
         };

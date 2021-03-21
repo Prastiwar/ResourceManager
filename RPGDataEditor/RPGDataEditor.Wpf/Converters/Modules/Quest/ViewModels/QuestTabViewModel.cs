@@ -10,7 +10,10 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
     public class QuestTabViewModel : SimpleCategorizedTabViewModel<QuestModel>
     {
-        public QuestTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
+        public QuestTabViewModel(ViewModelContext context,
+                                 ITypeToResourceConverter resourceConverter,
+                                 ILocationToSimpleResourceConverter simpleResourceConverter)
+            : base(context, resourceConverter, simpleResourceConverter) { }
 
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {

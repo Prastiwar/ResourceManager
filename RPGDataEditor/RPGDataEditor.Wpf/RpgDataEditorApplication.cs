@@ -1,16 +1,18 @@
 ﻿using DryIoc;
 using FluentValidation;
 using Newtonsoft.Json;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
+using RPGDataEditor.Core.Connection;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
-using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
@@ -20,8 +22,6 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using RPGDataEditor.Core.Connection;
-using Prism.DryIoc;
 
 namespace RPGDataEditor.Wpf
 {
@@ -174,9 +174,12 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterConverters(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance<IResourceToPathConverter>(new DefaultResourceToPathConverter());
-            containerRegistry.RegisterInstance<IResourceToTypeConverter>(new DefaultResourceToTypeConverter());
+            DefaultResourceToPathConverter resourceToPathConverter = new DefaultResourceToPathConverter();
+            containerRegistry.RegisterInstance<IResourceToPathConverter>(resourceToPathConverter);
+            DefaultResourceToTypeConverter typeConverter = new DefaultResourceToTypeConverter();
+            containerRegistry.RegisterInstance<IResourceToTypeConverter>(typeConverter);
             containerRegistry.RegisterInstance<ITypeToResourceConverter>(new DefaultTypeToResourceConverter());
+            containerRegistry.RegisterInstance<ILocationToSimpleResourceConverter>(new DefaultLocationToSimpleResourceConverter(resourceToPathConverter, typeConverter));
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();

@@ -10,7 +10,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class PickerDialogViewModel : DialogViewModelBase
     {
-        public PickerDialogViewModel(ViewModelContext context) : base(context) { }
+        public PickerDialogViewModel(ViewModelContext context, ILocationToSimpleResourceConverter simpleResourceConverter) : base(context) => this.simpleResourceConverter = simpleResourceConverter;
 
         public override string Title => "Resource Picker";
 
@@ -31,6 +31,8 @@ namespace RPGDataEditor.Wpf.ViewModels
             get => models;
             set => SetProperty(ref models, value);
         }
+
+        private readonly ILocationToSimpleResourceConverter simpleResourceConverter;
 
         protected sealed override void CloseDialog(object result) => Close(result is bool b && b);
 
@@ -72,8 +74,14 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(RPGResource resource)
         {
-            List<IIdentifiable> list = (await Session.Client.GetAllAsync((int)resource)).ToList();
-            list.Insert(0, new NullResource());
+            string[] locations = await Session.Client.GetAllLocationsAsync((int)resource);
+            List<IIdentifiable> list = new List<IIdentifiable>(locations.Length + 1) {
+                new NullResource()
+            };
+            foreach (string location in locations)
+            {
+                list.Add(simpleResourceConverter.CreateSimpleData(location));
+            }
             return list;
         }
 

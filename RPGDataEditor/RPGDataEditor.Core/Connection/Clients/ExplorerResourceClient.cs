@@ -96,6 +96,13 @@ namespace RPGDataEditor.Core.Connection
             return jsons.ToArray();
         }
 
+        public Task<string> GetContentAsync(string location)
+        {
+            string filePath = Path.Combine(FolderPath, location);
+            string json = File.ReadAllText(filePath);
+            return Task.FromResult(json);
+        }
+
         public Task<string> GetContentAsync(IIdentifiable identifiable)
         {
             string filePath = Path.Combine(FolderPath, pathConverter.ToRelativePath(identifiable));
@@ -108,6 +115,13 @@ namespace RPGDataEditor.Core.Connection
             string json = await GetContentAsync(identifiable);
             return JsonConvert.DeserializeObject(json, typeConverter.GetResourceType(identifiable)) as IIdentifiable;
         }
+
+        public async Task<IIdentifiable> GetAsync(Type type, string location)
+        {
+            string json = await GetContentAsync(location);
+            return JsonConvert.DeserializeObject(json, type) as IIdentifiable;
+        }
+
         public Task<string[]> GetAllLocationsAsync(int resource) => GetJsonFiles(Path.Combine(FolderPath, pathConverter.ToRelativeRoot(resource)));
 
         public Task<string> GetLocationAsync(IIdentifiable resource) => Task.FromResult(pathConverter.ToRelativePath(resource));

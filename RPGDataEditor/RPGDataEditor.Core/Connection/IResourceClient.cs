@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Connection
@@ -11,6 +12,8 @@ namespace RPGDataEditor.Core.Connection
         Task<IIdentifiable[]> GetAllAsync(int resource);
 
         Task<IIdentifiable> GetAsync(IIdentifiable resource);
+
+        Task<IIdentifiable> GetAsync(Type type, string location);
 
         Task<bool> CreateAsync(IIdentifiable resource);
 

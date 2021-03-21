@@ -7,7 +7,10 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
     public class NpcTabViewModel : SimpleIdentifiableTabViewModel<NpcDataModel>
     {
-        public NpcTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
+        public NpcTabViewModel(ViewModelContext context,
+                               ITypeToResourceConverter resourceConverter,
+                               ILocationToSimpleResourceConverter simpleResourceConverter)
+            : base(context, resourceConverter, simpleResourceConverter) { }
 
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {

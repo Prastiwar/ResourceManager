@@ -20,6 +20,7 @@ namespace RPGDataEditor.Core.Connection
         public Task<IIdentifiable[]> GetAllAsync(int resource) => throw new NotImplementedException();
         public Task<string[]> GetAllLocationsAsync(int resource) => throw new NotImplementedException();
         public Task<IIdentifiable> GetAsync(IIdentifiable resource) => throw new NotImplementedException();
+        public Task<IIdentifiable> GetAsync(Type type, string location) => throw new NotImplementedException();
         public Task<string> GetLocationAsync(IIdentifiable resource) => throw new NotImplementedException();
         public Task<bool> UpdateAsync(IIdentifiable oldResource, IIdentifiable newResource) => throw new NotImplementedException();
     }

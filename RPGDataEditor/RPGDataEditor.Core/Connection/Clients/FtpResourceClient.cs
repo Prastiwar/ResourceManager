@@ -141,12 +141,20 @@ namespace RPGDataEditor.Core.Connection
             return true;
         }
 
-        public Task<string> GetContentAsync(IIdentifiable resource) => GetContentAsync(pathConverter.ToRelativePath(resource));
+        public Task<string> GetContentAsync(IIdentifiable resource) => GetFileContentAsync(pathConverter.ToRelativePath(resource));
 
         public async Task<IIdentifiable> GetAsync(IIdentifiable resource)
         {
-            string json = await GetContentAsync(pathConverter.ToRelativePath(resource));
+            string json = await GetFileContentAsync(pathConverter.ToRelativePath(resource));
             return JsonConvert.DeserializeObject(json, typeConverter.GetResourceType(resource)) as IIdentifiable;
+        }
+
+        public Task<string> GetContentAsync(string location) => GetFileContentAsync(location);
+
+        public async Task<IIdentifiable> GetAsync(Type type, string location)
+        {
+            string json = await GetContentAsync(location);
+            return JsonConvert.DeserializeObject(json, type) as IIdentifiable;
         }
 
         public Task<string[]> GetAllContentAsync(int resource) => GetJsonsAsync(pathConverter.ToRelativeRoot(resource));
@@ -197,7 +205,7 @@ namespace RPGDataEditor.Core.Connection
         {
             string[] files = await GetFiles(relativePath);
             List<string> jsons = new List<string>();
-            Task<string>[] tasks = files.Select(file => GetContentAsync(file)).ToArray();
+            Task<string>[] tasks = files.Select(file => GetFileContentAsync(file)).ToArray();
             await Task.WhenAll(tasks);
             foreach (Task<string> task in tasks)
             {
@@ -210,7 +218,7 @@ namespace RPGDataEditor.Core.Connection
             return jsons.ToArray();
         }
 
-        protected async Task<string> GetContentAsync(string relativePath)
+        protected async Task<string> GetFileContentAsync(string relativePath)
         {
             await EnsureConnectedAsync();
             string targetPath = Path.Combine(RelativePath, relativePath);

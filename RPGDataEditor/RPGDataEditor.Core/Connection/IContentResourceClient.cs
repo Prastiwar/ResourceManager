@@ -7,5 +7,7 @@ namespace RPGDataEditor.Core.Connection
         Task<string[]> GetAllContentAsync(int resource);
 
         Task<string> GetContentAsync(IIdentifiable resource);
+
+        Task<string> GetContentAsync(string location);
     }
 }

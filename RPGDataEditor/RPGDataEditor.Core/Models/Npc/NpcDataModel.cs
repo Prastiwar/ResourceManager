@@ -10,7 +10,7 @@ namespace RPGDataEditor.Core.Models
             set => Id = (int)value;
         }
 
-        private int id;
+        private int id = -1;
         public int Id {
             get => id;
             set => SetProperty(ref id, value);

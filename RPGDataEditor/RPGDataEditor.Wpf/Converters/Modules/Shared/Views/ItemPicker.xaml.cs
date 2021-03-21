@@ -60,9 +60,17 @@ namespace RPGDataEditor.Wpf.Views
             set => SetValue(DialogServiceProperty, value);
         }
 
-        protected async void OnPickedIdChanged(int oldId, int newId) => await ReassignItemAsync();
+        protected virtual async void OnPickedIdChanged(int oldId, int newId)
+        {
+            PickedItem = null;
+            await ReassignItemAsync();
+        }
 
-        protected async void OnResourceChanged(RPGResource? oldValue, RPGResource? newValue) => await ReassignItemAsync();
+        protected virtual async void OnResourceChanged(RPGResource? oldValue, RPGResource? newValue)
+        {
+            PickedItem = null;
+            await ReassignItemAsync();
+        }
 
         protected async Task ReassignItemAsync()
         {
@@ -71,10 +79,17 @@ namespace RPGDataEditor.Wpf.Views
             {
                 return;
             }
+            if (PickedItem != null)
+            {
+                OnPickedItemChanged(PickedItem, PickedItem);
+                return;
+            }
             LoadingOverlay.Visibility = Visibility.Visible;
             ItemTextBlock.Text = "Loading...";
-            IIdentifiable[] resources = await RPGDataEditorApp.Current.Session.Client.GetAllAsync((int)Resource);
-            PickedItem = resources.FirstOrDefault(q => (int)q.Id == id);
+            string[] locations = await RpgDataEditorApplication.Current.Session.Client.GetAllLocationsAsync((int)Resource);
+            ILocationToSimpleResourceConverter converter = RpgDataEditorApplication.Current.Container.Resolve<ILocationToSimpleResourceConverter>();
+            SimpleIdentifiableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
+            PickedItem = pickedItem;
             LoadingOverlay.Visibility = Visibility.Collapsed;
         }
 

@@ -41,8 +41,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
-- [ ] Improve resources loading time
 - [ ] Improve generic data (separate Minecraft data)
 - [ ] Check for connection status and inform user about problems
-- [ ] Refactor Session and controllers (for upcoming database support)
-- [ ] Support Databases
+- [ ] Support MSSQL database

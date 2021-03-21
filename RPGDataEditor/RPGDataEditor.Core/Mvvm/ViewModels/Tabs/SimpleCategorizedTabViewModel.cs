@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
+﻿using Prism.Commands;
 using RPGDataEditor.Core.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,7 +9,10 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract class SimpleCategorizedTabViewModel<TModel> : SimpleIdentifiableTabViewModel<TModel>, ICategorizedTabViewModel where TModel : IdentifiableData
     {
-        public SimpleCategorizedTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context, resourceConverter) { }
+        public SimpleCategorizedTabViewModel(ViewModelContext context,
+                                             ITypeToResourceConverter resourceConverter,
+                                             ILocationToSimpleResourceConverter simpleResourceConverter) 
+            : base(context, resourceConverter, simpleResourceConverter) { }
 
         private ICommand addCategoryCommand;
         public ICommand AddCategoryCommand => addCategoryCommand ??= new DelegateCommand(CreateCategory);
@@ -66,19 +68,6 @@ namespace RPGDataEditor.Core.Mvvm
                 return categorizedData;
             }
             return null;
-        }
-
-        protected override SimpleIdentifiableData CreateSimpleModel(string file)
-        {
-            SimpleIdentifiableData data = base.CreateSimpleModel(file);
-            int lastDimIndex = file.LastIndexOf('/');
-            int categoryStartIndex = file.LastIndexOf('/', lastDimIndex - 1) + 1;
-            string category = file[categoryStartIndex..lastDimIndex];
-            return new SimpleCategorizedData(typeof(TModel)) {
-                Id = data.Id,
-                Name = data.Name,
-                Category = category
-            };
         }
 
         protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData(typeof(TModel));
