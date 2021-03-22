@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj" />
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
+    <ProjectReference Include="..\RPGDataEditor.Minecraft.Wpf\RPGDataEditor.Minecraft.Wpf.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Modules\Dialogue\Views\DialogueEditor.xaml">
@@ -26,19 +26,10 @@
     <Page Update="Modules\Dialogue\Views\DialogueOptionView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Modules\Dialogue\Views\DialogueTab.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Modules\Npc\Views\NpcDataModelEditor.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Modules\Npc\Views\NpcTab.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Modules\Quest\Views\QuestEditor.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Modules\Quest\Views\QuestTab.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Modules\Quest\Views\QuestTaskView.xaml">
@@ -50,8 +41,5 @@
     <Page Update="Modules\Shared\Views\RequirementView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\Shared\ViewModels\" />
   </ItemGroup>
 </Project>

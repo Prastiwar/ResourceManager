@@ -12,7 +12,7 @@
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
              xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
-             xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -72,10 +72,10 @@
                                      Padding="5">
                     <StackPanel>
                         <TextBlock Text="Spawn location" />
-                        <views:BlockPosField DataContext="{Binding Model}"
-                                             Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             Orientation="Horizontal"
-                                             Margin="-2" />
+                        <controls:BlockPosField DataContext="{Binding Model}"
+                                                Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Orientation="Horizontal"
+                                                Margin="-2" />
                     </StackPanel>
                 </materialDesign:Card>
                 <CheckBox x:Name="InvulnerableCheckbox"
@@ -158,10 +158,10 @@
                                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                                     Padding="0"
                                                     Margin="0,12,0,0" />
-                                            <views:BlockPosField Position="{Binding .}"
-                                                                 Grid.Column="1"
-                                                                 HorizontalAlignment="Stretch"
-                                                                 HorizontalContentAlignment="Stretch" />
+                                            <controls:BlockPosField Position="{Binding .}"
+                                                                    Grid.Column="1"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    HorizontalContentAlignment="Stretch" />
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>
@@ -209,7 +209,7 @@
                         <StackPanel x:Name="JobStackPanel"
                                     Visibility="Collapsed">
                             <StackPanel x:Name="GuardStackPanel"
-                                        Visibility="Collapsed"/>
+                                        Visibility="Collapsed" />
                             <StackPanel x:Name="TraderStackPanel"
                                         Visibility="Collapsed">
                                 <materialDesign:Card Margin="5"

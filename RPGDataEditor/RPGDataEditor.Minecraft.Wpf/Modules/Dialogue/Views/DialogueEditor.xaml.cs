@@ -1,10 +1,12 @@
 ﻿using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Wpf;
+using RPGDataEditor.Wpf.Views;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace RPGDataEditor.Wpf.Dialogue.Views
+namespace RPGDataEditor.Minecraft.Wpf.Dialogue.Views
 {
     public partial class DialogueEditor : UserControl
     {
@@ -16,7 +18,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             Commands.ToggleExpandIcon(btn);
         }
 
-        private void RequirementView_TypeChange(object sender, Wpf.Views.RequirementView.ChangeTypeEventArgs e)
+        private void RequirementView_TypeChange(object sender, RequirementView.ChangeTypeEventArgs e)
         {
             if (DataContext is ModelDialogViewModel<DialogueModel> vm)
             {

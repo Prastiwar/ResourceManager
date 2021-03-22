@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace RPGDataEditor.Wpf.Views
+namespace RPGDataEditor.Minecraft.Wpf.Views
 {
     public partial class CategoryTabControl : UserControl
     {

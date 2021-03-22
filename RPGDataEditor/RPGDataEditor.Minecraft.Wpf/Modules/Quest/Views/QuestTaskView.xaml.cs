@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Quest.Views
+namespace RPGDataEditor.Minecraft.Wpf.Quest.Views
 {
     public partial class QuestTaskView : UserControl
     {

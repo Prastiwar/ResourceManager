@@ -2,15 +2,12 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Views
+namespace RPGDataEditor.Wpf.Controls
 {
-    public partial class BlockPosField : UserControl
+    public class BlockPosField : UserControl
     {
-        public BlockPosField() => InitializeComponent();
-
         public static DependencyProperty OrientationProperty =
-            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BlockPosField), new PropertyMetadata(Orientation.Horizontal, OnOrientationChanged));
-        private static void OnOrientationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as BlockPosField).FieldPanel.Orientation = (Orientation)e.NewValue;
+            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(BlockPosField), new PropertyMetadata(Orientation.Horizontal));
         public Orientation Orientation {
             get => (Orientation)GetValue(OrientationProperty);
             set => SetValue(OrientationProperty, value);
@@ -28,12 +25,20 @@ namespace RPGDataEditor.Wpf.Views
             set => SetValue(HeaderTextProperty, value);
         }
 
+        private StackPanel panel;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            panel = Template.FindName("FieldPanel", this) as StackPanel;
+        }
+
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
             if (e.Property == OrientationProperty)
             {
-                FieldPanel.Orientation = (Orientation)e.NewValue;
+                panel.Orientation = (Orientation)e.NewValue;
             }
         }
     }

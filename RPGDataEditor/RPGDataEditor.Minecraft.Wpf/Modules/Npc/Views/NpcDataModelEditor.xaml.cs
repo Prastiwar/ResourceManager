@@ -1,7 +1,8 @@
 ﻿using RPGDataEditor.Core.Models;
+using RPGDataEditor.Wpf;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Npc.Views
+namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
 {
     public partial class NpcDataModelEditor : UserControl
     {

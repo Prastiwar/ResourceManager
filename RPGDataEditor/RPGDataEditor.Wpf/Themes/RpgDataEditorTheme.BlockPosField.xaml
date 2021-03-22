@@ -1,0 +1,50 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
+    <ControlTemplate TargetType="{x:Type controls:BlockPosField}"
+                     x:Key="BlockPosFieldTemplate">
+        <StackPanel x:Name="FieldPanel"
+                    Orientation="{TemplateBinding Orientation}">
+            <TextBox x:Name="XField"
+                     DataContext="{Binding Position, RelativeSource={RelativeSource TemplatedParent}}"
+                     Text="{Binding X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     InputScope="Number"
+                     Margin="7"
+                     materialDesign:HintAssist.Hint="X position"
+                     Style="{DynamicResource materialDesign:MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                </i:Interaction.Behaviors>
+            </TextBox>
+            <TextBox x:Name="YField"
+                     DataContext="{Binding Position, RelativeSource={RelativeSource TemplatedParent}}"
+                     Text="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     InputScope="Number"
+                     Margin="7"
+                     materialDesign:HintAssist.Hint="Y position"
+                     Style="{DynamicResource materialDesign:MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                </i:Interaction.Behaviors>
+            </TextBox>
+            <TextBox x:Name="ZField"
+                     DataContext="{Binding Position, RelativeSource={RelativeSource TemplatedParent}}"
+                     Text="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     InputScope="Number"
+                     Margin="7"
+                     materialDesign:HintAssist.Hint="Z position"
+                     Style="{DynamicResource materialDesign:MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                </i:Interaction.Behaviors>
+            </TextBox>
+        </StackPanel>
+    </ControlTemplate>
+    <Style TargetType="{x:Type controls:BlockPosField}">
+        <Setter Property="Template"
+                Value="{StaticResource BlockPosFieldTemplate}" />
+    </Style>
+</ResourceDictionary>

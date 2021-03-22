@@ -8,7 +8,7 @@
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              x:Name="ThisTaskView"
              mc:Ignorable="d">
     <StackPanel>
@@ -60,9 +60,9 @@
         </StackPanel>
         <StackPanel x:Name="ReachQuestTaskPanel"
                     Visibility="Collapsed">
-            <views:BlockPosField Position="{Binding Pos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Orientation="Horizontal"
-                                 Margin="-2" />
+            <controls:BlockPosField Position="{Binding Pos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Orientation="Horizontal"
+                                    Margin="-2" />
             <TextBox Text="{Binding Distance, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      InputScope="Number"
@@ -80,9 +80,9 @@
                       Checked="CheckBox_Checked"
                       Unchecked="CheckBox_Unchecked"
                       IsChecked="{Binding LeftClick, Mode=TwoWay}" />
-            <views:BlockPosField Position="{Binding Pos}"
-                                 Orientation="Horizontal"
-                                 Margin="-2" />
+            <controls:BlockPosField Position="{Binding Pos}"
+                                    Orientation="Horizontal"
+                                    Margin="-2" />
         </StackPanel>
         <StackPanel x:Name="ItemInteractQuestTaskPanel"
                     Visibility="Collapsed">

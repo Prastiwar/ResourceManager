@@ -5,24 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace RPGDataEditor.Wpf.Views
+namespace RPGDataEditor.Minecraft.Wpf.Views
 {
     public partial class RequirementView : UserControl
     {
-        public delegate void ChangeTypeEventHandler(object sender, ChangeTypeEventArgs e);
-
-        public class ChangeTypeEventArgs : RoutedEventArgs
-        {
-            public ChangeTypeEventArgs(PlayerRequirementModel requirement, string targetType)
-            {
-                Requirement = requirement;
-                TargetType = targetType;
-            }
-
-            public PlayerRequirementModel Requirement { get; }
-            public string TargetType { get; }
-        }
-
         public RequirementView()
         {
             InitializeComponent();
@@ -50,14 +36,6 @@ namespace RPGDataEditor.Wpf.Views
             set => SetValue(ValidableContextProperty, value);
         }
 
-        public static readonly RoutedEvent TypeChangeEvent
-            = EventManager.RegisterRoutedEvent("TypeChange", RoutingStrategy.Direct, typeof(ChangeTypeEventHandler), typeof(RequirementView));
-
-        public event ChangeTypeEventHandler TypeChange {
-            add => AddHandler(SizeChangedEvent, value, false);
-            remove => RemoveHandler(SizeChangedEvent, value);
-        }
-
         private void RequirementView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) =>
             SetRequirementPanel(DataContext as PlayerRequirementModel);
 
@@ -80,29 +58,12 @@ namespace RPGDataEditor.Wpf.Views
             bool isDialogue = model is DialogueRequirement;
             bool isQuest = model is QuestRequirement;
             bool isItem = model is ItemRequirement;
-            RequirementType.SelectionChanged -= RequirementType_SelectionChanged;
             RequirementType.SelectedIndex = isDialogue ? 0 :
                                             isQuest ? 1 :
                                             2;
-            RequirementType.SelectionChanged += RequirementType_SelectionChanged;
             DialogueRequirementPanel.Visibility = isDialogue ? Visibility.Visible : Visibility.Collapsed;
             QuestRequirementPanel.Visibility = isQuest ? Visibility.Visible : Visibility.Collapsed;
             ItemRequirementPanel.Visibility = isItem ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void RequirementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                if (e.AddedItems[0] is ComboBoxItem selected)
-                {
-                    ChangeTypeCommand?.Execute(ChangeTypeCommandParameter);
-                    ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext as PlayerRequirementModel, selected.Name) {
-                        RoutedEvent = TypeChangeEvent
-                    };
-                    RaiseEvent(changeTypeArgs);
-                }
-            }
         }
     }
 }

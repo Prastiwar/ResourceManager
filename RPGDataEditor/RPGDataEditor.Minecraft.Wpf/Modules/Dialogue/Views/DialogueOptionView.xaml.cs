@@ -1,9 +1,11 @@
 ﻿using RPGDataEditor.Core.Models;
+using RPGDataEditor.Wpf;
+using RPGDataEditor.Wpf.Views;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace RPGDataEditor.Wpf.Dialogue.Views
+namespace RPGDataEditor.Minecraft.Wpf.Dialogue.Views
 {
     public partial class DialogueOptionView : UserControl
     {
@@ -68,7 +70,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             }
         }
 
-        private void RequirementView_TypeChange(object sender, Wpf.Views.RequirementView.ChangeTypeEventArgs e)
+        private void RequirementView_TypeChange(object sender, RequirementView.ChangeTypeEventArgs e)
         {
             if (DataContext is DialogueOptionModel model)
             {
