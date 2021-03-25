@@ -1,7 +1,4 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class LeftBlockInteractQuestTask : BlockInteractQuestTask
-    {
-        public LeftBlockInteractQuestTask() => LeftClick = true;
-    }
+    public class LeftBlockInteractQuestTask : BlockInteractQuestTask { }
 }

@@ -25,7 +25,7 @@
                             CommandParameter="{StaticResource FalseValue}" />
                 </Grid>
             </DataTemplate>
-            <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.RequirementContents.xaml" />
         </ResourceDictionary>
+        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.RequirementContents.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

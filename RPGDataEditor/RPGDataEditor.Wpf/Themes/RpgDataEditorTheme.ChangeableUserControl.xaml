@@ -21,4 +21,8 @@
         <Setter Property="Template"
                 Value="{StaticResource ChangeableUserControlTemplate}" />
     </Style>
+    <Style TargetType="{x:Type controls:QuestTaskView}">
+        <Setter Property="Template"
+                Value="{StaticResource ChangeableUserControlTemplate}" />
+    </Style>
 </ResourceDictionary>

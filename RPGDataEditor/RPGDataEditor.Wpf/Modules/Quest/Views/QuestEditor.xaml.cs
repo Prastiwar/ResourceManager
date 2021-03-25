@@ -37,5 +37,27 @@ namespace RPGDataEditor.Wpf.Quest.Views
                 }
             }
         }
+
+        //private void QuestTaskView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
+        //{
+        //    if (DataContext is ModelDialogViewModel<QuestModel> vm)
+        //    {
+        //        QuestTask newModel = e.CreateQuestTask();
+        //        if (newModel != null)
+        //        {
+        //            int index = vm.Model.Tasks.IndexOf(e.Item as QuestTask);
+        //            if (index > -1)
+        //            {
+        //                vm.Model.Tasks.RemoveAt(index);
+        //                vm.Model.Tasks.Insert(index, newModel);
+        //            }
+        //            ICollectionView view = CollectionViewSource.GetDefaultView(TasksListView.ItemsSource);
+        //            if (view != null)
+        //            {
+        //                view.Refresh();
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

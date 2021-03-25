@@ -19,6 +19,10 @@
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Themes\RpgDataEditorTheme.QuestTaskContents.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Themes\RpgDataEditorTheme.Styles.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -36,10 +40,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\RpgDataEditorTheme.RequirementContents.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Themes\RpgDataEditorTheme.RequirementView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

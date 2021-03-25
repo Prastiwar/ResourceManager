@@ -12,9 +12,9 @@ namespace RPGDataEditor.Wpf
         {
             if (Application.Current is PrismApplicationBase prismApp)
             {
-                if (prismApp.Container.Resolve(typeof(IRequirementProvider)) is IRequirementProvider provider)
+                if (prismApp.Container.Resolve(typeof(IModelProvider<PlayerRequirementModel>)) is IModelProvider<PlayerRequirementModel> provider)
                 {
-                    return provider.CreateRequirement(e.TargetType);
+                    return provider.CreateModel(e.TargetType);
                 }
             }
             return null;
