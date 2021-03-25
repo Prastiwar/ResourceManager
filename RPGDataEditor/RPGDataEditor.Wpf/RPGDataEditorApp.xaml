@@ -7,13 +7,16 @@
                                 xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <Application.Resources>
         <ResourceDictionary>
+            <x:Static x:Key="MaxIntValue"
+                      Member="sys:Int32.MaxValue" />
+            <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
+            <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Dark"
                                              PrimaryColor="Orange"
                                              SecondaryColor="Cyan" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Generic.xaml" />
                 <ResourceDictionary>
                     <converters:BindingListConverter x:Key="BindingListConverter" />
                 </ResourceDictionary>
@@ -90,11 +93,8 @@
                                 Value="WhiteSmoke" />
                     </Style>
                 </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <x:Static x:Key="MaxIntValue"
-                      Member="sys:Int32.MaxValue" />
-            <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
-            <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
         </ResourceDictionary>
     </Application.Resources>
 </local:RpgDataEditorApplication>

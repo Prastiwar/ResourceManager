@@ -11,6 +11,7 @@
              xmlns:dialogueViews="clr-namespace:RPGDataEditor.Wpf.Dialogue.Views"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -63,10 +64,10 @@
                                      HorizontalContentAlignment="Center"
                                      Margin="5"
                                      Padding="5">
-                    <views:ItemPicker EmptyText="Select Start Quest"
-                                      DataContext="{Binding Model}"
-                                      PickedId="{Binding StartQuest, Mode=TwoWay}"
-                                      Resource="Quest"/>
+                    <controls:ResourcePicker EmptyText="Select Start Quest"
+                                             DataContext="{Binding Model}"
+                                             PickedId="{Binding StartQuest, Mode=TwoWay}"
+                                             Resource="Quest" />
                 </materialDesign:Card>
                 <materialDesign:Card HorizontalAlignment="Stretch"
                                      HorizontalContentAlignment="Center"
@@ -74,14 +75,7 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandLess, Size=14}"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference OptionsListView}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton ExpandableElement="{x:Reference OptionsListView}"/>
                             <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                     Width="16"
                                     Height="16"
@@ -130,14 +124,7 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandLess, Size=14}"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference RequirementsListView}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton ExpandableElement="{x:Reference RequirementsListView}" />
                             <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                     Width="16"
                                     Height="16"
@@ -170,20 +157,20 @@
                                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                                     Padding="0"
                                                     Margin="0,12,0,0" />
-                                            <views:RequirementView DataContext="{Binding .}"
-                                                                   Grid.Column="1"
-                                                                   TypeChange="RequirementView_TypeChange"
-                                                                   local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                                                   local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
-                                                                   HorizontalAlignment="Stretch"
-                                                                   HorizontalContentAlignment="Stretch">
+                                            <controls:RequirementView DataContext="{Binding .}"
+                                                                      Grid.Column="1"
+                                                                      TypeChange="RequirementView_TypeChange"
+                                                                      local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
+                                                                      local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
+                                                                      HorizontalAlignment="Stretch"
+                                                                      HorizontalContentAlignment="Stretch">
                                                 <local:AttachProperties.ValidablePathValues>
                                                     <MultiBinding Converter="{StaticResource BindingListConverter}">
                                                         <Binding Path="(ItemsControl.AlternationIndex)"
                                                                  RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
                                                     </MultiBinding>
                                                 </local:AttachProperties.ValidablePathValues>
-                                            </views:RequirementView>
+                                            </controls:RequirementView>
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>
@@ -193,22 +180,7 @@
                 </materialDesign:Card>
             </StackPanel>
         </ScrollViewer>
-        <Grid Grid.Row="1"
-              VerticalAlignment="Bottom"
-              HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button Content="SAVE"
-                    Margin="5"
-                    Command="{Binding CloseDialogCommand}"
-                    CommandParameter="{StaticResource TrueValue}" />
-            <Button Content="CANCEL"
-                    Grid.Column="1"
-                    Margin="5"
-                    Command="{Binding CloseDialogCommand}"
-                    CommandParameter="{StaticResource FalseValue}" />
-        </Grid>
+        <ContentPresenter Grid.Row="1"
+                          ContentTemplate="{StaticResource SaveCancelButtonsTemplate}" />
     </Grid>
 </UserControl>

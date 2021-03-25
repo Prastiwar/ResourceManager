@@ -14,7 +14,7 @@
                      InputScope="Number"
                      Margin="7"
                      materialDesign:HintAssist.Hint="X position"
-                     Style="{DynamicResource materialDesign:MaterialDesignFloatingHintTextBox}">
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
                     <behaviors:NumericFieldBehaviour EmptyValue="0" />
                 </i:Interaction.Behaviors>
@@ -25,7 +25,7 @@
                      InputScope="Number"
                      Margin="7"
                      materialDesign:HintAssist.Hint="Y position"
-                     Style="{DynamicResource materialDesign:MaterialDesignFloatingHintTextBox}">
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
                     <behaviors:NumericFieldBehaviour EmptyValue="0" />
                 </i:Interaction.Behaviors>
@@ -36,7 +36,7 @@
                      InputScope="Number"
                      Margin="7"
                      materialDesign:HintAssist.Hint="Z position"
-                     Style="{DynamicResource materialDesign:MaterialDesignFloatingHintTextBox}">
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
                     <behaviors:NumericFieldBehaviour EmptyValue="0" />
                 </i:Interaction.Behaviors>

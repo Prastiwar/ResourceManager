@@ -7,11 +7,10 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:questViews="clr-namespace:RPGDataEditor.Wpf.Quest.Views"
-             xmlns:validation="clr-namespace:RPGDataEditor.Wpf.Validation"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="#424242"
              FontFamily="{DynamicResource MaterialDesignFont}"
@@ -75,14 +74,7 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandLess, Size=14}"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference TasksListView}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton ExpandableElement="{x:Reference TasksListView}" />
                             <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                     Width="16"
                                     Height="16"
@@ -142,14 +134,7 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandLess, Size=14}"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference RequirementsListView}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton ExpandableElement="{x:Reference RequirementsListView}" />
                             <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                     Width="16"
                                     Height="16"
@@ -182,20 +167,20 @@
                                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                                     Padding="0"
                                                     Margin="0,12,0,0" />
-                                            <views:RequirementView DataContext="{Binding .}"
-                                                                   Grid.Column="1"
-                                                                   TypeChange="RequirementView_TypeChange"
-                                                                   local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                                                   local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
-                                                                   HorizontalAlignment="Stretch"
-                                                                   HorizontalContentAlignment="Stretch">
+                                            <controls:RequirementView DataContext="{Binding .}"
+                                                                      Grid.Column="1"
+                                                                      TypeChange="RequirementView_TypeChange"
+                                                                      local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
+                                                                      local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
+                                                                      HorizontalAlignment="Stretch"
+                                                                      HorizontalContentAlignment="Stretch">
                                                 <local:AttachProperties.ValidablePathValues>
                                                     <MultiBinding Converter="{StaticResource BindingListConverter}">
                                                         <Binding Path="(ItemsControl.AlternationIndex)"
                                                                  RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
                                                     </MultiBinding>
                                                 </local:AttachProperties.ValidablePathValues>
-                                            </views:RequirementView>
+                                            </controls:RequirementView>
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>
@@ -205,22 +190,7 @@
                 </materialDesign:Card>
             </StackPanel>
         </ScrollViewer>
-        <Grid Grid.Row="1"
-              VerticalAlignment="Bottom"
-              HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button Content="SAVE"
-                    Margin="5"
-                    Command="{Binding CloseDialogCommand}"
-                    CommandParameter="{StaticResource TrueValue}" />
-            <Button Content="CANCEL"
-                    Grid.Column="1"
-                    Margin="5"
-                    Command="{Binding CloseDialogCommand}"
-                    CommandParameter="{StaticResource FalseValue}" />
-        </Grid>
+        <ContentPresenter Grid.Row="1"
+                          ContentTemplate="{StaticResource SaveCancelButtonsTemplate}"/>
     </Grid>
 </UserControl>

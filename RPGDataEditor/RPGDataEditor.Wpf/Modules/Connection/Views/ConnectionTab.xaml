@@ -5,6 +5,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Name="CONNECTION"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>

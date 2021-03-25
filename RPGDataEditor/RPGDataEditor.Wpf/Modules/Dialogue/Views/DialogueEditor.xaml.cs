@@ -16,7 +16,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             Commands.ToggleExpandIcon(btn);
         }
 
-        private void RequirementView_TypeChange(object sender, Wpf.Views.RequirementView.ChangeTypeEventArgs e)
+        private void RequirementView_TypeChange(object sender, Controls.RequirementView.ChangeTypeEventArgs e)
         {
             if (DataContext is ModelDialogViewModel<DialogueModel> vm)
             {

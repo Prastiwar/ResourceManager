@@ -100,19 +100,12 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="ExpandMovementTypeButton"
-                                    Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                    HorizontalAlignment="Left"
-                                    Width="16"
-                                    VerticalAlignment="Bottom"
-                                    Height="16"
-                                    Padding="0"
-                                    Margin="3,0,3,5"
-                                    Click="ToggleExpandIcon"
-                                    IsEnabled="{Binding SelectedIndex, ElementName=MovementTypeComboBox, Mode=OneWay, Converter={StaticResource StringToBoolConverter}, ConverterParameter=2}"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference PathListView}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton x:Name="ExpandMovementTypeButton"
+                                                   HorizontalAlignment="Left"
+                                                   VerticalAlignment="Bottom"
+                                                   Margin="3,0,3,5"
+                                                   IsEnabled="{Binding SelectedIndex, ElementName=MovementTypeComboBox, Mode=OneWay, Converter={StaticResource StringToBoolConverter}, ConverterParameter=2}"
+                                                   ExpandableElement="{x:Reference PathListView}" />
                             <StackPanel Grid.Column="1"
                                         Orientation="Horizontal"
                                         Visibility="{Binding IsEnabled, ElementName=ExpandMovementTypeButton, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -180,16 +173,9 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                    HorizontalAlignment="Left"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference JobStackPanel}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton HorizontalAlignment="Left"
+                                                   IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
+                                                   ExpandableElement="{x:Reference JobStackPanel}" />
                             <ComboBox x:Name="JobComboBox"
                                       Grid.Column="1"
                                       Margin="10,-2,0,0"
@@ -216,15 +202,8 @@
                                                      DataContext="{Binding Model}">
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                                    Width="16"
-                                                    Height="16"
-                                                    Padding="0"
-                                                    Click="ToggleExpandIcon"
-                                                    Margin="5,0,0,2"
-                                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                                    CommandParameter="{x:Reference TradeItemListView}"
-                                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                                            <controls:ExpandButton Margin="5,0,0,2"
+                                                                   ExpandableElement="{x:Reference TradeItemListView}" />
                                             <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                                     Width="16"
                                                     Height="16"
@@ -256,18 +235,10 @@
                                                                     <ColumnDefinition Width="Auto" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
-                                                                <Button x:Name="ExpandTradeItemButton"
-                                                                        Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                                                        HorizontalAlignment="Left"
-                                                                        Width="16"
-                                                                        VerticalAlignment="Bottom"
-                                                                        Height="16"
-                                                                        Padding="0"
-                                                                        Margin="3,0,3,5"
-                                                                        Click="ToggleExpandIcon"
-                                                                        Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                                                        CommandParameter="{x:Reference TradeItemPanel}"
-                                                                        Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                                <controls:ExpandButton Margin="3,0,3,5"
+                                                                                       HorizontalAlignment="Left"
+                                                                                       VerticalAlignment="Bottom"
+                                                                                       ExpandableElement="{x:Reference TradeItemPanel}" />
                                                                 <Button x:Name="DeleteTradeItemButton"
                                                                         Content="{materialDesign:PackIcon Kind=Delete}"
                                                                         Grid.Column="1"
@@ -361,15 +332,8 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                    HorizontalAlignment="Left"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference AttributesPanel}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton HorizontalAlignment="Left"
+                                                   ExpandableElement="{x:Reference AttributesPanel}" />
                             <TextBlock Text="Attributes"
                                        Margin="10,0,0,0" />
                         </StackPanel>
@@ -495,15 +459,8 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                    HorizontalAlignment="Left"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference EquipmentPanel}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton HorizontalAlignment="Left"
+                                                   ExpandableElement="{x:Reference EquipmentPanel}" />
                             <TextBlock Text="Equipment"
                                        Margin="10,0,0,0" />
                         </StackPanel>
@@ -550,15 +507,8 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                    HorizontalAlignment="Left"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference DialogueStackPanel}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton HorizontalAlignment="Left"
+                                                   ExpandableElement="{x:Reference DialogueStackPanel}" />
                             <TextBlock Text="Dialogue"
                                        Margin="10,0,0,0" />
                         </StackPanel>
@@ -634,15 +584,8 @@
                             <materialDesign:Card Margin="5">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Click="ToggleExpandIcon"
-                                                Margin="5,0,0,2"
-                                                Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                                CommandParameter="{x:Reference InteractLinesListView}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                        <controls:ExpandButton Margin="5,0,0,2"
+                                                               ExpandableElement="{x:Reference InteractLinesListView}" />
                                         <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                                 Width="16"
                                                 Height="16"
@@ -669,15 +612,8 @@
                             <materialDesign:Card Margin="5">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Click="ToggleExpandIcon"
-                                                Margin="5,0,0,2"
-                                                Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                                CommandParameter="{x:Reference DeathLinesListView}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                        <controls:ExpandButton Margin="5,0,0,2"
+                                                               ExpandableElement="{x:Reference DeathLinesListView}" />
                                         <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                                 Width="16"
                                                 Height="16"
@@ -704,15 +640,8 @@
                             <materialDesign:Card Margin="5">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Click="ToggleExpandIcon"
-                                                Margin="5,0,0,2"
-                                                Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                                CommandParameter="{x:Reference HurtLinesListView}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                        <controls:ExpandButton Margin="5,0,0,2"
+                                                               ExpandableElement="{x:Reference HurtLinesListView}" />
                                         <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                                 Width="16"
                                                 Height="16"
@@ -739,15 +668,8 @@
                             <materialDesign:Card Margin="5">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Click="ToggleExpandIcon"
-                                                Margin="5,0,0,2"
-                                                Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                                CommandParameter="{x:Reference InitationDialoguesListView}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                        <controls:ExpandButton Margin="5,0,0,2"
+                                                               ExpandableElement="{x:Reference InitationDialoguesListView}" />
                                         <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                                                 Width="16"
                                                 Height="16"
@@ -786,11 +708,11 @@
                                                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                                                 Margin="5,0,5,0"
                                                                 Padding="0" />
-                                                        <views:ItemPicker Grid.Column="1"
-                                                                          VerticalAlignment="Center"
-                                                                          Resource="Dialogue"
-                                                                          EmptyText="Select initaition dialogue"
-                                                                          PickedId="{Binding .}" />
+                                                        <controls:ResourcePicker Grid.Column="1"
+                                                                                 VerticalAlignment="Center"
+                                                                                 Resource="Dialogue"
+                                                                                 EmptyText="Select initaition dialogue"
+                                                                                 PickedId="{Binding .}" />
                                                     </Grid>
                                                 </materialDesign:Card>
                                             </DataTemplate>
@@ -808,15 +730,8 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="{materialDesign:PackIcon Kind=ExpandMore, Size=14}"
-                                    HorizontalAlignment="Left"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Click="ToggleExpandIcon"
-                                    Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                                    CommandParameter="{x:Reference SoundsStackPanel}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <controls:ExpandButton HorizontalAlignment="Left"
+                                                   ExpandableElement="{x:Reference SoundsStackPanel}" />
                             <TextBlock Text="Living sound locations"
                                        Margin="10,0,0,0" />
                         </StackPanel>
@@ -842,22 +757,7 @@
                 </materialDesign:Card>
             </StackPanel>
         </ScrollViewer>
-        <Grid Grid.Row="1"
-              VerticalAlignment="Bottom"
-              HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button Content="SAVE"
-                    Margin="5"
-                    Command="{Binding CloseDialogCommand}"
-                    CommandParameter="{StaticResource TrueValue}" />
-            <Button Content="CANCEL"
-                    Grid.Column="1"
-                    Margin="5"
-                    Command="{Binding CloseDialogCommand}"
-                    CommandParameter="{StaticResource FalseValue}" />
-        </Grid>
+        <ContentPresenter Grid.Row="1"
+                          ContentTemplate="{StaticResource SaveCancelButtonsTemplate}" />
     </Grid>
 </UserControl>

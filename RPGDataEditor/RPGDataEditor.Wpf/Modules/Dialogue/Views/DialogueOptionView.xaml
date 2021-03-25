@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -28,11 +28,11 @@
                 <ComboBoxItem Name="Quit"
                               Content="Quit" />
             </ComboBox>
-            <views:ItemPicker x:Name="DialogueOptionPanel"
-                              Resource="Dialogue"
-                              PickedId="{Binding NextDialogId, Mode=TwoWay}"
-                              Margin="5"
-                              Visibility="Collapsed" />
+            <controls:ResourcePicker x:Name="DialogueOptionPanel"
+                                     Resource="Dialogue"
+                                     PickedId="{Binding NextDialogId, Mode=TwoWay}"
+                                     Margin="5"
+                                     Visibility="Collapsed" />
             <TextBox Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="5"
                      local:AttachProperties.ValidablePathFormat="Options[{0}]"
@@ -62,8 +62,8 @@
             <TextBlock Text="Color: "
                        VerticalAlignment="Top"
                        Margin="5,10,5,5" />
-            <views:MaterialColorPicker Margin="5"
-                                       Color="{Binding Color, Mode=TwoWay, Converter={StaticResource HexDecColorConverter}}" />
+            <controls:MaterialColorPicker Margin="5"
+                                          Color="{Binding Color, Mode=TwoWay, Converter={StaticResource HexDecColorConverter}}" />
         </StackPanel>
         <materialDesign:Card HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Center"
@@ -71,14 +71,7 @@
                              Padding="5">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="{materialDesign:PackIcon Kind=ExpandLess, Size=14}"
-                            Width="16"
-                            Height="16"
-                            Padding="0"
-                            Click="ToggleExpandIcon"
-                            Command="{Binding Source={x:Static local:Commands.ToggleVisibilityCommand}}"
-                            CommandParameter="{x:Reference RequirementsListView}"
-                            Style="{DynamicResource MaterialDesignFlatButton}" />
+                    <controls:ExpandButton ExpandableElement="{x:Reference RequirementsListView}" />
                     <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
                             Width="16"
                             Height="16"
@@ -111,13 +104,13 @@
                                             Padding="0"
                                             Margin="0,12,0,0" />
                                     <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
-                                    <views:RequirementView DataContext="{Binding .}"
-                                                           TypeChange="RequirementView_TypeChange"
-                                                           local:AttachProperties.ValidablePathFormat="Options[{0}].Requirements[{1}]"
-                                                           local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
-                                                           Grid.Column="1"
-                                                           HorizontalAlignment="Stretch"
-                                                           HorizontalContentAlignment="Stretch">
+                                    <controls:RequirementView DataContext="{Binding .}"
+                                                              TypeChange="RequirementView_TypeChange"
+                                                              local:AttachProperties.ValidablePathFormat="Options[{0}].Requirements[{1}]"
+                                                              local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
+                                                              Grid.Column="1"
+                                                              HorizontalAlignment="Stretch"
+                                                              HorizontalContentAlignment="Stretch">
                                         <local:AttachProperties.ValidablePathValues>
                                             <MultiBinding Converter="{StaticResource BindingListConverter}">
                                                 <Binding Path="(ItemsControl.AlternationIndex)"
@@ -126,7 +119,7 @@
                                                          RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
                                             </MultiBinding>
                                         </local:AttachProperties.ValidablePathValues>
-                                    </views:RequirementView>
+                                    </controls:RequirementView>
                                 </Grid>
                             </materialDesign:Card>
                         </DataTemplate>

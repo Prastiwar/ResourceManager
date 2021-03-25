@@ -1,13 +1,11 @@
 ﻿using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Validation;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace RPGDataEditor.Wpf.Views
+namespace RPGDataEditor.Wpf.Controls
 {
-    public partial class RequirementView : UserControl
+    public class RequirementView : UserControl
     {
         public delegate void ChangeTypeEventHandler(object sender, ChangeTypeEventArgs e);
 
@@ -21,12 +19,6 @@ namespace RPGDataEditor.Wpf.Views
 
             public PlayerRequirementModel Requirement { get; }
             public string TargetType { get; }
-        }
-
-        public RequirementView()
-        {
-            InitializeComponent();
-            DataContextChanged += RequirementView_DataContextChanged;
         }
 
         public static DependencyProperty ChangeTypeRequestProperty =
@@ -43,13 +35,6 @@ namespace RPGDataEditor.Wpf.Views
             set => SetValue(ChangeTypeCommandParameterProperty, value);
         }
 
-        public static DependencyProperty ValidableContextProperty =
-            DependencyProperty.Register(nameof(ValidableContext), typeof(IValidable), typeof(RequirementView));
-        public IValidable ValidableContext {
-            get => (IValidable)GetValue(ValidableContextProperty);
-            set => SetValue(ValidableContextProperty, value);
-        }
-
         public static readonly RoutedEvent TypeChangeEvent
             = EventManager.RegisterRoutedEvent("TypeChange", RoutingStrategy.Direct, typeof(ChangeTypeEventHandler), typeof(RequirementView));
 
@@ -58,36 +43,16 @@ namespace RPGDataEditor.Wpf.Views
             remove => RemoveHandler(SizeChangedEvent, value);
         }
 
-        private void RequirementView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) =>
-            SetRequirementPanel(DataContext as PlayerRequirementModel);
+        private ComboBox requirementTypeComboBox;
+        private ContentPresenter requirementContent;
 
-        private void QuestStage_Selected(object sender, SelectionChangedEventArgs e)
+        public override void OnApplyTemplate()
         {
-            if (e.AddedItems.Count > 0)
-            {
-                if (e.AddedItems[0] is ComboBoxItem selected)
-                {
-                    if (DataContext is QuestRequirement requirement)
-                    {
-                        requirement.Stage = (QuestStage)Enum.Parse(typeof(QuestStage), selected.Name.ToString());
-                    }
-                }
-            }
-        }
+            base.OnApplyTemplate();
+            requirementTypeComboBox = Template.FindName("RequirementTypeComboBox", this) as ComboBox;
+            requirementContent = Template.FindName("RequirementContent", this) as ContentPresenter;
 
-        private void SetRequirementPanel(PlayerRequirementModel model)
-        {
-            bool isDialogue = model is DialogueRequirement;
-            bool isQuest = model is QuestRequirement;
-            bool isItem = model is ItemRequirement;
-            RequirementType.SelectionChanged -= RequirementType_SelectionChanged;
-            RequirementType.SelectedIndex = isDialogue ? 0 :
-                                            isQuest ? 1 :
-                                            2;
-            RequirementType.SelectionChanged += RequirementType_SelectionChanged;
-            DialogueRequirementPanel.Visibility = isDialogue ? Visibility.Visible : Visibility.Collapsed;
-            QuestRequirementPanel.Visibility = isQuest ? Visibility.Visible : Visibility.Collapsed;
-            ItemRequirementPanel.Visibility = isItem ? Visibility.Visible : Visibility.Collapsed;
+            requirementTypeComboBox.SelectionChanged += RequirementType_SelectionChanged;
         }
 
         private void RequirementType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -101,8 +66,17 @@ namespace RPGDataEditor.Wpf.Views
                         RoutedEvent = TypeChangeEvent
                     };
                     RaiseEvent(changeTypeArgs);
+                    ApplyRequirementContent(selected.Name);
                 }
             }
         }
+
+        protected virtual void ApplyRequirementContent(string name)
+        {
+            object content = GetRequirementContent(name);
+            requirementContent.Content = content;
+        }
+
+        protected virtual object GetRequirementContent(string name) => Application.Current.TryFindResource(name + "RequirementContent");
     }
 }

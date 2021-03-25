@@ -32,9 +32,9 @@
         </ComboBox>
         <StackPanel x:Name="EntityInteractQuestTaskPanel"
                     Visibility="Collapsed">
-            <views:ItemPicker PickedId="{Binding Entity}"
-                              Resource="Npc"
-                              Margin="5" />
+            <controls:ResourcePicker PickedId="{Binding Entity}"
+                                     Resource="Npc"
+                                     Margin="5" />
         </StackPanel>
         <StackPanel x:Name="KillQuestTaskPanel"
                     Visibility="Collapsed">
@@ -114,9 +114,9 @@
         </StackPanel>
         <StackPanel x:Name="DialogueQuestTaskPanel"
                     Visibility="Collapsed">
-            <views:ItemPicker PickedId="{Binding DialogueId}"
-                              Resource="Dialogue"
-                              Margin="5" />
+            <controls:ResourcePicker PickedId="{Binding DialogueId}"
+                                     Resource="Dialogue"
+                                     Margin="5" />
         </StackPanel>
     </StackPanel>
 </UserControl>

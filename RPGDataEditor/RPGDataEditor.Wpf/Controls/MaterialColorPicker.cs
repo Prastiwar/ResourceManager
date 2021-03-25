@@ -6,24 +6,34 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace RPGDataEditor.Wpf.Views
+namespace RPGDataEditor.Wpf.Controls
 {
-    public partial class MaterialColorPicker : UserControl
+    public class MaterialColorPicker : UserControl
     {
-        public MaterialColorPicker()
-        {
-            InitializeComponent();
-            Picker.SetBinding(ColorPicker.ColorProperty, new Binding("Color") { Source = this, Mode = BindingMode.TwoWay });
-            HexTextBox.Text = GetColor();
-        }
-
-        private bool isTextBoxInput;
-
         public static DependencyProperty ColorProperty = DependencyProperty.Register(nameof(Color), typeof(Color), typeof(MaterialColorPicker), new PropertyMetadata(Colors.Black, OnColorChanged));
         private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as MaterialColorPicker).Picker_ColorChanged((Color)e.NewValue);
         public Color Color {
             get => (Color)GetValue(ColorProperty);
             set => SetValue(ColorProperty, value);
+        }
+
+        private ColorPicker picker;
+        private TextBox hexTextBox;
+        private Button colorButton;
+
+        private bool isTextBoxInput;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            picker = Template.FindName("Picker", this) as ColorPicker;
+            hexTextBox = Template.FindName("HexTextBox", this) as TextBox;
+            colorButton = Template.FindName("ColorButton", this) as Button;
+
+            picker.SetBinding(ColorPicker.ColorProperty, new Binding("Color") { Source = this, Mode = BindingMode.TwoWay });
+            hexTextBox.TextChanged += HexTextBox_TextChanged;
+            hexTextBox.Text = GetColor();
+            colorButton.Click += Button_Click;
         }
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -36,18 +46,18 @@ namespace RPGDataEditor.Wpf.Views
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-            => Picker.Visibility = Picker.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            => picker.Visibility = picker.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
 
         private void Picker_ColorChanged(Color newColor)
         {
             if (newColor.A == 0)
             {
-                Picker.Color = Color.Add(newColor, Colors.Black);
+                picker.Color = Color.Add(newColor, Colors.Black);
             }
-            Picker.Color = newColor;
+            picker.Color = newColor;
             if (!isTextBoxInput)
             {
-                HexTextBox.Text = GetColor();
+                hexTextBox.Text = GetColor();
             }
         }
 
@@ -56,8 +66,8 @@ namespace RPGDataEditor.Wpf.Views
             isTextBoxInput = true;
             try
             {
-                Color c = (Color)ColorConverter.ConvertFromString(HexTextBox.Text);
-                Picker.Color = c;
+                Color c = (Color)ColorConverter.ConvertFromString(hexTextBox.Text);
+                picker.Color = c;
             }
             catch (Exception)
             {
@@ -68,9 +78,9 @@ namespace RPGDataEditor.Wpf.Views
         private string GetColor()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0:X2}", Picker.Color.R);
-            sb.AppendFormat("{0:X2}", Picker.Color.G);
-            sb.AppendFormat("{0:X2}", Picker.Color.B);
+            sb.AppendFormat("#{0:X2}", picker.Color.R);
+            sb.AppendFormat("{0:X2}", picker.Color.G);
+            sb.AppendFormat("{0:X2}", picker.Color.B);
             return sb.ToString();
         }
     }

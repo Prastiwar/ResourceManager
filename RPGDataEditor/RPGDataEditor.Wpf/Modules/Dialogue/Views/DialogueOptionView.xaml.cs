@@ -68,7 +68,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             }
         }
 
-        private void RequirementView_TypeChange(object sender, Wpf.Views.RequirementView.ChangeTypeEventArgs e)
+        private void RequirementView_TypeChange(object sender, Controls.RequirementView.ChangeTypeEventArgs e)
         {
             if (DataContext is DialogueOptionModel model)
             {

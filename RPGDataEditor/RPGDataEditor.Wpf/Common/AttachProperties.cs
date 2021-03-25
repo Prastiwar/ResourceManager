@@ -1,6 +1,7 @@
 ﻿using RPGDataEditor.Core.Validation;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf
 {
@@ -25,5 +26,17 @@ namespace RPGDataEditor.Wpf
             DependencyProperty.RegisterAttached("ValidablePathValues", typeof(IList<object>), typeof(AttachProperties));
         public static void SetValidablePathValues(UIElement element, IList<object> value) => element.SetValue(ValidablePathValuesProperty, value);
         public static IList<object> GetValidablePathValues(UIElement element) => (IList<object>)element.GetValue(ValidablePathValuesProperty);
+
+        public static readonly DependencyProperty AlternationIndexProperty =
+            DependencyProperty.RegisterAttached("AlternationIndex", typeof(int), typeof(AttachProperties), new PropertyMetadata(-1));
+        public static int GetAlternationIndex(UIElement element)
+        {
+            if (element is ListBoxItem)
+            {
+                return ItemsControl.GetAlternationIndex(element);
+            }
+            // TODO: Find ancestor of type ListBoxItem
+            return ItemsControl.GetAlternationIndex(element);
+        }
     }
 }

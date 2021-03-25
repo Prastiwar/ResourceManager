@@ -1,7 +1,7 @@
 using Prism;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
-using RPGDataEditor.Wpf.Views;
+using RPGDataEditor.Wpf.Controls;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf

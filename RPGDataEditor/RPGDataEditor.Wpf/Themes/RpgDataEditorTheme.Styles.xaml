@@ -1,0 +1,70 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:prism="http://prismlibrary.com/"
+                    xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Style TargetType="UserControl"
+           x:Key="DefaultMaterialControlStyle">
+        <Style.Setters>
+            <Setter Property="prism:ViewModelLocator.AutoWireViewModel"
+                    Value="True" />
+            <Setter Property="FontFamily"
+                    Value="{DynamicResource MaterialDesignFont}" />
+            <Setter Property="TextElement.Foreground"
+                    Value="{DynamicResource MaterialDesignBody}" />
+            <Setter Property="TextElement.FontWeight"
+                    Value="Regular" />
+            <Setter Property="TextElement.FontSize"
+                    Value="13" />
+            <Setter Property="TextOptions.TextFormattingMode"
+                    Value="Ideal" />
+            <Setter Property="TextOptions.TextRenderingMode"
+                    Value="Auto" />
+            <Setter Property="Background"
+                    Value="#424242" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
+           TargetType="{x:Type controls:ExpandButton}">
+        <Style.Setters>
+            <Setter Property="Content"
+                    Value="{materialDesign:PackIcon Kind=None, Size=14}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
+           TargetType="{x:Type Button}"
+           x:Key="DeleteFlatButtonStyle">
+        <Style.Setters>
+            <Setter Property="Content"
+                    Value="{materialDesign:PackIcon Kind=Delete, Size=14}" />
+            <Setter Property="CommandParameter"
+                    Value="{Binding .}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
+           TargetType="{x:Type Button}"
+           x:Key="AddFlatButtonStyle">
+        <Style.Setters>
+            <Setter Property="Content"
+                    Value="{materialDesign:PackIcon Kind=Add, Size=14}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+        </Style.Setters>
+    </Style>
+</ResourceDictionary>
