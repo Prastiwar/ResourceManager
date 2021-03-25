@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,7 +8,7 @@ using System.Windows.Markup;
 namespace RPGDataEditor.Wpf.Controls
 {
     [ContentProperty(nameof(TypesSource))]
-    public class ChangeableUserControl : UserControl
+    public abstract class ChangeableUserControl : UserControl
     {
         public delegate void ChangeTypeEventHandler(object sender, ChangeTypeEventArgs e);
 
@@ -67,32 +68,68 @@ namespace RPGDataEditor.Wpf.Controls
             base.OnApplyTemplate();
             typeComboBox = Template.FindName("TypeComboBox", this) as ComboBox;
             actualContent = Template.FindName("ActualContent", this) as ContentPresenter;
+            OnTemplateApplied();
+        }
 
+        protected virtual void OnTemplateApplied()
+        {
+            string name = GetDataContextItemName();
+            if (!string.IsNullOrEmpty(name))
+            {
+                ApplyActualContent(name);
+                typeComboBox.SelectedItem = typeComboBox.Items.Cast<object>().FirstOrDefault(item => CompareItem(item, name));
+            }
             typeComboBox.SelectionChanged += OnTypeComboBoxSelectionChanged;
         }
+
+        protected virtual bool CompareItem(object item, string name)
+        {
+            string str = null;
+            if (item is ComboBoxItem boxItem)
+            {
+                str = boxItem.Name;
+            }
+            else
+            {
+                str = item.ToString();
+            }
+            return name.CompareTo(str) == 0;
+        }
+
+        protected abstract string GetDataContextItemName();
+
+        protected virtual void ApplyActualContent(string name)
+        {
+            object content = GetActualContentResource(name);
+            if (content is DataTemplate template)
+            {
+                content = template.LoadContent();
+            }
+            actualContent.Content = content;
+        }
+
+        protected virtual object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "ChangeableContent");
 
         private void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
+                string name = null;
                 if (e.AddedItems[0] is ComboBoxItem selected)
                 {
-                    ChangeTypeCommand?.Execute(ChangeTypeCommandParameter);
-                    ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, selected.Name) {
-                        RoutedEvent = TypeChangeEvent
-                    };
-                    RaiseEvent(changeTypeArgs);
-                    ApplyActualContent(selected.Name);
+                    name = selected.Name;
                 }
+                else
+                {
+                    name = e.AddedItems[0].ToString();
+                }
+                ChangeTypeCommand?.Execute(ChangeTypeCommandParameter);
+                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, name) {
+                    RoutedEvent = TypeChangeEvent
+                };
+                RaiseEvent(changeTypeArgs);
+                ApplyActualContent(name);
             }
         }
-
-        protected virtual void ApplyActualContent(string name)
-        {
-            object content = GetActualContentResource(name);
-            actualContent.Content = content;
-        }
-
-        protected virtual object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "ChangeableContent");
     }
 }

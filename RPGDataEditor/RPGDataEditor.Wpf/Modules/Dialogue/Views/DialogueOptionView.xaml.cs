@@ -68,14 +68,14 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             }
         }
 
-        private void RequirementView_TypeChange(object sender, Controls.RequirementView.ChangeTypeEventArgs e)
+        private void RequirementView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
             if (DataContext is DialogueOptionModel model)
             {
                 PlayerRequirementModel newModel = e.CreateRequirement();
                 if (newModel != null)
                 {
-                    int index = model.Requirements.IndexOf(e.Requirement);
+                    int index = model.Requirements.IndexOf(e.Item as PlayerRequirementModel);
                     if (index > -1)
                     {
                         model.Requirements.RemoveAt(index);

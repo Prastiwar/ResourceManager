@@ -3,7 +3,7 @@
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
     <ControlTemplate TargetType="{x:Type controls:ChangeableUserControl}"
-                     x:Key="RequirementViewTemplate">
+                     x:Key="ChangeableUserControlTemplate" >
         <StackPanel>
             <ComboBox x:Name="TypeComboBox"
                       materialDesign:HintAssist.Hint="{TemplateBinding HintText}"
@@ -14,6 +14,10 @@
         </StackPanel>
     </ControlTemplate>
     <Style TargetType="{x:Type controls:ChangeableUserControl}">
+        <Setter Property="Template"
+                Value="{StaticResource ChangeableUserControlTemplate}" />
+    </Style>
+    <Style TargetType="{x:Type controls:RequirementView}">
         <Setter Property="Template"
                 Value="{StaticResource ChangeableUserControlTemplate}" />
     </Style>

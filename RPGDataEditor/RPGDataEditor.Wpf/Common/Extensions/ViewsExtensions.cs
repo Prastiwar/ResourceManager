@@ -8,7 +8,7 @@ namespace RPGDataEditor.Wpf
 {
     public static class ViewsExtensions
     {
-        public static PlayerRequirementModel CreateRequirement(this RequirementView.ChangeTypeEventArgs e)
+        public static PlayerRequirementModel CreateRequirement(this ChangeableUserControl.ChangeTypeEventArgs e)
         {
             if (Application.Current is PrismApplicationBase prismApp)
             {

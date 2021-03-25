@@ -16,14 +16,14 @@ namespace RPGDataEditor.Wpf.Quest.Views
             Commands.ToggleExpandIcon(btn);
         }
 
-        private void RequirementView_TypeChange(object sender, Controls.RequirementView.ChangeTypeEventArgs e)
+        private void RequirementView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
             if (DataContext is ModelDialogViewModel<QuestModel> vm)
             {
                 PlayerRequirementModel newModel = e.CreateRequirement();
                 if (newModel != null)
                 {
-                    int index = vm.Model.Requirements.IndexOf(e.Requirement);
+                    int index = vm.Model.Requirements.IndexOf(e.Item as PlayerRequirementModel);
                     if (index > -1)
                     {
                         vm.Model.Requirements.RemoveAt(index);
