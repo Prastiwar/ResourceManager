@@ -76,12 +76,8 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <controls:ExpandButton ExpandableElement="{x:Reference OptionsListView}"/>
-                            <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Command="{Binding AddOptionCommand}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <Button Command="{Binding AddOptionCommand}"
+                                    Style="{DynamicResource AddFlatButtonStyle}" />
                             <TextBlock Text="{Binding ItemsSource.Count, ElementName=OptionsListView, StringFormat='({0}) Options'}"
                                        Margin="5" />
                         </StackPanel>
@@ -100,13 +96,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Button Content="{materialDesign:PackIcon Kind=Delete}"
-                                                    Command="{Binding DataContext.RemoveOptionCommand, Source={x:Reference MainGrid}}"
+                                            <Button Command="{Binding DataContext.RemoveOptionCommand, Source={x:Reference MainGrid}}"
                                                     CommandParameter="{Binding .}"
                                                     VerticalAlignment="Top"
-                                                    Style="{DynamicResource MaterialDesignFlatButton}"
-                                                    Padding="0"
-                                                    Margin="0,12,0,0" />
+                                                    Margin="0,12,0,0"
+                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
                                             <dialogueViews:DialogueOptionView DataContext="{Binding .}"
                                                                               Grid.Column="1"
                                                                               HorizontalAlignment="Stretch"
@@ -125,12 +119,8 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <controls:ExpandButton ExpandableElement="{x:Reference RequirementsListView}" />
-                            <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                    Width="16"
-                                    Height="16"
-                                    Padding="0"
-                                    Command="{Binding AddRequirementCommand}"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                            <Button Command="{Binding AddRequirementCommand}"
+                                    Style="{DynamicResource AddFlatButtonStyle}" />
                             <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
                                        Margin="5" />
                         </StackPanel>
@@ -150,13 +140,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Button Content="{materialDesign:PackIcon Kind=Delete}"
-                                                    Command="{Binding DataContext.RemoveRequirementCommand, Source={x:Reference MainGrid}}"
+                                            <Button Command="{Binding DataContext.RemoveRequirementCommand, Source={x:Reference MainGrid}}"
                                                     CommandParameter="{Binding .}"
                                                     VerticalAlignment="Top"
-                                                    Style="{DynamicResource MaterialDesignFlatButton}"
-                                                    Padding="0"
-                                                    Margin="0,12,0,0" />
+                                                    Margin="0,12,0,0"
+                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
                                             <controls:RequirementView DataContext="{Binding .}"
                                                                       Grid.Column="1"
                                                                       TypeChange="RequirementView_TypeChange"

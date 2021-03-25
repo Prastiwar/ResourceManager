@@ -27,8 +27,6 @@
     <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
            TargetType="{x:Type controls:ExpandButton}">
         <Style.Setters>
-            <Setter Property="Content"
-                    Value="{materialDesign:PackIcon Kind=None, Size=14}" />
             <Setter Property="Padding"
                     Value="0" />
             <Setter Property="Width"
@@ -41,8 +39,14 @@
            TargetType="{x:Type Button}"
            x:Key="DeleteFlatButtonStyle">
         <Style.Setters>
-            <Setter Property="Content"
-                    Value="{materialDesign:PackIcon Kind=Delete, Size=14}" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <materialDesign:PackIcon Kind="Delete"
+                                                 FontSize="14" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="CommandParameter"
                     Value="{Binding .}" />
             <Setter Property="Padding"
@@ -57,8 +61,14 @@
            TargetType="{x:Type Button}"
            x:Key="AddFlatButtonStyle">
         <Style.Setters>
-            <Setter Property="Content"
-                    Value="{materialDesign:PackIcon Kind=Add, Size=14}" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <materialDesign:PackIcon Kind="Add"
+                                                 FontSize="14"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Padding"
                     Value="0" />
             <Setter Property="Width"

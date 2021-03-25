@@ -109,14 +109,10 @@
                             <StackPanel Grid.Column="1"
                                         Orientation="Horizontal"
                                         Visibility="{Binding IsEnabled, ElementName=ExpandMovementTypeButton, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                        Width="16"
-                                        Height="16"
-                                        Padding="0"
-                                        Margin="5,0,0,5"
+                                <Button Margin="5,0,0,5"
                                         VerticalAlignment="Bottom"
                                         Command="{Binding AddPathCommand}"
-                                        Style="{DynamicResource MaterialDesignFlatButton}" />
+                                        Style="{DynamicResource AddFlatButtonStyle}" />
                                 <TextBlock Text="{Binding PathsCount, StringFormat='({0})'}"
                                            VerticalAlignment="Bottom"
                                            Margin="5,2,2,5" />
@@ -144,13 +140,11 @@
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Button Content="{materialDesign:PackIcon Kind=Delete}"
-                                                    Command="{Binding DataContext.RemovePathCommand, ElementName=MainGrid}"
+                                            <Button Command="{Binding DataContext.RemovePathCommand, ElementName=MainGrid}"
                                                     CommandParameter="{Binding .}"
                                                     VerticalAlignment="Top"
-                                                    Style="{DynamicResource MaterialDesignFlatButton}"
-                                                    Padding="0"
-                                                    Margin="0,12,0,0" />
+                                                    Margin="0,12,0,0"
+                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
                                             <controls:BlockPosField Position="{Binding .}"
                                                                     Grid.Column="1"
                                                                     HorizontalAlignment="Stretch"
@@ -204,16 +198,12 @@
                                         <StackPanel Orientation="Horizontal">
                                             <controls:ExpandButton Margin="5,0,0,2"
                                                                    ExpandableElement="{x:Reference TradeItemListView}" />
-                                            <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                                    Width="16"
-                                                    Height="16"
-                                                    Padding="0"
-                                                    Margin="5,0,0,4"
+                                            <Button Margin="5,0,0,4"
                                                     VerticalAlignment="Bottom"
                                                     Command="{Binding DataContext.AddTradeItemCommand, ElementName=MainGrid}"
                                                     DataContext="{Binding Job}"
                                                     CommandParameter="{Binding Items}"
-                                                    Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                    Style="{DynamicResource AddFlatButtonStyle}" />
                                             <TextBlock Text="{Binding ItemsSource.Count, ElementName=TradeItemListView, StringFormat='({0}) Trade items'}"
                                                        VerticalAlignment="Bottom"
                                                        Margin="5,2,2,5" />
@@ -240,15 +230,13 @@
                                                                                        VerticalAlignment="Bottom"
                                                                                        ExpandableElement="{x:Reference TradeItemPanel}" />
                                                                 <Button x:Name="DeleteTradeItemButton"
-                                                                        Content="{materialDesign:PackIcon Kind=Delete}"
                                                                         Grid.Column="1"
                                                                         Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
                                                                         Command="{Binding DataContext.RemoveTradeItemCommand, ElementName=MainGrid}"
                                                                         CommandParameter="{Binding ., ElementName=DeleteTradeItemButton}"
                                                                         VerticalAlignment="Top"
-                                                                        Style="{DynamicResource MaterialDesignFlatButton}"
-                                                                        Padding="0"
-                                                                        Margin="0,12,0,0" />
+                                                                        Margin="0,12,0,0"
+                                                                        Style="{StaticResource DeleteFlatButtonStyle}" />
                                                                 <TextBlock Text="{Binding Item}"
                                                                            Grid.Column="2"
                                                                            VerticalAlignment="Bottom"
@@ -527,14 +515,12 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Button x:Name="DeleteItemButton"
-                                                    Content="{materialDesign:PackIcon Kind=Delete}"
                                                     Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
                                                     Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
                                                     CommandParameter="{Binding ., ElementName=DeleteItemButton}"
                                                     VerticalAlignment="Top"
-                                                    Style="{DynamicResource MaterialDesignFlatButton}"
-                                                    Padding="0"
-                                                    Margin="0,12,0,0" />
+                                                    Margin="0,12,0,0"
+                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
                                             <TextBox Grid.Column="1"
                                                      Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      Margin="5"
@@ -586,16 +572,12 @@
                                     <StackPanel Orientation="Horizontal">
                                         <controls:ExpandButton Margin="5,0,0,2"
                                                                ExpandableElement="{x:Reference InteractLinesListView}" />
-                                        <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Margin="5,0,0,5"
+                                        <Button Margin="5,0,0,5"
                                                 VerticalAlignment="Bottom"
                                                 Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
                                                 DataContext="{Binding TalkData}"
                                                 CommandParameter="{Binding InteractLines}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                Style="{DynamicResource AddFlatButtonStyle}" />
                                         <TextBlock Text="{Binding ItemsSource.Count, ElementName=InteractLinesListView, StringFormat='({0}) Interact Lines'}"
                                                    VerticalAlignment="Bottom"
                                                    Margin="5,2,2,5" />
@@ -614,16 +596,12 @@
                                     <StackPanel Orientation="Horizontal">
                                         <controls:ExpandButton Margin="5,0,0,2"
                                                                ExpandableElement="{x:Reference DeathLinesListView}" />
-                                        <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Margin="5,0,0,5"
+                                        <Button Margin="5,0,0,5"
                                                 VerticalAlignment="Bottom"
                                                 Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
                                                 DataContext="{Binding TalkData}"
                                                 CommandParameter="{Binding DeathLines}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                Style="{DynamicResource AddFlatButtonStyle}" />
                                         <TextBlock Text="{Binding ItemsSource.Count, ElementName=DeathLinesListView, StringFormat='({0}) Death Lines'}"
                                                    VerticalAlignment="Bottom"
                                                    Margin="5,2,2,5" />
@@ -642,16 +620,12 @@
                                     <StackPanel Orientation="Horizontal">
                                         <controls:ExpandButton Margin="5,0,0,2"
                                                                ExpandableElement="{x:Reference HurtLinesListView}" />
-                                        <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Margin="5,0,0,5"
+                                        <Button Margin="5,0,0,5"
                                                 VerticalAlignment="Bottom"
                                                 Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
                                                 DataContext="{Binding TalkData}"
                                                 CommandParameter="{Binding HurtLines}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                Style="{DynamicResource AddFlatButtonStyle}" />
                                         <TextBlock Text="{Binding ItemsSource.Count, ElementName=HurtLinesListView, StringFormat='({0}) Hurt Lines'}"
                                                    VerticalAlignment="Bottom"
                                                    Margin="5,2,2,5" />
@@ -670,16 +644,12 @@
                                     <StackPanel Orientation="Horizontal">
                                         <controls:ExpandButton Margin="5,0,0,2"
                                                                ExpandableElement="{x:Reference InitationDialoguesListView}" />
-                                        <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                                                Width="16"
-                                                Height="16"
-                                                Padding="0"
-                                                Margin="5,0,0,5"
+                                        <Button Margin="5,0,0,5"
                                                 VerticalAlignment="Bottom"
                                                 Command="{Binding DataContext.AddDialogueIdCommand, ElementName=MainGrid}"
                                                 DataContext="{Binding TalkData}"
                                                 CommandParameter="{Binding InitationDialogues}"
-                                                Style="{DynamicResource MaterialDesignFlatButton}" />
+                                                Style="{DynamicResource AddFlatButtonStyle}" />
                                         <TextBlock Text="{Binding ItemsSource.Count, ElementName=InitationDialoguesListView, StringFormat='({0}) Initation Dialogues'}"
                                                    VerticalAlignment="Bottom"
                                                    Margin="5,2,2,5" />
@@ -700,14 +670,12 @@
                                                             <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Button x:Name="DeleteItemButton"
-                                                                Content="{materialDesign:PackIcon Kind=Delete}"
                                                                 Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
                                                                 Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
                                                                 CommandParameter="{Binding ., ElementName=DeleteItemButton}"
                                                                 VerticalAlignment="Top"
-                                                                Style="{DynamicResource MaterialDesignFlatButton}"
                                                                 Margin="5,0,5,0"
-                                                                Padding="0" />
+                                                                Style="{StaticResource DeleteFlatButtonStyle}" />
                                                         <controls:ResourcePicker Grid.Column="1"
                                                                                  VerticalAlignment="Center"
                                                                                  Resource="Dialogue"

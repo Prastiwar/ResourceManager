@@ -72,12 +72,8 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <controls:ExpandButton ExpandableElement="{x:Reference RequirementsListView}" />
-                    <Button Content="{materialDesign:PackIcon Kind=Add, Size=14}"
-                            Width="16"
-                            Height="16"
-                            Padding="0"
-                            Click="AddRequirement"
-                            Style="{DynamicResource MaterialDesignFlatButton}" />
+                    <Button Click="AddRequirement"
+                            Style="{DynamicResource AddFlatButtonStyle}" />
                     <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
                                Margin="5" />
                 </StackPanel>
@@ -96,13 +92,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Content="{materialDesign:PackIcon Kind=Delete}"
-                                            Click="RemoveRequirement"
+                                    <Button Click="RemoveRequirement"
                                             CommandParameter="{Binding .}"
                                             VerticalAlignment="Top"
-                                            Style="{DynamicResource MaterialDesignFlatButton}"
-                                            Padding="0"
-                                            Margin="0,12,0,0" />
+                                            Margin="0,12,0,0"
+                                            Style="{StaticResource DeleteFlatButtonStyle}" />
                                     <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
                                     <controls:RequirementView DataContext="{Binding .}"
                                                               TypeChange="RequirementView_TypeChange"
