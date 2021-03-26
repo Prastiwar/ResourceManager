@@ -62,10 +62,11 @@
                     <StackPanel>
                         <TextBlock Text="Choose completion task"
                                    Margin="5" />
-                        <questViews:QuestTaskView DataContext="{Binding CompletionTask, Mode=TwoWay}"
-                                                  Grid.Column="1"
-                                                  HorizontalAlignment="Stretch"
-                                                  HorizontalContentAlignment="Stretch" />
+                        <controls:QuestTaskView DataContext="{Binding CompletionTask, Mode=TwoWay}"
+                                                TypeChange="CompletionQuestTaskView_TypeChange"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Stretch" />
                     </StackPanel>
                 </materialDesign:Card>
                 <materialDesign:Card HorizontalAlignment="Stretch"
@@ -102,20 +103,20 @@
                                                     VerticalAlignment="Top"
                                                     Margin="0,12,0,0"
                                                     Style="{StaticResource DeleteFlatButtonStyle}" />
-                                            <!--TypeChange="QuestTaskView_TypeChange"-->
-                                            <questViews:QuestTaskView DataContext="{Binding .}"
-                                                                      Grid.Column="1"
-                                                                      local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
-                                                                      local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListView}"
-                                                                      HorizontalAlignment="Stretch"
-                                                                      HorizontalContentAlignment="Stretch">
+                                            <controls:QuestTaskView DataContext="{Binding .}"
+                                                                    TypeChange="QuestTaskViewList_TypeChange"
+                                                                    Grid.Column="1"
+                                                                    local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
+                                                                    local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListView}"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    HorizontalContentAlignment="Stretch">
                                                 <local:AttachProperties.ValidablePathValues>
                                                     <MultiBinding Converter="{StaticResource BindingListConverter}">
                                                         <Binding Path="(ItemsControl.AlternationIndex)"
                                                                  RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
                                                     </MultiBinding>
                                                 </local:AttachProperties.ValidablePathValues>
-                                            </questViews:QuestTaskView>
+                                            </controls:QuestTaskView>
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>

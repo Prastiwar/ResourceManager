@@ -20,7 +20,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
         {
             if (DataContext is ModelDialogViewModel<DialogueModel> vm)
             {
-                PlayerRequirementModel newModel = e.CreateRequirement();
+                PlayerRequirementModel newModel = e.CreateModel<PlayerRequirementModel>();
                 if (newModel != null)
                 {
                     int index = vm.Model.Requirements.IndexOf(e.Item as PlayerRequirementModel);

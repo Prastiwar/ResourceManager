@@ -8,11 +8,11 @@ namespace RPGDataEditor.Wpf
 {
     public static class ViewsExtensions
     {
-        public static PlayerRequirementModel CreateRequirement(this ChangeableUserControl.ChangeTypeEventArgs e)
+        public static TModel CreateModel<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e) where TModel : ObservableModel
         {
             if (Application.Current is PrismApplicationBase prismApp)
             {
-                if (prismApp.Container.Resolve(typeof(IModelProvider<PlayerRequirementModel>)) is IModelProvider<PlayerRequirementModel> provider)
+                if (prismApp.Container.Resolve(typeof(IModelProvider<TModel>)) is IModelProvider<TModel> provider)
                 {
                     return provider.CreateModel(e.TargetType);
                 }

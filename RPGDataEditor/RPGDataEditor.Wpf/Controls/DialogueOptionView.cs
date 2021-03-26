@@ -79,7 +79,7 @@ namespace RPGDataEditor.Wpf.Controls
         {
             if (DataContext is DialogueOptionModel model)
             {
-                PlayerRequirementModel newModel = e.CreateRequirement();
+                PlayerRequirementModel newModel = e.CreateModel<PlayerRequirementModel>();
                 if (newModel != null)
                 {
                     int index = model.Requirements.IndexOf(e.Item as PlayerRequirementModel);

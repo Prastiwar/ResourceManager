@@ -20,7 +20,7 @@ namespace RPGDataEditor.Wpf.Quest.Views
         {
             if (DataContext is ModelDialogViewModel<QuestModel> vm)
             {
-                PlayerRequirementModel newModel = e.CreateRequirement();
+                PlayerRequirementModel newModel = e.CreateModel<PlayerRequirementModel>();
                 if (newModel != null)
                 {
                     int index = vm.Model.Requirements.IndexOf(e.Item as PlayerRequirementModel);
@@ -38,26 +38,38 @@ namespace RPGDataEditor.Wpf.Quest.Views
             }
         }
 
-        //private void QuestTaskView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
-        //{
-        //    if (DataContext is ModelDialogViewModel<QuestModel> vm)
-        //    {
-        //        QuestTask newModel = e.CreateQuestTask();
-        //        if (newModel != null)
-        //        {
-        //            int index = vm.Model.Tasks.IndexOf(e.Item as QuestTask);
-        //            if (index > -1)
-        //            {
-        //                vm.Model.Tasks.RemoveAt(index);
-        //                vm.Model.Tasks.Insert(index, newModel);
-        //            }
-        //            ICollectionView view = CollectionViewSource.GetDefaultView(TasksListView.ItemsSource);
-        //            if (view != null)
-        //            {
-        //                view.Refresh();
-        //            }
-        //        }
-        //    }
-        //}
+        private void QuestTaskViewList_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
+        {
+            if (DataContext is ModelDialogViewModel<QuestModel> vm)
+            {
+                QuestTask newModel = e.CreateModel<QuestTask>();
+                if (newModel != null)
+                {
+                    int index = vm.Model.Tasks.IndexOf(e.Item as QuestTask);
+                    if (index > -1)
+                    {
+                        vm.Model.Tasks.RemoveAt(index);
+                        vm.Model.Tasks.Insert(index, newModel);
+                    }
+                    ICollectionView view = CollectionViewSource.GetDefaultView(TasksListView.ItemsSource);
+                    if (view != null)
+                    {
+                        view.Refresh();
+                    }
+                }
+            }
+        }
+
+        private void CompletionQuestTaskView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
+        {
+            if (DataContext is ModelDialogViewModel<QuestModel> vm)
+            {
+                QuestTask newModel = e.CreateModel<QuestTask>();
+                if (newModel != null)
+                {
+                    vm.Model.CompletionTask = newModel;
+                }
+            }
+        }
     }
 }

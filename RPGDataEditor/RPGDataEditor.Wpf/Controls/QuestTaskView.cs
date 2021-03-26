@@ -11,7 +11,6 @@ namespace RPGDataEditor.Wpf.Controls
             "LeftBlockInteract",
             "RightBlockInteract",
             "RightItemInteract",
-            "LeftItemInteract",
             "Dialogue"
         };
 
