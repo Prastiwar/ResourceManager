@@ -1,7 +1,5 @@
 ﻿using RPGDataEditor.Core.Models;
-using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Dialogue.Views
 {
@@ -12,12 +10,6 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
             InitializeComponent();
             DataContextChanged += DialogueOptionView_DataContextChanged;
             TypeComboBox.SelectionChanged += OptionType_Selected;
-        }
-
-        private void ToggleExpandIcon(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            Commands.ToggleExpandIcon(btn);
         }
 
         private void DialogueOptionView_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
@@ -72,21 +64,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
         {
             if (DataContext is DialogueOptionModel model)
             {
-                PlayerRequirementModel newModel = e.CreateModel<PlayerRequirementModel>();
-                if (newModel != null)
-                {
-                    int index = model.Requirements.IndexOf(e.Item as PlayerRequirementModel);
-                    if (index > -1)
-                    {
-                        model.Requirements.RemoveAt(index);
-                        model.Requirements.Insert(index, newModel);
-                    }
-                    ICollectionView view = CollectionViewSource.GetDefaultView(RequirementsListView.ItemsSource);
-                    if (view != null)
-                    {
-                        view.Refresh();
-                    }
-                }
+                e.ChangeTypeInList(model.Requirements, RequirementsListView);
             }
         }
     }

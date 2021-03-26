@@ -18,14 +18,7 @@ namespace RPGDataEditor.Wpf.Views
             tagDpd.AddValueChanged(CategoryModelList, OnModelListTagBindingChanged);
         }
 
-        private void OnModelListTagBindingChanged(object sender, EventArgs e)
-        {
-            ICollectionView view = CollectionViewSource.GetDefaultView(CategoryModelList.ItemsSource);
-            if (view != null)
-            {
-                view.Refresh();
-            }
-        }
+        private void OnModelListTagBindingChanged(object sender, EventArgs e) => CategoryModelList.Refresh();
 
         private void OnModelListBindingChanged(object sender, EventArgs e)
         {

@@ -7,12 +7,6 @@ namespace RPGDataEditor.Wpf.Npc.Views
     {
         public NpcDataModelEditor() => InitializeComponent();
 
-        private void ToggleExpandIcon(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            Commands.ToggleExpandIcon(btn);
-        }
-
         private void JobComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)

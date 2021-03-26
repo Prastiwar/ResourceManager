@@ -1,7 +1,5 @@
 ﻿using RPGDataEditor.Core.Models;
-using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Controls
 {
@@ -79,21 +77,7 @@ namespace RPGDataEditor.Wpf.Controls
         {
             if (DataContext is DialogueOptionModel model)
             {
-                PlayerRequirementModel newModel = e.CreateModel<PlayerRequirementModel>();
-                if (newModel != null)
-                {
-                    int index = model.Requirements.IndexOf(e.Item as PlayerRequirementModel);
-                    if (index > -1)
-                    {
-                        model.Requirements.RemoveAt(index);
-                        model.Requirements.Insert(index, newModel);
-                    }
-                    ICollectionView view = CollectionViewSource.GetDefaultView(requirementsListView.ItemsSource);
-                    if (view != null)
-                    {
-                        view.Refresh();
-                    }
-                }
+                e.ChangeTypeInList(model.Requirements, requirementsListView);
             }
         }
     }

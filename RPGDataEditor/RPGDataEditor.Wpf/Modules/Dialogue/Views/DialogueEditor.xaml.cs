@@ -1,8 +1,6 @@
 ﻿using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
-using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Dialogue.Views
 {
@@ -10,31 +8,11 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
     {
         public DialogueEditor() => InitializeComponent();
 
-        private void ToggleExpandIcon(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            Commands.ToggleExpandIcon(btn);
-        }
-
         private void RequirementView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
             if (DataContext is ModelDialogViewModel<DialogueModel> vm)
             {
-                PlayerRequirementModel newModel = e.CreateModel<PlayerRequirementModel>();
-                if (newModel != null)
-                {
-                    int index = vm.Model.Requirements.IndexOf(e.Item as PlayerRequirementModel);
-                    if (index > -1)
-                    {
-                        vm.Model.Requirements.RemoveAt(index);
-                        vm.Model.Requirements.Insert(index, newModel);
-                    }
-                    ICollectionView view = CollectionViewSource.GetDefaultView(RequirementsListView.ItemsSource);
-                    if (view != null)
-                    {
-                        view.Refresh();
-                    }
-                }
+                e.ChangeTypeInList(vm.Model.Requirements, RequirementsListView);
             }
         }
     }
