@@ -50,6 +50,10 @@ namespace RPGDataEditor.Wpf.Controls
 
         private void Picker_ColorChanged(Color newColor)
         {
+            if (picker == null)
+            {
+                return;
+            }
             if (newColor.A == 0)
             {
                 picker.Color = Color.Add(newColor, Colors.Black);

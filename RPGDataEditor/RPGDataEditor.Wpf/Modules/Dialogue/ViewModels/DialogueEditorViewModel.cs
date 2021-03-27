@@ -10,11 +10,11 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 
         public override string Title => "Dialogue Editor";
 
-        public ICommand AddOptionCommand => Commands.AddListItemLiCommand(() => Model.Options);
+        public ICommand AddOptionCommand => Commands.AddListItemCommand(() => Model.Options);
 
         public ICommand RemoveOptionCommand => Commands.RemoveListItemLiCommand(() => Model.Options);
 
-        public ICommand AddRequirementCommand => Commands.AddListItemLiCommand(() => Model.Requirements, () => new DialogueRequirement());
+        public ICommand AddRequirementCommand => Commands.AddListItemCommand(() => Model.Requirements, () => new DialogueRequirement());
 
         public ICommand RemoveRequirementCommand => Commands.RemoveListItemLiCommand(() => Model.Requirements);
     }

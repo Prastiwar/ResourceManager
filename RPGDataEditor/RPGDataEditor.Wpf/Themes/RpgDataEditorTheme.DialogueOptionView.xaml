@@ -7,7 +7,7 @@
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
     <ControlTemplate TargetType="{x:Type controls:DialogueOptionView}"
                      x:Key="DialogueOptionViewTemplate">
-        <StackPanel x:Name="MainPanel">
+        <StackPanel>
             <StackPanel>
                 <ComboBox x:Name="TypeComboBox"
                           materialDesign:HintAssist.Hint="Type"
@@ -23,7 +23,7 @@
                     <ComboBoxItem Name="Quit"
                                   Content="Quit" />
                 </ComboBox>
-                <controls:ResourcePicker x:Name="DialogueOptionPanel"
+                <controls:ResourcePicker x:Name="NextDialoguePicker"
                                          Resource="Dialogue"
                                          PickedId="{Binding NextDialogId, Mode=TwoWay}"
                                          Margin="5"
@@ -73,9 +73,9 @@
                         <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
                                    Margin="5" />
                     </StackPanel>
+                              <!--AlternationCount="{StaticResource MaxIntValue}"-->
                     <ListView x:Name="RequirementsListView"
                               ItemsSource="{Binding Requirements}"
-                              AlternationCount="{StaticResource MaxIntValue}"
                               HorizontalAlignment="Stretch"
                               HorizontalContentAlignment="Stretch">
                         <ListView.ItemTemplate>

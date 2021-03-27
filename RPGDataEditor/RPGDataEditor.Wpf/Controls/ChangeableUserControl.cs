@@ -56,8 +56,8 @@ namespace RPGDataEditor.Wpf.Controls
             = EventManager.RegisterRoutedEvent("TypeChange", RoutingStrategy.Direct, typeof(ChangeTypeEventHandler), typeof(ChangeableUserControl));
 
         public event ChangeTypeEventHandler TypeChange {
-            add => AddHandler(SizeChangedEvent, value, false);
-            remove => RemoveHandler(SizeChangedEvent, value);
+            add => AddHandler(TypeChangeEvent, value, false);
+            remove => RemoveHandler(TypeChangeEvent, value);
         }
 
         private ComboBox typeComboBox;

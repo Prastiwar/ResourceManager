@@ -15,7 +15,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
 
         public override string Title => "Npc Editor";
 
-        public ICommand AddPathCommand => Commands.AddListItemLiCommand(() => Model.Paths);
+        public ICommand AddPathCommand => Commands.AddListItemCommand(() => Model.Paths);
         public ICommand RemovePathCommand => Commands.RemoveListItemLiCommand(() => Model.Paths);
         public int PathsCount => Model == null ? 0 : Model.Paths.Count;
 
@@ -24,7 +24,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
 
         public ICommand AddDialogueIdCommand => Commands.AddParameterListItemLiCommand<int>();
         
-        public ICommand AddTradeItemCommand => Commands.AddListItemLiCommand(() => ((TraderNpcJobModel)Model.Job).Items);
+        public ICommand AddTradeItemCommand => Commands.AddListItemCommand(() => ((TraderNpcJobModel)Model.Job).Items);
         public ICommand RemoveTradeItemCommand => Commands.RemoveItemFromListView();
 
         private double maxHealth;

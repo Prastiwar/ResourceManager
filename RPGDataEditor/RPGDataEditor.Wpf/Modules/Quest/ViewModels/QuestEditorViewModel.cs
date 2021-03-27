@@ -10,11 +10,11 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 
         public override string Title => "Quest Editor";
 
-        public ICommand AddTaskCommand => Commands.AddListItemLiCommand(() => Model.Tasks, () => new KillQuestTask());
+        public ICommand AddTaskCommand => Commands.AddListItemCommand(() => Model.Tasks, () => new KillQuestTask());
 
         public ICommand RemoveTaskCommand => Commands.RemoveListItemLiCommand(() => Model.Tasks);
 
-        public ICommand AddRequirementCommand => Commands.AddListItemLiCommand(() => Model.Requirements, () => new DialogueRequirement());
+        public ICommand AddRequirementCommand => Commands.AddListItemCommand(() => Model.Requirements, () => new DialogueRequirement());
 
         public ICommand RemoveRequirementCommand => Commands.RemoveListItemLiCommand(() => Model.Requirements);
     }

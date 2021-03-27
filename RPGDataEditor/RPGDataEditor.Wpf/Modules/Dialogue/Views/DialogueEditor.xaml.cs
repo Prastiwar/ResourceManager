@@ -12,7 +12,7 @@ namespace RPGDataEditor.Wpf.Dialogue.Views
         {
             if (DataContext is ModelDialogViewModel<DialogueModel> vm)
             {
-                e.ChangeTypeInList(vm.Model.Requirements, RequirementsListView);
+                //e.ChangeTypeInList(vm.Model.Requirements, RequirementsListView);
             }
         }
     }

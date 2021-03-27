@@ -75,7 +75,7 @@
                                      Padding="5">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <controls:ExpandButton ExpandableElement="{x:Reference OptionsListView}"/>
+                            <controls:ExpandButton ExpandableElement="{x:Reference OptionsListView}" />
                             <Button Command="{Binding AddOptionCommand}"
                                     Style="{DynamicResource AddFlatButtonStyle}" />
                             <TextBlock Text="{Binding ItemsSource.Count, ElementName=OptionsListView, StringFormat='({0}) Options'}"
@@ -101,10 +101,10 @@
                                                     VerticalAlignment="Top"
                                                     Margin="0,12,0,0"
                                                     Style="{StaticResource DeleteFlatButtonStyle}" />
-                                            <dialogueViews:DialogueOptionView DataContext="{Binding .}"
-                                                                              Grid.Column="1"
-                                                                              HorizontalAlignment="Stretch"
-                                                                              HorizontalContentAlignment="Stretch" />
+                                            <controls:DialogueOptionView DataContext="{Binding .}"
+                                                                         Grid.Column="1"
+                                                                         HorizontalAlignment="Stretch"
+                                                                         HorizontalContentAlignment="Stretch" />
                                         </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>
@@ -112,7 +112,13 @@
                         </ListView>
                     </StackPanel>
                 </materialDesign:Card>
-                <materialDesign:Card HorizontalAlignment="Stretch"
+                <controls:RequirementsListCard AddRequirementCommand="{Binding DataContext.AddRequirementCommand, RelativeSource={RelativeSource AncestorType=dialogueViews:DialogueEditor}}"
+                                               RemoveRequirementCommand="{Binding DataContext.RemoveRequirementCommand, RelativeSource={RelativeSource AncestorType=dialogueViews:DialogueEditor}}"
+                                               DataContext="{Binding Model}"
+                                               Requirements="{Binding Requirements}"
+                                               local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
+                                               local:AttachProperties.ValidableObject="{Binding Model}" />
+                <!--<materialDesign:Card HorizontalAlignment="Stretch"
                                      HorizontalContentAlignment="Center"
                                      Margin="5"
                                      Padding="5">
@@ -165,7 +171,7 @@
                             </ListView.ItemTemplate>
                         </ListView>
                     </StackPanel>
-                </materialDesign:Card>
+                </materialDesign:Card>-->
             </StackPanel>
         </ScrollViewer>
         <ContentPresenter Grid.Row="1"
