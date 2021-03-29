@@ -91,7 +91,7 @@
                                         <Button x:Name="RemoveButton"
                                                 VerticalAlignment="Top"
                                                 Margin="0,12,0,0"
-                                                Style="{StaticResource DeleteFlatButtonStyle}"/>
+                                                Style="{DynamicResource DeleteFlatButtonStyle}"/>
                                         <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
                                         <controls:RequirementView x:Name="RequirementView"
                                                                   Grid.Column="1"

@@ -1,5 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Prism.Ioc;
 using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Providers;
+using RPGDataEditor.Wpf.Converters;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,12 +56,24 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(RequirementItemTemplateProperty, value);
         }
 
+        public static DependencyProperty ValidablePathValuesBindingsProperty =
+            DependencyProperty.Register(nameof(ValidablePathValuesBindings), typeof(MultiBindingValue), typeof(RequirementsListCard));
+        public MultiBindingValue ValidablePathValuesBindings {
+            get => (MultiBindingValue)GetValue(ValidablePathValuesBindingsProperty);
+            set => SetValue(ValidablePathValuesBindingsProperty, value);
+        }
+
         private ListView requirementsListView;
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             requirementsListView = Template.FindName("RequirementsListView", this) as ListView;
+            OnTemplateApplied();
+        }
+
+        protected virtual void OnTemplateApplied()
+        {
             if (RequirementItemTemplate == null && GetBindingExpression(RequirementItemTemplateProperty) == null)
             {
                 RequirementItemTemplate = TemplateGenerator.CreateDataTemplate(() => CreateRequirementItemTemplate());
@@ -69,7 +84,8 @@ namespace RPGDataEditor.Wpf.Controls
             }
             if (AddRequirementCommand == null && GetBindingExpression(AddRequirementCommandProperty) == null)
             {
-                //AddRequirementCommand = Commands.AddListItemCommand(() => Requirements, );
+                IModelProvider<PlayerRequirementModel> modelProvider = RpgDataEditorApplication.Current.Container.Resolve<IModelProvider<PlayerRequirementModel>>();
+                AddRequirementCommand = Commands.AddListItemCommand(() => Requirements, () => modelProvider.CreateModel("Dialogue"));
             }
         }
 
@@ -89,21 +105,27 @@ namespace RPGDataEditor.Wpf.Controls
             Button removeRequirmentButton = new Button() {
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(0, 12, 0, 0),
-                Style = Application.Current.Resources.FindName("DeleteFlatButtonStyle") as Style
+                Style = FindResource("DeleteFlatButtonStyle") as Style
             };
             removeRequirmentButton.SetBinding(Button.CommandProperty, new Binding(nameof(RemoveRequirementCommand)) { Source = this });
             removeRequirmentButton.SetBinding(Button.CommandParameterProperty, new Binding("."));
             grid.Children.Add(removeRequirmentButton);
 
+            RequirementView requirementView = CreateRequirementView();
+            grid.Children.Add(requirementView);
+            Grid.SetColumn(requirementView, 1);
+            container.Content = grid;
+            return container;
+        }
+
+        protected virtual RequirementView CreateRequirementView()
+        {
             RequirementView requirementView = new RequirementView() {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch
             };
-            requirementView.SetBinding(DataContextProperty, new Binding(nameof(DataContext)) {
-                RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ListBoxItem), 1)
-            });
-            requirementView.SetBinding(RequirementView.ChangeTypeRequestProperty, new Binding(nameof(ChangeRequirementTypeCommand)) { Source = this });
-            requirementView.SetBinding(RequirementView.ChangeTypeCommandParameterProperty, new Binding(nameof(ChangeRequirementTypeCommandParameter)) { Source = this });
+            requirementView.SetBinding(ChangeableUserControl.ChangeTypeRequestProperty, new Binding(nameof(ChangeRequirementTypeCommand)) { Source = this });
+            requirementView.SetBinding(ChangeableUserControl.ChangeTypeCommandParameterProperty, new Binding(nameof(ChangeRequirementTypeCommandParameter)) { Source = this });
             requirementView.SetBinding(AttachProperties.ValidablePathFormatProperty, new Binding() {
                 Path = new PropertyPath(AttachProperties.ValidablePathFormatProperty),
                 Source = this
@@ -112,22 +134,14 @@ namespace RPGDataEditor.Wpf.Controls
                 Path = new PropertyPath(AttachProperties.ValidableObjectProperty),
                 Source = this
             });
+            requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, ValidablePathValuesBindings.ToMultiBinding(new BindingListConverter()));
+            // TODO: Set proper binding when ValidablePathValuesBindings is changed
+            //requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, new Binding(nameof(ValidablePathValuesBindings)) {
+            //    Source = this,
+            //    Converter = StaticValueConverter.Create((x) => x is MultiBindingValue value ? value.ToMultiBinding(new BindingListConverter()) : null, null)
+            //});
             requirementView.TypeChange += RequirementView_TypeChange;
-            //AttachProperties.SetValidablePathValues(requirementView);
-            grid.Children.Add(requirementView);
-            Grid.SetColumn(requirementView, 1);
-            container.Content = grid;
-            return container;
-            /*
-                 <controls:RequirementView>
-                     <local:AttachProperties.ValidablePathValues>
-                         <MultiBinding Converter="{StaticResource BindingListConverter}">
-                             <Binding Path="(ItemsControl.AlternationIndex)"
-                                      RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                         </MultiBinding>
-                     </local:AttachProperties.ValidablePathValues>
-                 </controls:RequirementView>
-             */
+            return requirementView;
         }
 
         protected virtual void RequirementView_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeTypeInList(Requirements, requirementsListView);

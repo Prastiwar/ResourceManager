@@ -123,11 +123,17 @@ namespace RPGDataEditor.Wpf.Controls
                 {
                     name = e.AddedItems[0].ToString();
                 }
-                ChangeTypeCommand?.Execute(ChangeTypeCommandParameter);
-                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, name) {
-                    RoutedEvent = TypeChangeEvent
-                };
-                RaiseEvent(changeTypeArgs);
+                if (ChangeTypeCommand != null)
+                {
+                    ChangeTypeCommand.Execute(ChangeTypeCommandParameter);
+                }
+                else
+                {
+                    ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, name) {
+                        RoutedEvent = TypeChangeEvent
+                    };
+                    RaiseEvent(changeTypeArgs);
+                }
                 ApplyActualContent(name);
             }
         }

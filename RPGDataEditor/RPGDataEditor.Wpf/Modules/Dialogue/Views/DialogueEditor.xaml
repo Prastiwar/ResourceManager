@@ -7,8 +7,6 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
-             xmlns:dialogueViews="clr-namespace:RPGDataEditor.Wpf.Dialogue.Views"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
@@ -100,7 +98,7 @@
                                                     CommandParameter="{Binding .}"
                                                     VerticalAlignment="Top"
                                                     Margin="0,12,0,0"
-                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
+                                                    Style="{DynamicResource DeleteFlatButtonStyle}" />
                                             <controls:DialogueOptionView DataContext="{Binding .}"
                                                                          Grid.Column="1"
                                                                          HorizontalAlignment="Stretch"
@@ -112,66 +110,18 @@
                         </ListView>
                     </StackPanel>
                 </materialDesign:Card>
-                <controls:RequirementsListCard AddRequirementCommand="{Binding DataContext.AddRequirementCommand, RelativeSource={RelativeSource AncestorType=dialogueViews:DialogueEditor}}"
-                                               RemoveRequirementCommand="{Binding DataContext.RemoveRequirementCommand, RelativeSource={RelativeSource AncestorType=dialogueViews:DialogueEditor}}"
+                <controls:RequirementsListCard x:Name="RequirementsCard"
                                                DataContext="{Binding Model}"
                                                Requirements="{Binding Requirements}"
                                                local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                               local:AttachProperties.ValidableObject="{Binding Model}" />
-                <!--<materialDesign:Card HorizontalAlignment="Stretch"
-                                     HorizontalContentAlignment="Center"
-                                     Margin="5"
-                                     Padding="5">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <controls:ExpandButton ExpandableElement="{x:Reference RequirementsListView}" />
-                            <Button Command="{Binding AddRequirementCommand}"
-                                    Style="{DynamicResource AddFlatButtonStyle}" />
-                            <TextBlock Text="{Binding ItemsSource.Count, ElementName=RequirementsListView, StringFormat='({0}) Requirements'}"
-                                       Margin="5" />
-                        </StackPanel>
-                        <ListView x:Name="RequirementsListView"
-                                  DataContext="{Binding Model}"
-                                  ItemsSource="{Binding Requirements}"
-                                  AlternationCount="{StaticResource MaxIntValue}"
-                                  HorizontalAlignment="Stretch"
-                                  HorizontalContentAlignment="Stretch">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <materialDesign:Card HorizontalAlignment="Stretch"
-                                                         HorizontalContentAlignment="Center"
-                                                         Padding="5">
-                                        <Grid HorizontalAlignment="Stretch">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Button Command="{Binding DataContext.RemoveRequirementCommand, Source={x:Reference MainGrid}}"
-                                                    CommandParameter="{Binding .}"
-                                                    VerticalAlignment="Top"
-                                                    Margin="0,12,0,0"
-                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
-                                            <controls:RequirementView DataContext="{Binding .}"
-                                                                      Grid.Column="1"
-                                                                      TypeChange="RequirementView_TypeChange"
-                                                                      local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                                                      local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsListView}"
-                                                                      HorizontalAlignment="Stretch"
-                                                                      HorizontalContentAlignment="Stretch">
-                                                <local:AttachProperties.ValidablePathValues>
-                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                    </MultiBinding>
-                                                </local:AttachProperties.ValidablePathValues>
-                                            </controls:RequirementView>
-                                        </Grid>
-                                    </materialDesign:Card>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>
-                </materialDesign:Card>-->
+                                               local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
+                    <controls:RequirementsListCard.ValidablePathValuesBindings>
+                        <local:MultiBindingValue>
+                            <Binding Path="(ItemsControl.AlternationIndex)"
+                                     RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                        </local:MultiBindingValue>
+                    </controls:RequirementsListCard.ValidablePathValuesBindings>
+                </controls:RequirementsListCard>
             </StackPanel>
         </ScrollViewer>
         <ContentPresenter Grid.Row="1"

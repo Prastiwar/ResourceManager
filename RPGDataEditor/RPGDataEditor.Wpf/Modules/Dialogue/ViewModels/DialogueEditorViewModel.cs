@@ -13,9 +13,5 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
         public ICommand AddOptionCommand => Commands.AddListItemCommand(() => Model.Options);
 
         public ICommand RemoveOptionCommand => Commands.RemoveListItemLiCommand(() => Model.Options);
-
-        public ICommand AddRequirementCommand => Commands.AddListItemCommand(() => Model.Requirements, () => new DialogueRequirement());
-
-        public ICommand RemoveRequirementCommand => Commands.RemoveListItemLiCommand(() => Model.Requirements);
     }
 }
