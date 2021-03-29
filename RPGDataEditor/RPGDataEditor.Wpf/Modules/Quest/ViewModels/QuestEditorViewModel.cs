@@ -13,9 +13,5 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
         public ICommand AddTaskCommand => Commands.AddListItemCommand(() => Model.Tasks, () => new KillQuestTask());
 
         public ICommand RemoveTaskCommand => Commands.RemoveListItemLiCommand(() => Model.Tasks);
-
-        public ICommand AddRequirementCommand => Commands.AddListItemCommand(() => Model.Requirements, () => new DialogueRequirement());
-
-        public ICommand RemoveRequirementCommand => Commands.RemoveListItemLiCommand(() => Model.Requirements);
     }
 }

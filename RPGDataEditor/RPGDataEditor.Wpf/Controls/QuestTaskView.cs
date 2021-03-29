@@ -27,6 +27,6 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected override object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "QuestTaskContent");
 
-        protected override string GetDataContextItemName() => DataContext.GetType().Name.Replace("QuestTask", "");
+        protected override string GetDataContextItemName() => DataContext?.GetType().Name.Replace("QuestTask", "");
     }
 }

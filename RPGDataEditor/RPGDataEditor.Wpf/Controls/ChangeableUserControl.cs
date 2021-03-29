@@ -24,6 +24,8 @@ namespace RPGDataEditor.Wpf.Controls
             public string TargetType { get; }
         }
 
+        public ChangeableUserControl() => DataContextChanged += OnDataContextChanged;
+
         public static DependencyProperty HintTextProperty =
             DependencyProperty.Register(nameof(HintText), typeof(string), typeof(ChangeableUserControl), new PropertyMetadata("Type"));
         public string HintText {
@@ -73,6 +75,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual void OnTemplateApplied()
         {
+            typeComboBox.SelectionChanged -= OnTypeComboBoxSelectionChanged;
             string name = GetDataContextItemName();
             if (!string.IsNullOrEmpty(name))
             {
@@ -110,7 +113,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "ChangeableContent");
 
-        private void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        protected virtual void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
@@ -137,5 +140,7 @@ namespace RPGDataEditor.Wpf.Controls
                 ApplyActualContent(name);
             }
         }
+
+        protected virtual void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => OnTemplateApplied();
     }
 }

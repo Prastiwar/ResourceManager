@@ -4,6 +4,7 @@ using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Wpf.Converters;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -134,12 +135,13 @@ namespace RPGDataEditor.Wpf.Controls
                 Path = new PropertyPath(AttachProperties.ValidableObjectProperty),
                 Source = this
             });
+
+            DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(ValidablePathValuesBindingsProperty, GetType());
+            dpd.AddValueChanged(this, (sender, e) => {
+                BindingOperations.ClearBinding(requirementView, AttachProperties.ValidablePathValuesProperty);
+                requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, ValidablePathValuesBindings.ToMultiBinding(new BindingListConverter()));
+            });
             requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, ValidablePathValuesBindings.ToMultiBinding(new BindingListConverter()));
-            // TODO: Set proper binding when ValidablePathValuesBindings is changed
-            //requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, new Binding(nameof(ValidablePathValuesBindings)) {
-            //    Source = this,
-            //    Converter = StaticValueConverter.Create((x) => x is MultiBindingValue value ? value.ToMultiBinding(new BindingListConverter()) : null, null)
-            //});
             requirementView.TypeChange += RequirementView_TypeChange;
             return requirementView;
         }

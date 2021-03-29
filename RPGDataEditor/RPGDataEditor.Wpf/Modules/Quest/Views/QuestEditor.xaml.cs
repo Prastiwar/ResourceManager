@@ -8,14 +8,6 @@ namespace RPGDataEditor.Wpf.Quest.Views
     {
         public QuestEditor() => InitializeComponent();
 
-        private void RequirementView_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
-        {
-            if (DataContext is ModelDialogViewModel<QuestModel> vm)
-            {
-                e.ChangeTypeInList(vm.Model.Requirements, RequirementsListView);
-            }
-        }
-
         private void QuestTaskViewList_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
             if (DataContext is ModelDialogViewModel<QuestModel> vm)
