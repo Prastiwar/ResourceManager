@@ -167,6 +167,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance<IValidationProvider>(new ValidatorProvider(Container));
             containerRegistry.RegisterInstance<IModelProvider<PlayerRequirementModel>>(new DefaultRequirementProvider());
             containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
+            containerRegistry.RegisterInstance<INamedIdProvider<DialogueOptionModel>>(new DefaultDialogueOptionNamedIdProvider());
             containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
             containerRegistry.Register<IClientProvider, DefaultClientProvider>();
         }

@@ -25,4 +25,8 @@
         <Setter Property="Template"
                 Value="{StaticResource ChangeableUserControlTemplate}" />
     </Style>
+    <Style TargetType="{x:Type controls:DialogueOptionView}">
+        <Setter Property="Template"
+                Value="{StaticResource ChangeableUserControlTemplate}" />
+    </Style>
 </ResourceDictionary>

@@ -75,6 +75,10 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual void OnTemplateApplied()
         {
+            if (typeComboBox == null)
+            {
+                return;
+            }
             typeComboBox.SelectionChanged -= OnTypeComboBoxSelectionChanged;
             string name = GetDataContextItemName();
             if (!string.IsNullOrEmpty(name))
@@ -113,7 +117,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "ChangeableContent");
 
-        protected virtual void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        protected void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
@@ -126,18 +130,23 @@ namespace RPGDataEditor.Wpf.Controls
                 {
                     name = e.AddedItems[0].ToString();
                 }
-                if (ChangeTypeCommand != null)
-                {
-                    ChangeTypeCommand.Execute(ChangeTypeCommandParameter);
-                }
-                else
-                {
-                    ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, name) {
-                        RoutedEvent = TypeChangeEvent
-                    };
-                    RaiseEvent(changeTypeArgs);
-                }
+                RequestChangeType(name);
                 ApplyActualContent(name);
+            }
+        }
+
+        protected virtual void RequestChangeType(string name)
+        {
+            if (ChangeTypeCommand != null)
+            {
+                ChangeTypeCommand.Execute(ChangeTypeCommandParameter);
+            }
+            else
+            {
+                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, name) {
+                    RoutedEvent = TypeChangeEvent
+                };
+                RaiseEvent(changeTypeArgs);
             }
         }
 

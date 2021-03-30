@@ -101,6 +101,7 @@
                                                     Style="{DynamicResource DeleteFlatButtonStyle}" />
                                             <controls:DialogueOptionView DataContext="{Binding .}"
                                                                          Grid.Column="1"
+                                                                         TypeChange="DialogueOptionView_TypeChange"
                                                                          HorizontalAlignment="Stretch"
                                                                          HorizontalContentAlignment="Stretch" />
                                         </Grid>

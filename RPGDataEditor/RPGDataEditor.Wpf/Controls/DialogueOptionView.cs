@@ -1,88 +1,44 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using Prism;
+using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Providers;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class DialogueOptionView : UserControl
+    public class DialogueOptionView : ChangeableUserControl
     {
-        private ListView requirementsListView;
-        private Button removeButton;
-        private Button addRequirementButton;
-        private RequirementView requirementView;
-        private ComboBox typeComboBox;
-        private ResourcePicker nextDialoguePicker;
+        private static readonly string[] types = new string[] {
+            "Quit",
+            "Job",
+            "Dialogue"
+        };
+        private ContentPresenter actualContent;
 
-        public override void OnApplyTemplate()
+        protected override void OnTemplateApplied()
         {
-            base.OnApplyTemplate();
-            DataContextChanged += DialogueOptionView_DataContextChanged;
-            requirementsListView = Template.FindName("RequirementsListView", this) as ListView;
-            //removeButton = Template.FindName("RemoveButton", this) as Button;
-            addRequirementButton = Template.FindName("AddRequirementButton", this) as Button;
-            //requirementView = Template.FindName("RequirementView", this) as RequirementView;
-            typeComboBox = Template.FindName("TypeComboBox", this) as ComboBox;
-            nextDialoguePicker = Template.FindName("NextDialoguePicker", this) as ResourcePicker;
-
-            //removeButton.Click += OnRemoveRequirementClicked;
-            addRequirementButton.Click += AddRequirement;
-            //requirementView.TypeChange += OnRequirementViewTypeChanged;
-            typeComboBox.SelectionChanged += OptionType_Selected;
-        }
-
-        private void DialogueOptionView_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue is DialogueOptionModel model)
+            if (GetBindingExpression(TypesSourceProperty) == null)
             {
-                typeComboBox.SelectedIndex = model.NextDialogId == -2 ? 1 :
-                                             model.NextDialogId == -1 ? 2 :
-                                             0;
+                TypesSource = GetOptionNames();
             }
-        }
-
-        private void OptionType_Selected(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
+            if (Template != null)
             {
-                if (e.AddedItems[0] is ComboBoxItem selected)
-                {
-                    bool isDialogue = string.Compare(selected.Name, "dialogue", true) == 0;
-                    bool isJob = string.Compare(selected.Name, "TriggerJob", true) == 0;
-                    bool isQuit = string.Compare(selected.Name, "quit", true) == 0;
-                    nextDialoguePicker.Visibility = isDialogue ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-                    if (DataContext is DialogueOptionModel model)
-                    {
-                        model.NextDialogId = isQuit ? -1 :
-                                             isJob ? -2 :
-                                             -1;
-                    }
-                }
+                actualContent = Template.FindName("ActualContent", this) as ContentPresenter;
             }
+            base.OnTemplateApplied();
         }
 
-        private void AddRequirement(object sender, System.Windows.RoutedEventArgs e)
+        protected virtual string[] GetOptionNames() => types;
+
+        protected override object GetActualContentResource(string name) => actualContent.Content ?? Application.Current.TryFindResource("DialogueOptionContent");
+
+        protected override string GetDataContextItemName()
         {
             if (DataContext is DialogueOptionModel model)
             {
-                model.Requirements.Add(new DialogueRequirement());
+                return Application.Current.TryResolve<INamedIdProvider<DialogueOptionModel>>()?.GetName(model.NextDialogId);
             }
-        }
-
-        private void OnRemoveRequirementClicked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (DataContext is DialogueOptionModel model)
-            {
-                Button btn = (Button)sender;
-                PlayerRequirementModel requirement = (PlayerRequirementModel)btn.DataContext;
-                model.Requirements.Remove(requirement);
-            }
-        }
-
-        private void OnRequirementViewTypeChanged(object sender, ChangeableUserControl.ChangeTypeEventArgs e)
-        {
-            if (DataContext is DialogueOptionModel model)
-            {
-                e.ChangeTypeInList(model.Requirements, requirementsListView);
-            }
+            return null;
         }
     }
 }

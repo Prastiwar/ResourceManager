@@ -29,6 +29,6 @@
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.RequirementContents.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.RequirementsListCard.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.QuestTaskContents.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.DialogueOptionView.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.DialogueOptionContents.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

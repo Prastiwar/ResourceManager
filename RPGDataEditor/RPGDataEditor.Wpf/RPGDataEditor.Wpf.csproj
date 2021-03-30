@@ -19,6 +19,10 @@
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Themes\RpgDataEditorTheme.DialogueOptionContents.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Themes\RpgDataEditorTheme.RequirementsListCard.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -28,10 +32,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\RpgDataEditorTheme.Styles.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Themes\RpgDataEditorTheme.DialogueOptionView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

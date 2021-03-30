@@ -6,11 +6,11 @@ namespace RPGDataEditor.Core.Providers
 {
     public class DefaultModelProvider<TModel> : IModelProvider<TModel> where TModel : ObservableModel
     {
-        private static readonly Type[] derivedTypes = typeof(TModel).EnumarateDerivedTypes().ToArray();
+        protected static Type[] DerivedTypes { get; } = typeof(TModel).EnumarateDerivedTypes().ToArray();
 
-        public TModel CreateModel(string name)
+        public virtual TModel CreateModel(string name)
         {
-            foreach (Type type in derivedTypes)
+            foreach (Type type in DerivedTypes)
             {
                 string typeName = GetTypeNameToCompare(type.Name);
                 if (typeName.CompareTo(name) == 0)
