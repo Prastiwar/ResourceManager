@@ -29,4 +29,8 @@
         <Setter Property="Template"
                 Value="{StaticResource ChangeableUserControlTemplate}" />
     </Style>
+    <Style TargetType="{x:Type controls:SessionControl}">
+        <Setter Property="Template"
+                Value="{StaticResource ChangeableUserControlTemplate}" />
+    </Style>
 </ResourceDictionary>

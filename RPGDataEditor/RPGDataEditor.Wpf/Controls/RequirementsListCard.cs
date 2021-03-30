@@ -1,5 +1,4 @@
 ﻿using MaterialDesignThemes.Wpf;
-using Prism.Ioc;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Wpf.Converters;
@@ -85,7 +84,7 @@ namespace RPGDataEditor.Wpf.Controls
             }
             if (AddRequirementCommand == null && GetBindingExpression(AddRequirementCommandProperty) == null)
             {
-                IModelProvider<PlayerRequirementModel> modelProvider = RpgDataEditorApplication.Current.Container.Resolve<IModelProvider<PlayerRequirementModel>>();
+                IModelProvider<PlayerRequirementModel> modelProvider = Application.Current.TryResolve<IModelProvider<PlayerRequirementModel>>();
                 AddRequirementCommand = Commands.AddListItemCommand(() => Requirements, () => modelProvider.CreateModel("Dialogue"));
             }
         }

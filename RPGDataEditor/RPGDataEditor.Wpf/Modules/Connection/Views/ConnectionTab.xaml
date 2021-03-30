@@ -2,111 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Name="CONNECTION"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-        <StackPanel VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Margin="64">
-            <ComboBox x:Name="ConnectionComboBox"
-                      DataContext="{Binding Session}"
-                      DataContextChanged="ConnectionComboBox_DataContextChanged"
-                      materialDesign:HintAssist.Hint="Connection type"
-                      HorizontalAlignment="Stretch"
-                      HorizontalContentAlignment="Stretch"
-                      Margin="5"
-                      SelectedIndex="0"
-                      Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
-                <ComboBoxItem Name="File"
-                              Content="File Explorer" />
-                <ComboBoxItem Name="FTP"
-                              Content="FTP" />
-                <!-- <ComboBoxItem Name="MSSQL"
-                              Content="MSSQL" /> -->
-            </ComboBox>
-            <StackPanel x:Name="FilePanel"
-                        DataContext="{Binding Session}"
-                        Visibility="{Binding SelectedIndex, ElementName=ConnectionComboBox, Converter={StaticResource StringCompareToVisibilityConverter}, ConverterParameter=0}">
-                <TextBox Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         DataContext="{Binding Client}"
-                         Margin="0,8,0,8"
-                         MinWidth="126"
-                         materialDesign:HintAssist.Hint="Folder Path"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior PropertyName="Client.FolderPath" />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-            </StackPanel>
-            <StackPanel x:Name="FTPPanel"
-                        DataContext="{Binding Session}"
-                        Visibility="{Binding SelectedIndex, ElementName=ConnectionComboBox, Converter={StaticResource StringCompareToVisibilityConverter}, ConverterParameter=1}">
-                <TextBox Text="{Binding Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         DataContext="{Binding Client}"
-                         Margin="0,8,0,8"
-                         MinWidth="126"
-                         materialDesign:HintAssist.Hint="Host"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior PropertyName="Client.Host" />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         DataContext="{Binding Client}"
-                         InputScope="Number"
-                         Margin="0,8,0,8"
-                         MinWidth="126"
-                         materialDesign:HintAssist.Hint="Port"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                        <behaviors:CatchValidationBehavior PropertyName="Client.Port" />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <TextBox Text="{Binding RelativePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         DataContext="{Binding Client}"
-                         Margin="0,8,0,8"
-                         MinWidth="126"
-                         materialDesign:HintAssist.Hint="Relative Path"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior PropertyName="Client.RelativePath" />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <TextBox Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         DataContext="{Binding Client}"
-                         Margin="0,8,0,8"
-                         materialDesign:HintAssist.Hint="Username"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior PropertyName="Client.UserName" />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <PasswordBox x:Name="FtpPasswordBox"
-                             DataContext="{Binding Client}"
-                             DataContextChanged="FtpPasswordBox_DataContextChanged"
-                             PasswordChanged="PasswordBox_PasswordChanged"
-                             Margin="0,8,0,8"
-                             materialDesign:HintAssist.Hint="Password"
-                             Style="{DynamicResource MaterialDesignFloatingHintPasswordBox}" />
-            </StackPanel>
-            <StackPanel x:Name="MSSQLPanel"
-                        DataContext="{Binding Session}"
-                        Visibility="{Binding SelectedIndex, ElementName=ConnectionComboBox, Converter={StaticResource StringCompareToVisibilityConverter}, ConverterParameter=2}">
-                <TextBox Text="{Binding ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="0,8,0,8"
-                         MinWidth="126"
-                         materialDesign:HintAssist.Hint="Connection String"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior PropertyName="Client.ConnectionString" />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+    <controls:SessionControl x:Name="SessionControl"
+                             Margin="32"
+                             DataContext="{Binding Session}"
+                             TypeChange="SessionControl_TypeChange" />
 </UserControl>

@@ -129,7 +129,7 @@ namespace RPGDataEditor.Wpf.Controls
                 resourceTextBlock.Text = "Loading...";
             }
             string[] locations = await RpgDataEditorApplication.Current.Session.Client.GetAllLocationsAsync((int)Resource);
-            ILocationToSimpleResourceConverter converter = RpgDataEditorApplication.Current.Container.Resolve<ILocationToSimpleResourceConverter>();
+            ILocationToSimpleResourceConverter converter = Application.Current.TryResolve<ILocationToSimpleResourceConverter>();
             SimpleIdentifiableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
             PickedItem = pickedItem;
             isLoading = false;
@@ -143,7 +143,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual async Task PickItemAsync()
         {
-            IDialogService service = (Application.Current as PrismApplicationBase).Container.Resolve<IDialogService>();
+            IDialogService service = Application.Current.TryResolve<IDialogService>();
             IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource.Value, PickedItem, PickedId).Build()).ConfigureAwait(true);
             if (result.Result == ButtonResult.OK)
             {

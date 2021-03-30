@@ -16,10 +16,10 @@ namespace RPGDataEditor.Core.Providers
 
         public IResourceClient GetClient(string name)
         {
-            bool isFile = string.Compare(name, "file", true) == 0;
+            bool isExplorer = string.Compare(name, "explorer", true) == 0;
             bool isFtp = string.Compare(name, "ftp", true) == 0;
             bool isMssql = string.Compare(name, "mssql", true) == 0;
-            if (isFile)
+            if (isExplorer)
             {
                 return new ExplorerResourceClient(pathConverter, typeConverter);
             }

@@ -100,7 +100,7 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 str = item.ToString();
             }
-            return name.CompareTo(str) == 0;
+            return string.Compare(name, str, true) == 0;
         }
 
         protected abstract string GetDataContextItemName();
