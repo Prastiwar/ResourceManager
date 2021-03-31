@@ -2,6 +2,7 @@ using Prism;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Wpf.Controls;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,7 +24,14 @@ namespace RPGDataEditor.Wpf
                     list.RemoveAt(index);
                     list.Insert(index, newModel);
                 }
-                itemsControl?.Refresh();
+                if (itemsControl != null)
+                {
+                    itemsControl.Refresh();
+                }
+                else
+                {
+                    list.Refresh();
+                }
             }
         }
 
@@ -39,6 +47,8 @@ namespace RPGDataEditor.Wpf
             return null;
         }
 
-        public static void Refresh(this ItemsControl itemsControl) => CollectionViewSource.GetDefaultView(itemsControl.ItemsSource)?.Refresh();
+        public static void Refresh(this IEnumerable itemsSource) => CollectionViewSource.GetDefaultView(itemsSource)?.Refresh();
+
+        public static void Refresh(this ItemsControl itemsControl) => itemsControl.ItemsSource?.Refresh();
     }
 }

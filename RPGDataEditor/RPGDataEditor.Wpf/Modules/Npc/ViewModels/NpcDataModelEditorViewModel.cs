@@ -16,7 +16,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public override string Title => "Npc Editor";
 
         public ICommand AddPathCommand => Commands.AddListItemCommand(() => Model.Paths);
-        public ICommand RemovePathCommand => Commands.RemoveListItemLiCommand(() => Model.Paths);
+        public ICommand RemovePathCommand => Commands.RemoveListItemCommand(() => Model.Paths);
         public int PathsCount => Model == null ? 0 : Model.Paths.Count;
 
         public ICommand AddTalkLineCommand => Commands.AddParameterListItemLiCommand<TalkLine>();

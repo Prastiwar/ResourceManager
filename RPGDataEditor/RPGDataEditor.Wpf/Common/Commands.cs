@@ -11,14 +11,16 @@ namespace RPGDataEditor.Wpf
 {
     public static class Commands
     {
-        public static ICommand RemoveListItemLiCommand<T>(Func<IList<T>> getList) => new DelegateCommand<T>(item => getList().Remove(item));
+        public static ICommand RemoveListItemCommand(Func<IList> getList) => new DelegateCommand<object>(item => getList().Remove(item));
+        public static ICommand RemoveListItemCommand<T>(Func<IList<T>> getList) => new DelegateCommand<T>(item => getList().Remove(item));
 
         public static ICommand AddParameterListItemLiCommand<T>() => AddParameterListItemLiCommand(() => Activator.CreateInstance<T>());
 
         public static ICommand AddParameterListItemLiCommand<T>(Func<T> createInstance) => new DelegateCommand<IList>((x) => x.Add(createInstance()));
 
-        public static ICommand AddListItemCommand<T>(Func<IList<T>> getList) => AddListItemCommand(getList, () => Activator.CreateInstance<T>());
+        public static ICommand AddListItemCommand(Func<IList> getList, Func<object> createInstance) => new DelegateCommand(() => getList().Add(createInstance()));
 
+        public static ICommand AddListItemCommand<T>(Func<IList<T>> getList) => AddListItemCommand(getList, () => Activator.CreateInstance<T>());
         public static ICommand AddListItemCommand<T>(Func<IList<T>> getList, Func<T> createInstance) => new DelegateCommand(() => getList().Add(createInstance()));
 
         /// <summary> Gets Button (sender) as parameter and gets ListView from its Tag to remove item retrieved from button's DataContext </summary>

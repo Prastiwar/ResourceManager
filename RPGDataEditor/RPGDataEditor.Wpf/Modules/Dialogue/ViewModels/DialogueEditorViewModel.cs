@@ -11,7 +11,5 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
         public override string Title => "Dialogue Editor";
 
         public ICommand AddOptionCommand => Commands.AddListItemCommand(() => Model.Options);
-
-        public ICommand RemoveOptionCommand => Commands.RemoveListItemLiCommand(() => Model.Options);
     }
 }

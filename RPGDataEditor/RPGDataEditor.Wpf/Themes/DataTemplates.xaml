@@ -6,7 +6,9 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ContentPresenter Content="{TemplateBinding Content}" />
+            <ScrollViewer>
+                <ContentPresenter Content="{TemplateBinding Content}" />
+            </ScrollViewer>
             <ContentPresenter Grid.Row="1"
                               ContentTemplate="{DynamicResource SaveCancelButtonsTemplate}" />
         </Grid>

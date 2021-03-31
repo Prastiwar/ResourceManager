@@ -13,651 +13,271 @@
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Style="{DynamicResource DefaultEditorControl}"
              x:Name="ThisNpcView">
-    <ScrollViewer>
-        <StackPanel Margin="10">
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Name"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Title"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding TextureLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Texture"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <materialDesign:Card HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <TextBlock Text="Spawn location" />
-                    <controls:BlockPosField DataContext="{Binding Model}"
-                                            Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Orientation="Horizontal"
-                                            Margin="-2" />
-                </StackPanel>
-            </materialDesign:Card>
-            <CheckBox x:Name="InvulnerableCheckbox"
-                      Margin="5"
-                      Content="Invulnerable"
-                      DataContext="{Binding Model}"
-                      IsChecked="{Binding Invulnerable}" />
-            <CheckBox x:Name="LookAtPlayerCheckbox"
-                      Margin="5"
-                      Content="Look At Player"
-                      DataContext="{Binding Model}"
-                      IsChecked="{Binding LookAtPlayer}" />
-            <materialDesign:Card x:Name="ExpandableMovement"
-                                 HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <controls:ExpandButton x:Name="ExpandMovementTypeButton"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Bottom"
-                                               Margin="3,0,3,5"
-                                               IsEnabled="{Binding SelectedIndex, ElementName=MovementTypeComboBox, Mode=OneWay, Converter={StaticResource StringToBoolConverter}, ConverterParameter=2}"
-                                               ExpandableElement="{x:Reference PathListView}" />
-                        <StackPanel Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    Visibility="{Binding IsEnabled, ElementName=ExpandMovementTypeButton, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Button Margin="5,0,0,5"
-                                    VerticalAlignment="Bottom"
-                                    Command="{Binding AddPathCommand}"
-                                    Style="{DynamicResource AddFlatButtonStyle}" />
-                            <TextBlock Text="{Binding PathsCount, StringFormat='({0})'}"
-                                       VerticalAlignment="Bottom"
-                                       Margin="5,2,2,5" />
-                        </StackPanel>
-                        <ComboBox x:Name="MovementTypeComboBox"
-                                  Grid.Column="2"
-                                  Margin="10,-2,0,0"
-                                  DataContext="{Binding Model}"
-                                  SelectedItem="{Binding MovementType}"
-                                  materialDesign:HintAssist.Hint="Movement Type"
-                                  ItemsSource="{Binding Source={converters:EnumBindingSource {x:Type models:NpcMovement}}}"
-                                  Style="{DynamicResource MaterialDesignFloatingHintComboBox}" />
-                    </Grid>
-                    <ListView x:Name="PathListView"
-                              Visibility="Collapsed"
+    <StackPanel Margin="10">
+        <TextBox DataContext="{Binding Model}"
+                 Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Name"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:CatchValidationBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <TextBox DataContext="{Binding Model}"
+                 Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Title"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:CatchValidationBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <TextBox DataContext="{Binding Model}"
+                 Text="{Binding TextureLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Texture"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:CatchValidationBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <materialDesign:Card HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <TextBlock Text="Spawn location" />
+                <controls:BlockPosField DataContext="{Binding Model}"
+                                        Position="{Binding Position, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Orientation="Horizontal"
+                                        Margin="-2" />
+            </StackPanel>
+        </materialDesign:Card>
+        <CheckBox x:Name="InvulnerableCheckbox"
+                  Margin="5"
+                  Content="Invulnerable"
+                  DataContext="{Binding Model}"
+                  IsChecked="{Binding Invulnerable}" />
+        <CheckBox x:Name="LookAtPlayerCheckbox"
+                  Margin="5"
+                  Content="Look At Player"
+                  DataContext="{Binding Model}"
+                  IsChecked="{Binding LookAtPlayer}" />
+        <materialDesign:Card x:Name="ExpandableMovement"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <controls:ExpandButton x:Name="ExpandMovementTypeButton"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Bottom"
+                                           Margin="3,0,3,5"
+                                           IsEnabled="{Binding SelectedIndex, ElementName=MovementTypeComboBox, Mode=OneWay, Converter={StaticResource StringToBoolConverter}, ConverterParameter=2}"
+                                           ExpandableElement="{x:Reference PathListView}" />
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Visibility="{Binding IsEnabled, ElementName=ExpandMovementTypeButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Margin="5,0,0,5"
+                                VerticalAlignment="Bottom"
+                                Command="{Binding AddPathCommand}"
+                                Style="{DynamicResource AddFlatButtonStyle}" />
+                        <TextBlock Text="{Binding PathsCount, StringFormat='({0})'}"
+                                   VerticalAlignment="Bottom"
+                                   Margin="5,2,2,5" />
+                    </StackPanel>
+                    <ComboBox x:Name="MovementTypeComboBox"
+                              Grid.Column="2"
+                              Margin="10,-2,0,0"
                               DataContext="{Binding Model}"
-                              ItemsSource="{Binding Paths}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <materialDesign:Card HorizontalAlignment="Stretch"
-                                                     HorizontalContentAlignment="Center"
-                                                     Padding="5">
-                                    <Grid HorizontalAlignment="Stretch">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Button Command="{Binding DataContext.RemovePathCommand, ElementName=MainGrid}"
-                                                CommandParameter="{Binding .}"
-                                                VerticalAlignment="Top"
-                                                Margin="0,12,0,0"
-                                                Style="{StaticResource DeleteFlatButtonStyle}" />
-                                        <controls:BlockPosField Position="{Binding .}"
-                                                                Grid.Column="1"
-                                                                HorizontalAlignment="Stretch"
-                                                                HorizontalContentAlignment="Stretch" />
-                                    </Grid>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card x:Name="ExpandableJobSection"
-                                 HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <controls:ExpandButton HorizontalAlignment="Left"
-                                               IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
-                                               ExpandableElement="{x:Reference JobStackPanel}" />
-                        <ComboBox x:Name="JobComboBox"
-                                  Grid.Column="1"
-                                  Margin="10,-2,0,0"
-                                  DataContext="{Binding Model}"
-                                  DataContextChanged="JobComboBox_DataContextChanged"
-                                  SelectionChanged="JobComboBox_SelectionChanged"
-                                  materialDesign:HintAssist.Hint="Job Type"
-                                  Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
-                            <ComboBoxItem Name="NONE"
-                                          Content="NONE" />
-                            <ComboBoxItem Name="GUARD"
-                                          Content="GUARD" />
-                            <ComboBoxItem Name="TRADER"
-                                          Content="TRADER" />
-                        </ComboBox>
-                    </Grid>
-                    <StackPanel x:Name="JobStackPanel"
-                                Visibility="Collapsed">
-                        <StackPanel x:Name="GuardStackPanel"
-                                    Visibility="Collapsed" />
-                        <StackPanel x:Name="TraderStackPanel"
-                                    Visibility="Collapsed">
-                            <materialDesign:Card Margin="5"
-                                                 DataContext="{Binding Model}">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <controls:ExpandButton Margin="5,0,0,2"
-                                                               ExpandableElement="{x:Reference TradeItemListView}" />
-                                        <Button Margin="5,0,0,4"
-                                                VerticalAlignment="Bottom"
-                                                Command="{Binding DataContext.AddTradeItemCommand, ElementName=MainGrid}"
-                                                DataContext="{Binding Job}"
-                                                CommandParameter="{Binding Items}"
-                                                Style="{DynamicResource AddFlatButtonStyle}" />
-                                        <TextBlock Text="{Binding ItemsSource.Count, ElementName=TradeItemListView, StringFormat='({0}) Trade items'}"
-                                                   VerticalAlignment="Bottom"
-                                                   Margin="5,2,2,5" />
-                                    </StackPanel>
-                                    <ListView x:Name="TradeItemListView"
-                                              Visibility="Collapsed"
-                                              AlternationCount="{StaticResource MaxIntValue}"
-                                              DataContext="{Binding Job}"
-                                              ItemsSource="{Binding Items}">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <materialDesign:Card HorizontalAlignment="Stretch"
-                                                                     Margin="5"
-                                                                     Padding="5">
-                                                    <StackPanel>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <controls:ExpandButton Margin="3,0,3,5"
-                                                                                   HorizontalAlignment="Left"
-                                                                                   VerticalAlignment="Bottom"
-                                                                                   ExpandableElement="{x:Reference TradeItemPanel}" />
-                                                            <Button x:Name="DeleteTradeItemButton"
-                                                                    Grid.Column="1"
-                                                                    Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                                    Command="{Binding DataContext.RemoveTradeItemCommand, ElementName=MainGrid}"
-                                                                    CommandParameter="{Binding ., ElementName=DeleteTradeItemButton}"
-                                                                    VerticalAlignment="Top"
-                                                                    Margin="0,12,0,0"
-                                                                    Style="{StaticResource DeleteFlatButtonStyle}" />
-                                                            <TextBlock Text="{Binding Item}"
-                                                                       Grid.Column="2"
-                                                                       VerticalAlignment="Bottom"
-                                                                       Margin="5,2,2,5" />
-                                                        </Grid>
-                                                        <StackPanel x:Name="TradeItemPanel"
-                                                                    Visibility="Collapsed">
-                                                            <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                     Margin="5"
-                                                                     local:AttachProperties.ValidablePathFormat="Job.Items[{0}]"
-                                                                     materialDesign:HintAssist.Hint="Item resource location"
-                                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                <local:AttachProperties.ValidablePathValues>
-                                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                                    </MultiBinding>
-                                                                </local:AttachProperties.ValidablePathValues>
-                                                                <i:Interaction.Behaviors>
-                                                                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
-                                                                </i:Interaction.Behaviors>
-                                                            </TextBox>
-                                                            <TextBox Text="{Binding Buy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                     InputScope="Number"
-                                                                     Margin="5"
-                                                                     materialDesign:HintAssist.Hint="Buy price"
-                                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                <i:Interaction.Behaviors>
-                                                                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                                                                </i:Interaction.Behaviors>
-                                                            </TextBox>
-                                                            <TextBox Text="{Binding Sell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                     InputScope="Number"
-                                                                     Margin="5"
-                                                                     materialDesign:HintAssist.Hint="Sell price"
-                                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                <i:Interaction.Behaviors>
-                                                                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                                                                </i:Interaction.Behaviors>
-                                                            </TextBox>
-                                                            <TextBox Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                     InputScope="Number"
-                                                                     Margin="5"
-                                                                     materialDesign:HintAssist.Hint="Count"
-                                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                <i:Interaction.Behaviors>
-                                                                    <behaviors:NumericFieldBehaviour EmptyValue="1" />
-                                                                </i:Interaction.Behaviors>
-                                                            </TextBox>
-                                                            <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                     Margin="5"
-                                                                     local:AttachProperties.ValidablePathFormat="Job.Items[{0}]"
-                                                                     materialDesign:HintAssist.Hint="NBT"
-                                                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                                <local:AttachProperties.ValidablePathValues>
-                                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                                    </MultiBinding>
-                                                                </local:AttachProperties.ValidablePathValues>
-                                                                <i:Interaction.Behaviors>
-                                                                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
-                                                                </i:Interaction.Behaviors>
-                                                            </TextBox>
-                                                        </StackPanel>
-                                                    </StackPanel>
-                                                </materialDesign:Card>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </StackPanel>
+                              SelectedItem="{Binding MovementType}"
+                              materialDesign:HintAssist.Hint="Movement Type"
+                              ItemsSource="{Binding Source={converters:EnumBindingSource {x:Type models:NpcMovement}}}"
+                              Style="{DynamicResource MaterialDesignFloatingHintComboBox}" />
+                </Grid>
+                <ListView x:Name="PathListView"
+                          Visibility="Collapsed"
+                          DataContext="{Binding Model}"
+                          ItemsSource="{Binding Paths}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Card HorizontalAlignment="Stretch"
+                                                 HorizontalContentAlignment="Center"
+                                                 Padding="5">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Command="{Binding DataContext.RemovePathCommand, ElementName=MainGrid}"
+                                            CommandParameter="{Binding .}"
+                                            VerticalAlignment="Top"
+                                            Margin="0,12,0,0"
+                                            Style="{StaticResource DeleteFlatButtonStyle}" />
+                                    <controls:BlockPosField Position="{Binding .}"
+                                                            Grid.Column="1"
+                                                            HorizontalAlignment="Stretch"
+                                                            HorizontalContentAlignment="Stretch" />
+                                </Grid>
                             </materialDesign:Card>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card x:Name="ExpandableAttributes"
-                                 HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ExpandButton HorizontalAlignment="Left"
-                                               ExpandableElement="{x:Reference AttributesPanel}" />
-                        <TextBlock Text="Attributes"
-                                   Margin="10,0,0,0" />
-                    </StackPanel>
-                    <StackPanel x:Name="AttributesPanel"
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card x:Name="ExpandableJobSection"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <controls:ExpandButton HorizontalAlignment="Left"
+                                           IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
+                                           ExpandableElement="{x:Reference JobStackPanel}" />
+                    <ComboBox x:Name="JobComboBox"
+                              Grid.Column="1"
+                              Margin="10,-2,0,0"
+                              DataContext="{Binding Model}"
+                              DataContextChanged="JobComboBox_DataContextChanged"
+                              SelectionChanged="JobComboBox_SelectionChanged"
+                              materialDesign:HintAssist.Hint="Job Type"
+                              Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBoxItem Name="NONE"
+                                      Content="NONE" />
+                        <ComboBoxItem Name="GUARD"
+                                      Content="GUARD" />
+                        <ComboBoxItem Name="TRADER"
+                                      Content="TRADER" />
+                    </ComboBox>
+                </Grid>
+                <StackPanel x:Name="JobStackPanel"
+                            Visibility="Collapsed">
+                    <StackPanel x:Name="GuardStackPanel"
+                                Visibility="Collapsed" />
+                    <StackPanel x:Name="TraderStackPanel"
                                 Visibility="Collapsed">
-                        <TextBox DataContext="{Binding Model}"
-                                 Text="{Binding HealthRegen, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Health Regeneration"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0.0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="MaxHealthTextBox"
-                                 Text="{Binding MaxHealth, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Max Health"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0.0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="RespawnTimeTextBox"
-                                 Text="{Binding RespawnTime, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Respawn Time"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="MovementSpeedTextBox"
-                                 Text="{Binding MovementSpeed, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Movement Speed"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="AttackDamageTextBox"
-                                 Text="{Binding AttackDamage, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Attack Damage"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="AttackKnockbackTextBox"
-                                 Text="{Binding AttackKnockback, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Attack Knockback"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="AttackSpeedTextBox"
-                                 Text="{Binding AttackSpeed, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Attack Speed"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="ArmorTextBox"
-                                 Text="{Binding Armor, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Armor"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="ArmorToughnessTextBox"
-                                 Text="{Binding ArmorToughness, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Armor Toughness"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <TextBox x:Name="KnockbackResistanceTextBox"
-                                 Text="{Binding KnockbackResistance, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Knockback Resistance"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0"
-                                                                 IsPrecise="true" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                    </StackPanel>
-                </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card x:Name="ExpandableEquipment"
-                                 HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ExpandButton HorizontalAlignment="Left"
-                                               ExpandableElement="{x:Reference EquipmentPanel}" />
-                        <TextBlock Text="Equipment"
-                                   Margin="10,0,0,0" />
-                    </StackPanel>
-                    <StackPanel x:Name="EquipmentPanel"
-                                DataContext="{Binding Model}"
-                                Visibility="Collapsed">
-                        <TextBox DataContext="{Binding Equipment}"
-                                 Text="{Binding MainHand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Main Hand"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Equipment}"
-                                 Text="{Binding OffHand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Off Hand"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Equipment}"
-                                 Text="{Binding Head, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Head"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Equipment}"
-                                 Text="{Binding Chest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Chest"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Equipment}"
-                                 Text="{Binding Legs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Legs"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Equipment}"
-                                 Text="{Binding Feet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Feet"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                    </StackPanel>
-                </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card x:Name="ExpandableDialogue"
-                                 HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ExpandButton HorizontalAlignment="Left"
-                                               ExpandableElement="{x:Reference DialogueStackPanel}" />
-                        <TextBlock Text="Dialogue"
-                                   Margin="10,0,0,0" />
-                    </StackPanel>
-                    <StackPanel x:Name="DialogueStackPanel"
-                                DataContext="{Binding Model}"
-                                Visibility="Collapsed">
-                        <StackPanel.Resources>
-                            <DataTemplate x:Key="TalkLineTemplate">
-                                <materialDesign:Card HorizontalAlignment="Stretch"
-                                                     HorizontalContentAlignment="Center"
-                                                     Padding="5">
-                                    <Grid HorizontalAlignment="Stretch">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Button x:Name="DeleteItemButton"
-                                                Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
-                                                Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding ., ElementName=DeleteItemButton}"
-                                                VerticalAlignment="Top"
-                                                Margin="0,12,0,0"
-                                                Style="{StaticResource DeleteFlatButtonStyle}" />
-                                        <TextBox Grid.Column="1"
-                                                 Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 Margin="5"
-                                                 local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                 materialDesign:HintAssist.Hint="Talk Text"
-                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                            <local:AttachProperties.ValidablePathValues>
-                                                <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                    <Binding Path="(ItemsControl.AlternationIndex)"
-                                                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                </MultiBinding>
-                                            </local:AttachProperties.ValidablePathValues>
-                                            <i:Interaction.Behaviors>
-                                                <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
-                                            </i:Interaction.Behaviors>
-                                        </TextBox>
-                                        <TextBox Grid.Column="2"
-                                                 Margin="5"
-                                                 Text="{Binding Path=SoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                 materialDesign:HintAssist.Hint="Sound Location"
-                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                            <local:AttachProperties.ValidablePathValues>
-                                                <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                    <Binding Path="(ItemsControl.AlternationIndex)"
-                                                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                </MultiBinding>
-                                            </local:AttachProperties.ValidablePathValues>
-                                            <i:Interaction.Behaviors>
-                                                <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
-                                            </i:Interaction.Behaviors>
-                                        </TextBox>
-                                    </Grid>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </StackPanel.Resources>
-                        <TextBox DataContext="{Binding TalkData}"
-                                 Text="{Binding TalkRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 InputScope="Number"
-                                 materialDesign:HintAssist.Hint="Talk Range"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                            </i:Interaction.Behaviors>
-                        </TextBox>
-                        <materialDesign:Card Margin="5">
+                        <materialDesign:Card Margin="5"
+                                             DataContext="{Binding Model}">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <controls:ExpandButton Margin="5,0,0,2"
-                                                           ExpandableElement="{x:Reference InteractLinesListView}" />
-                                    <Button Margin="5,0,0,5"
+                                                           ExpandableElement="{x:Reference TradeItemListView}" />
+                                    <Button Margin="5,0,0,4"
                                             VerticalAlignment="Bottom"
-                                            Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
-                                            DataContext="{Binding TalkData}"
-                                            CommandParameter="{Binding InteractLines}"
+                                            Command="{Binding DataContext.AddTradeItemCommand, ElementName=MainGrid}"
+                                            DataContext="{Binding Job}"
+                                            CommandParameter="{Binding Items}"
                                             Style="{DynamicResource AddFlatButtonStyle}" />
-                                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=InteractLinesListView, StringFormat='({0}) Interact Lines'}"
+                                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=TradeItemListView, StringFormat='({0}) Trade items'}"
                                                VerticalAlignment="Bottom"
                                                Margin="5,2,2,5" />
                                 </StackPanel>
-                                <ListView x:Name="InteractLinesListView"
+                                <ListView x:Name="TradeItemListView"
                                           Visibility="Collapsed"
                                           AlternationCount="{StaticResource MaxIntValue}"
-                                          local:AttachProperties.ValidablePathFormat="TalkData.InteractLines[{0}]"
-                                          DataContext="{Binding TalkData}"
-                                          ItemsSource="{Binding InteractLines}"
-                                          ItemTemplate="{StaticResource TalkLineTemplate}" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Margin="5">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <controls:ExpandButton Margin="5,0,0,2"
-                                                           ExpandableElement="{x:Reference DeathLinesListView}" />
-                                    <Button Margin="5,0,0,5"
-                                            VerticalAlignment="Bottom"
-                                            Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
-                                            DataContext="{Binding TalkData}"
-                                            CommandParameter="{Binding DeathLines}"
-                                            Style="{DynamicResource AddFlatButtonStyle}" />
-                                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=DeathLinesListView, StringFormat='({0}) Death Lines'}"
-                                               VerticalAlignment="Bottom"
-                                               Margin="5,2,2,5" />
-                                </StackPanel>
-                                <ListView x:Name="DeathLinesListView"
-                                          Visibility="Collapsed"
-                                          AlternationCount="{StaticResource MaxIntValue}"
-                                          local:AttachProperties.ValidablePathFormat="TalkData.DeathLines[{0}]"
-                                          DataContext="{Binding TalkData}"
-                                          ItemsSource="{Binding DeathLines}"
-                                          ItemTemplate="{StaticResource TalkLineTemplate}" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Margin="5">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <controls:ExpandButton Margin="5,0,0,2"
-                                                           ExpandableElement="{x:Reference HurtLinesListView}" />
-                                    <Button Margin="5,0,0,5"
-                                            VerticalAlignment="Bottom"
-                                            Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
-                                            DataContext="{Binding TalkData}"
-                                            CommandParameter="{Binding HurtLines}"
-                                            Style="{DynamicResource AddFlatButtonStyle}" />
-                                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=HurtLinesListView, StringFormat='({0}) Hurt Lines'}"
-                                               VerticalAlignment="Bottom"
-                                               Margin="5,2,2,5" />
-                                </StackPanel>
-                                <ListView x:Name="HurtLinesListView"
-                                          Visibility="Collapsed"
-                                          AlternationCount="{StaticResource MaxIntValue}"
-                                          local:AttachProperties.ValidablePathFormat="TalkData.HurtLines[{0}]"
-                                          DataContext="{Binding TalkData}"
-                                          ItemsSource="{Binding HurtLines}"
-                                          ItemTemplate="{StaticResource TalkLineTemplate}" />
-                            </StackPanel>
-                        </materialDesign:Card>
-                        <materialDesign:Card Margin="5">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <controls:ExpandButton Margin="5,0,0,2"
-                                                           ExpandableElement="{x:Reference InitationDialoguesListView}" />
-                                    <Button Margin="5,0,0,5"
-                                            VerticalAlignment="Bottom"
-                                            Command="{Binding DataContext.AddDialogueIdCommand, ElementName=MainGrid}"
-                                            DataContext="{Binding TalkData}"
-                                            CommandParameter="{Binding InitationDialogues}"
-                                            Style="{DynamicResource AddFlatButtonStyle}" />
-                                    <TextBlock Text="{Binding ItemsSource.Count, ElementName=InitationDialoguesListView, StringFormat='({0}) Initation Dialogues'}"
-                                               VerticalAlignment="Bottom"
-                                               Margin="5,2,2,5" />
-                                </StackPanel>
-                                <ListView x:Name="InitationDialoguesListView"
-                                          Visibility="Collapsed"
-                                          DataContext="{Binding TalkData}"
-                                          ItemsSource="{Binding InitationDialogues}">
+                                          DataContext="{Binding Job}"
+                                          ItemsSource="{Binding Items}">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <materialDesign:Card HorizontalAlignment="Stretch"
-                                                                 HorizontalContentAlignment="Center"
-                                                                 Padding="2">
-                                                <Grid HorizontalAlignment="Stretch">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Button x:Name="DeleteItemButton"
-                                                            Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
-                                                            Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                            CommandParameter="{Binding ., ElementName=DeleteItemButton}"
-                                                            VerticalAlignment="Top"
-                                                            Margin="5,0,5,0"
-                                                            Style="{StaticResource DeleteFlatButtonStyle}" />
-                                                    <controls:ResourcePicker Grid.Column="1"
-                                                                             VerticalAlignment="Center"
-                                                                             Resource="Dialogue"
-                                                                             EmptyText="Select initaition dialogue"
-                                                                             PickedId="{Binding .}" />
-                                                </Grid>
+                                                                 Margin="5"
+                                                                 Padding="5">
+                                                <StackPanel>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <controls:ExpandButton Margin="3,0,3,5"
+                                                                               HorizontalAlignment="Left"
+                                                                               VerticalAlignment="Bottom"
+                                                                               ExpandableElement="{x:Reference TradeItemPanel}" />
+                                                        <Button x:Name="DeleteTradeItemButton"
+                                                                Grid.Column="1"
+                                                                Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                Command="{Binding DataContext.RemoveTradeItemCommand, ElementName=MainGrid}"
+                                                                CommandParameter="{Binding ., ElementName=DeleteTradeItemButton}"
+                                                                VerticalAlignment="Top"
+                                                                Margin="0,12,0,0"
+                                                                Style="{StaticResource DeleteFlatButtonStyle}" />
+                                                        <TextBlock Text="{Binding Item}"
+                                                                   Grid.Column="2"
+                                                                   VerticalAlignment="Bottom"
+                                                                   Margin="5,2,2,5" />
+                                                    </Grid>
+                                                    <StackPanel x:Name="TradeItemPanel"
+                                                                Visibility="Collapsed">
+                                                        <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Margin="5"
+                                                                 local:AttachProperties.ValidablePathFormat="Job.Items[{0}]"
+                                                                 materialDesign:HintAssist.Hint="Item resource location"
+                                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                            <local:AttachProperties.ValidablePathValues>
+                                                                <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                                    <Binding Path="(ItemsControl.AlternationIndex)"
+                                                                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                                                </MultiBinding>
+                                                            </local:AttachProperties.ValidablePathValues>
+                                                            <i:Interaction.Behaviors>
+                                                                <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                                            </i:Interaction.Behaviors>
+                                                        </TextBox>
+                                                        <TextBox Text="{Binding Buy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 InputScope="Number"
+                                                                 Margin="5"
+                                                                 materialDesign:HintAssist.Hint="Buy price"
+                                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                            <i:Interaction.Behaviors>
+                                                                <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                                                            </i:Interaction.Behaviors>
+                                                        </TextBox>
+                                                        <TextBox Text="{Binding Sell, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 InputScope="Number"
+                                                                 Margin="5"
+                                                                 materialDesign:HintAssist.Hint="Sell price"
+                                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                            <i:Interaction.Behaviors>
+                                                                <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                                                            </i:Interaction.Behaviors>
+                                                        </TextBox>
+                                                        <TextBox Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 InputScope="Number"
+                                                                 Margin="5"
+                                                                 materialDesign:HintAssist.Hint="Count"
+                                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                            <i:Interaction.Behaviors>
+                                                                <behaviors:NumericFieldBehaviour EmptyValue="1" />
+                                                            </i:Interaction.Behaviors>
+                                                        </TextBox>
+                                                        <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Margin="5"
+                                                                 local:AttachProperties.ValidablePathFormat="Job.Items[{0}]"
+                                                                 materialDesign:HintAssist.Hint="NBT"
+                                                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                                            <local:AttachProperties.ValidablePathValues>
+                                                                <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                                    <Binding Path="(ItemsControl.AlternationIndex)"
+                                                                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                                                </MultiBinding>
+                                                            </local:AttachProperties.ValidablePathValues>
+                                                            <i:Interaction.Behaviors>
+                                                                <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                                            </i:Interaction.Behaviors>
+                                                        </TextBox>
+                                                    </StackPanel>
+                                                </StackPanel>
                                             </materialDesign:Card>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
@@ -666,39 +286,417 @@
                         </materialDesign:Card>
                     </StackPanel>
                 </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card x:Name="ExpandableLivingSounds"
-                                 HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ExpandButton HorizontalAlignment="Left"
-                                               ExpandableElement="{x:Reference SoundsStackPanel}" />
-                        <TextBlock Text="Living sound locations"
-                                   Margin="10,0,0,0" />
-                    </StackPanel>
-                    <StackPanel x:Name="SoundsStackPanel"
-                                Visibility="Collapsed">
-                        <TextBox DataContext="{Binding Model}"
-                                 Text="{Binding DeathSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Death Sound Location"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Model}"
-                                 Text="{Binding HurtSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Hurt Sound Location"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBox DataContext="{Binding Model}"
-                                 Text="{Binding AmbientSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Margin="5"
-                                 materialDesign:HintAssist.Hint="Ambient Sound Location"
-                                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
-                    </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card x:Name="ExpandableAttributes"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <controls:ExpandButton HorizontalAlignment="Left"
+                                           ExpandableElement="{x:Reference AttributesPanel}" />
+                    <TextBlock Text="Attributes"
+                               Margin="10,0,0,0" />
                 </StackPanel>
-            </materialDesign:Card>
-        </StackPanel>
-    </ScrollViewer>
+                <StackPanel x:Name="AttributesPanel"
+                            Visibility="Collapsed">
+                    <TextBox DataContext="{Binding Model}"
+                             Text="{Binding HealthRegen, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Health Regeneration"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0.0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="MaxHealthTextBox"
+                             Text="{Binding MaxHealth, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Max Health"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0.0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="RespawnTimeTextBox"
+                             Text="{Binding RespawnTime, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Respawn Time"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="MovementSpeedTextBox"
+                             Text="{Binding MovementSpeed, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Movement Speed"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="AttackDamageTextBox"
+                             Text="{Binding AttackDamage, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Attack Damage"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="AttackKnockbackTextBox"
+                             Text="{Binding AttackKnockback, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Attack Knockback"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="AttackSpeedTextBox"
+                             Text="{Binding AttackSpeed, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Attack Speed"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="ArmorTextBox"
+                             Text="{Binding Armor, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Armor"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="ArmorToughnessTextBox"
+                             Text="{Binding ArmorToughness, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Armor Toughness"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <TextBox x:Name="KnockbackResistanceTextBox"
+                             Text="{Binding KnockbackResistance, StringFormat={}{0:0.0#}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Knockback Resistance"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0"
+                                                             IsPrecise="true" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card x:Name="ExpandableEquipment"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <controls:ExpandButton HorizontalAlignment="Left"
+                                           ExpandableElement="{x:Reference EquipmentPanel}" />
+                    <TextBlock Text="Equipment"
+                               Margin="10,0,0,0" />
+                </StackPanel>
+                <StackPanel x:Name="EquipmentPanel"
+                            DataContext="{Binding Model}"
+                            Visibility="Collapsed">
+                    <TextBox DataContext="{Binding Equipment}"
+                             Text="{Binding MainHand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Main Hand"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Equipment}"
+                             Text="{Binding OffHand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Off Hand"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Equipment}"
+                             Text="{Binding Head, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Head"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Equipment}"
+                             Text="{Binding Chest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Chest"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Equipment}"
+                             Text="{Binding Legs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Legs"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Equipment}"
+                             Text="{Binding Feet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Feet"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card x:Name="ExpandableDialogue"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <controls:ExpandButton HorizontalAlignment="Left"
+                                           ExpandableElement="{x:Reference DialogueStackPanel}" />
+                    <TextBlock Text="Dialogue"
+                               Margin="10,0,0,0" />
+                </StackPanel>
+                <StackPanel x:Name="DialogueStackPanel"
+                            DataContext="{Binding Model}"
+                            Visibility="Collapsed">
+                    <StackPanel.Resources>
+                        <DataTemplate x:Key="TalkLineTemplate">
+                            <materialDesign:Card HorizontalAlignment="Stretch"
+                                                 HorizontalContentAlignment="Center"
+                                                 Padding="5">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="DeleteItemButton"
+                                            Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
+                                            Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding ., ElementName=DeleteItemButton}"
+                                            VerticalAlignment="Top"
+                                            Margin="0,12,0,0"
+                                            Style="{StaticResource DeleteFlatButtonStyle}" />
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Margin="5"
+                                             local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), RelativeSource={RelativeSource AncestorType=ListView}}"
+                                             materialDesign:HintAssist.Hint="Talk Text"
+                                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                        <local:AttachProperties.ValidablePathValues>
+                                            <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                <Binding Path="(ItemsControl.AlternationIndex)"
+                                                         RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                            </MultiBinding>
+                                        </local:AttachProperties.ValidablePathValues>
+                                        <i:Interaction.Behaviors>
+                                            <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                        </i:Interaction.Behaviors>
+                                    </TextBox>
+                                    <TextBox Grid.Column="2"
+                                             Margin="5"
+                                             Text="{Binding Path=SoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), RelativeSource={RelativeSource AncestorType=ListView}}"
+                                             materialDesign:HintAssist.Hint="Sound Location"
+                                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                        <local:AttachProperties.ValidablePathValues>
+                                            <MultiBinding Converter="{StaticResource BindingListConverter}">
+                                                <Binding Path="(ItemsControl.AlternationIndex)"
+                                                         RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                                            </MultiBinding>
+                                        </local:AttachProperties.ValidablePathValues>
+                                        <i:Interaction.Behaviors>
+                                            <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                        </i:Interaction.Behaviors>
+                                    </TextBox>
+                                </Grid>
+                            </materialDesign:Card>
+                        </DataTemplate>
+                    </StackPanel.Resources>
+                    <TextBox DataContext="{Binding TalkData}"
+                             Text="{Binding TalkRange, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             InputScope="Number"
+                             materialDesign:HintAssist.Hint="Talk Range"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericFieldBehaviour EmptyValue="0" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                    <materialDesign:Card Margin="5">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ExpandButton Margin="5,0,0,2"
+                                                       ExpandableElement="{x:Reference InteractLinesListView}" />
+                                <Button Margin="5,0,0,5"
+                                        VerticalAlignment="Bottom"
+                                        Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
+                                        DataContext="{Binding TalkData}"
+                                        CommandParameter="{Binding InteractLines}"
+                                        Style="{DynamicResource AddFlatButtonStyle}" />
+                                <TextBlock Text="{Binding ItemsSource.Count, ElementName=InteractLinesListView, StringFormat='({0}) Interact Lines'}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="5,2,2,5" />
+                            </StackPanel>
+                            <ListView x:Name="InteractLinesListView"
+                                      Visibility="Collapsed"
+                                      AlternationCount="{StaticResource MaxIntValue}"
+                                      local:AttachProperties.ValidablePathFormat="TalkData.InteractLines[{0}]"
+                                      DataContext="{Binding TalkData}"
+                                      ItemsSource="{Binding InteractLines}"
+                                      ItemTemplate="{StaticResource TalkLineTemplate}" />
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <materialDesign:Card Margin="5">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ExpandButton Margin="5,0,0,2"
+                                                       ExpandableElement="{x:Reference DeathLinesListView}" />
+                                <Button Margin="5,0,0,5"
+                                        VerticalAlignment="Bottom"
+                                        Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
+                                        DataContext="{Binding TalkData}"
+                                        CommandParameter="{Binding DeathLines}"
+                                        Style="{DynamicResource AddFlatButtonStyle}" />
+                                <TextBlock Text="{Binding ItemsSource.Count, ElementName=DeathLinesListView, StringFormat='({0}) Death Lines'}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="5,2,2,5" />
+                            </StackPanel>
+                            <ListView x:Name="DeathLinesListView"
+                                      Visibility="Collapsed"
+                                      AlternationCount="{StaticResource MaxIntValue}"
+                                      local:AttachProperties.ValidablePathFormat="TalkData.DeathLines[{0}]"
+                                      DataContext="{Binding TalkData}"
+                                      ItemsSource="{Binding DeathLines}"
+                                      ItemTemplate="{StaticResource TalkLineTemplate}" />
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <materialDesign:Card Margin="5">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ExpandButton Margin="5,0,0,2"
+                                                       ExpandableElement="{x:Reference HurtLinesListView}" />
+                                <Button Margin="5,0,0,5"
+                                        VerticalAlignment="Bottom"
+                                        Command="{Binding DataContext.AddTalkLineCommand, ElementName=MainGrid}"
+                                        DataContext="{Binding TalkData}"
+                                        CommandParameter="{Binding HurtLines}"
+                                        Style="{DynamicResource AddFlatButtonStyle}" />
+                                <TextBlock Text="{Binding ItemsSource.Count, ElementName=HurtLinesListView, StringFormat='({0}) Hurt Lines'}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="5,2,2,5" />
+                            </StackPanel>
+                            <ListView x:Name="HurtLinesListView"
+                                      Visibility="Collapsed"
+                                      AlternationCount="{StaticResource MaxIntValue}"
+                                      local:AttachProperties.ValidablePathFormat="TalkData.HurtLines[{0}]"
+                                      DataContext="{Binding TalkData}"
+                                      ItemsSource="{Binding HurtLines}"
+                                      ItemTemplate="{StaticResource TalkLineTemplate}" />
+                        </StackPanel>
+                    </materialDesign:Card>
+                    <materialDesign:Card Margin="5">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <controls:ExpandButton Margin="5,0,0,2"
+                                                       ExpandableElement="{x:Reference InitationDialoguesListView}" />
+                                <Button Margin="5,0,0,5"
+                                        VerticalAlignment="Bottom"
+                                        Command="{Binding DataContext.AddDialogueIdCommand, ElementName=MainGrid}"
+                                        DataContext="{Binding TalkData}"
+                                        CommandParameter="{Binding InitationDialogues}"
+                                        Style="{DynamicResource AddFlatButtonStyle}" />
+                                <TextBlock Text="{Binding ItemsSource.Count, ElementName=InitationDialoguesListView, StringFormat='({0}) Initation Dialogues'}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="5,2,2,5" />
+                            </StackPanel>
+                            <ListView x:Name="InitationDialoguesListView"
+                                      Visibility="Collapsed"
+                                      DataContext="{Binding TalkData}"
+                                      ItemsSource="{Binding InitationDialogues}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <materialDesign:Card HorizontalAlignment="Stretch"
+                                                             HorizontalContentAlignment="Center"
+                                                             Padding="2">
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Button x:Name="DeleteItemButton"
+                                                        Command="{Binding DataContext.RemoveTalkLineCommand, ElementName=MainGrid}"
+                                                        Tag="{Binding RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                        CommandParameter="{Binding ., ElementName=DeleteItemButton}"
+                                                        VerticalAlignment="Top"
+                                                        Margin="5,0,5,0"
+                                                        Style="{StaticResource DeleteFlatButtonStyle}" />
+                                                <controls:ResourcePicker Grid.Column="1"
+                                                                         VerticalAlignment="Center"
+                                                                         Resource="Dialogue"
+                                                                         EmptyText="Select initaition dialogue"
+                                                                         PickedId="{Binding .}" />
+                                            </Grid>
+                                        </materialDesign:Card>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+        <materialDesign:Card x:Name="ExpandableLivingSounds"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <controls:ExpandButton HorizontalAlignment="Left"
+                                           ExpandableElement="{x:Reference SoundsStackPanel}" />
+                    <TextBlock Text="Living sound locations"
+                               Margin="10,0,0,0" />
+                </StackPanel>
+                <StackPanel x:Name="SoundsStackPanel"
+                            Visibility="Collapsed">
+                    <TextBox DataContext="{Binding Model}"
+                             Text="{Binding DeathSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Death Sound Location"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Model}"
+                             Text="{Binding HurtSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Hurt Sound Location"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox DataContext="{Binding Model}"
+                             Text="{Binding AmbientSoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="5"
+                             materialDesign:HintAssist.Hint="Ambient Sound Location"
+                             Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+    </StackPanel>
 </UserControl>

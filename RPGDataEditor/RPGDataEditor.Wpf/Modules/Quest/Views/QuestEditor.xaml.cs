@@ -12,7 +12,7 @@ namespace RPGDataEditor.Wpf.Quest.Views
         {
             if (DataContext is ModelDialogViewModel<QuestModel> vm)
             {
-                e.ChangeTypeInList(vm.Model.Tasks, TasksListView);
+                e.ChangeTypeInList(vm.Model.Tasks);
             }
         }
 

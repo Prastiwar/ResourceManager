@@ -10,108 +10,73 @@
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Style="{DynamicResource DefaultEditorControl}">
-    <ScrollViewer>
-        <StackPanel Margin="10">
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Title"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox DataContext="{Binding Model}"
-                     Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="5"
-                     materialDesign:HintAssist.Hint="Message"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <materialDesign:Card HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 DataContext="{Binding Model}"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <TextBlock Text="Choose completion task"
-                               Margin="5" />
-                    <controls:QuestTaskView DataContext="{Binding CompletionTask}"
-                                            TypeChange="CompletionQuestTaskView_TypeChange"
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch" />
-                </StackPanel>
-            </materialDesign:Card>
-            <materialDesign:Card HorizontalAlignment="Stretch"
-                                 HorizontalContentAlignment="Center"
-                                 Margin="5"
-                                 Padding="5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <controls:ExpandButton ExpandableElement="{x:Reference TasksListView}" />
-                        <Button Command="{Binding AddTaskCommand}"
-                                Style="{DynamicResource AddFlatButtonStyle}" />
-                        <TextBlock Text="{Binding Count, StringFormat='({0}) Tasks'}"
-                                   DataContext="{Binding ItemsSource, ElementName=TasksListView}"
-                                   Margin="5" />
-                    </StackPanel>
-                    <ListView x:Name="TasksListView"
-                              DataContext="{Binding Model}"
-                              ItemsSource="{Binding Tasks}"
-                              HorizontalAlignment="Stretch"
-                              AlternationCount="{StaticResource MaxIntValue}"
-                              HorizontalContentAlignment="Stretch">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <materialDesign:Card HorizontalAlignment="Stretch"
-                                                     HorizontalContentAlignment="Center"
-                                                     Padding="5">
-                                    <Grid HorizontalAlignment="Stretch">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Button Command="{Binding DataContext.RemoveTaskCommand, Source={x:Reference MainGrid}}"
-                                                CommandParameter="{Binding .}"
-                                                VerticalAlignment="Top"
-                                                Margin="0,12,0,0"
-                                                Style="{StaticResource DeleteFlatButtonStyle}" />
-                                        <controls:QuestTaskView DataContext="{Binding .}"
-                                                                TypeChange="QuestTaskViewList_TypeChange"
-                                                                Grid.Column="1"
-                                                                local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
-                                                                local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListView}"
-                                                                HorizontalAlignment="Stretch"
-                                                                HorizontalContentAlignment="Stretch">
-                                            <local:AttachProperties.ValidablePathValues>
-                                                <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                    <Binding Path="(ItemsControl.AlternationIndex)"
-                                                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                </MultiBinding>
-                                            </local:AttachProperties.ValidablePathValues>
-                                        </controls:QuestTaskView>
-                                    </Grid>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-            </materialDesign:Card>
-            <controls:RequirementsListCard x:Name="RequirementsCard"
-                                           DataContext="{Binding Model}"
-                                           Requirements="{Binding Requirements}"
-                                           local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                           local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
-                <controls:RequirementsListCard.ValidablePathValuesBindings>
-                    <local:MultiBindingValue>
-                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                    </local:MultiBindingValue>
-                </controls:RequirementsListCard.ValidablePathValuesBindings>
-            </controls:RequirementsListCard>
-        </StackPanel>
-    </ScrollViewer>
+    <StackPanel Margin="10">
+        <TextBox DataContext="{Binding Model}"
+                 Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Title"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:CatchValidationBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <TextBox DataContext="{Binding Model}"
+                 Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="5"
+                 materialDesign:HintAssist.Hint="Message"
+                 Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+            <i:Interaction.Behaviors>
+                <behaviors:CatchValidationBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+        <materialDesign:Card HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             DataContext="{Binding Model}"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <TextBlock Text="Choose completion task"
+                           Margin="5" />
+                <controls:QuestTaskView DataContext="{Binding CompletionTask}"
+                                        TypeChange="CompletionQuestTaskView_TypeChange"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch" />
+            </StackPanel>
+        </materialDesign:Card>
+        <controls:ListDataCard x:Name="TasksListDataCard"
+                               AddItemCommand="{Binding DataContext.AddTaskCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}"
+                               DataContext="{Binding Model}"
+                               HeaderText="{Binding Tasks.Count, StringFormat='({0}) Tasks'}"
+                               ItemsSource="{Binding Tasks}">
+            <DataTemplate>
+                <controls:QuestTaskView DataContext="{Binding .}"
+                                        TypeChange="QuestTaskViewList_TypeChange"
+                                        Grid.Column="1"
+                                        local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
+                                        local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListDataCard}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch">
+                    <local:AttachProperties.ValidablePathValues>
+                        <MultiBinding Converter="{StaticResource BindingListConverter}">
+                            <Binding Path="(ItemsControl.AlternationIndex)"
+                                     RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                        </MultiBinding>
+                    </local:AttachProperties.ValidablePathValues>
+                </controls:QuestTaskView>
+            </DataTemplate>
+        </controls:ListDataCard>
+        <controls:RequirementsListCard x:Name="RequirementsCard"
+                                       DataContext="{Binding Model}"
+                                       Requirements="{Binding Requirements}"
+                                       local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
+                                       local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
+            <controls:RequirementsListCard.ValidablePathValuesBindings>
+                <local:MultiBindingValue>
+                    <Binding Path="(ItemsControl.AlternationIndex)"
+                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                </local:MultiBindingValue>
+            </controls:RequirementsListCard.ValidablePathValuesBindings>
+        </controls:RequirementsListCard>
+    </StackPanel>
 </UserControl>

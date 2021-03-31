@@ -81,7 +81,7 @@ namespace RPGDataEditor.Wpf.Controls
             }
             if (RemoveRequirementCommand == null && GetBindingExpression(RemoveRequirementCommandProperty) == null)
             {
-                RemoveRequirementCommand = Commands.RemoveListItemLiCommand(() => Requirements);
+                RemoveRequirementCommand = Commands.RemoveListItemCommand(() => Requirements);
             }
             if (AddRequirementCommand == null && GetBindingExpression(AddRequirementCommandProperty) == null)
             {
