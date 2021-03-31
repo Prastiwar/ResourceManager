@@ -2,18 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Name="NPC"
              Style="{DynamicResource DefaultControlStyle}">
     <Grid>
         <ScrollViewer>
             <StackPanel>
-                <TextBox x:Name="SearchTextBox"
-                         Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         TextChanged="SearchTextBox_TextChanged"
-                         Margin="5"
-                         materialDesign:TextFieldAssist.PrefixText="🔍  "
-                         materialDesign:HintAssist.Hint="Search npc"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}" />
+                <controls:SearchBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Filter="NpcFilter"
+                                    ItemsSource="{Binding Models}" />
                 <ListView x:Name="NpcsList"
                           ItemsSource="{Binding Models}">
                     <ListView.ItemTemplate>

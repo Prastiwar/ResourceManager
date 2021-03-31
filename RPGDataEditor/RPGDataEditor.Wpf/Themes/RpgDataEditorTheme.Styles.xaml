@@ -22,6 +22,17 @@
                     Value="Auto" />
         </Style.Setters>
     </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
+           TargetType="{x:Type controls:SearchBox}">
+        <Style.Setters>
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="materialDesign:TextFieldAssist.PrefixText"
+                    Value="🔍  " />
+            <Setter Property="materialDesign:HintAssist.Hint"
+                    Value="Search.." />
+        </Style.Setters>
+    </Style>
     <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
            TargetType="{x:Type controls:ExpandButton}">
         <Style.Setters>
@@ -63,7 +74,7 @@
                 <Setter.Value>
                     <DataTemplate>
                         <materialDesign:PackIcon Kind="Add"
-                                                 FontSize="14"/>
+                                                 FontSize="14" />
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
