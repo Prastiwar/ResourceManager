@@ -2,7 +2,6 @@ using Prism;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Wpf.Controls;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,10 +11,6 @@ namespace RPGDataEditor.Wpf
 {
     public static class ViewsExtensions
     {
-        public static object TryResolve(this Application app, Type type) => app is PrismApplicationBase prismApp ? prismApp.Container.Resolve(type) : default;
-
-        public static T TryResolve<T>(this Application app) => TryResolve(app, typeof(T)) is T item ? item : default;
-
         public static void ChangeTypeInList<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e, IList<TModel> list, ItemsControl itemsControl = null)
             where TModel : ObservableModel
         {

@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Wpf.Converters;

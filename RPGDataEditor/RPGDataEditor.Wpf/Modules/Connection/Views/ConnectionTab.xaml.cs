@@ -9,7 +9,7 @@ namespace RPGDataEditor.Wpf.Connection.Views
 
         private void SessionControl_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
-            if (SessionControl.DataContext is SessionContext context)
+            if (SessionControl.DataContext is ISessionContext context)
             {
                 context.SetConnection(e.TargetType);
             }

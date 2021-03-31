@@ -6,7 +6,7 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public class ViewModelContext
     {
-        public ViewModelContext(SessionContext session,
+        public ViewModelContext(ISessionContext session,
                                 IDialogService dialogService,
                                 IValidationProvider validationProvider,
                                 ISnackbarService snackbarService)
@@ -17,7 +17,7 @@ namespace RPGDataEditor.Core.Mvvm
             SnackbarService = snackbarService;
         }
 
-        public SessionContext Session { get; }
+        public ISessionContext Session { get; }
         public IDialogService DialogService { get; }
         public IValidationProvider ValidationProvider { get; }
         public ISnackbarService SnackbarService { get; }

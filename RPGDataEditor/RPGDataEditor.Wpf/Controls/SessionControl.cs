@@ -26,7 +26,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected override string GetDataContextItemName()
         {
-            if (DataContext is SessionContext session)
+            if (DataContext is ISessionContext session)
             {
                 return session.Client?.GetType().Name.Replace("ResourceClient", "");
             }

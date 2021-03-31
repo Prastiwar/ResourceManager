@@ -1,4 +1,4 @@
-﻿using Prism;
+﻿using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using System.Windows;

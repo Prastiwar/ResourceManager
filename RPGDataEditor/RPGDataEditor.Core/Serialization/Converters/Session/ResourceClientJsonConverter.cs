@@ -6,7 +6,7 @@ using System;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class ConnectionJsonConverter : ExtendableJsonConverter<IResourceClient>
+    public class ResourceClientJsonConverter : ExtendableJsonConverter<IResourceClient>
     {
         protected virtual IClientProvider GetClientProvider() => new DefaultClientProvider(new DefaultResourceToTypeConverter(), new DefaultResourceToPathConverter());
 

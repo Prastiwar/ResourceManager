@@ -13,7 +13,7 @@ namespace RPGDataEditor.Core.Mvvm
 
         public ViewModelContext Context { get; }
 
-        public SessionContext Session { get; }
+        public ISessionContext Session { get; }
 
         public virtual void Destroy() { }
     }

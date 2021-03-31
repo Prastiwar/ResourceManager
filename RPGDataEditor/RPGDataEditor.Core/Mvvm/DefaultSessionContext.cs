@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Mvvm
 {
-    public class SessionContext : ObservableModel
+    public class DefaultSessionContext : ObservableModel, ISessionContext
     {
-        public SessionContext() { }
+        public DefaultSessionContext() { }
 
-        public SessionContext(string sessionFilePath)
+        public DefaultSessionContext(string sessionFilePath)
         {
             if (string.IsNullOrEmpty(sessionFilePath))
             {
@@ -21,12 +21,12 @@ namespace RPGDataEditor.Core.Mvvm
             SessionFilePath = sessionFilePath;
         }
 
-        protected string SessionFilePath { get; set; }
+        public string SessionFilePath { get; set; }
 
-        private OptionsData options = new OptionsData();
+        private OptionsData options;
         public OptionsData Options {
             get => options;
-            set => SetProperty(ref options, value ?? new OptionsData());
+            set => SetProperty(ref options, value);
         }
 
         private IResourceClient client;
@@ -103,10 +103,10 @@ namespace RPGDataEditor.Core.Mvvm
             File.WriteAllText(SessionFilePath, json);
         }
 
-        public SessionContext LoadSession()
+        public ISessionContext LoadSession()
         {
             string json = File.ReadAllText(SessionFilePath);
-            SessionContext session = JsonConvert.DeserializeObject<SessionContext>(json);
+            DefaultSessionContext session = JsonConvert.DeserializeObject<DefaultSessionContext>(json);
             session.SessionFilePath = SessionFilePath;
             return session;
         }
