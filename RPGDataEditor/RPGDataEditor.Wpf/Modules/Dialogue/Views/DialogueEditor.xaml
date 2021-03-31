@@ -8,118 +8,98 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
-             xmlns:prism="http://prismlibrary.com/"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
-             Background="{DynamicResource MaterialDialogColor}"
-             Style="{DynamicResource DefaultControlStyle}">
-    <prism:Dialog.WindowStyle>
-        <Style TargetType="Window">
-            <Style.Setters>
-                <Setter Property="MinHeight"
-                        Value="512" />
-                <Setter Property="MinWidth"
-                        Value="800" />
-            </Style.Setters>
-        </Style>
-    </prism:Dialog.WindowStyle>
-    <Grid x:Name="MainGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <ScrollViewer>
-            <StackPanel Margin="10">
-                <TextBox DataContext="{Binding Model}"
-                         Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="5"
-                         materialDesign:HintAssist.Hint="Title"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <TextBox DataContext="{Binding Model}"
-                         Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Margin="5"
-                         materialDesign:HintAssist.Hint="Message"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBox>
-                <CheckBox x:Name="AllowEscapeCheckbox"
-                          Margin="8"
-                          DataContext="{Binding Model}"
-                          IsChecked="{Binding AllowEscape}"
-                          Content="Allow Escape to close dialog" />
-                <materialDesign:Card HorizontalAlignment="Stretch"
-                                     HorizontalContentAlignment="Center"
-                                     Margin="5"
-                                     Padding="5">
-                    <controls:ResourcePicker EmptyText="Select Start Quest"
-                                             DataContext="{Binding Model}"
-                                             PickedId="{Binding StartQuest, Mode=TwoWay}"
-                                             Resource="Quest" />
-                </materialDesign:Card>
-                <materialDesign:Card HorizontalAlignment="Stretch"
-                                     HorizontalContentAlignment="Center"
-                                     Margin="5"
-                                     Padding="5">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <controls:ExpandButton ExpandableElement="{x:Reference OptionsListView}" />
-                            <Button Command="{Binding AddOptionCommand}"
-                                    Style="{DynamicResource AddFlatButtonStyle}" />
-                            <TextBlock Text="{Binding ItemsSource.Count, ElementName=OptionsListView, StringFormat='({0}) Options'}"
-                                       Margin="5" />
-                        </StackPanel>
-                        <ListView x:Name="OptionsListView"
-                                  DataContext="{Binding Model}"
-                                  ItemsSource="{Binding Options}"
-                                  HorizontalAlignment="Stretch"
-                                  HorizontalContentAlignment="Stretch">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <materialDesign:Card HorizontalAlignment="Stretch"
-                                                         HorizontalContentAlignment="Center"
-                                                         Padding="5">
-                                        <Grid HorizontalAlignment="Stretch">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Button Command="{Binding DataContext.RemoveOptionCommand, Source={x:Reference MainGrid}}"
-                                                    CommandParameter="{Binding .}"
-                                                    VerticalAlignment="Top"
-                                                    Margin="0,12,0,0"
-                                                    Style="{DynamicResource DeleteFlatButtonStyle}" />
-                                            <controls:DialogueOptionView DataContext="{Binding .}"
-                                                                         Grid.Column="1"
-                                                                         TypeChange="DialogueOptionView_TypeChange"
-                                                                         HorizontalAlignment="Stretch"
-                                                                         HorizontalContentAlignment="Stretch" />
-                                        </Grid>
-                                    </materialDesign:Card>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+             Style="{DynamicResource DefaultEditorControl}">
+    <ScrollViewer>
+        <StackPanel Margin="10">
+            <TextBox DataContext="{Binding Model}"
+                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Title"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
+            <TextBox DataContext="{Binding Model}"
+                     Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"
+                     materialDesign:HintAssist.Hint="Message"
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                <i:Interaction.Behaviors>
+                    <behaviors:CatchValidationBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
+            <CheckBox x:Name="AllowEscapeCheckbox"
+                      Margin="8"
+                      DataContext="{Binding Model}"
+                      IsChecked="{Binding AllowEscape}"
+                      Content="Allow Escape to close dialog" />
+            <materialDesign:Card HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Center"
+                                 Margin="5"
+                                 Padding="5">
+                <controls:ResourcePicker EmptyText="Select Start Quest"
+                                         DataContext="{Binding Model}"
+                                         PickedId="{Binding StartQuest, Mode=TwoWay}"
+                                         Resource="Quest" />
+            </materialDesign:Card>
+            <materialDesign:Card HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Center"
+                                 Margin="5"
+                                 Padding="5">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <controls:ExpandButton ExpandableElement="{x:Reference OptionsListView}" />
+                        <Button Command="{Binding AddOptionCommand}"
+                                Style="{DynamicResource AddFlatButtonStyle}" />
+                        <TextBlock Text="{Binding ItemsSource.Count, ElementName=OptionsListView, StringFormat='({0}) Options'}"
+                                   Margin="5" />
                     </StackPanel>
-                </materialDesign:Card>
-                <controls:RequirementsListCard x:Name="RequirementsCard"
-                                               DataContext="{Binding Model}"
-                                               Requirements="{Binding Requirements}"
-                                               local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                               local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
-                    <controls:RequirementsListCard.ValidablePathValuesBindings>
-                        <local:MultiBindingValue>
-                            <Binding Path="(ItemsControl.AlternationIndex)"
-                                     RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                        </local:MultiBindingValue>
-                    </controls:RequirementsListCard.ValidablePathValuesBindings>
-                </controls:RequirementsListCard>
-            </StackPanel>
-        </ScrollViewer>
-        <ContentPresenter Grid.Row="1"
-                          ContentTemplate="{StaticResource SaveCancelButtonsTemplate}" />
-    </Grid>
+                    <ListView x:Name="OptionsListView"
+                              DataContext="{Binding Model}"
+                              ItemsSource="{Binding Options}"
+                              HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <materialDesign:Card HorizontalAlignment="Stretch"
+                                                     HorizontalContentAlignment="Center"
+                                                     Padding="5">
+                                    <Grid HorizontalAlignment="Stretch">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button Command="{Binding DataContext.RemoveOptionCommand, Source={x:Reference MainGrid}}"
+                                                CommandParameter="{Binding .}"
+                                                VerticalAlignment="Top"
+                                                Margin="0,12,0,0"
+                                                Style="{DynamicResource DeleteFlatButtonStyle}" />
+                                        <controls:DialogueOptionView DataContext="{Binding .}"
+                                                                     Grid.Column="1"
+                                                                     TypeChange="DialogueOptionView_TypeChange"
+                                                                     HorizontalAlignment="Stretch"
+                                                                     HorizontalContentAlignment="Stretch" />
+                                    </Grid>
+                                </materialDesign:Card>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </materialDesign:Card>
+            <controls:RequirementsListCard x:Name="RequirementsCard"
+                                           DataContext="{Binding Model}"
+                                           Requirements="{Binding Requirements}"
+                                           local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
+                                           local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
+                <controls:RequirementsListCard.ValidablePathValuesBindings>
+                    <local:MultiBindingValue>
+                        <Binding Path="(ItemsControl.AlternationIndex)"
+                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
+                    </local:MultiBindingValue>
+                </controls:RequirementsListCard.ValidablePathValuesBindings>
+            </controls:RequirementsListCard>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

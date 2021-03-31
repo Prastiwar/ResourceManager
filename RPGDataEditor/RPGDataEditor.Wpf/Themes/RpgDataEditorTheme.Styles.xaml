@@ -22,6 +22,27 @@
                     Value="Auto" />
         </Style.Setters>
     </Style>
+    <Style TargetType="{x:Type Control}"
+           x:Key="DefaultPrismWindowStyle">
+        <Style.Setters>
+            <Setter Property="MinHeight"
+                    Value="512" />
+            <Setter Property="MinWidth"
+                    Value="800" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource DefaultControlStyle}"
+           TargetType="{x:Type ContentControl}"
+           x:Key="DefaultEditorControl">
+        <Style.Setters>
+            <Setter Property="Background"
+                    Value="{DynamicResource MaterialDialogColor}" />
+            <Setter Property="ContentTemplate"
+                    Value="{DynamicResource EditorDialogTemplate}" />
+            <Setter Property="prism:Dialog.WindowStyle"
+                    Value="{DynamicResource DefaultPrismWindowStyle}" />
+        </Style.Setters>
+    </Style>
     <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
            TargetType="{x:Type controls:SearchBox}">
         <Style.Setters>

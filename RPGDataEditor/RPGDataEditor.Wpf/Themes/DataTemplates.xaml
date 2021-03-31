@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataTemplate x:Key="EditorDialogTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ContentPresenter Content="{TemplateBinding Content}" />
+            <ContentPresenter Grid.Row="1"
+                              ContentTemplate="{DynamicResource SaveCancelButtonsTemplate}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="SaveCancelButtonsTemplate">
+        <Grid VerticalAlignment="Bottom"
+              HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*" />
+                <ColumnDefinition Width="0.5*" />
+            </Grid.ColumnDefinitions>
+            <Button Content="SAVE"
+                    Margin="5"
+                    Command="{Binding DataContext.CloseDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{StaticResource TrueValue}" />
+            <Button Content="CANCEL"
+                    Grid.Column="1"
+                    Margin="5"
+                    Command="{Binding DataContext.CloseDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{StaticResource FalseValue}" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>
