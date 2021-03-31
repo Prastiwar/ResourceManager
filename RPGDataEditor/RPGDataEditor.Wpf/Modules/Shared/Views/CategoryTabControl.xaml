@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" >
+             mc:Ignorable="d"
+             Style="{DynamicResource DefaultControlStyle}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -26,7 +27,7 @@
             <Button Grid.Column="1"
                     Content="Create new"
                     Visibility="{Binding Visibility, Source={x:Reference CategoryModelList}}"
-                    Command="{Binding AddModelCommand}"/>
+                    Command="{Binding AddModelCommand}" />
         </Grid>
         <ScrollViewer Grid.Row="1">
             <StackPanel>

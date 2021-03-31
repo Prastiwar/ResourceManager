@@ -3,8 +3,8 @@
                     xmlns:prism="http://prismlibrary.com/"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    <Style TargetType="UserControl"
-           x:Key="DefaultMaterialControlStyle">
+    <Style TargetType="{x:Type Control}"
+           x:Key="DefaultControlStyle">
         <Style.Setters>
             <Setter Property="prism:ViewModelLocator.AutoWireViewModel"
                     Value="True" />
@@ -20,8 +20,6 @@
                     Value="Ideal" />
             <Setter Property="TextOptions.TextRenderingMode"
                     Value="Auto" />
-            <Setter Property="Background"
-                    Value="#424242" />
         </Style.Setters>
     </Style>
     <Style BasedOn="{StaticResource MaterialDesignFlatButton}"

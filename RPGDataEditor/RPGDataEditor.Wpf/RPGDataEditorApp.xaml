@@ -2,92 +2,15 @@
                                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                                xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
-                                xmlns:local="clr-namespace:RPGDataEditor.Wpf"
-                                xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                xmlns:local="clr-namespace:RPGDataEditor.Wpf">
     <Application.Resources>
         <ResourceDictionary>
-            <x:Static x:Key="MaxIntValue"
-                      Member="sys:Int32.MaxValue" />
-            <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
-            <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Dark"
                                              PrimaryColor="Orange"
                                              SecondaryColor="Cyan" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
-                <ResourceDictionary>
-                    <converters:NextDialogIdToVisibility x:Key="NextDialogIdToVisibility" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:BindingListConverter x:Key="BindingListConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:CombinePropertyPathConverter x:Key="CombinePropertyPathConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:HexDecColorConverter x:Key="HexDecColorConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:ColorBrushConverter x:Key="ColorBrushConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:ColorStringConverter x:Key="ColorConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:StringCompareToVisibilityConverter x:Key="StringCompareToVisibilityConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:StringToBoolConverter x:Key="InvertStringToBoolConverter"
-                                                      Invert="True" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:IdentifiableToIdConverter x:Key="IdentifiableToIdConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:VisibilityInvertConverter x:Key="VisibilityInvertConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:BoolToVisibilityConverter x:Key="InvertedBoolToVisibility"
-                                                          Invert="True" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:DataBindingDebugConverter x:Key="DataBindingDebugConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:MethodToCommandConverter x:Key="MethodToCommandConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:GetCommandConverter x:Key="GetCommandConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:BoolToTextWrapConverter x:Key="BoolToTextWrapConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:InvertBooleanConverter x:Key="InvertBooleanConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:InvertIntToVisibilityConverter x:Key="InvertIntToVisibilityConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:PathToNameConverter x:Key="PathToNameConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:BindMultiValueConverter x:Key="BindMultiValueConverter" />
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <converters:GenericTupleConverter x:Key="GenericTupleConverter" />
-                </ResourceDictionary>
                 <ResourceDictionary>
                     <Style x:Key="MaterialDesignSnackbarActionCustomButton"
                            TargetType="Button"
@@ -96,6 +19,7 @@
                                 Value="WhiteSmoke" />
                     </Style>
                 </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Converters.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

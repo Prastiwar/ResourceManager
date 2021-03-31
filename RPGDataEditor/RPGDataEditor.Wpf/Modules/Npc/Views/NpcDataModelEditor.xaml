@@ -8,19 +8,12 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views"
              xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
              xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             Background="#424242"
-             FontFamily="{DynamicResource MaterialDesignFont}"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             TextElement.FontWeight="Regular"
-             TextElement.FontSize="13"
-             TextOptions.TextFormattingMode="Ideal"
-             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDialogColor}"
+             Style="{DynamicResource DefaultControlStyle}"
              x:Name="ThisNpcView">
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
