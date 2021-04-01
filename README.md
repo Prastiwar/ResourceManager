@@ -41,6 +41,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
-- [ ] Improve generic data (separate Minecraft data)
+- [ ] Fix ftp crashes on request exceptions (timeout, started request(when you spawn multiple ResourcePicker))
 - [ ] Check for connection status and inform user about problems
 - [ ] Support MSSQL database

@@ -24,6 +24,13 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(AddItemCommandProperty, value);
         }
 
+        public static DependencyProperty AddItemCommandParameterProperty =
+            DependencyProperty.Register(nameof(AddItemCommandParameter), typeof(object), typeof(ListDataCard));
+        public object AddItemCommandParameter {
+            get => GetValue(AddItemCommandParameterProperty);
+            set => SetValue(AddItemCommandParameterProperty, value);
+        }
+
         public static DependencyProperty RemoveItemCommandProperty =
             DependencyProperty.Register(nameof(RemoveItemCommand), typeof(ICommand), typeof(ListDataCard));
         public ICommand RemoveItemCommand {

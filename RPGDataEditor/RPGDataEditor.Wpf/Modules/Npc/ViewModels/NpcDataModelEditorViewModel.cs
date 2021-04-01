@@ -19,10 +19,10 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public ICommand RemovePathCommand => Commands.RemoveListItemCommand(() => Model.Paths);
         public int PathsCount => Model == null ? 0 : Model.Paths.Count;
 
-        public ICommand AddTalkLineCommand => Commands.AddParameterListItemLiCommand<TalkLine>();
+        public ICommand AddTalkLineCommand => Commands.AddParameterListItemCommand<TalkLine>();
         public ICommand RemoveTalkLineCommand => Commands.RemoveItemFromListView();
 
-        public ICommand AddDialogueIdCommand => Commands.AddParameterListItemLiCommand<int>();
+        public ICommand AddDialogueIdCommand => Commands.AddParameterListItemCommand<int>();
         
         public ICommand AddTradeItemCommand => Commands.AddListItemCommand(() => ((TraderNpcJobModel)Model.Job).Items);
         public ICommand RemoveTradeItemCommand => Commands.RemoveItemFromListView();

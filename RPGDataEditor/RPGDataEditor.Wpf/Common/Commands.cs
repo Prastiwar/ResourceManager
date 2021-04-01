@@ -14,9 +14,9 @@ namespace RPGDataEditor.Wpf
         public static ICommand RemoveListItemCommand(Func<IList> getList) => new DelegateCommand<object>(item => getList().Remove(item));
         public static ICommand RemoveListItemCommand<T>(Func<IList<T>> getList) => new DelegateCommand<T>(item => getList().Remove(item));
 
-        public static ICommand AddParameterListItemLiCommand<T>() => AddParameterListItemLiCommand(() => Activator.CreateInstance<T>());
+        public static ICommand AddParameterListItemCommand<T>() => AddParameterListItemCommand(() => Activator.CreateInstance<T>());
 
-        public static ICommand AddParameterListItemLiCommand<T>(Func<T> createInstance) => new DelegateCommand<IList>((x) => x.Add(createInstance()));
+        public static ICommand AddParameterListItemCommand<T>(Func<T> createInstance) => new DelegateCommand<IList>((x) => x.Add(createInstance()));
 
         public static ICommand AddListItemCommand(Func<IList> getList, Func<object> createInstance) => new DelegateCommand(() => getList().Add(createInstance()));
 

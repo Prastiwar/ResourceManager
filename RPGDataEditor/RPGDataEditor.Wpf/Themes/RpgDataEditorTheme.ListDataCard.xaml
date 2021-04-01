@@ -14,6 +14,7 @@
                 <StackPanel Orientation="Horizontal">
                     <controls:ExpandButton ExpandableElement="{x:Reference ListDataView}" />
                     <Button Command="{TemplateBinding AddItemCommand}"
+                            CommandParameter="{TemplateBinding AddItemCommandParameter}"
                             Style="{DynamicResource AddFlatButtonStyle}" />
                     <TextBlock x:Name="ItemsTextBlock"
                                Text="{TemplateBinding HeaderText}"
