@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
 
@@ -45,11 +46,46 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(ItemContentTemplateProperty, value);
         }
 
+        public static DependencyProperty HeaderTemplateProperty =
+            DependencyProperty.Register(nameof(HeaderTemplate), typeof(DataTemplate), typeof(ListDataCard));
+        public DataTemplate HeaderTemplate {
+            get => (DataTemplate)GetValue(HeaderTemplateProperty);
+            set => SetValue(HeaderTemplateProperty, value);
+        }
+
         public static DependencyProperty HeaderTextProperty =
             DependencyProperty.Register(nameof(HeaderText), typeof(string), typeof(ListDataCard));
         public string HeaderText {
             get => (string)GetValue(HeaderTextProperty);
             set => SetValue(HeaderTextProperty, value);
+        }
+
+        public static DependencyProperty IsReadOnlyProperty =
+            DependencyProperty.Register(nameof(IsReadOnly), typeof(bool), typeof(ListDataCard));
+        public bool IsReadOnly {
+            get => (bool)GetValue(IsReadOnlyProperty);
+            set => SetValue(IsReadOnlyProperty, value);
+        }
+
+        public static DependencyProperty IsExpandableProperty =
+            DependencyProperty.Register(nameof(IsExpandable), typeof(bool), typeof(ListDataCard));
+        public bool IsExpandable {
+            get => (bool)GetValue(IsExpandableProperty);
+            set => SetValue(IsExpandableProperty, value);
+        }
+
+        public static DependencyProperty IsExpandedProperty =
+            DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(ListDataCard), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        public bool IsExpanded {
+            get => (bool)GetValue(IsExpandedProperty);
+            set => SetValue(IsExpandedProperty, value);
+        }
+
+        public static DependencyProperty NoExpandableVisibilityProperty =
+            DependencyProperty.Register(nameof(NoExpandableVisibility), typeof(bool), typeof(ListDataCard));
+        public bool NoExpandableVisibility {
+            get => (bool)GetValue(NoExpandableVisibilityProperty);
+            set => SetValue(NoExpandableVisibilityProperty, value);
         }
 
         public override void OnApplyTemplate()
@@ -60,13 +96,17 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual void OnTemplateApplied()
         {
+            if (HeaderTemplate == null && GetBindingExpression(HeaderTemplateProperty) == null)
+            {
+                HeaderTemplate = TemplateGenerator.CreateDataTemplate(() => {
+                    TextBlock textBlock = new TextBlock();
+                    textBlock.SetBinding(TextBlock.TextProperty, new Binding(nameof(HeaderText)) { Source = this });
+                    return textBlock;
+                });
+            }
             if (RemoveItemCommand == null && GetBindingExpression(RemoveItemCommandProperty) == null)
             {
                 RemoveItemCommand = Commands.RemoveListItemCommand(() => ItemsSource);
-            }
-            if (AddItemCommand == null && GetBindingExpression(AddItemCommandProperty) == null)
-            {
-                //AddItemCommand = Commands.AddListItemCommand(() => Requirements);
             }
         }
 

@@ -1,8 +1,6 @@
 ﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -16,16 +14,12 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public override string Title => "Npc Editor";
 
         public ICommand AddPathCommand => Commands.AddListItemCommand(() => Model.Paths);
-        public ICommand RemovePathCommand => Commands.RemoveListItemCommand(() => Model.Paths);
-        public int PathsCount => Model == null ? 0 : Model.Paths.Count;
 
         public ICommand AddTalkLineCommand => Commands.AddParameterListItemCommand<TalkLine>();
-        public ICommand RemoveTalkLineCommand => Commands.RemoveItemFromListView();
 
         public ICommand AddDialogueIdCommand => Commands.AddParameterListItemCommand<int>();
         
         public ICommand AddTradeItemCommand => Commands.AddListItemCommand(() => ((TraderNpcJobModel)Model.Job).Items);
-        public ICommand RemoveTradeItemCommand => Commands.RemoveItemFromListView();
 
         private double maxHealth;
         public double MaxHealth {
@@ -84,10 +78,6 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         protected override Task InitializeAsync(IDialogParameters parameters)
         {
             base.InitializeAsync(parameters);
-            if (Model.Paths is INotifyCollectionChanged optionsNotifier)
-            {
-                optionsNotifier.CollectionChanged += Paths_CollectionChanged;
-            }
             MaxHealth = GetFromAttributes("minecraft:generic.max_health");
             KnockbackResistance = GetFromAttributes("minecraft:generic.knockback_resistance");
             MovementSpeed = GetFromAttributes("minecraft:generic.movement_speed");
@@ -127,17 +117,6 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
             }
             return Task.CompletedTask;
         }
-
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            if (e.PropertyName == nameof(Model))
-            {
-                RaisePropertyChanged(nameof(PathsCount));
-            }
-        }
-
-        private void Paths_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => RaisePropertyChanged(nameof(PathsCount));
 
     }
 }

@@ -11,14 +11,29 @@
                              Margin="5"
                              Padding="5">
             <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <controls:ExpandButton ExpandableElement="{x:Reference ListDataView}" />
+                <StackPanel x:Name="HeaderPanel"
+                            Orientation="Horizontal">
+                    <controls:ExpandButton ExpandableElement="{x:Reference ListDataView}"
+                                           Visibility="{TemplateBinding IsExpandable, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <controls:ExpandButton.IsExpanded>
+                            <MultiBinding Converter="{StaticResource ExpandListDataCardConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="IsExpanded"
+                                             RelativeSource="{RelativeSource AncestorType=controls:ListDataCard}" />
+                                    <Binding Path="IsExpandable"
+                                             RelativeSource="{RelativeSource AncestorType=controls:ListDataCard}" />
+                                    <Binding Path="NoExpandableVisibility"
+                                             RelativeSource="{RelativeSource AncestorType=controls:ListDataCard}" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </controls:ExpandButton.IsExpanded>
+                    </controls:ExpandButton>
                     <Button Command="{TemplateBinding AddItemCommand}"
                             CommandParameter="{TemplateBinding AddItemCommandParameter}"
-                            Style="{DynamicResource AddFlatButtonStyle}" />
-                    <TextBlock x:Name="ItemsTextBlock"
-                               Text="{TemplateBinding HeaderText}"
-                               Margin="5" />
+                            Style="{DynamicResource AddFlatButtonStyle}"
+                            Visibility="{TemplateBinding IsReadOnly, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                    <ContentPresenter x:Name="HeaderContentPresenter"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}" />
                 </StackPanel>
                 <ListView x:Name="ListDataView"
                           ItemsSource="{TemplateBinding ItemsSource}"
@@ -37,6 +52,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Button Command="{Binding RemoveItemCommand, RelativeSource={RelativeSource AncestorType=controls:ListDataCard}}"
                                             CommandParameter="{Binding .}"
+                                            Visibility="{Binding IsReadOnly, RelativeSource={RelativeSource AncestorType=controls:ListDataCard}, Converter={StaticResource InvertedBoolToVisibilityConverter}}"
                                             VerticalAlignment="Top"
                                             Margin="0,12,0,0"
                                             Style="{DynamicResource DeleteFlatButtonStyle}" />

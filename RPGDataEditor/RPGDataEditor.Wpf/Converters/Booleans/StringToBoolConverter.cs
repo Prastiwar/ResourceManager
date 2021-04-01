@@ -10,7 +10,8 @@ namespace RPGDataEditor.Wpf.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool equal = value.ToString() == parameter.ToString();
+            string valueString = value == null ? "null" : value.ToString();
+            bool equal = valueString == parameter.ToString();
             return Invert ? !equal : equal;
         }
 

@@ -15,6 +15,12 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
                                  ILocationToSimpleResourceConverter simpleResourceConverter)
             : base(context, resourceConverter, simpleResourceConverter) { }
 
+        protected override QuestModel CreateNewExactModel(SimpleIdentifiableData model) => new QuestModel() {
+            Id = model.Id,
+            Title = model.Name,
+            Category = (model as SimpleCategorizedData).Category
+        };
+
         protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
         {
             Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
@@ -67,11 +73,5 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
             };
             return cachedSettings;
         }
-
-        protected override QuestModel CreateNewExactModel(SimpleIdentifiableData model) => new QuestModel() {
-            Id = (int)model.Id,
-            Title = model.Name,
-            Category = (model as SimpleCategorizedData).Category
-        };
     }
 }

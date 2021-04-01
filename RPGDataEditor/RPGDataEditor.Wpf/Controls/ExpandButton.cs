@@ -17,7 +17,7 @@ namespace RPGDataEditor.Wpf.Controls
         }
 
         public static DependencyProperty IsExpandedProperty =
-            DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(ExpandButton), new PropertyMetadata(false, OnIsExpandedPropertyChanged));
+            DependencyProperty.Register(nameof(IsExpanded), typeof(bool), typeof(ExpandButton), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsExpandedPropertyChanged));
         private static void OnIsExpandedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => (d as ExpandButton).OnIsExpandedChanged((bool)e.NewValue);
         public bool IsExpanded {
