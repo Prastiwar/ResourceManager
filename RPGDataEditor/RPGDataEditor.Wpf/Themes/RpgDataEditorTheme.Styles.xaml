@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:prism="http://prismlibrary.com/"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
+                    xmlns:local="clr-namespace:RPGDataEditor.Wpf"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Style TargetType="{x:Type Control}"
            x:Key="DefaultControlStyle">

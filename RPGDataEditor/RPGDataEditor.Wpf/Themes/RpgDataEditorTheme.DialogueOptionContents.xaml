@@ -47,10 +47,9 @@
                                               Color="{Binding Color, Mode=TwoWay, Converter={StaticResource HexDecColorConverter}}" />
             </StackPanel>
             <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
-            <controls:RequirementsListCard x:Name="RequirementsCard"
-                                           Requirements="{Binding Requirements}"
-                                           local:AttachProperties.ValidablePathFormat="Options[{0}].Requirements[{1}]"
-                                           local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
+            <controls:RequirementsListCard Style="{DynamicResource ModelRequirementsListCardStyle}"
+                                           DataContext="{Binding .}"
+                                           local:AttachProperties.ValidablePathFormat="Options[{0}].Requirements[{1}]">
                 <controls:RequirementsListCard.ValidablePathValuesBindings>
                     <local:MultiBindingValue>
                         <Binding Path="(ItemsControl.AlternationIndex)"

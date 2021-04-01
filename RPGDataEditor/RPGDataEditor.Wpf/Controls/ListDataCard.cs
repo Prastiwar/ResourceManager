@@ -68,7 +68,7 @@ namespace RPGDataEditor.Wpf.Controls
         }
 
         public static DependencyProperty IsExpandableProperty =
-            DependencyProperty.Register(nameof(IsExpandable), typeof(bool), typeof(ListDataCard));
+            DependencyProperty.Register(nameof(IsExpandable), typeof(bool), typeof(ListDataCard), new PropertyMetadata(true));
         public bool IsExpandable {
             get => (bool)GetValue(IsExpandableProperty);
             set => SetValue(IsExpandableProperty, value);

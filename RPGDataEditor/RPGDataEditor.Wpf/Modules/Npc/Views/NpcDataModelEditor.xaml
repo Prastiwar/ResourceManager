@@ -416,6 +416,7 @@
                         </StackPanel>
                     </DataTemplate>
                     <Style TargetType="{x:Type controls:ListDataCard}"
+                           BasedOn="{StaticResource {x:Type controls:ListDataCard}}"
                            x:Key="TalkLineListStyle">
                         <Setter Property="DataContext"
                                 Value="{Binding TalkData}" />
@@ -423,8 +424,6 @@
                                 Value="{Binding Tag, ElementName=ListsPanel}" />
                         <Setter Property="ItemContentTemplate"
                                 Value="{StaticResource TalkLineTemplate}" />
-                        <Setter Property="Template"
-                                Value="{StaticResource ListDataCardTemplate}" />
                     </Style>
                 </StackPanel.Resources>
                 <TextBox DataContext="{Binding TalkData}"

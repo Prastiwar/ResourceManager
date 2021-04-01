@@ -52,7 +52,6 @@
             <DataTemplate>
                 <controls:QuestTaskView DataContext="{Binding .}"
                                         TypeChange="QuestTaskViewList_TypeChange"
-                                        Grid.Column="1"
                                         local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
                                         local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListDataCard}"
                                         HorizontalAlignment="Stretch"
@@ -66,17 +65,6 @@
                 </controls:QuestTaskView>
             </DataTemplate>
         </controls:ListDataCard>
-        <controls:RequirementsListCard x:Name="RequirementsCard"
-                                       DataContext="{Binding Model}"
-                                       Requirements="{Binding Requirements}"
-                                       local:AttachProperties.ValidablePathFormat="Requirements[{0}]"
-                                       local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=RequirementsCard}">
-            <controls:RequirementsListCard.ValidablePathValuesBindings>
-                <local:MultiBindingValue>
-                    <Binding Path="(ItemsControl.AlternationIndex)"
-                             RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                </local:MultiBindingValue>
-            </controls:RequirementsListCard.ValidablePathValuesBindings>
-        </controls:RequirementsListCard>
+        <controls:RequirementsListCard Style="{DynamicResource ModelRequirementsListCardStyle}" />
     </StackPanel>
 </UserControl>
