@@ -22,17 +22,18 @@ namespace RPGDataEditor.Wpf
         public static object GetResolvedValue(this BindingExpression binding) =>
             binding.ResolvedSource.GetType().GetProperty(binding.ResolvedSourcePropertyName, BindingFlags.Public | BindingFlags.Instance).GetValue(binding.ResolvedSource);
 
-        public static T GetResolvedValue<T>(this Binding binding)
+        public static T GetResolvedValue<T>(this Binding binding) => GetResolvedValue<T>(binding, new Dummy());
+        public static T GetResolvedValue<T>(this Binding binding, DependencyObject root)
         {
-            object val = binding.GetResolvedValue();
+            object val = binding.GetResolvedValue(root);
             return val != null ? (T)val : default;
         }
 
-        public static object GetResolvedValue(this Binding binding)
+        public static object GetResolvedValue(this Binding binding) => GetResolvedValue(binding, new Dummy());
+        public static object GetResolvedValue(this Binding binding, DependencyObject root)
         {
-            Dummy dummy = new Dummy();
-            BindingOperations.SetBinding(dummy, Dummy.ValueProperty, binding);
-            return dummy.GetValue(Dummy.ValueProperty);
+            BindingOperations.SetBinding(root, Dummy.ValueProperty, binding);
+            return root.GetValue(Dummy.ValueProperty);
         }
 
         public static BindingBase CloneBinding(this BindingBase bindingBase)

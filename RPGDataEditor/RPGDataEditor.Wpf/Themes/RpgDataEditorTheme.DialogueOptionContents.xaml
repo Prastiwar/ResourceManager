@@ -37,8 +37,7 @@
                 <controls:MaterialColorPicker Margin="5"
                                               Color="{Binding Color, Mode=TwoWay, Converter={StaticResource HexDecColorConverter}}" />
             </StackPanel>
-            <controls:RequirementsListCard Requirements="{Binding Requirements}"
-                                           DataContext="{Binding .}" />
+            <controls:ListDataCard Style="{DynamicResource RequirementsListCardStyle}" />
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

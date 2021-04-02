@@ -1,5 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
+using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Providers;
+using RPGDataEditor.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +45,13 @@ namespace RPGDataEditor.Wpf
             if (btn.Content is PackIcon icon)
             {
                 icon.Kind = icon.Kind == PackIconKind.ExpandMore ? PackIconKind.ExpandLess : PackIconKind.ExpandMore;
+            }
+        }
+
+        public static ICommand AddRequirementCommand {
+            get {
+                IModelProvider<PlayerRequirementModel> modelProvider = Application.Current.TryResolve<IModelProvider<PlayerRequirementModel>>();
+                return AddParameterListItemCommand(() => modelProvider.CreateModel("Dialogue"));
             }
         }
     }

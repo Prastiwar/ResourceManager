@@ -6,6 +6,11 @@ namespace RPGDataEditor.Wpf
 {
     public class AttachProperties : DependencyObject
     {
+        public static readonly DependencyProperty DataProperty =
+            DependencyProperty.RegisterAttached("Data", typeof(object), typeof(AttachProperties));
+        public static void SetData(UIElement element, object value) => element.SetValue(DataProperty, value);
+        public static object GetData(UIElement element) => element.GetValue(DataProperty);
+
         public static readonly DependencyProperty BindingProperty =
             DependencyProperty.RegisterAttached("Binding", typeof(Binding), typeof(AttachProperties));
         public static void SetBinding(UIElement element, Binding value) => element.SetValue(BindingProperty, value);

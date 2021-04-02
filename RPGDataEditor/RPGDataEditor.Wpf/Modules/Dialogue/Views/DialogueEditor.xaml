@@ -52,7 +52,7 @@
                                              HorizontalContentAlignment="Stretch" />
             </DataTemplate>
         </controls:ListDataCard>
-        <controls:RequirementsListCard DataContext="{Binding Model}"
-                                       Requirements="{Binding Requirements}" />
+        <controls:ListDataCard DataContext="{Binding Model}"
+                               Style="{DynamicResource RequirementsListCardStyle}" />
     </StackPanel>
 </UserControl>
