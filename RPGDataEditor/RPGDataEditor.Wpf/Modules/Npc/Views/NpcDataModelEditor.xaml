@@ -133,7 +133,8 @@
                                 Visibility="Collapsed" />
                     <StackPanel x:Name="TraderStackPanel"
                                 Visibility="Collapsed">
-                        <controls:ListDataCard DataContext="{Binding Model.Job}"
+                        <controls:ListDataCard x:Name="TradeItemsListCard"
+                                               DataContext="{Binding Model.Job}"
                                                ItemsSource="{Binding Items}"
                                                HeaderText="{Binding Items.Count, StringFormat='({0}) Items'}"
                                                AddItemCommand="{Binding DataContext.AddTradeItemCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}">
@@ -160,17 +161,10 @@
                                                     Visibility="Collapsed">
                                             <TextBox Text="{Binding Item, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      Margin="5"
-                                                     local:AttachProperties.ValidablePathFormat="Job.Items[{0}]"
                                                      materialDesign:HintAssist.Hint="Item resource location"
                                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                <local:AttachProperties.ValidablePathValues>
-                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                    </MultiBinding>
-                                                </local:AttachProperties.ValidablePathValues>
                                                 <i:Interaction.Behaviors>
-                                                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                                    <behaviors:CatchValidationBehavior />
                                                 </i:Interaction.Behaviors>
                                             </TextBox>
                                             <TextBox Text="{Binding Buy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -202,17 +196,10 @@
                                             </TextBox>
                                             <TextBox Text="{Binding Nbt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      Margin="5"
-                                                     local:AttachProperties.ValidablePathFormat="Job.Items[{0}]"
                                                      materialDesign:HintAssist.Hint="NBT"
                                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                                <local:AttachProperties.ValidablePathValues>
-                                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                                    </MultiBinding>
-                                                </local:AttachProperties.ValidablePathValues>
                                                 <i:Interaction.Behaviors>
-                                                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                                    <behaviors:CatchValidationBehavior />
                                                 </i:Interaction.Behaviors>
                                             </TextBox>
                                         </StackPanel>
@@ -385,32 +372,18 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBox Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="5"
-                                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), RelativeSource={RelativeSource AncestorType=controls:ListDataCard}}"
                                      materialDesign:HintAssist.Hint="Talk Text"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                <local:AttachProperties.ValidablePathValues>
-                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                    </MultiBinding>
-                                </local:AttachProperties.ValidablePathValues>
                                 <i:Interaction.Behaviors>
-                                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                    <behaviors:CatchValidationBehavior />
                                 </i:Interaction.Behaviors>
                             </TextBox>
                             <TextBox Margin="5"
                                      Text="{Binding Path=SoundLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     local:AttachProperties.ValidablePathFormat="{Binding Path=(local:AttachProperties.ValidablePathFormat), RelativeSource={RelativeSource AncestorType=controls:ListDataCard}}"
                                      materialDesign:HintAssist.Hint="Sound Location"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                                <local:AttachProperties.ValidablePathValues>
-                                    <MultiBinding Converter="{StaticResource BindingListConverter}">
-                                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                                    </MultiBinding>
-                                </local:AttachProperties.ValidablePathValues>
                                 <i:Interaction.Behaviors>
-                                    <behaviors:CatchValidationBehavior ValidableContext="{Binding Path=DataContext.Model, ElementName=ThisNpcView}" />
+                                    <behaviors:CatchValidationBehavior />
                                 </i:Interaction.Behaviors>
                             </TextBox>
                         </StackPanel>
@@ -437,23 +410,19 @@
                     </i:Interaction.Behaviors>
                 </TextBox>
                 <controls:ListDataCard ItemsSource="{Binding InteractLines}"
-                                       local:AttachProperties.ValidablePathFormat="TalkData.InteractLines[{0}]"
                                        HeaderText="{Binding InteractLines.Count, StringFormat='({0}) Interact Lines'}"
                                        AddItemCommandParameter="{Binding InteractLines}"
                                        Style="{StaticResource TalkLineListStyle}" />
                 <controls:ListDataCard ItemsSource="{Binding DeathLines}"
-                                       local:AttachProperties.ValidablePathFormat="TalkData.DeathLines[{0}]"
                                        HeaderText="{Binding DeathLines.Count, StringFormat='({0}) Death Lines'}"
                                        AddItemCommandParameter="{Binding DeathLines}"
                                        Style="{StaticResource TalkLineListStyle}" />
                 <controls:ListDataCard ItemsSource="{Binding HurtLines}"
-                                       local:AttachProperties.ValidablePathFormat="TalkData.HurtLines[{0}]"
                                        HeaderText="{Binding HurtLines.Count, StringFormat='({0}) Hurt Lines'}"
                                        AddItemCommandParameter="{Binding HurtLines}"
                                        Style="{StaticResource TalkLineListStyle}" />
                 <controls:ListDataCard DataContext="{Binding TalkData}"
                                        ItemsSource="{Binding InitationDialogues}"
-                                       local:AttachProperties.ValidablePathFormat="TalkData.InitationDialogues[{0}]"
                                        HeaderText="{Binding InitationDialogues.Count, StringFormat='({0}) Initation Dialogues'}"
                                        AddItemCommand="{Binding DataContext.AddDialogueIdCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                        AddItemCommandParameter="{Binding InitationDialogues}">

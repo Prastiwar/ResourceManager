@@ -4,6 +4,7 @@ using RPGDataEditor.Core.Validation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace RPGDataEditor.Core.Models
@@ -49,36 +50,91 @@ namespace RPGDataEditor.Core.Models
 
         public event EventHandler<ValidationResult> Validated;
 
-        private void CallOnEach<T>(object root, Action<T> action)
+        public virtual void NotifyValidate(ValidationResult result)
         {
-            foreach (PropertyInfo property in root.GetType().GetProperties())
+            OnValidated(this, result);
+            HashSet<string> notifiedPropertyNames = new HashSet<string>();
+            List<ValidationFailure> newFailures = new List<ValidationFailure>();
+            foreach (ValidationFailure failure in result.Errors)
             {
-                if (property.GetMethod == null || property.GetCustomAttribute<NotValidableAttribute>() != null)
+                string[] propertyNames = failure.PropertyName.Split('.', StringSplitOptions.RemoveEmptyEntries);
+                if (propertyNames.Length < 2)
+                {
+                    continue;
+                }
+                string targetPropertyName = GetNoArrayProperty(propertyNames[0]);
+                if (!notifiedPropertyNames.Add(targetPropertyName))
+                {
+                    continue;
+                }
+                PropertyInfo property = GetType().GetProperty(targetPropertyName);
+                bool cannotValidate = property.GetMethod == null || property.GetCustomAttribute<NotValidableAttribute>() != null;
+                if (cannotValidate)
                 {
                     continue;
                 }
                 object value = property.GetValue(this);
-                if (value is T tValue)
+                if (value is IValidable validable)
                 {
-                    action(tValue);
+                    ValidationResult newResult = GetTargetPropertyResult(result, newFailures, targetPropertyName);
+                    validable.NotifyValidate(newResult);
                 }
-                if (value is IEnumerable enumerable && !(enumerable is IEnumerable<char>))
+                else if (value is IEnumerable enumerable && !(enumerable is IEnumerable<char>))
                 {
-                    foreach (object item in enumerable)
+                    ValidationResult collectionResults = GetTargetPropertyResult(result, newFailures, targetPropertyName);
+                    List<object> enumerableItems = enumerable.Cast<object>().ToList();
+                    foreach (ValidationFailure item in collectionResults.Errors)
                     {
-                        if (item is T tItem)
+                        int arrayEndIndex = item.PropertyName.IndexOf(']');
+                        string itemIndexString = item.PropertyName.Substring(1, arrayEndIndex - 1);
+                        int itemIndex = int.Parse(itemIndexString);
+                        if (enumerableItems[itemIndex] is IValidable itemValidable)
                         {
-                            action(tItem);
+                            string targetItemPropertyName = item.PropertyName.Substring(0, item.PropertyName.IndexOf('.'));
+                            ValidationResult itemResults = GetTargetPropertyResult(collectionResults, newFailures, targetItemPropertyName);
+                            itemValidable.NotifyValidate(itemResults);
                         }
                     }
                 }
             }
         }
 
-        public virtual void NotifyValidate(ValidationResult result)
+        private string GetNoArrayProperty(string propertyName)
         {
-            OnValidated(this, result);
-            CallOnEach<IValidable>(this, validable => validable.NotifyValidate(result));
+            int startArrayIndex = propertyName.IndexOf('[');
+            if (startArrayIndex > -1)
+            {
+                return propertyName.Substring(0, startArrayIndex);
+            }
+            return propertyName;
+        }
+
+        private ValidationResult GetTargetPropertyResult(ValidationResult result, List<ValidationFailure> newFailures, string targetPropertyName)
+        {
+            newFailures.Clear();
+
+            bool IsTargetFailure(ValidationFailure failure)
+            {
+                bool starts = failure.PropertyName.StartsWith(targetPropertyName);
+                if (starts && failure.PropertyName.Length > targetPropertyName.Length)
+                {
+                    char nextChar = failure.PropertyName[targetPropertyName.Length];
+                    return nextChar == '[' || nextChar == '.';
+                }
+                return starts;
+            }
+
+            IEnumerable<ValidationFailure> segmentFailures = result.Errors.Where(IsTargetFailure);
+            foreach (ValidationFailure segmentFailure in segmentFailures)
+            {
+                bool isStartArray = segmentFailure.PropertyName[targetPropertyName.Length] == '[';
+                int removeCount = isStartArray ? targetPropertyName.Length : targetPropertyName.Length + 1;
+                string trimmedPropertyName = segmentFailure.PropertyName.Remove(0, removeCount);
+                ValidationFailure newFailure = segmentFailure.Copy();
+                newFailure.PropertyName = trimmedPropertyName;
+                newFailures.Add(newFailure);
+            }
+            return new ValidationResult(newFailures);
         }
 
         protected void OnValidated(object sender, ValidationResult result) => Validated?.Invoke(sender, result);

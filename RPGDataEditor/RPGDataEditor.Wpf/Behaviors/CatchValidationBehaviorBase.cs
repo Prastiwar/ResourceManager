@@ -55,8 +55,8 @@ namespace RPGDataEditor.Wpf.Behaviors
                 }
                 if (ValidableContext == null)
                 {
-                    ValidableContext = AssociatedObject.GetValue(AttachProperties.ValidableObjectProperty) as IValidable;
-                    DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(AttachProperties.ValidableObjectProperty, AssociatedType);
+                    ValidableContext = AssociatedObject.GetValue(ValidableHelper.ValidableObjectProperty) as IValidable;
+                    DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(ValidableHelper.ValidableObjectProperty, AssociatedType);
                     dpd.AddValueChanged(AssociatedObject, OnValidableObjectChanged);
                 }
             }
@@ -65,7 +65,7 @@ namespace RPGDataEditor.Wpf.Behaviors
         private void AssociatedObject_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => OnValidableContextChanged(this, e);
 
         private void OnValidableObjectChanged(object sender, EventArgs e)
-            => ValidableContext = AssociatedObject.GetValue(AttachProperties.ValidableObjectProperty) as IValidable;
+            => ValidableContext = AssociatedObject.GetValue(ValidableHelper.ValidableObjectProperty) as IValidable;
 
         protected override void OnDetaching()
         {
@@ -88,10 +88,10 @@ namespace RPGDataEditor.Wpf.Behaviors
                 Binding binding = BindingOperations.GetBinding(AssociatedObject, System.Windows.Controls.TextBox.TextProperty);
                 catchProperty = binding?.Path.Path;
             }
-            string pathFormat = AttachProperties.GetValidablePathFormat(AssociatedObject);
+            string pathFormat = ValidableHelper.GetValidablePathFormat(AssociatedObject);
             if (!string.IsNullOrEmpty(pathFormat))
             {
-                IList<object> values = AttachProperties.GetValidablePathValues(AssociatedObject);
+                IList<object> values = ValidableHelper.GetValidablePathValues(AssociatedObject);
                 if (values == null)
                 {
                     catchProperty = pathFormat + "." + catchProperty;

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -73,5 +74,13 @@ namespace RPGDataEditor.Core
             string value = obj.ToString();
             return new UrlAttribute().IsValid(value);
         }
+
+        public static ValidationFailure Copy(this ValidationFailure failure) => new ValidationFailure(failure.PropertyName, failure.ErrorMessage, failure.AttemptedValue) {
+            Severity = failure.Severity,
+            CustomState = failure.CustomState,
+            ErrorCode = failure.ErrorCode,
+            FormattedMessageArguments = failure.FormattedMessageArguments,
+            FormattedMessagePlaceholderValues = failure.FormattedMessagePlaceholderValues
+        };
     }
 }

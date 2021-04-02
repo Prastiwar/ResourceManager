@@ -33,26 +33,4 @@
         <Setter Property="Template"
                 Value="{StaticResource RequirementsListCardTemplate}" />
     </Style>
-    <Style TargetType="{x:Type controls:RequirementsListCard}"
-           BasedOn="{StaticResource {x:Type controls:RequirementsListCard}}"
-           x:Key="ModelRequirementsListCardStyle">
-        <Style.Setters>
-            <Setter Property="DataContext"
-                    Value="{Binding Model}" />
-            <Setter Property="Requirements"
-                    Value="{Binding Requirements}" />
-            <Setter Property="local:AttachProperties.ValidablePathFormat"
-                    Value="Requirements[{0}]" />
-            <Setter Property="local:AttachProperties.ValidableObject"
-                    Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=controls:RequirementsListCard}}" />
-            <Setter Property="ValidablePathValuesBindings">
-                <Setter.Value>
-                    <local:MultiBindingValue>
-                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                    </local:MultiBindingValue>
-                </Setter.Value>
-            </Setter>
-        </Style.Setters>
-    </Style>
 </ResourceDictionary>

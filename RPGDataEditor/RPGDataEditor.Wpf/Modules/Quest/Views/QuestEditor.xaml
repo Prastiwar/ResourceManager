@@ -7,7 +7,6 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Style="{DynamicResource DefaultEditorControl}">
     <StackPanel Margin="10">
@@ -52,19 +51,11 @@
             <DataTemplate>
                 <controls:QuestTaskView DataContext="{Binding .}"
                                         TypeChange="QuestTaskViewList_TypeChange"
-                                        local:AttachProperties.ValidablePathFormat="Tasks[{0}]"
-                                        local:AttachProperties.ValidableObject="{Binding DataContext, ElementName=TasksListDataCard}"
                                         HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch">
-                    <local:AttachProperties.ValidablePathValues>
-                        <MultiBinding Converter="{StaticResource BindingListConverter}">
-                            <Binding Path="(ItemsControl.AlternationIndex)"
-                                     RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                        </MultiBinding>
-                    </local:AttachProperties.ValidablePathValues>
-                </controls:QuestTaskView>
+                                        HorizontalContentAlignment="Stretch" />
             </DataTemplate>
         </controls:ListDataCard>
-        <controls:RequirementsListCard Style="{DynamicResource ModelRequirementsListCardStyle}" />
+        <controls:RequirementsListCard DataContext="{Binding Model}"
+                                       Requirements="{Binding Requirements}" />
     </StackPanel>
 </UserControl>

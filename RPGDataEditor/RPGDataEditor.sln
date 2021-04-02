@@ -7,9 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Wpf", "RPGDat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Core", "RPGDataEditor.Core\RPGDataEditor.Core.csproj", "{7D7DEB66-A8EF-40F1-BE04-80C3BD8C3454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGDataEditor.Minecraft", "RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj", "{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Minecraft", "RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj", "{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBA}") = "RPGDataEditor.Minecraft.Wpf", "RPGDataEditor.Minecraft.Wpf\RPGDataEditor.Minecraft.Wpf.csproj", "{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{99A3A3BE-E65E-4B6B-9ACF-738A91DB9C49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGDataEditor.Tests", "RPGDataEditor.Tests\RPGDataEditor.Tests.csproj", "{966E7199-0E76-4A10-9608-9EC0437313EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,17 +29,24 @@ Global
 		{7D7DEB66-A8EF-40F1-BE04-80C3BD8C3454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D7DEB66-A8EF-40F1-BE04-80C3BD8C3454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D7DEB66-A8EF-40F1-BE04-80C3BD8C3454}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7EC6AC2-5CE0-4D9E-8F85-ECED07723AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{966E7199-0E76-4A10-9608-9EC0437313EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{966E7199-0E76-4A10-9608-9EC0437313EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{966E7199-0E76-4A10-9608-9EC0437313EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{966E7199-0E76-4A10-9608-9EC0437313EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{966E7199-0E76-4A10-9608-9EC0437313EE} = {99A3A3BE-E65E-4B6B-9ACF-738A91DB9C49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9A67AE6-2C21-464D-95B1-3D51844ABAAA}

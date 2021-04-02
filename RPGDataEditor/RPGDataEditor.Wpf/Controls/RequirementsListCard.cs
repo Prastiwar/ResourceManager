@@ -2,9 +2,7 @@
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
-using RPGDataEditor.Wpf.Converters;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -55,13 +53,6 @@ namespace RPGDataEditor.Wpf.Controls
         public DataTemplate RequirementItemTemplate {
             get => (DataTemplate)GetValue(RequirementItemTemplateProperty);
             set => SetValue(RequirementItemTemplateProperty, value);
-        }
-
-        public static DependencyProperty ValidablePathValuesBindingsProperty =
-            DependencyProperty.Register(nameof(ValidablePathValuesBindings), typeof(MultiBindingValue), typeof(RequirementsListCard));
-        public MultiBindingValue ValidablePathValuesBindings {
-            get => (MultiBindingValue)GetValue(ValidablePathValuesBindingsProperty);
-            set => SetValue(ValidablePathValuesBindingsProperty, value);
         }
 
         private ListView requirementsListView;
@@ -127,21 +118,6 @@ namespace RPGDataEditor.Wpf.Controls
             };
             requirementView.SetBinding(ChangeableUserControl.ChangeTypeRequestProperty, new Binding(nameof(ChangeRequirementTypeCommand)) { Source = this });
             requirementView.SetBinding(ChangeableUserControl.ChangeTypeCommandParameterProperty, new Binding(nameof(ChangeRequirementTypeCommandParameter)) { Source = this });
-            requirementView.SetBinding(AttachProperties.ValidablePathFormatProperty, new Binding() {
-                Path = new PropertyPath(AttachProperties.ValidablePathFormatProperty),
-                Source = this
-            });
-            requirementView.SetBinding(AttachProperties.ValidableObjectProperty, new Binding() {
-                Path = new PropertyPath(AttachProperties.ValidableObjectProperty),
-                Source = this
-            });
-
-            DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(ValidablePathValuesBindingsProperty, GetType());
-            dpd.AddValueChanged(this, (sender, e) => {
-                BindingOperations.ClearBinding(requirementView, AttachProperties.ValidablePathValuesProperty);
-                requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, ValidablePathValuesBindings.ToMultiBinding(new BindingListConverter()));
-            });
-            requirementView.SetBinding(AttachProperties.ValidablePathValuesProperty, ValidablePathValuesBindings.ToMultiBinding(new BindingListConverter()));
             requirementView.TypeChange += RequirementView_TypeChange;
             return requirementView;
         }

@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
-                    xmlns:local="clr-namespace:RPGDataEditor.Wpf"
                     xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
     <DataTemplate x:Key="DialogueOptionContent">
@@ -13,18 +12,10 @@
                                          PickedId="{Binding NextDialogId, Mode=TwoWay}"
                                          Margin="5"
                                          Visibility="{Binding NextDialogId, Converter={StaticResource NextDialogIdToVisibility}}" />
-                <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
                 <TextBox Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Margin="5"
-                         local:AttachProperties.ValidablePathFormat="Options[{0}]"
                          materialDesign:HintAssist.Hint="Message"
                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                    <local:AttachProperties.ValidablePathValues>
-                        <MultiBinding Converter="{StaticResource BindingListConverter}">
-                            <Binding Path="(ItemsControl.AlternationIndex)"
-                                     RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                        </MultiBinding>
-                    </local:AttachProperties.ValidablePathValues>
                     <i:Interaction.Behaviors>
                         <behaviors:CatchValidationBehavior />
                     </i:Interaction.Behaviors>
@@ -46,19 +37,8 @@
                 <controls:MaterialColorPicker Margin="5"
                                               Color="{Binding Color, Mode=TwoWay, Converter={StaticResource HexDecColorConverter}}" />
             </StackPanel>
-            <!-- TODO: Review if this view should know that it belongs to only "Options" member name -->
-            <controls:RequirementsListCard Style="{DynamicResource ModelRequirementsListCardStyle}"
-                                           DataContext="{Binding .}"
-                                           local:AttachProperties.ValidablePathFormat="Options[{0}].Requirements[{1}]">
-                <controls:RequirementsListCard.ValidablePathValuesBindings>
-                    <local:MultiBindingValue>
-                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}, AncestorLevel=2}" />
-                        <Binding Path="(ItemsControl.AlternationIndex)"
-                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBoxItem}}" />
-                    </local:MultiBindingValue>
-                </controls:RequirementsListCard.ValidablePathValuesBindings>
-            </controls:RequirementsListCard>
+            <controls:RequirementsListCard Requirements="{Binding Requirements}"
+                                           DataContext="{Binding .}" />
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>
