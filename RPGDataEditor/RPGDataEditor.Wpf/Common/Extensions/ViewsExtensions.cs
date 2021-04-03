@@ -2,8 +2,10 @@ using Prism;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Wpf.Controls;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,6 +14,12 @@ namespace RPGDataEditor.Wpf
 {
     public static class ViewsExtensions
     {
+        public static void AddValueChanged(this DependencyObject obj, DependencyProperty property, EventHandler handler)
+        {
+            DependencyPropertyDescriptor dpd = DependencyPropertyDescriptor.FromProperty(property, obj.GetType());
+            dpd.AddValueChanged(obj, handler);
+        }
+
         public static void ChangeTypeInList<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e, IList<TModel> list, ItemsControl itemsControl = null)
             where TModel : ObservableModel
         {

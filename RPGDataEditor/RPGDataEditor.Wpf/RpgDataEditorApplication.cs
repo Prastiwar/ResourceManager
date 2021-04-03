@@ -16,6 +16,7 @@ using RPGDataEditor.Core.Services;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
+using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
@@ -173,6 +174,9 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance<INamedIdProvider<DialogueOptionModel>>(new DefaultDialogueOptionNamedIdProvider());
             containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
             containerRegistry.Register<IClientProvider, DefaultClientProvider>();
+            ControlGenerateTemplateProvider controlProvider = new ControlGenerateTemplateProvider(Container);
+            controlProvider.RegisterDefaults(containerRegistry);
+            containerRegistry.RegisterInstance<IControlGenerateTemplateProvider>(controlProvider);
         }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)

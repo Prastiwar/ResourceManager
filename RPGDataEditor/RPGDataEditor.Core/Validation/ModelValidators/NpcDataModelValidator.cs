@@ -19,6 +19,9 @@ namespace RPGDataEditor.Core.Validation
 
             TalkDataModelValidator talkDataValidator = new TalkDataModelValidator();
             RuleFor(x => x.TalkData).SetValidator(talkDataValidator);
+
+            EquipmentModelValidator equipmentValidator = new EquipmentModelValidator();
+            RuleFor(x => x.Equipment).SetValidator(equipmentValidator);
         }
 
     }

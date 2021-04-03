@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
-                    xmlns:local="clr-namespace:RPGDataEditor.Wpf"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <ControlTemplate TargetType="{x:Type controls:ListDataCard}"
                      x:Key="ListDataCardTemplate">
@@ -68,19 +67,5 @@
     <Style TargetType="{x:Type controls:ListDataCard}">
         <Setter Property="Template"
                 Value="{StaticResource ListDataCardTemplate}" />
-    </Style>
-    <Style TargetType="{x:Type controls:ListDataCard}"
-           BasedOn="{StaticResource {x:Type controls:ListDataCard}}"
-           x:Key="RequirementsListCardStyle">
-        <Setter Property="ItemsSource"
-                Value="{Binding Requirements}" />
-        <Setter Property="HeaderText"
-                Value="{Binding Requirements.Count, StringFormat='({0}) Requirements'}" />
-        <Setter Property="AddItemCommand"
-                Value="{x:Static local:Commands.AddRequirementCommand}" />
-        <Setter Property="AddItemCommandParameter"
-                Value="{Binding Requirements}" />
-        <Setter Property="ItemContentTemplate"
-                Value="{DynamicResource RequirementsListCardItemTemplate}"/>
     </Style>
 </ResourceDictionary>

@@ -11,16 +11,13 @@ namespace RPGDataEditor.Wpf.Controls
 {
     public class StringControlGenerateTemplate : ControlGenerateTemplate<string>
     {
-        public StringControlGenerateTemplate(PropertyInfo info) : base(info) { }
-
-        public override DependencyObject LoadContent()
+        public override DependencyObject LoadContent(PropertyInfo info)
         {
             TextBox box = new TextBox() {
                 Margin = new Thickness(5)
             };
-            box.SetBinding(FrameworkElement.DataContextProperty, new Binding("Model"));
-            box.SetBinding(TextBox.TextProperty, new Binding(Info.Name) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
-            string friendlyName = Info.Name.MakeFriendlyName();
+            box.SetBinding(TextBox.TextProperty, new Binding(info.Name) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+            string friendlyName = info.Name.MakeFriendlyName();
             HintAssist.SetHint(box, friendlyName);
             box.SetResourceReference(FrameworkElement.StyleProperty, "MaterialDesignFloatingHintTextBox");
             BehaviorCollection behaviours = Interaction.GetBehaviors(box);
