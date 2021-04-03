@@ -101,7 +101,8 @@ namespace RPGDataEditor.Wpf.Converters
             return method.Invoke(instance, parameters) as ICommand;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException($"{nameof(ConvertBack)} is not supported");
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => ConverterExceptionMessages.GetNotSupportedConversion(typeof(ICommand), typeof(MethodInfo));
     }
 
 }

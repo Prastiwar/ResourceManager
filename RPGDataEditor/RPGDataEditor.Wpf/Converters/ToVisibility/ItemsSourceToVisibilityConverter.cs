@@ -3,28 +3,22 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Converters
 {
-    public class ItemsSourceToVisibilityConverter : IValueConverter
+    /// <summary> Converts IEnumerable collection to Visibility. Returns Visibility.Visible if it contains any element </summary>
+    public class ItemsSourceToVisibilityConverter : SimpleInvertableConverter<Visibility>
     {
-        public Visibility PositiveValue { get; set; } = Visibility.Visible;
-        public Visibility EmptyValue { get; set; } = Visibility.Collapsed;
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public ItemsSourceToVisibilityConverter()
         {
-            if (value is IEnumerable enumrable)
-            {
-                return enumrable.Cast<object>().Any() ? PositiveValue : EmptyValue;
-            }
-            return EmptyValue;
+            PositiveValue = Visibility.Visible;
+            NegativeValue = Visibility.Collapsed;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Visibility? visibility = value as Visibility?;
-            return visibility == PositiveValue ? 1 : 0;
-        }
+        public override Visibility ConvertTo(object value, Type targetType, object parameter, CultureInfo culture)
+            => value is IEnumerable enumrable ? enumrable.Cast<object>().Any() ? PositiveValue : NegativeValue : NegativeValue;
+
+        public override object ConvertToBack(Visibility value, Type targetType, object parameter, CultureInfo culture) 
+            => throw ConverterExceptionMessages.GetNotSupportedConversion(typeof(Visibility), typeof(IEnumerable));
     }
 }

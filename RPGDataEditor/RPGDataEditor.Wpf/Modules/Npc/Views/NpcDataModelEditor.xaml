@@ -68,7 +68,7 @@
                                AddItemCommand="{Binding DataContext.AddPathCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                ItemsSource="{Binding Paths}"
                                NoExpandableVisibility="False"
-                               IsExpandable="{Binding IsReadOnly,ElementName=MovementListDataCard, Converter={StaticResource InvertBooleanConverter}}"
+                               IsExpandable="{Binding IsReadOnly,ElementName=MovementListDataCard, Converter={StaticResource BoolToInvertBoolConverter}}"
                                IsReadOnly="{Binding MovementType, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter='PATH'}">
             <controls:ListDataCard.HeaderTemplate>
                 <DataTemplate>

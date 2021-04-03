@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
-using System.Windows.Data;
 using System.Text;
+using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Converters
 {
@@ -18,7 +18,6 @@ namespace RPGDataEditor.Wpf.Converters
             return builder.ToString();
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-            => throw new NotSupportedException("Converting combined property paths back is not supported");
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => value?.ToString().Split('.', StringSplitOptions.RemoveEmptyEntries);
     }
 }

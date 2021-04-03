@@ -68,4 +68,14 @@ namespace RPGDataEditor.Wpf.Converters
             FalseValue = 0;
         }
     }
+
+    public class BoolToInvertBoolConverter : BoolValueConverter<bool>
+    {
+        public BoolToInvertBoolConverter()
+        {
+            TrueValue = true;
+            FalseValue = false;
+            Invert = true;
+        }
+    }
 }

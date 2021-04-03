@@ -51,7 +51,8 @@ namespace RPGDataEditor.Wpf.Converters
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException($"{nameof(ConvertBack)} is not supported");
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => ConverterExceptionMessages.GetNotSupportedConversion(typeof(ICommand), typeof(MethodInfo));
     }
 
 }

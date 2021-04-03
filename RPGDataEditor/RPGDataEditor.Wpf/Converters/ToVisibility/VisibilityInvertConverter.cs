@@ -1,28 +1,21 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Converters
 {
-    public class VisibilityInvertConverter : IValueConverter
+    public class VisibilityInvertConverter : SimpleInvertableConverter<Visibility>
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public VisibilityInvertConverter()
         {
-            if (value is Visibility visibility)
-            {
-                return visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-            }
-            return Visibility.Visible;
+            PositiveValue = Visibility.Visible;
+            NegativeValue = Visibility.Collapsed;
+            Invert = true;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is Visibility visibility)
-            {
-                return visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-            }
-            return Visibility.Visible;
-        }
+        public override Visibility ConvertTo(object value, Type targetType, object parameter, CultureInfo culture)
+            => value is Visibility visibility ? visibility : NegativeValue;
+
+        public override object ConvertToBack(Visibility value, Type targetType, object parameter, CultureInfo culture) => value;
     }
 }

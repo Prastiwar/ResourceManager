@@ -1,28 +1,20 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Converters
 {
-    public class IntToVisibilityConverter : IValueConverter
+    /// <summary> Returns Visibility.Visible if value is positive integer. Converts back to 1 or 0 </summary>
+    public class IntToVisibilityConverter : SimpleInvertableConverter<Visibility>
     {
-        public Visibility PositiveValue { get; set; } = Visibility.Visible;
-        public Visibility ZeroNegativeValue { get; set; } = Visibility.Collapsed;
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public IntToVisibilityConverter()
         {
-            if (value is int num)
-            {
-                return num > 0 ? PositiveValue : ZeroNegativeValue;
-            }
-            return ZeroNegativeValue;
+            PositiveValue = Visibility.Visible;
+            NegativeValue = Visibility.Collapsed;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Visibility? visibility = value as Visibility?;
-            return visibility == PositiveValue ? 1 : 0;
-        }
+        public override Visibility ConvertTo(object value, Type targetType, object parameter, CultureInfo culture) => value is int num ? num > 0 ? PositiveValue : NegativeValue : NegativeValue;
+
+        public override object ConvertToBack(Visibility value, Type targetType, object parameter, CultureInfo culture) => value == PositiveValue ? 1 : 0;
     }
 }

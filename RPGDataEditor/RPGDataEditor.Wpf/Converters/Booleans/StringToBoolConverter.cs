@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Converters
 {
-    public class StringToBoolConverter : IValueConverter
+    /// <summary> Compares object value with parameter value as strings. Returns True if they are equal </summary>
+    public class StringToBoolConverter : SimpleInvertableConverter<bool>
     {
-        public bool Invert { get; set; }
+        public StringToBoolConverter() => PositiveValue = true;
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public bool IgnoreCase { get; set; }
+
+        public override bool ConvertTo(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string valueString = value == null ? "null" : value.ToString();
-            bool equal = valueString == parameter.ToString();
-            return Invert ? !equal : equal;
+            return !IgnoreCase ? valueString == parameter.ToString() : (string.Compare(valueString, parameter.ToString(), true) == 0);
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
-            => throw new NotSupportedException("Convert bool to proper string value is not suppoerted");
+        public override object ConvertToBack(bool value, Type targetType, object parameter, CultureInfo culture)
+            => throw ConverterExceptionMessages.GetNotSupportedConversion(typeof(bool), typeof(string));
     }
 }
