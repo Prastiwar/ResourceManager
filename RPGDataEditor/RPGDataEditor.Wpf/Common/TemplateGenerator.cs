@@ -4,14 +4,12 @@ using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf
 {
-    /// <summary>
-    /// Class that helps the creation of control and data templates by using delegates.
-    /// </summary>
+    /// <summary> Class that helps the creation of control and data templates by using delegates </summary>
     public static class TemplateGenerator
     {
         private sealed class _TemplateGeneratorControl : ContentControl
         {
-            internal static readonly DependencyProperty FactoryProperty 
+            internal static readonly DependencyProperty factoryProperty
                 = DependencyProperty.Register("Factory", typeof(Func<object>), typeof(_TemplateGeneratorControl), new PropertyMetadata(null, _FactoryChanged));
 
             private static void _FactoryChanged(DependencyObject instance, DependencyPropertyChangedEventArgs args)
@@ -22,18 +20,16 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        /// <summary>
-        /// Creates a data-template that uses the given delegate to create new instances.
-        /// </summary>
+        /// <summary> Creates a data-template that uses the given delegate to create new instances </summary>
         public static DataTemplate CreateDataTemplate(Func<object> factory)
         {
             if (factory == null)
             {
-                throw new ArgumentNullException("factory");
+                throw new ArgumentNullException(nameof(factory));
             }
 
             FrameworkElementFactory frameworkElementFactory = new FrameworkElementFactory(typeof(_TemplateGeneratorControl));
-            frameworkElementFactory.SetValue(_TemplateGeneratorControl.FactoryProperty, factory);
+            frameworkElementFactory.SetValue(_TemplateGeneratorControl.factoryProperty, factory);
 
             DataTemplate dataTemplate = new DataTemplate(typeof(DependencyObject)) {
                 VisualTree = frameworkElementFactory
@@ -41,23 +37,21 @@ namespace RPGDataEditor.Wpf
             return dataTemplate;
         }
 
-        /// <summary>
-        /// Creates a control-template that uses the given delegate to create new instances.
-        /// </summary>
+        /// <summary> Creates a control-template that uses the given delegate to create new instances </summary>
         public static ControlTemplate CreateControlTemplate(Type controlType, Func<object> factory)
         {
             if (controlType == null)
             {
-                throw new ArgumentNullException("controlType");
+                throw new ArgumentNullException(nameof(controlType));
             }
 
             if (factory == null)
             {
-                throw new ArgumentNullException("factory");
+                throw new ArgumentNullException(nameof(factory));
             }
 
             FrameworkElementFactory frameworkElementFactory = new FrameworkElementFactory(typeof(_TemplateGeneratorControl));
-            frameworkElementFactory.SetValue(_TemplateGeneratorControl.FactoryProperty, factory);
+            frameworkElementFactory.SetValue(_TemplateGeneratorControl.factoryProperty, factory);
 
             ControlTemplate controlTemplate = new ControlTemplate(controlType) {
                 VisualTree = frameworkElementFactory

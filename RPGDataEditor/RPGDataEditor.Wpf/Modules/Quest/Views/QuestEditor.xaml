@@ -28,8 +28,7 @@
                 <behaviors:CatchValidationBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
-        <materialDesign:Card HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Center"
+        <materialDesign:Card HorizontalContentAlignment="Center"
                              DataContext="{Binding Model}"
                              Margin="5"
                              Padding="5">
@@ -38,9 +37,7 @@
                            Margin="5" />
                 <controls:QuestTaskView DataContext="{Binding CompletionTask}"
                                         TypeChange="CompletionQuestTaskView_TypeChange"
-                                        Grid.Column="1"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch" />
+                                        Grid.Column="1" />
             </StackPanel>
         </materialDesign:Card>
         <controls:ListDataCard x:Name="TasksListDataCard"
@@ -50,9 +47,7 @@
                                ItemsSource="{Binding Tasks}">
             <DataTemplate>
                 <controls:QuestTaskView DataContext="{Binding .}"
-                                        TypeChange="QuestTaskViewList_TypeChange"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch" />
+                                        TypeChange="QuestTaskViewList_TypeChange"/>
             </DataTemplate>
         </controls:ListDataCard>
         <controls:ListDataCard DataContext="{Binding Model}"

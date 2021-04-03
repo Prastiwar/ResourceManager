@@ -9,8 +9,7 @@
                                   local:AttachProperties.Data="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=controls:ListDataCard}}" />
     </DataTemplate>
     <DataTemplate x:Key="ExpandableCardTemplate">
-        <materialDesign:Card HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Center"
+        <materialDesign:Card HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
             <StackPanel>
@@ -40,8 +39,7 @@
         </Grid>
     </DataTemplate>
     <DataTemplate x:Key="SaveCancelButtonsTemplate">
-        <Grid VerticalAlignment="Bottom"
-              HorizontalAlignment="Stretch">
+        <Grid VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition Width="0.5*" />

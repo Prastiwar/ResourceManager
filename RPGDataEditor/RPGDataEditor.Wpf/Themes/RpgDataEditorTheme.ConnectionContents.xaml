@@ -5,9 +5,7 @@
                     xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
                     xmlns:local="clr-namespace:RPGDataEditor.Wpf">
     <DataTemplate x:Key="ExplorerConnectionContent">
-        <StackPanel VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Margin="64">
+        <StackPanel Margin="64">
             <TextBox Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Client}"
                      Margin="0,8,0,8"
@@ -21,9 +19,7 @@
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="FtpConnectionContent">
-        <StackPanel VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Margin="64">
+        <StackPanel Margin="64">
             <TextBox Text="{Binding Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Client}"
                      Margin="0,8,0,8"
@@ -75,9 +71,7 @@
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="MssqlConnectionContent">
-        <StackPanel VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Margin="64">
+        <StackPanel Margin="64">
             <TextBox Text="{Binding ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Client}"
                      Margin="0,8,0,8"

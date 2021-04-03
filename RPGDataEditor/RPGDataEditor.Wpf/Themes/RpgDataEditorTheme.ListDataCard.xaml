@@ -7,7 +7,6 @@
     <ControlTemplate TargetType="{x:Type controls:ListDataCard}"
                      x:Key="ListDataCardTemplate">
         <materialDesign:Card x:Name="CardContainer"
-                             HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
@@ -39,14 +38,12 @@
                 <ListView x:Name="ListDataView"
                           ItemsSource="{TemplateBinding ItemsSource}"
                           AlternationCount="{x:Static sys:Int32.MaxValue}"
-                          HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <materialDesign:Card HorizontalAlignment="Stretch"
-                                                 HorizontalContentAlignment="Center"
+                            <materialDesign:Card HorizontalContentAlignment="Center"
                                                  Padding="5">
-                                <Grid HorizontalAlignment="Stretch">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />

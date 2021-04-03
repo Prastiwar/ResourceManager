@@ -26,7 +26,6 @@
         <materialDesign:Card Margin="5,5,5,0">
             <Grid>
                 <TabControl x:Name="MainTabControl"
-                            VerticalAlignment="Stretch"
                             TabStripPlacement="Top"
                             Padding="0"
                             BorderThickness="0"
@@ -44,7 +43,6 @@
                         Content="{materialDesign:PackIcon Kind=Refresh, Size=25}"
                         RenderTransformOrigin="0.5, 0.5" />
                 <materialDesign:Snackbar x:Name="MainSnackbar"
-                                         HorizontalAlignment="Stretch"
                                          VerticalAlignment="Bottom"
                                          Background="DimGray"
                                          Foreground="WhiteSmoke"

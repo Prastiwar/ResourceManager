@@ -43,9 +43,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
-                                        Margin="2"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Stretch">
+                                        Margin="2">
                                 <Button Content="Edit"
                                         Margin="2"
                                         Command="{Binding DataContext.OpenEditorCommand, Source={x:Reference CategoryModelList}}"
@@ -69,9 +67,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
-                                        Margin="2"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Stretch">
+                                        Margin="2">
                                 <Button Content="Show"
                                         Margin="2"
                                         Click="ShowCategory_Click"

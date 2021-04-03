@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using RPGDataEditor.Wpf.Validation;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Behaviors

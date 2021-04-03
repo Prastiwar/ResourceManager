@@ -7,9 +7,7 @@
              xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
              Name="SETTINGS"
              Style="{DynamicResource DefaultControlStyle}">
-    <StackPanel VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-                DataContext="{Binding Session}"
+    <StackPanel DataContext="{Binding Session}"
                 Margin="64">
         <CheckBox x:Name="IsPrettyJsonCheckbox"
                   Margin="8"

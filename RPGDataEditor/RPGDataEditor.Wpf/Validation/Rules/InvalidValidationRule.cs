@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Behaviors
+namespace RPGDataEditor.Wpf.Validation
 {
     internal class InvalidValidationRule : ValidationRule
     {

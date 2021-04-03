@@ -7,7 +7,6 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
              xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
              xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
@@ -41,8 +40,7 @@
                 <behaviors:CatchValidationBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
-        <materialDesign:Card HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Center"
+        <materialDesign:Card HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
             <StackPanel>
@@ -92,13 +90,10 @@
                 </DataTemplate>
             </controls:ListDataCard.HeaderTemplate>
             <DataTemplate>
-                <controls:BlockPosField Position="{Binding .}"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch" />
+                <controls:BlockPosField Position="{Binding .}"/>
             </DataTemplate>
         </controls:ListDataCard>
         <materialDesign:Card x:Name="ExpandableJobSection"
-                             HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
@@ -139,8 +134,7 @@
                                                HeaderText="{Binding Items.Count, StringFormat='({0}) Items'}"
                                                AddItemCommand="{Binding DataContext.AddTradeItemCommand, RelativeSource={RelativeSource AncestorType=StackPanel}}">
                             <DataTemplate>
-                                <materialDesign:Card HorizontalAlignment="Stretch"
-                                                     Margin="5"
+                                <materialDesign:Card Margin="5"
                                                      Padding="5">
                                     <StackPanel>
                                         <Grid>

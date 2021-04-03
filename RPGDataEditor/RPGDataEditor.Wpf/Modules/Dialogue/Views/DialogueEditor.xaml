@@ -33,8 +33,7 @@
                   DataContext="{Binding Model}"
                   IsChecked="{Binding AllowEscape}"
                   Content="Allow Escape to close dialog" />
-        <materialDesign:Card HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Center"
+        <materialDesign:Card HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
             <controls:ResourcePicker EmptyText="Select Start Quest"
@@ -47,9 +46,7 @@
                                DataContext="{Binding Model}"
                                ItemsSource="{Binding Options}">
             <DataTemplate>
-                <controls:DialogueOptionView TypeChange="DialogueOptionView_TypeChange"
-                                             HorizontalAlignment="Stretch"
-                                             HorizontalContentAlignment="Stretch" />
+                <controls:DialogueOptionView TypeChange="DialogueOptionView_TypeChange" />
             </DataTemplate>
         </controls:ListDataCard>
         <controls:ListDataCard DataContext="{Binding Model}"
