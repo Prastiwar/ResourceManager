@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿using RPGDataEditor.Core;
+using System;
+using System.Collections;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,7 +15,8 @@ namespace RPGDataEditor.Wpf.Controls
     {
         public static DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IList), typeof(ListDataCard),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnItemsSourceChanged));
+        private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ListDataCard).OnItemsSourceChanged();
         public IList ItemsSource {
             get => (IList)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
@@ -88,6 +92,17 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(NoExpandableVisibilityProperty, value);
         }
 
+        private Type elementType;
+
+        protected virtual void OnItemsSourceChanged()
+        {
+            elementType = ItemsSource.GetType().GetArrayElementType();
+            if (elementType.IsAbstract)
+            {
+                elementType = elementType.EnumarateDerivedTypes().First();
+            }
+        }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -108,7 +123,12 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 RemoveItemCommand = Commands.RemoveListItemCommand(() => ItemsSource);
             }
+            if (AddItemCommand == null && GetBindingExpression(AddItemCommandProperty) == null)
+            {
+                AddItemCommand = Commands.AddListItemCommand(() => ItemsSource, () => CreateDefaultElement());
+            }
         }
 
+        protected virtual object CreateDefaultElement() => Activator.CreateInstance(elementType);
     }
 }

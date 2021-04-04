@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class PositionControlGenerateTemplate : ControlGenerateTemplate<Position>
+    public class PositionAutoTemplate : AutoTemplate<Position>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {

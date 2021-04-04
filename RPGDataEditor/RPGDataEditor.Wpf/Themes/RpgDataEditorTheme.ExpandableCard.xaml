@@ -11,7 +11,7 @@
                 <StackPanel Orientation="Horizontal">
                     <controls:ExpandButton x:Name="ExpandButton"
                                            HorizontalAlignment="Left"
-                                           ExpandableElement="{x:Reference ExpandableContentPresenter}"/>
+                                           ExpandableElement="{x:Reference ExpandableContentPresenter}" />
                     <TextBlock Text="{TemplateBinding HeaderText}"
                                Margin="10,0,0,0" />
                 </StackPanel>

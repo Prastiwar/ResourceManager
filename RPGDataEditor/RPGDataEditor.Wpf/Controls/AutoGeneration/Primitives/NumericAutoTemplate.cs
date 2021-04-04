@@ -10,13 +10,13 @@ using System.Windows.Interactivity;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class IntControlGenerateTemplate : NumericControlGenerateTemplate<int> { }
+    public class IntAutoTemplate : NumericAutoTemplate<int> { }
 
-    public class DoubleControlGenerateTemplate : NumericControlGenerateTemplate<double> { }
+    public class DoubleAutoTemplate : NumericAutoTemplate<double> { }
 
-    public class FloatControlGenerateTemplate : NumericControlGenerateTemplate<float> { }
+    public class FloatAutoTemplate : NumericAutoTemplate<float> { }
 
-    public class NumericControlGenerateTemplate<T> : ControlGenerateTemplate<T>
+    public class NumericAutoTemplate<T> : AutoTemplate<T>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {

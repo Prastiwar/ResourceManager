@@ -3,7 +3,6 @@ using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
@@ -12,14 +11,6 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         public NpcDataModelEditorViewModel(ViewModelContext context) : base(context) { }
 
         public override string Title => "Npc Editor";
-
-        public ICommand AddPathCommand => Commands.AddListItemCommand(() => Model.Paths);
-
-        public ICommand AddTalkLineCommand => Commands.AddParameterListItemCommand<TalkLine>();
-
-        public ICommand AddDialogueIdCommand => Commands.AddParameterListItemCommand<int>();
-        
-        public ICommand AddTradeItemCommand => Commands.AddListItemCommand(() => ((TraderNpcJobModel)Model.Job).Items);
 
         private double maxHealth;
         public double MaxHealth {

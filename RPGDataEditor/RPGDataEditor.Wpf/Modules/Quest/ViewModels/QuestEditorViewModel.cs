@@ -1,6 +1,5 @@
 ﻿using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
-using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
@@ -9,7 +8,5 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
         public QuestEditorViewModel(ViewModelContext context) : base(context) { }
 
         public override string Title => "Quest Editor";
-
-        public ICommand AddTaskCommand => Commands.AddListItemCommand(() => Model.Tasks, () => new KillQuestTask());
     }
 }

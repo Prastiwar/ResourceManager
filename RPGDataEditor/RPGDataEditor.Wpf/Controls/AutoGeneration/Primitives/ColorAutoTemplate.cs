@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class ColorControlGenerateTemplate : ControlGenerateTemplate<Color>
+    public class ColorAutoTemplate : AutoTemplate<Color>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {

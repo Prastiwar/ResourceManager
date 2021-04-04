@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public class BlockInteractQuestTask : InteractQuestTask
+    public abstract class BlockInteractQuestTask : InteractQuestTask
     {
         private Position pos = new Position();
         public Position Pos {

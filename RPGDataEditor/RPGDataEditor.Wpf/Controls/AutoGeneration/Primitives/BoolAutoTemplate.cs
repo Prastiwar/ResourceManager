@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class BoolControlGenerateTemplate : ControlGenerateTemplate<bool>
+    public class BoolAutoTemplate : AutoTemplate<bool>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {

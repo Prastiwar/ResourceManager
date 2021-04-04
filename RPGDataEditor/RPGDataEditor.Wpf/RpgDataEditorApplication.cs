@@ -174,9 +174,9 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance<INamedIdProvider<DialogueOptionModel>>(new DefaultDialogueOptionNamedIdProvider());
             containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
             containerRegistry.Register<IClientProvider, DefaultClientProvider>();
-            ControlGenerateTemplateProvider controlProvider = new ControlGenerateTemplateProvider(Container);
+            AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
-            containerRegistry.RegisterInstance<IControlGenerateTemplateProvider>(controlProvider);
+            containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
         }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)

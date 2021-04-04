@@ -1,5 +1,4 @@
 ﻿using RPGDataEditor.Core;
-using RPGDataEditor.Wpf.Providers;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
@@ -7,7 +6,7 @@ using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class DataCollectionControlGenerateTemplate<T> : ControlGenerateTemplate<IList<T>>
+    public class DataCollectionAutoTemplate<T> : AutoTemplate<IList<T>>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {
@@ -18,13 +17,6 @@ namespace RPGDataEditor.Wpf.Controls
             return listCard;
         }
 
-        protected virtual DataTemplate ResolveItemContentTemplate(PropertyInfo info)
-        {
-            IControlGenerateTemplateProvider provider = Application.Current.TryResolve<IControlGenerateTemplateProvider>();
-            ControlGenerateTemplate resolvedGenerator = provider.Resolve(info.PropertyType.GetElementType());
-            // TODO: Create correct generic template
-            //return TemplateGenerator.CreateDataTemplate(() => resolvedGenerator.LoadContent()); 
-            return null;
-        }
+        protected virtual DataTemplate ResolveItemContentTemplate(PropertyInfo info) => TemplateGenerator.CreateDataTemplate(() => new AutoControl() { PropertyName = "." });
     }
 }
