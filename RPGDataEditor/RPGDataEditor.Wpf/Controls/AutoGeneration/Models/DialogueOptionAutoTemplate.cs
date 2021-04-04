@@ -11,6 +11,7 @@ namespace RPGDataEditor.Wpf.Controls
         public override DependencyObject LoadContent(PropertyInfo info = null)
         {
             DialogueOptionView view = new DialogueOptionView();
+            AutoControl.SetPreserveDataContext(view, false);
             view.TypeChange += View_TypeChange;
             return view;
         }

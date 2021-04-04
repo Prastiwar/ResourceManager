@@ -14,7 +14,6 @@ namespace RPGDataEditor.Wpf.Behaviors
     {
         public static DependencyProperty PropertyNameProperty =
             DependencyProperty.Register(nameof(PropertyName), typeof(string), typeof(CatchValidationBehaviorBase<T>));
-
         public string PropertyName {
             get => (string)GetValue(PropertyNameProperty);
             set => SetValue(PropertyNameProperty, value);
@@ -22,7 +21,6 @@ namespace RPGDataEditor.Wpf.Behaviors
 
         public static DependencyProperty ValidableContextProperty =
             DependencyProperty.Register(nameof(ValidableContext), typeof(IValidable), typeof(CatchValidationBehaviorBase<T>), new PropertyMetadata(null, OnValidableContextChanged));
-
         public IValidable ValidableContext {
             get => (IValidable)GetValue(ValidableContextProperty);
             set => SetValue(ValidableContextProperty, value);

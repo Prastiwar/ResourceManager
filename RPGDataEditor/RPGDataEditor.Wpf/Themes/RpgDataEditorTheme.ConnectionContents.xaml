@@ -1,66 +1,24 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-                    xmlns:local="clr-namespace:RPGDataEditor.Wpf">
+                    xmlns:local="clr-namespace:RPGDataEditor.Wpf"
+                    xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
     <DataTemplate x:Key="ExplorerConnectionContent">
         <StackPanel Margin="64">
-            <TextBox Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     DataContext="{Binding Client}"
-                     Margin="0,8,0,8"
-                     MinWidth="126"
-                     materialDesign:HintAssist.Hint="Folder Path"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior PropertyName="Client.FolderPath" />
-                </i:Interaction.Behaviors>
-            </TextBox>
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="FolderPath" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="FtpConnectionContent">
         <StackPanel Margin="64">
-            <TextBox Text="{Binding Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     DataContext="{Binding Client}"
-                     Margin="0,8,0,8"
-                     MinWidth="126"
-                     materialDesign:HintAssist.Hint="Host"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior PropertyName="Client.Host" />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     DataContext="{Binding Client}"
-                     InputScope="Number"
-                     Margin="0,8,0,8"
-                     MinWidth="126"
-                     materialDesign:HintAssist.Hint="Port"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:NumericFieldBehaviour EmptyValue="0" />
-                    <behaviors:CatchValidationBehavior PropertyName="Client.Port" />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox Text="{Binding RelativePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     DataContext="{Binding Client}"
-                     Margin="0,8,0,8"
-                     MinWidth="126"
-                     materialDesign:HintAssist.Hint="Relative Path"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior PropertyName="Client.RelativePath" />
-                </i:Interaction.Behaviors>
-            </TextBox>
-            <TextBox Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     DataContext="{Binding Client}"
-                     Margin="0,8,0,8"
-                     materialDesign:HintAssist.Hint="Username"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior PropertyName="Client.UserName" />
-                </i:Interaction.Behaviors>
-            </TextBox>
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="Host" />
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="Port" />
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="RelativePath" />
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="UserName" />
             <PasswordBox x:Name="FtpPasswordBox"
                          DataContext="{Binding Client}"
                          Margin="0,8,0,8"
@@ -72,16 +30,8 @@
     </DataTemplate>
     <DataTemplate x:Key="MssqlConnectionContent">
         <StackPanel Margin="64">
-            <TextBox Text="{Binding ConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     DataContext="{Binding Client}"
-                     Margin="0,8,0,8"
-                     MinWidth="126"
-                     materialDesign:HintAssist.Hint="Connection String"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
-                <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior PropertyName="Client.ConnectionString" />
-                </i:Interaction.Behaviors>
-            </TextBox>
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="ConnectionString" />
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

@@ -40,10 +40,12 @@ namespace RPGDataEditor.Wpf.Providers
             RegisterAutoTemplate<DialogueOptionModel>(containerRegistry, new DialogueOptionAutoTemplate());
             RegisterAutoTemplate<QuestTask>(containerRegistry, new QuestTaskAutoTemplate());
             RegisterAutoTemplate<PlayerRequirementModel>(containerRegistry, new RequirementAutoTemplate());
+            RegisterAutoTemplate<TalkLine>(containerRegistry, new TalkLineAutoTemplate());
 
             RegisterListDataAutoTemplate<PlayerRequirementModel>(containerRegistry);
             RegisterListDataAutoTemplate<DialogueOptionModel>(containerRegistry);
             RegisterListDataAutoTemplate<QuestTask>(containerRegistry);
+            RegisterListDataAutoTemplate<TalkLine>(containerRegistry);
         }
 
         protected void RegisterListDataAutoTemplate<T>(IContainerRegistry containerRegistry)

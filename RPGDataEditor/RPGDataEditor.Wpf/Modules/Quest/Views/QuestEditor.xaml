@@ -8,9 +8,9 @@
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Style="{DynamicResource DefaultEditorControl}">
     <StackPanel Margin="10">
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Title" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Message" />
         <materialDesign:Card HorizontalContentAlignment="Center"
                              DataContext="{Binding Model}"
@@ -19,15 +19,12 @@
             <StackPanel>
                 <TextBlock Text="Choose completion task"
                            Margin="5" />
-                <!--<controls:AutoControl PropertyName="CompletionTask" />-->
-                <controls:QuestTaskView DataContext="{Binding CompletionTask}"
-                                        TypeChange="CompletionQuestTaskView_TypeChange"
-                                        Grid.Column="1" />
+                <controls:AutoControl PropertyName="CompletionTask" />
             </StackPanel>
         </materialDesign:Card>
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Tasks" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Requirements" />
     </StackPanel>
 </UserControl>

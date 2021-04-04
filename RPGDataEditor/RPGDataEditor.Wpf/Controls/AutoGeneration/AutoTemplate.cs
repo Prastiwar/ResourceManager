@@ -10,7 +10,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected Type Type { get; }
 
-        public abstract DependencyObject LoadContent(PropertyInfo info = null);
+        public abstract DependencyObject LoadContent(PropertyInfo info);
     }
 
     public abstract class AutoTemplate<T> : AutoTemplate

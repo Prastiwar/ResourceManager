@@ -11,24 +11,24 @@
              Style="{DynamicResource DefaultEditorControl}"
              x:Name="ThisNpcView">
     <StackPanel Margin="10">
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Name" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Title" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="TextureLocation" />
         <materialDesign:Card HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
             <StackPanel>
                 <TextBlock Text="Spawn location" />
-                <controls:AutoControl PropertyContext="{Binding Model}"
+                <controls:AutoControl DataContext="{Binding Model}"
                                       PropertyName="Position" />
             </StackPanel>
         </materialDesign:Card>
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Invulnerable" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="LookAtPlayer" />
         <controls:ListDataCard x:Name="MovementListDataCard"
                                DataContext="{Binding Model}"
@@ -164,33 +164,14 @@
         <controls:ExpandableCard HeaderText="Dialogues">
             <StackPanel x:Name="ListsPanel"
                         DataContext="{Binding Model}">
-                <StackPanel.Resources>
-                    <DataTemplate x:Key="TalkLineTemplate">
-                        <StackPanel Orientation="Horizontal">
-                            <controls:AutoControl PropertyName="Text" />
-                            <controls:AutoControl PropertyName="SoundLocation" />
-                        </StackPanel>
-                    </DataTemplate>
-                    <Style TargetType="{x:Type controls:ListDataCard}"
-                           BasedOn="{StaticResource {x:Type controls:ListDataCard}}"
-                           x:Key="TalkLineListStyle">
-                        <Setter Property="DataContext"
-                                Value="{Binding TalkData}" />
-                        <Setter Property="ItemContentTemplate"
-                                Value="{StaticResource TalkLineTemplate}" />
-                    </Style>
-                </StackPanel.Resources>
-                <controls:AutoControl PropertyContext="{Binding TalkData}"
+                <controls:AutoControl DataContext="{Binding TalkData}"
                                       PropertyName="TalkRange" />
-                <controls:ListDataCard ItemsSource="{Binding InteractLines}"
-                                       HeaderText="{Binding InteractLines.Count, StringFormat='({0}) Interact Lines'}"
-                                       Style="{StaticResource TalkLineListStyle}" />
-                <controls:ListDataCard ItemsSource="{Binding DeathLines}"
-                                       HeaderText="{Binding DeathLines.Count, StringFormat='({0}) Death Lines'}"
-                                       Style="{StaticResource TalkLineListStyle}" />
-                <controls:ListDataCard ItemsSource="{Binding HurtLines}"
-                                       HeaderText="{Binding HurtLines.Count, StringFormat='({0}) Hurt Lines'}"
-                                       Style="{StaticResource TalkLineListStyle}" />
+                <controls:AutoControl DataContext="{Binding TalkData}"
+                                      PropertyName="InteractLines" />
+                <controls:AutoControl DataContext="{Binding TalkData}"
+                                      PropertyName="DeathLines" />
+                <controls:AutoControl DataContext="{Binding TalkData}"
+                                      PropertyName="HurtLines" />
                 <controls:ListDataCard DataContext="{Binding TalkData}"
                                        ItemsSource="{Binding InitationDialogues}"
                                        HeaderText="{Binding InitationDialogues.Count, StringFormat='({0}) Initation Dialogues'}">

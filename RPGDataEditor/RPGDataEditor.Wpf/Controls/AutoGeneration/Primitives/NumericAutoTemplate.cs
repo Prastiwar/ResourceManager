@@ -1,6 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using RPGDataEditor.Core;
-using RPGDataEditor.Wpf.Behaviors;
+﻿using RPGDataEditor.Wpf.Behaviors;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,8 +28,6 @@ namespace RPGDataEditor.Wpf.Controls
                 StringFormat = Type == typeof(int) ? null : "{0:0.0#}"
             });
             box.SetResourceReference(FrameworkElement.StyleProperty, "MaterialDesignFloatingHintTextBox");
-            string friendlyName = info.Name.MakeFriendlyName();
-            HintAssist.SetHint(box, friendlyName);
             BehaviorCollection behaviours = Interaction.GetBehaviors(box);
             behaviours.Add(new CatchValidationBehavior());
             behaviours.Add(new NumericFieldBehaviour() {

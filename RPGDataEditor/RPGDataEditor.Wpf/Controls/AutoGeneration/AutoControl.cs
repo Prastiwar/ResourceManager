@@ -11,18 +11,23 @@ namespace RPGDataEditor.Wpf.Controls
     [ContentProperty(nameof(Root))]
     public class AutoControl : UserControl
     {
-        public static DependencyProperty PropertyContextProperty =
-            DependencyProperty.Register(nameof(PropertyContext), typeof(object), typeof(AutoControl));
-        public object PropertyContext {
-            get => GetValue(PropertyContextProperty);
-            set => SetValue(PropertyContextProperty, value);
-        }
+        public static readonly DependencyProperty PreserveDataContextProperty =
+            DependencyProperty.RegisterAttached("PreserveDataContext", typeof(bool), typeof(AttachProperties), new PropertyMetadata(true));
+        public static void SetPreserveDataContext(UIElement element, bool value) => element.SetValue(PreserveDataContextProperty, value);
+        public static bool GetPreserveDataContext(UIElement element) => (bool)element.GetValue(PreserveDataContextProperty);
 
         public static DependencyProperty PropertyNameProperty =
             DependencyProperty.Register(nameof(PropertyName), typeof(string), typeof(AutoControl));
         public string PropertyName {
             get => (string)GetValue(PropertyNameProperty);
             set => SetValue(PropertyNameProperty, value);
+        }
+
+        public static DependencyProperty PropertyTypeProperty =
+            DependencyProperty.Register(nameof(PropertyType), typeof(Type), typeof(AutoControl));
+        public Type PropertyType {
+            get => (Type)GetValue(PropertyTypeProperty);
+            set => SetValue(PropertyTypeProperty, value);
         }
 
         public static DependencyProperty RootProperty =
@@ -39,7 +44,6 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 Recreate();
             }
-            this.AddValueChanged(PropertyContextProperty, OnContextChanged);
             this.AddValueChanged(PropertyNameProperty, OnContextChanged);
             DataContextChanged += OnDataContextChanged;
         }
@@ -58,7 +62,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual DependencyObject CreateContent()
         {
-            object context = GetBindingExpression(PropertyContextProperty) != null ? PropertyContext : PropertyContext ?? DataContext;
+            object context = DataContext;
             if (context == null || string.IsNullOrEmpty(PropertyName))
             {
                 return null;
@@ -67,10 +71,6 @@ namespace RPGDataEditor.Wpf.Controls
             if (control == null)
             {
                 return null;
-            }
-            if (control is FrameworkElement element)
-            {
-                element.DataContext = context;
             }
             if (Root is Panel panel)
             {
@@ -98,13 +98,33 @@ namespace RPGDataEditor.Wpf.Controls
                 }
                 type = property.PropertyType;
             }
+            if (PropertyType != null)
+            {
+                type = PropertyType;
+            }
             AutoTemplate template = provider.Resolve(type);
             while (template == null)
             {
                 type = type.BaseType;
                 template = provider.Resolve(type);
             }
-            return template?.LoadContent(property);
+            DependencyObject control = template?.LoadContent(property);
+            if (control is FrameworkElement element)
+            {
+                if (GetPreserveDataContext(element))
+                {
+                    element.DataContext = DataContext;
+                }
+                else
+                {
+                    element.SetBinding(FrameworkElement.DataContextProperty, propertyName);
+                }
+                foreach (DependencyProperty prop in this.EnumerateAttachedProperties())
+                {
+                    element.SetValue(prop, GetValue(prop));
+                }
+            }
+            return control;
         }
     }
 }

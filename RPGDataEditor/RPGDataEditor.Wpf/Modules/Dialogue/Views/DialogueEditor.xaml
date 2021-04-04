@@ -8,9 +8,9 @@
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              Style="{DynamicResource DefaultEditorControl}">
     <StackPanel Margin="10">
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Title" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Message" />
         <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="AllowEscape" />
@@ -24,7 +24,7 @@
         </materialDesign:Card>
         <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Options" />
-        <controls:AutoControl PropertyContext="{Binding Model}"
+        <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Requirements" />
     </StackPanel>
 </UserControl>

@@ -29,8 +29,12 @@ namespace RPGDataEditor.Wpf
             {
                 return ItemsControl.GetAlternationIndex(element);
             }
-            // TODO: Find ancestor of type ListBoxItem
-            return ItemsControl.GetAlternationIndex(element);
+            if (element is FrameworkElement el)
+            {
+                el.SetBinding(AlternationIndexProperty, new Binding(".") { RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(ListBoxItem), 1) });
+                return (int)el.GetValue(AlternationIndexProperty);
+            }
+            return -1;
         }
     }
 }
