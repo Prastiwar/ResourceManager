@@ -8,16 +8,22 @@
                     Orientation="{TemplateBinding Orientation}">
             <controls:AutoControl DataContext="{TemplateBinding Position}"
                                   PropertyName="X"
-                                  materialDesign:HintAssist.Hint="X position"
-                                  Margin="2" />
+                                  Margin="2">
+                <Setter Property="materialDesign:HintAssist.Hint"
+                        Value="X position" />
+            </controls:AutoControl>
             <controls:AutoControl DataContext="{TemplateBinding Position}"
                                   PropertyName="Y"
-                                  materialDesign:HintAssist.Hint="Y position"
-                                  Margin="2" />
+                                  Margin="2">
+                <Setter Property="materialDesign:HintAssist.Hint"
+                        Value="Y position" />
+            </controls:AutoControl>
             <controls:AutoControl DataContext="{TemplateBinding Position}"
                                   PropertyName="Z"
-                                  materialDesign:HintAssist.Hint="Z position"
-                                  Margin="2" />
+                                  Margin="2">
+                <Setter Property="materialDesign:HintAssist.Hint"
+                        Value="Z position" />
+            </controls:AutoControl>
         </StackPanel>
     </ControlTemplate>
     <Style TargetType="{x:Type controls:BlockPosField}">

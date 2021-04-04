@@ -96,40 +96,8 @@
                                 Visibility="Collapsed" />
                     <StackPanel x:Name="TraderStackPanel"
                                 Visibility="Collapsed">
-                        <controls:ListDataCard x:Name="TradeItemsListCard"
-                                               DataContext="{Binding Model.Job}"
-                                               ItemsSource="{Binding Items}"
-                                               HeaderText="{Binding Items.Count, StringFormat='({0}) Items'}">
-                            <DataTemplate>
-                                <materialDesign:Card Margin="5"
-                                                     Padding="5">
-                                    <StackPanel>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <controls:ExpandButton Margin="3,0,3,5"
-                                                                   HorizontalAlignment="Left"
-                                                                   VerticalAlignment="Bottom"
-                                                                   ExpandableElement="{x:Reference TradeItemPanel}" />
-                                            <TextBlock Text="{Binding Item}"
-                                                       Grid.Column="2"
-                                                       VerticalAlignment="Bottom"
-                                                       Margin="5,2,2,5" />
-                                        </Grid>
-                                        <StackPanel x:Name="TradeItemPanel"
-                                                    Visibility="Collapsed">
-                                            <controls:AutoControl PropertyName="Item" />
-                                            <controls:AutoControl PropertyName="Buy" />
-                                            <controls:AutoControl PropertyName="Sell" />
-                                            <controls:AutoControl PropertyName="Count" />
-                                            <controls:AutoControl PropertyName="Nbt" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </controls:ListDataCard>
+                        <controls:AutoControl DataContext="{Binding Model.Job}"
+                                              PropertyName="Items" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -151,15 +119,7 @@
         </controls:ExpandableCard>
         <controls:ExpandableCard DataContext="{Binding Model}"
                                  HeaderText="Equipment">
-            <StackPanel x:Name="EquipmentPanel"
-                        DataContext="{Binding Equipment}">
-                <controls:AutoControl PropertyName="MainHand" />
-                <controls:AutoControl PropertyName="OffHand" />
-                <controls:AutoControl PropertyName="Head" />
-                <controls:AutoControl PropertyName="Chest" />
-                <controls:AutoControl PropertyName="Legs" />
-                <controls:AutoControl PropertyName="Feet" />
-            </StackPanel>
+            <controls:AutoControl PropertyName="Equipment" />
         </controls:ExpandableCard>
         <controls:ExpandableCard HeaderText="Dialogues">
             <StackPanel x:Name="ListsPanel"

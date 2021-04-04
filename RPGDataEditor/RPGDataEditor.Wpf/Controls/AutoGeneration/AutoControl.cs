@@ -8,7 +8,7 @@ using System.Windows.Markup;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    [ContentProperty(nameof(Root))]
+    [ContentProperty(nameof(PropertyOverrides))]
     public class AutoControl : UserControl
     {
         public static readonly DependencyProperty PreserveDataContextProperty =
@@ -30,11 +30,12 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(PropertyTypeProperty, value);
         }
 
-        public static DependencyProperty RootProperty =
-            DependencyProperty.Register(nameof(Root), typeof(object), typeof(AutoControl));
-        public object Root {
-            get => GetValue(RootProperty);
-            set => SetValue(RootProperty, value);
+        private SetterBaseCollection propertyOverrides;
+        public SetterBaseCollection PropertyOverrides {
+            get {
+                VerifyAccess();
+                return propertyOverrides ??= new SetterBaseCollection();
+            }
         }
 
         protected override void OnInitialized(EventArgs e)
@@ -72,20 +73,14 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 return null;
             }
-            if (Root is Panel panel)
-            {
-                panel.Children.Add((UIElement)control);
-                return panel;
-            }
             return control;
         }
 
         protected virtual DependencyObject LoadControl(object context, string propertyName)
         {
-            IAutoTemplateProvider provider = Application.Current.TryResolve<IAutoTemplateProvider>();
             Type type = null;
             PropertyInfo property = null;
-            if (PropertyName == ".")
+            if (propertyName == ".")
             {
                 type = context.GetType();
             }
@@ -102,6 +97,7 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 type = PropertyType;
             }
+            IAutoTemplateProvider provider = Application.Current.TryResolve<IAutoTemplateProvider>();
             AutoTemplate template = provider.Resolve(type);
             while (template == null)
             {
@@ -119,9 +115,12 @@ namespace RPGDataEditor.Wpf.Controls
                 {
                     element.SetBinding(FrameworkElement.DataContextProperty, propertyName);
                 }
-                foreach (DependencyProperty prop in this.EnumerateAttachedProperties())
+                if (PropertyOverrides != null)
                 {
-                    element.SetValue(prop, GetValue(prop));
+                    foreach (Setter setter in PropertyOverrides)
+                    {
+                        element.SetValue(setter.Property, setter.Value);
+                    }
                 }
             }
             return control;
