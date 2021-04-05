@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RPGDataEditor.Core;
+using RPGDataEditor.Minecraft.Models;
 
 namespace RPGDataEditor.Minecraft.Validation
 {
@@ -7,17 +7,20 @@ namespace RPGDataEditor.Minecraft.Validation
     {
         public NpcDataModelValidator() : base()
         {
-            RuleFor(x => x.TextureLocation).Must(x => ValidationExtensions.IsResourceLocation(x) || ValidationExtensions.IsUrl(x))
+            RuleFor(x => (x as NpcDataModel).TextureLocation).Must(x => ValidationExtensions.IsResourceLocation(x) || Core.ValidationExtensions.IsUrl(x))
                                            .WithMessage("This is not valid url or resource location");
 
-            RuleFor(x => x.AmbientSoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
-            RuleFor(x => x.DeathSoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
-            RuleFor(x => x.HurtSoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
+            RuleFor(x => (x as NpcDataModel).AmbientSoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
+            RuleFor(x => (x as NpcDataModel).DeathSoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
+            RuleFor(x => (x as NpcDataModel).HurtSoundLocation).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
 
             RuleFor(x => x.Job).SetValidator(new NpcJobModelValidator());
 
             TalkDataModelValidator talkDataValidator = new TalkDataModelValidator();
             RuleFor(x => x.TalkData).SetValidator(talkDataValidator);
+
+            EquipmentModelValidator equipmentValidator = new EquipmentModelValidator();
+            RuleFor(x => (x as NpcDataModel).Equipment).SetValidator(equipmentValidator);
         }
 
     }

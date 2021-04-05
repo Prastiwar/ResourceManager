@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Controls
+namespace RPGDataEditor.Minecraft.Wpf.Controls
 {
     public class EquipmentModelAutoTemplate : AutoTemplate<EquipmentModel>
     {

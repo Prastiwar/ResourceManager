@@ -1,6 +1,4 @@
-﻿using RPGDataEditor.Core.Models;
-
-namespace RPGDataEditor.Minecraft.Models
+﻿namespace RPGDataEditor.Minecraft.Models
 {
     public class ItemRequirement : Core.Models.ItemRequirement
     {

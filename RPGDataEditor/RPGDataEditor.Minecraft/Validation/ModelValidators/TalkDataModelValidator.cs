@@ -1,17 +1,15 @@
-﻿using FluentValidation;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Validation;
+﻿using RPGDataEditor.Minecraft.Models;
 
 namespace RPGDataEditor.Minecraft.Validation
 {
-    public class TalkDataModelValidator : AbstractValidator<TalkDataModel>
+    public class TalkDataModelValidator : Core.Validation.TalkDataModelValidator
     {
         public TalkDataModelValidator() : base()
         {
             TalkLineValidator talkLineValidator = new TalkLineValidator();
-            RuleForEach(x => x.DeathLines).SetValidator(talkLineValidator);
-            RuleForEach(x => x.HurtLines).SetValidator(talkLineValidator);
-            RuleForEach(x => x.InteractLines).SetValidator(talkLineValidator);
+            RuleForEach(x => (x as TalkDataModel).DeathLines).SetValidator(talkLineValidator);
+            RuleForEach(x => (x as TalkDataModel).HurtLines).SetValidator(talkLineValidator);
+            RuleForEach(x => (x as TalkDataModel).InteractLines).SetValidator(talkLineValidator);
         }
     }
 }

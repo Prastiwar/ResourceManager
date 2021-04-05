@@ -8,9 +8,6 @@ namespace RPGDataEditor.Core
 {
     public static class ValidationExtensions
     {
-        public static IRuleBuilderOptions<T, TProperty> ResourceLocation<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
-            => ruleBuilder.Must(x => IsResourceLocation(x, allowNull));
-
         public static IRuleBuilderOptions<T, TProperty> Url<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowNull = true)
             => ruleBuilder.Must(x => IsUrl(x, allowNull));
 
@@ -52,17 +49,6 @@ namespace RPGDataEditor.Core
                 }
             }
             return false;
-        }
-
-        public static bool IsResourceLocation(object obj, bool allowNull = true)
-        {
-            if (obj == null || obj.ToString() == "")
-            {
-                return allowNull;
-            }
-            string value = obj.ToString();
-            string[] parts = value.Split(':', System.StringSplitOptions.RemoveEmptyEntries);
-            return parts.Length == 2;
         }
 
         public static bool IsUrl(object obj, bool allowNull = true)
