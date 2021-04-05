@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using Prism.Ioc;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Minecraft.Models;
+using RPGDataEditor.Minecraft.Providers;
 using RPGDataEditor.Minecraft.Serialization;
 using RPGDataEditor.Minecraft.Validation;
 using RPGDataEditor.Minecraft.Wpf.Providers;
@@ -53,11 +55,9 @@ namespace RPGDataEditor.Minecraft.Wpf
         protected override void RegisterProviders(IContainerRegistry containerRegistry)
         {
             base.RegisterProviders(containerRegistry);
-            // TODO: Fix providers so it will ignore overriden cores
-            //containerRegistry.RegisterInstance<IModelProvider<PlayerRequirementModel>>(new DefaultRequirementProvider());
-            //containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
-            //containerRegistry.RegisterInstance<INamedIdProvider<DialogueOptionModel>>(new DefaultDialogueOptionNamedIdProvider());
-            //containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
+            containerRegistry.RegisterInstance<IModelProvider<PlayerRequirementModel>>(new RequirementProvider());
+            containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new QuestTaskProvider());
+            containerRegistry.Register(typeof(IModelProvider<>), typeof(McModelProvider<>));
             AutoTemplateProvider controlProvider = new MinecraftAutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);

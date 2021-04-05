@@ -17,12 +17,6 @@
     <DataTemplate x:Key="ItemRequirementContent">
         <StackPanel Margin="5">
             <controls:AutoControl PropertyName="Item" />
-            <CheckBox x:Name="RespectNBTCheckbox"
-                      Content="Should respect NBT?"
-                      Margin="5"
-                      IsChecked="{Binding RespectNbt, Mode=TwoWay}" />
-            <controls:AutoControl PropertyName="Nbt"
-                                  Visibility="{Binding IsChecked, ElementName=RespectNBTCheckbox, Converter={StaticResource BoolToVisibilityConverter}}" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="QuestRequirementContent">

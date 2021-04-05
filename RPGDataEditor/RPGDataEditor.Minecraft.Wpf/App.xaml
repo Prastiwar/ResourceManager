@@ -1,8 +1,28 @@
 ﻿<rpg:RpgDataEditorApplication x:Class="RPGDataEditor.Minecraft.Wpf.App"
                               xmlns:rpg="clr-namespace:RPGDataEditor.Wpf;assembly=RPGDataEditor.Wpf"
                               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Application.Resources>
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Minecraft.Wpf;component/Themes/MinecraftRpgDataEditorTheme.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Dark"
+                                             PrimaryColor="Orange"
+                                             SecondaryColor="Cyan" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Snackbar.xaml" />
+                <ResourceDictionary>
+                    <Style x:Key="MaterialDesignSnackbarActionCustomButton"
+                           TargetType="Button"
+                           BasedOn="{StaticResource MaterialDesignSnackbarActionButton}">
+                        <Setter Property="Foreground"
+                                Value="WhiteSmoke" />
+                    </Style>
+                </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Converters.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Minecraft.Wpf;component/Themes/McRpgDataEditorTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </rpg:RpgDataEditorApplication>

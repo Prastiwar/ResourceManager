@@ -149,7 +149,13 @@ namespace RPGDataEditor.Wpf
             OnRegistrationFinished(containerRegistry);
         }
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
-            => Session.ClientProvider = Container.Resolve<IClientProvider>();
+        {
+            Session.ClientProvider = Container.Resolve<IClientProvider>();
+            if (Session.Client == null)
+            {
+                Session.SetConnection("Explorer");
+            }
+        }
 
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {

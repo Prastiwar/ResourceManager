@@ -1,5 +1,6 @@
 ﻿using RPGDataEditor.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RPGDataEditor.Core.Providers
@@ -8,10 +9,17 @@ namespace RPGDataEditor.Core.Providers
     {
         protected static Type[] DerivedTypes { get; } = typeof(TModel).EnumarateDerivedTypes().ToArray();
 
+        protected virtual HashSet<Type> GetIgnoredTypes() => null;
+
         public virtual TModel CreateModel(string name)
         {
+            HashSet<Type> ignoredTypes = GetIgnoredTypes();
             foreach (Type type in DerivedTypes)
             {
+                if (ignoredTypes != null && ignoredTypes.Contains(type))
+                {
+                    continue;
+                }
                 string typeName = GetTypeNameToCompare(type.Name);
                 if (typeName.CompareTo(name) == 0)
                 {
