@@ -1,5 +1,5 @@
 ﻿using RPGDataEditor.Core.Models;
-using RPGDataEditor.Wpf;
+using RPGDataEditor.Minecraft.Models;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
@@ -7,12 +7,6 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
     public partial class NpcDataModelEditor : UserControl
     {
         public NpcDataModelEditor() => InitializeComponent();
-
-        private void ToggleExpandIcon(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            Commands.ToggleExpandIcon(btn);
-        }
 
         private void JobComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -24,7 +18,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
                     bool isTrader = string.Compare(selected.Name, "trader", true) == 0;
                     RefreshJobPanelVisibility(selected.Name);
                     ComboBox comboBox = (ComboBox)sender;
-                    if (comboBox.DataContext is NpcDataModel model)
+                    if (comboBox.DataContext is Models.NpcDataModel model)
                     {
                         if (isGuard)
                         {
@@ -55,7 +49,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
         {
             ComboBox comboBox = (ComboBox)sender;
             comboBox.SelectionChanged -= JobComboBox_SelectionChanged;
-            if (comboBox.DataContext is NpcDataModel model)
+            if (comboBox.DataContext is Models.NpcDataModel model)
             {
                 comboBox.SelectedIndex = model.Job == null
                                          ? 0 : model.Job is GuardNpcJobModel

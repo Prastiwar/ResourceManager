@@ -41,7 +41,6 @@ namespace RPGDataEditor.Wpf.Providers
             RegisterAutoTemplate<QuestTask>(containerRegistry, new QuestTaskAutoTemplate());
             RegisterAutoTemplate<PlayerRequirementModel>(containerRegistry, new RequirementAutoTemplate());
             RegisterAutoTemplate<TalkLine>(containerRegistry, new TalkLineAutoTemplate());
-            RegisterAutoTemplate<EquipmentModel>(containerRegistry, new EquipmentModelAutoTemplate());
             RegisterAutoTemplate<TradeItemModel>(containerRegistry, new TradeItemAutoTemplate());
 
             RegisterListDataAutoTemplate<PlayerRequirementModel>(containerRegistry);

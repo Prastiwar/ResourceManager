@@ -17,28 +17,13 @@
   <ItemGroup>
     <ProjectReference Include="..\RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj" />
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Minecraft.Wpf\RPGDataEditor.Minecraft.Wpf.csproj" />
+    <ProjectReference Include="..\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Modules\Dialogue\Views\DialogueEditor.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Modules\Dialogue\Views\DialogueOptionView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Modules\Npc\Views\NpcDataModelEditor.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Modules\Quest\Views\QuestEditor.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Modules\Quest\Views\QuestTaskView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Modules\Shared\Views\CategoryTabControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Modules\Shared\Views\RequirementView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

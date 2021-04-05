@@ -12,8 +12,6 @@
                               PropertyName="Title" />
         <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Message" />
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="AllowEscape" />
         <materialDesign:Card HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">

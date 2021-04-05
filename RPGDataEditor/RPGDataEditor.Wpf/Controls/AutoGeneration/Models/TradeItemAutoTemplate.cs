@@ -14,6 +14,13 @@ namespace RPGDataEditor.Wpf.Controls
                 Margin = new Thickness(5),
                 Padding = new Thickness(5)
             };
+            card.Content = BuildPanel(info);
+            AutoControl.SetPreserveDataContext(card, false);
+            return card;
+        }
+
+        protected virtual StackPanel BuildPanel(PropertyInfo info)
+        {
             StackPanel panel = new StackPanel();
             panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItemModel.Item) });
             StackPanel numericPanel = new StackPanel() { Orientation = Orientation.Horizontal };
@@ -30,11 +37,7 @@ namespace RPGDataEditor.Wpf.Controls
                 MinWidth = 128
             });
             panel.Children.Add(numericPanel);
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItemModel.Nbt) });
-
-            card.Content = panel;
-            AutoControl.SetPreserveDataContext(card, false);
-            return card;
+            return panel;
         }
     }
 }

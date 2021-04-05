@@ -13,17 +13,12 @@ namespace RPGDataEditor.Wpf.Npc.Views
             {
                 if (e.AddedItems[0] is ComboBoxItem selected)
                 {
-                    bool isGuard = string.Compare(selected.Name, "guard", true) == 0;
                     bool isTrader = string.Compare(selected.Name, "trader", true) == 0;
                     RefreshJobPanelVisibility(selected.Name);
                     ComboBox comboBox = (ComboBox)sender;
                     if (comboBox.DataContext is NpcDataModel model)
                     {
-                        if (isGuard)
-                        {
-                            model.Job = new GuardNpcJobModel();
-                        }
-                        else if (isTrader)
+                        if (isTrader)
                         {
                             model.Job = new TraderNpcJobModel();
                         }
@@ -38,10 +33,8 @@ namespace RPGDataEditor.Wpf.Npc.Views
 
         private void RefreshJobPanelVisibility(string jobName)
         {
-            bool isGuard = string.Compare(jobName, "guard", true) == 0;
             bool isTrader = string.Compare(jobName, "trader", true) == 0;
             TraderStackPanel.Visibility = isTrader ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-            GuardStackPanel.Visibility = isGuard ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }
 
         private void JobComboBox_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
@@ -51,8 +44,7 @@ namespace RPGDataEditor.Wpf.Npc.Views
             if (comboBox.DataContext is NpcDataModel model)
             {
                 comboBox.SelectedIndex = model.Job == null
-                                         ? 0 : model.Job is GuardNpcJobModel
-                                         ? 1 : 2;
+                                         ? 0 : 1;
                 RefreshJobPanelVisibility((comboBox.SelectedItem as ComboBoxItem).Name);
             }
             comboBox.SelectionChanged += JobComboBox_SelectionChanged;

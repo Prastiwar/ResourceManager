@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Minecraft.Models;
+using RPGDataEditor.Wpf.Controls;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;

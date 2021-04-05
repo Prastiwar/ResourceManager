@@ -79,7 +79,6 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new PlayerRequirementJsonConverter());
 
             settings.Converters.Add(new NpcJobJsonConverter());
-            settings.Converters.Add(new EquipmentModelJsonConverter());
             settings.Converters.Add(new NpcDataModelJsonConverter());
             settings.Converters.Add(new TradeItemModelJsonConverter());
             settings.Converters.Add(new AttributeDataModelJsonConverter());

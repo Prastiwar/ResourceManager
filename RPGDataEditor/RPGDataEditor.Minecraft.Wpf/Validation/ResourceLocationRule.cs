@@ -1,9 +1,9 @@
-﻿using RPGDataEditor.Core;
-using RPGDataEditor.Core.Validation;
+﻿using RPGDataEditor.Minecraft.Validation;
+using RPGDataEditor.Wpf.Validation;
 using System.Globalization;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Validation
+namespace RPGDataEditor.Minecraft.Wpf.Validation
 {
     public class ResourceLocationRule : ValidationRuleBase
     {
