@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core.Validation;
 
 namespace RPGDataEditor.Minecraft.Validation
 {

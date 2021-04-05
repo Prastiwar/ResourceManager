@@ -49,17 +49,17 @@ namespace RPGDataEditor.Minecraft.Serialization
         public override JObject ToJObject(Core.Models.NpcDataModel value, JsonSerializer serializer)
         {
             JObject obj = base.ToJObject(value, serializer);
-            obj.Add(nameof(NpcDataModel.Title).ToFirstLower(), value.Title);
-            obj.Add(nameof(NpcDataModel.TextureLocation).ToFirstLower(), value.TextureLocation);
-            obj.Add(nameof(NpcDataModel.Invulnerable).ToFirstLower(), value.Invulnerable);
-            obj.Add(nameof(NpcDataModel.LookAtPlayer).ToFirstLower(), value.LookAtPlayer);
-            obj.Add(nameof(NpcDataModel.HealthRegen).ToFirstLower(), value.HealthRegen);
-            obj.Add(nameof(NpcDataModel.Equipment).ToFirstLower(), JToken.FromObject(value.Equipment, serializer));
-            obj.Add(nameof(NpcDataModel.MovementType).ToFirstLower(), value.MovementType.ToString().ToUpper());
-            obj.Add(nameof(NpcDataModel.Paths).ToFirstLower(), JArray.FromObject(value.Paths, serializer));
-            obj.Add(nameof(NpcDataModel.AmbientSoundLocation).ToFirstLower(), value.AmbientSoundLocation);
-            obj.Add(nameof(NpcDataModel.DeathSoundLocation).ToFirstLower(), value.DeathSoundLocation);
-            obj.Add(nameof(NpcDataModel.HurtSoundLocation).ToFirstLower(), value.HurtSoundLocation);
+            obj.Add(nameof(NpcDataModel.Title).ToFirstLower(), (value as NpcDataModel).Title);
+            obj.Add(nameof(NpcDataModel.TextureLocation).ToFirstLower(), (value as NpcDataModel).TextureLocation);
+            obj.Add(nameof(NpcDataModel.Invulnerable).ToFirstLower(), (value as NpcDataModel).Invulnerable);
+            obj.Add(nameof(NpcDataModel.LookAtPlayer).ToFirstLower(), (value as NpcDataModel).LookAtPlayer);
+            obj.Add(nameof(NpcDataModel.HealthRegen).ToFirstLower(), (value as NpcDataModel).HealthRegen);
+            obj.Add(nameof(NpcDataModel.Equipment).ToFirstLower(), JToken.FromObject((value as NpcDataModel).Equipment, serializer));
+            obj.Add(nameof(NpcDataModel.MovementType).ToFirstLower(), (value as NpcDataModel).MovementType.ToString().ToUpper());
+            obj.Add(nameof(NpcDataModel.Paths).ToFirstLower(), JArray.FromObject((value as NpcDataModel).Paths, serializer));
+            obj.Add(nameof(NpcDataModel.AmbientSoundLocation).ToFirstLower(), (value as NpcDataModel).AmbientSoundLocation);
+            obj.Add(nameof(NpcDataModel.DeathSoundLocation).ToFirstLower(), (value as NpcDataModel).DeathSoundLocation);
+            obj.Add(nameof(NpcDataModel.HurtSoundLocation).ToFirstLower(), (value as NpcDataModel).HurtSoundLocation);
             return obj;
         }
     }

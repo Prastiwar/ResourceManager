@@ -1,6 +1,4 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public abstract class NpcJobModel : ObservableModel
-    {
-    }
+    public abstract class NpcJobModel : ObservableModel { }
 }

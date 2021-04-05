@@ -11,22 +11,10 @@ namespace RPGDataEditor.Core.Models
             set => SetProperty(ref message, value ?? "");
         }
 
-        private string command = "";
-        public string Command {
-            get => command;
-            set => SetProperty(ref command, value ?? "");
-        }
-
         private int nextDialogId = -1;
         public int NextDialogId {
             get => nextDialogId;
             set => SetProperty(ref nextDialogId, value);
-        }
-
-        private int color = 1;
-        public int Color {
-            get => color;
-            set => SetProperty(ref color, value);
         }
 
         private IList<PlayerRequirementModel> requirements = new ObservableCollection<PlayerRequirementModel>();

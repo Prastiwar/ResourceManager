@@ -1,6 +1,4 @@
 ﻿namespace RPGDataEditor.Core.Models
 {
-    public abstract class QuestTask : ObservableModel
-    {
-    }
+    public abstract class QuestTask : ObservableModel { }
 }

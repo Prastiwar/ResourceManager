@@ -25,7 +25,7 @@ namespace RPGDataEditor.Minecraft.Serialization
         public override JObject ToJObject(Core.Models.TradeItemModel value, JsonSerializer serializer)
         {
             JObject obj = base.ToJObject(value, serializer);
-            obj.Add(nameof(TradeItemModel.Nbt).ToFirstLower(), value.Nbt);
+            obj.Add(nameof(TradeItemModel.Nbt).ToFirstLower(), (value as TradeItemModel).Nbt);
             return obj;
         }
     }

@@ -28,7 +28,7 @@ namespace RPGDataEditor.Minecraft.Serialization
         public override JObject ToJObject(Core.Models.DialogueModel value, JsonSerializer serializer)
         {
             JObject obj = base.ToJObject(value, serializer);
-            obj.Add(nameof(DialogueModel.AllowEscape).ToFirstLower(), value.AllowEscape);
+            obj.Add(nameof(DialogueModel.AllowEscape).ToFirstLower(), (value as DialogueModel).AllowEscape);
             return obj;
         }
     }

@@ -25,11 +25,5 @@
             get => count;
             set => SetProperty(ref count, value < 1 ? 1 : value);
         }
-
-        private string nbt;
-        public string Nbt {
-            get => nbt;
-            set => SetProperty(ref nbt, value);
-        }
     }
 }

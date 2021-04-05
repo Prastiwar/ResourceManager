@@ -13,13 +13,11 @@ namespace RPGDataEditor.Core.Serialization
             int buy = obj.GetValue<int>(nameof(TradeItemModel.Buy), 0);
             int sell = obj.GetValue<int>(nameof(TradeItemModel.Sell), 0);
             int count = obj.GetValue(nameof(TradeItemModel.Count), 1);
-            string nbt = obj.GetValue<string>(nameof(TradeItemModel.Nbt), null);
             TradeItemModel model = new TradeItemModel() {
                 Item = item,
                 Buy = buy,
                 Sell = sell,
-                Count = count,
-                Nbt = nbt
+                Count = count
             };
             return model;
         }
@@ -28,8 +26,7 @@ namespace RPGDataEditor.Core.Serialization
                 { nameof(TradeItemModel.Item).ToFirstLower(), value.Item },
                 { nameof(TradeItemModel.Buy).ToFirstLower(), value.Buy },
                 { nameof(TradeItemModel.Sell).ToFirstLower(), value.Sell },
-                { nameof(TradeItemModel.Count).ToFirstLower(), value.Count },
-                { nameof(TradeItemModel.Nbt).ToFirstLower(), value.Nbt }
+                { nameof(TradeItemModel.Count).ToFirstLower(), value.Count }
             };
     }
 }

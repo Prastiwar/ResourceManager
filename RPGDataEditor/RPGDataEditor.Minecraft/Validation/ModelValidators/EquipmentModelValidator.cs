@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Minecraft.Models;
 
-namespace RPGDataEditor.Core.Validation
+namespace RPGDataEditor.Minecraft.Validation
 {
     public class EquipmentModelValidator : AbstractValidator<EquipmentModel>
     {
