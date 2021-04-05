@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace RPGDataEditor.ViewModels
+namespace RPGDataEditor.Wpf.ViewModels
 {
     public class AppWindowViewModel : ViewModelBase
     {

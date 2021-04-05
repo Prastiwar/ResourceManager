@@ -34,7 +34,7 @@ namespace RPGDataEditor.Wpf
             Exit += OnExit;
         }
 
-        public static new RPGDataEditorApp Current => Application.Current as RPGDataEditorApp;
+        public static new RpgDataEditorApplication Current => Application.Current as RpgDataEditorApplication;
 
         protected string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
 

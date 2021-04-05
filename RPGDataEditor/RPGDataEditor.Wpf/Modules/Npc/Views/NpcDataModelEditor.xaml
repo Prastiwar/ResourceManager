@@ -20,10 +20,6 @@
                                       PropertyName="Position" />
             </StackPanel>
         </materialDesign:Card>
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="Invulnerable" />
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="LookAtPlayer" />
         <materialDesign:Card x:Name="ExpandableJobSection"
                              HorizontalContentAlignment="Center"
                              Margin="5"

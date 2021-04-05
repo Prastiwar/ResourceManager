@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters;assembly=RPGDataEditor.Wpf"
-             xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
+             xmlns:models="clr-namespace:RPGDataEditor.Minecraft.Models;assembly=RPGDataEditor.Minecraft"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls;assembly=RPGDataEditor.Wpf"
              Style="{DynamicResource DefaultEditorControl}"
              x:Name="ThisNpcView">
