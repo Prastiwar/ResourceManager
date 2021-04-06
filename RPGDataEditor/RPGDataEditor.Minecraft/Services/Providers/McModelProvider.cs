@@ -12,7 +12,8 @@ namespace RPGDataEditor.Minecraft.Providers
             typeof(DialogueModel),
             typeof(DialogueOptionModel),
             typeof(TalkDataModel),
-            typeof(ItemRequirement)
+            typeof(ItemRequirement),
+            typeof(RightItemInteractQuestTask)
         };
     }
 }

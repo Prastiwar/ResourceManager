@@ -2,13 +2,19 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace RPGDataEditor.Core.Serialization
 {
     public class AbstractClassJsonConverter<T> : JsonConverter<T>
     {
-        public AbstractClassJsonConverter(params string[] namespaceNames) => NamespaceNames = namespaceNames ?? throw new ArgumentNullException(nameof(namespaceNames));
+        public AbstractClassJsonConverter(Assembly[] assemblies, params string[] namespaceNames)
+        {
+            Assemblies = assemblies;
+            NamespaceNames = namespaceNames ?? throw new ArgumentNullException(nameof(namespaceNames));
+        }
 
+        protected Assembly[] Assemblies { get; set; }
         protected string[] NamespaceNames { get; set; }
 
         protected virtual string Suffix { get; }
@@ -37,16 +43,34 @@ namespace RPGDataEditor.Core.Serialization
             obj.WriteTo(writer);
         }
 
-        protected virtual string GetTypeName(T src) => string.IsNullOrEmpty(Suffix) ? src.GetType().Name 
+        protected virtual string GetTypeName(T src) => string.IsNullOrEmpty(Suffix) ? src.GetType().Name
                                                                                     : src.GetType().Name.Replace(Suffix, "");
 
         protected virtual Type GetObjectType(string type)
         {
-            string suffixType = string.IsNullOrEmpty(Suffix) ? "." + type 
+            string suffixType = string.IsNullOrEmpty(Suffix) ? "." + type
                                                              : "." + type + Suffix;
+            if (Assemblies == null)
+            {
+                return GetObjectType(suffixType, typeof(AbstractClassJsonConverter<T>).Assembly.FullName);
+            }
+            foreach (Assembly assembly in Assemblies)
+            {
+                Type foundType = GetObjectType(suffixType, assembly.FullName);
+                if (foundType != null)
+                {
+                    return foundType;
+                }
+            }
+            return null;
+        }
+
+        protected Type GetObjectType(string type, string assemblyName)
+        {
+            string typeWithAssemblyName = type + ", " + assemblyName;
             foreach (string namespaceName in NamespaceNames)
             {
-                Type foundType = Type.GetType(namespaceName + suffixType);
+                Type foundType = Type.GetType(namespaceName + typeWithAssemblyName);
                 if (foundType != null)
                 {
                     return foundType;
