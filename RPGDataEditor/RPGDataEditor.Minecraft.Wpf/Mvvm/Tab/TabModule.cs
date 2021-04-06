@@ -2,9 +2,9 @@
 using Prism.Regions;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Minecraft.Wpf.Dialogue.Views;
+using RPGDataEditor.Minecraft.Wpf.Npc.ViewModels;
 using RPGDataEditor.Minecraft.Wpf.Npc.Views;
 using RPGDataEditor.Wpf.Dialogue.ViewModels;
-using RPGDataEditor.Wpf.Npc.ViewModels;
 
 namespace RPGDataEditor.Minecraft.Wpf
 {

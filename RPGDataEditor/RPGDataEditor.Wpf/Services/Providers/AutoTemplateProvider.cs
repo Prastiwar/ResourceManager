@@ -51,7 +51,10 @@ namespace RPGDataEditor.Wpf.Providers
         }
 
         protected void RegisterListDataAutoTemplate<T>(IContainerRegistry containerRegistry)
-            => containerRegistry.RegisterInstance<AutoTemplate>(new DataCollectionAutoTemplate<T>(), typeof(IList<T>).FullName);
+            => RegisterListDataAutoTemplate<T>(containerRegistry, new DataCollectionAutoTemplate<T>());
+
+        protected void RegisterListDataAutoTemplate<T>(IContainerRegistry containerRegistry, AutoTemplate template)
+            => containerRegistry.RegisterInstance<AutoTemplate>(template, typeof(IList<T>).FullName);
 
         protected void RegisterAutoTemplate<T>(IContainerRegistry containerRegistry, AutoTemplate template)
             => containerRegistry.RegisterInstance<AutoTemplate>(template, typeof(T).FullName);

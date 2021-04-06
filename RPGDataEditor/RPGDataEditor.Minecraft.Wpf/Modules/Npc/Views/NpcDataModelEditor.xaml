@@ -72,7 +72,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <controls:ExpandButton HorizontalAlignment="Left"
-                                           IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
+                                           IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource StringToBoolConverter}, ConverterParameter=2}"
                                            ExpandableElement="{x:Reference JobStackPanel}" />
                     <ComboBox x:Name="JobComboBox"
                               Grid.Column="1"
