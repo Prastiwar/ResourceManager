@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace RPGDataEditor.Views
+namespace RPGDataEditor.Wpf.Views
 {
     public partial class MainWindow : Window
     {

@@ -14,7 +14,6 @@ using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Core.Validation;
-using RPGDataEditor.Views;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
@@ -97,6 +96,10 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new ResourceClientJsonConverter());
             settings.Converters.Add(new OptionsDataJsonConverter());
             settings.Converters.Add(new SessionContextJsonConverter());
+            if (Session is DefaultSessionContext context)
+            {
+                settings.Formatting = context.Options.PrettyPrint ? Formatting.Indented : Formatting.None;
+            }
             return settings;
         }
 

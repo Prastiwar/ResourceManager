@@ -2,6 +2,7 @@
 using Prism.Regions;
 using RPGDataEditor.Core.Models;
 using RPGDataEditor.Core.Mvvm;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,6 +20,17 @@ namespace RPGDataEditor.Wpf.Settings.ViewModels
             FluentValidation.Results.ValidationResult validationResult = await Context.ValidationProvider.ValidateAsync(Session);
             return validationResult.IsValid;
         }
+
+        public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
+        {
+            await base.OnNavigatedToAsync(navigationContext);
+            if (Session is INotifyPropertyChanged notifyPropertyChanged)
+            {
+                notifyPropertyChanged.PropertyChanged += NotifyPropertyChanged_PropertyChanged;
+            }
+        }
+
+        private void NotifyPropertyChanged_PropertyChanged(object sender, PropertyChangedEventArgs e) => Session.SaveSession();
 
         private async void CreateBackup(RPGResource resource)
         {

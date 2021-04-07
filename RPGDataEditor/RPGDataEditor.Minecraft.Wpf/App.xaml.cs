@@ -70,6 +70,10 @@ namespace RPGDataEditor.Minecraft.Wpf
             settings.Converters.Add(new ResourceClientJsonConverter());
             settings.Converters.Add(new OptionsDataJsonConverter());
             settings.Converters.Add(new SessionContextJsonConverter());
+            if (Session is DefaultSessionContext context)
+            {
+                settings.Formatting = context.Options.PrettyPrint ? Formatting.Indented : Formatting.None;
+            }
             return settings;
         }
 

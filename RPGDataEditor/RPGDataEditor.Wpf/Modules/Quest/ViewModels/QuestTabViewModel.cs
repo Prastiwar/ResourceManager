@@ -38,7 +38,10 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
             Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
             bool renamed = await base.RenameCategoryAsync(oldCategory, newCategory);
             JsonConvert.DefaultSettings = cachedSettings;
-            Session.OnResourceChanged(RPGResource.Quest);
+            if (renamed)
+            {
+                Session.OnResourceChanged(RPGResource.Quest);
+            }
             return renamed;
         }
 
