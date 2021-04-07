@@ -37,6 +37,7 @@ namespace RPGDataEditor.Wpf.Behaviors
             {
                 newValidable.Validated -= behavior.Validable_OnValidated; // prevent event duplication
                 newValidable.Validated += behavior.Validable_OnValidated;
+                behavior.ValidableContext = newValidable; // set context there since it's not always updated
             }
         }
 

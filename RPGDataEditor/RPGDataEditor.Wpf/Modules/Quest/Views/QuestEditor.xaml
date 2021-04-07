@@ -6,6 +6,8 @@
              mc:Ignorable="d"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              Style="{DynamicResource DefaultEditorControl}">
     <StackPanel Margin="10">
         <controls:AutoControl DataContext="{Binding Model}"
@@ -19,7 +21,11 @@
             <StackPanel>
                 <TextBlock Text="Choose completion task"
                            Margin="5" />
-                <controls:AutoControl PropertyName="CompletionTask" />
+                <controls:AutoControl PropertyName="CompletionTask">
+                    <i:Interaction.Behaviors>
+                        <behaviors:CatchValidationBehaviorView PropertyName="CompletionTask" />
+                    </i:Interaction.Behaviors>
+                </controls:AutoControl>
             </StackPanel>
         </materialDesign:Card>
         <controls:AutoControl DataContext="{Binding Model}"

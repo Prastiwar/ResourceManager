@@ -24,9 +24,9 @@ namespace RPGDataEditor.Wpf.Settings.ViewModels
         public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
         {
             await base.OnNavigatedToAsync(navigationContext);
-            if (Session is INotifyPropertyChanged notifyPropertyChanged)
+            if (Session is DefaultSessionContext context)
             {
-                notifyPropertyChanged.PropertyChanged += NotifyPropertyChanged_PropertyChanged;
+                context.Options.PropertyChanged += NotifyPropertyChanged_PropertyChanged;
             }
         }
 
