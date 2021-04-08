@@ -4,6 +4,7 @@ using RPGDataEditor.Wpf.Controls;
 using RPGDataEditor.Wpf.Controls.AutoGeneration.Models;
 using System;
 using System.Collections.Generic;
+using System.Security;
 using System.Windows.Media;
 
 namespace RPGDataEditor.Wpf.Providers
@@ -36,6 +37,7 @@ namespace RPGDataEditor.Wpf.Providers
             RegisterAutoTemplate<string>(containerRegistry, new StringAutoTemplate());
             RegisterAutoTemplate<Position>(containerRegistry, new PositionAutoTemplate());
             RegisterAutoTemplate<Color>(containerRegistry, new ColorAutoTemplate());
+            RegisterAutoTemplate<SecureString>(containerRegistry, new SecureStringAutoTemplate());
 
             RegisterAutoTemplate<DialogueOptionModel>(containerRegistry, new DialogueOptionAutoTemplate());
             RegisterAutoTemplate<QuestTask>(containerRegistry, new QuestTaskAutoTemplate());

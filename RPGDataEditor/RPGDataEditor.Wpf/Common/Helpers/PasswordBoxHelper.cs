@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf
@@ -6,9 +9,14 @@ namespace RPGDataEditor.Wpf
     public static class PasswordBoxHelper
     {
         public static readonly DependencyProperty PasswordProperty =
-            DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBoxHelper), new PropertyMetadata(string.Empty, OnPasswordChanged));
+            DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBoxHelper), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnPasswordChanged));
         public static string GetPassword(DependencyObject dp) => (string)dp.GetValue(PasswordProperty);
         public static void SetPassword(DependencyObject dp, string value) => dp.SetValue(PasswordProperty, value);
+
+        public static readonly DependencyProperty SecurePasswordProperty =
+            DependencyProperty.RegisterAttached("SecurePassword", typeof(SecureString), typeof(PasswordBoxHelper), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnPasswordChanged));
+        public static SecureString GetSecurePassword(DependencyObject dp) => (SecureString)dp.GetValue(SecurePasswordProperty);
+        public static void SetSecurePassword(DependencyObject dp, SecureString value) => dp.SetValue(SecurePasswordProperty, value);
 
         public static readonly DependencyProperty BindPasswordProperty = DependencyProperty.RegisterAttached(
             "BindPassword", typeof(bool), typeof(PasswordBoxHelper), new PropertyMetadata(false, OnBindPasswordChanged));
@@ -30,7 +38,23 @@ namespace RPGDataEditor.Wpf
             box.PasswordChanged -= HandlePasswordChanged;
             if (!GetIsUpdatingPassword(box))
             {
-                box.Password = (string)e.NewValue;
+                if (e.NewValue is string password)
+                {
+                    box.Password = password;
+                }
+                else if (e.NewValue is SecureString securePassword)
+                {
+                    IntPtr valuePtr = IntPtr.Zero;
+                    try
+                    {
+                        valuePtr = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+                        box.Password = Marshal.PtrToStringUni(valuePtr);
+                    }
+                    finally
+                    {
+                        Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+                    }
+                }
             }
             box.PasswordChanged += HandlePasswordChanged;
         }
@@ -53,6 +77,7 @@ namespace RPGDataEditor.Wpf
             PasswordBox box = sender as PasswordBox;
             SetIsUpdatingPassword(box, true);
             SetPassword(box, box.Password);
+            SetSecurePassword(box, box.SecurePassword);
             SetIsUpdatingPassword(box, false);
         }
     }

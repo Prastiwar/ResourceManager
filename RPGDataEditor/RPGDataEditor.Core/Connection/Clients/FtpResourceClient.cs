@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -67,12 +68,12 @@ namespace RPGDataEditor.Core.Connection
             }
         }
 
-        private string password = "";
-        public string Password {
+        private SecureString password = new SecureString();
+        public SecureString Password {
             get => password;
             set {
-                SetProperty(ref password, value ?? "");
-                Client.Credentials.Password = password;
+                SetProperty(ref password, value ?? new SecureString());
+                Client.Credentials.SecurePassword = password;
             }
         }
 

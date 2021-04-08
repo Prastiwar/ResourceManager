@@ -102,6 +102,10 @@ namespace RPGDataEditor.Wpf.Controls
             while (template == null)
             {
                 type = type.BaseType;
+                if (type == null)
+                {
+                    break;
+                }
                 template = provider.Resolve(type);
             }
             DependencyObject control = template?.LoadContent(property);

@@ -21,7 +21,6 @@ namespace RPGDataEditor.Core.Serialization
                     ftpClient.RelativePath = obj.GetValue<string>(nameof(FtpResourceClient.RelativePath));
                     ftpClient.Port = obj.GetValue<int>(nameof(FtpResourceClient.Port), 0);
                     ftpClient.UserName = obj.GetValue<string>(nameof(FtpResourceClient.UserName));
-                    ftpClient.Password = obj.GetValue<string>(nameof(FtpResourceClient.Password));
                     break;
                 case ExplorerResourceClient explorerClient:
                     explorerClient.FolderPath = obj.GetValue<string>(nameof(ExplorerResourceClient.FolderPath));
@@ -39,8 +38,7 @@ namespace RPGDataEditor.Core.Serialization
                     { nameof(FtpResourceClient.Host).ToLower(), ftpClient.Host },
                     { nameof(FtpResourceClient.RelativePath).ToLower(), ftpClient.RelativePath },
                     { nameof(FtpResourceClient.Port).ToLower(), ftpClient.Port },
-                    { nameof(FtpResourceClient.UserName).ToLower(), ftpClient.UserName },
-                    { nameof(FtpResourceClient.Password).ToLower(), ftpClient.Password }
+                    { nameof(FtpResourceClient.UserName).ToLower(), ftpClient.UserName }
                 },
             ExplorerResourceClient explorerClient => new JObject() {
                     { "type", "explorer" },

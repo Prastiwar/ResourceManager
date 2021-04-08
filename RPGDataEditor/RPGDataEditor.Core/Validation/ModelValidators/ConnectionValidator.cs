@@ -14,7 +14,7 @@ namespace RPGDataEditor.Core.Validation
 
             RuleFor(x => ((FtpResourceClient)x).Host).NotEmpty().WithMessage("Host cannot be empty").When(x => x is FtpResourceClient);
             RuleFor(x => ((FtpResourceClient)x).UserName).NotEmpty().WithMessage("Username cannot be empty").When(x => x is FtpResourceClient);
-            RuleFor(x => ((FtpResourceClient)x).Password).NotEmpty().WithMessage("Password cannot be empty").When(x => x is FtpResourceClient);
+            RuleFor(x => ((FtpResourceClient)x).Password.Length).GreaterThan(0).WithMessage("Password cannot be empty").When(x => x is FtpResourceClient);
         }
     }
 }

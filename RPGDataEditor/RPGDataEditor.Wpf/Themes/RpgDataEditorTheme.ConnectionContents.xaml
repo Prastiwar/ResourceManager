@@ -1,7 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:local="clr-namespace:RPGDataEditor.Wpf"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
     <DataTemplate x:Key="ExplorerConnectionContent">
         <StackPanel Margin="64">
@@ -19,13 +17,8 @@
                                   PropertyName="RelativePath" />
             <controls:AutoControl DataContext="{Binding Client}"
                                   PropertyName="UserName" />
-            <PasswordBox x:Name="FtpPasswordBox"
-                         DataContext="{Binding Client}"
-                         Margin="0,8,0,8"
-                         materialDesign:HintAssist.Hint="Password"
-                         local:PasswordBoxHelper.BindPassword="True"
-                         local:PasswordBoxHelper.Password="{Binding Password}"
-                         Style="{DynamicResource MaterialDesignFloatingHintPasswordBox}" />
+            <controls:AutoControl DataContext="{Binding Client}"
+                                  PropertyName="Password" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="MssqlConnectionContent">
