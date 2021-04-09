@@ -11,7 +11,8 @@ namespace RPGDataEditor.Core.Mvvm
 {
     public abstract class IdentifiableTabViewModel<TModel> : TabViewModel where TModel : ObservableModel, IIdentifiable
     {
-        public IdentifiableTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context) => ResourceConverter = resourceConverter;
+        public IdentifiableTabViewModel(ViewModelContext context, ITypeToResourceConverter resourceConverter) : base(context)
+            => ResourceConverter = resourceConverter;
 
         private ObservableCollection<TModel> models;
         public ObservableCollection<TModel> Models {
@@ -76,13 +77,18 @@ namespace RPGDataEditor.Core.Mvvm
             TModel newModel = CreateModelInstance();
             int nextId = Models.Count > 0 ? Models.Max(x => (int)x.Id) + 1 : 0;
             newModel.Id = nextId;
-            bool created = await Session.Client.CreateAsync(newModel);
-            if (created)
+
+            bool save = await Context.DialogService.ShowModelDialogAsync(newModel);
+            if (save)
             {
-                Models.Add(newModel);
-                return newModel;
+                bool saved = await Context.Session.Client.CreateAsync(newModel);
+                if (saved)
+                {
+                    Models.Add(newModel);
+                }
+                Context.SnackbarService.Enqueue(saved ? "Created successfully" : "Couldn't create model");
             }
-            return null;
+            return newModel;
         }
 
         private async void RemoveModel(TModel model) => await RemoveModelAsync(model);

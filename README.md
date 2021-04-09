@@ -41,8 +41,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
-- [ ] Don't serialize password, use SecureString
-- [ ] While adding new model - open editor instead of adding then editing
 - [ ] Fix ftp crashes on request exceptions (timeout, started request(when you spawn multiple ResourcePicker))
 - [ ] Check for connection status and inform user about problems
 - [ ] Support MSSQL database

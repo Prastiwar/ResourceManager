@@ -11,7 +11,7 @@ namespace RPGDataEditor.Core.Mvvm
     {
         public SimpleCategorizedTabViewModel(ViewModelContext context,
                                              ITypeToResourceConverter resourceConverter,
-                                             ILocationToSimpleResourceConverter simpleResourceConverter) 
+                                             ILocationToSimpleResourceConverter simpleResourceConverter)
             : base(context, resourceConverter, simpleResourceConverter) { }
 
         private ICommand addCategoryCommand;
@@ -59,18 +59,22 @@ namespace RPGDataEditor.Core.Mvvm
             SimpleIdentifiableData newModel = await base.CreateModelAsync();
             if (newModel != null)
             {
+                if (newModel is SimpleCategorizedData data)
+                {
+                    data.Category = CurrentCategory;
+                    return data;
+                }
                 SimpleCategorizedData categorizedData = new SimpleCategorizedData(typeof(TModel)) {
                     Name = newModel.Name,
                     Id = newModel.Id,
                     Category = CurrentCategory
                 };
-                Models.Add(categorizedData);
                 return categorizedData;
             }
-            return null;
+            return newModel;
         }
 
-        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData(typeof(TModel));
+        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleCategorizedData(typeof(TModel)) { Category = CurrentCategory };
 
         protected virtual void ShowCategory(string category) => CurrentCategory = category;
 

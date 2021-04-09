@@ -47,6 +47,11 @@ namespace RPGDataEditor.Core.Mvvm
             }
 
             TModel newModel = oldModel.DeepClone<TModel>();
+            return await CreateOrEditAsync(model, oldModel, newModel);
+        }
+
+        protected virtual async Task<EditorResults> CreateOrEditAsync(SimpleIdentifiableData model, TModel oldModel, TModel newModel)
+        {
             bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newModel);
             EditorResults results = new EditorResults(newModel, saveRequested);
             if (saveRequested)
@@ -56,7 +61,15 @@ namespace RPGDataEditor.Core.Mvvm
                 {
                     return results;
                 }
-                bool saved = await Context.Session.Client.UpdateAsync(oldModel, newModel);
+                bool saved = false;
+                if (oldModel != null)
+                {
+                    saved = await Context.Session.Client.UpdateAsync(oldModel, newModel);
+                }
+                else
+                {
+                    saved = await Context.Session.Client.CreateAsync(newModel);
+                }
                 Context.SnackbarService.Enqueue(saved ? "Saved successfully" : "Couldn't save model");
             }
             return results;
@@ -86,14 +99,20 @@ namespace RPGDataEditor.Core.Mvvm
 
         protected virtual SimpleIdentifiableData CreateSimpleModel(string file) => simpleResourceConverter.CreateSimpleData(file);
 
-        protected override Task<SimpleIdentifiableData> CreateModelAsync()
+        protected override SimpleIdentifiableData CreateModelInstance() => new SimpleIdentifiableData(typeof(TModel));
+
+        protected override async Task<SimpleIdentifiableData> CreateModelAsync()
         {
             SimpleIdentifiableData newModel = CreateModelInstance();
             int nextId = Models.Count > 0 ? Models.Max(x => x.Id) + 1 : 0;
-            newModel.Name = "New Model";
             newModel.Id = nextId;
-            Models.Add(newModel);
-            return Task.FromResult(newModel);
+            TModel newExactModel = CreateNewExactModel(newModel);
+            EditorResults results = await CreateOrEditAsync(newModel, null, newExactModel);
+            if (results.Success)
+            {
+                Models.Add(newModel);
+            }
+            return newModel;
         }
     }
 }
