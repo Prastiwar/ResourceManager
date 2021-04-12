@@ -10,7 +10,7 @@ namespace RPGDataEditor.Core
 
         public static string FilePath { get; set; } = defaultFilePath;
 
-        public static string Template { get; set; } = $"[{DateTime.Now.ToString("HH:MM:ss")}]: {{0}}";
+        public static string Template { get; set; } = $"[{DateTime.Now.ToString("HH:mm:ss")}]: {{0}}";
 
         public static void Error(string message, Exception exception = null)
         {
@@ -31,7 +31,13 @@ namespace RPGDataEditor.Core
 
         private static string GetTemplatedMessage(string message) => string.Format(Template, message);
 
-        private static void WriteRaw(string message) => System.IO.File.AppendAllText(FilePath, message + "\n");
+        private static void WriteRaw(string message)
+        {
+            lock (FilePath)
+            {
+                System.IO.File.AppendAllText(FilePath, message + "\n");
+            }
+        }
 
         private static void Write(string message) => WriteRaw(GetTemplatedMessage(message));
     }

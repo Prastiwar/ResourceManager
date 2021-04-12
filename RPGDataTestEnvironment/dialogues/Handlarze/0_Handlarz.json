@@ -1,0 +1,18 @@
+{
+  "id": 0,
+  "title": "Handlarz",
+  "message": "Witaj w moim sklepie",
+  "category": "Handlarze",
+  "allowEscape": false,
+  "startQuest": -1,
+  "requirements": [],
+  "options": [
+    {
+      "nextDialogId": -2,
+      "message": "Pokaz mi swoje towary",
+      "command": "",
+      "color": 16755200,
+      "requirements": []
+    }
+  ]
+}

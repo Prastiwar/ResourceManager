@@ -1,20 +1,37 @@
 {
-  "id": 1,
-  "name": "Bob",
-  "title": "Handlarz",
-  "textureLocation": "",
+  "id": 14,
+  "name": "Jo",
   "position": {
-    "x": -297,
-    "y": 66,
-    "z": -500
+    "x": -67.81752902969771,
+    "y": 79.0,
+    "z": -422.1559724744843
   },
   "invulnerable": true,
   "lookAtPlayer": true,
+  "movementType": "PATH",
   "healthRegen": 0,
+  "ambientSoundLocation": "",
+  "talkData": {
+    "talkRange": 10,
+    "interactLines": [
+      {
+        "text": "Hello!"
+      }
+    ],
+    "deathLines": [],
+    "hurtLines": [],
+    "initationDialogues": []
+  },
+  "equipment": {},
+  "paths": [],
   "attributes": [
     {
       "name": "minecraft:generic.max_health",
       "value": 20.0
+    },
+    {
+      "name": "minecraft:generic.follow_range",
+      "value": 32.0
     },
     {
       "name": "minecraft:generic.knockback_resistance",
@@ -48,39 +65,5 @@
       "name": "craftpolis:npc.respawn_time",
       "value": 5.0
     }
-  ],
-  "equipment": {
-    "head": "minecraft:",
-    "chest": "minecraft:",
-    "legs": "minecraft:",
-    "feet": "minecraft:",
-    "mainHand": "minecraft:",
-    "offHand": "minecraft:"
-  },
-  "job": {
-    "type": "Trader",
-    "items": [
-      {
-        "item": "craftpolis:camp",
-        "buy": 10000,
-        "sell": 5000,
-        "count": 1,
-        "nbt": null
-      }
-    ]
-  },
-  "movementType": "STATIC",
-  "paths": [],
-  "talkData": {
-    "talkRange": 10,
-    "interactLines": [],
-    "deathLines": [],
-    "hurtLines": [],
-    "initationDialogues": [
-      0
-    ]
-  },
-  "ambientSoundLocation": "",
-  "deathSoundLocation": "",
-  "hurtSoundLocation": ""
+  ]
 }

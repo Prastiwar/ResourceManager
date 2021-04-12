@@ -1,13 +1,13 @@
 {
   "id": 0,
+  "title": "ZombieKill",
+  "message": "Zabij zombiaka",
+  "category": "Testowe",
   "completionTask": {
     "type": "Kill",
     "kill": "minecraft:zombie",
-    "amount": 2
+    "amount": 1
   },
-  "title": "Cos fajnego",
-  "message": "Helko",
-  "category": "Kup",
   "tasks": [],
   "requirements": []
 }

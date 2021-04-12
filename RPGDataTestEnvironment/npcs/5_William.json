@@ -1,20 +1,40 @@
 {
-  "id": 1,
-  "name": "Bob",
-  "title": "Handlarz",
-  "textureLocation": "",
+  "id": 5,
+  "name": "William",
+  "title": "Rybak",
   "position": {
-    "x": -297,
-    "y": 66,
-    "z": -500
+    "x": -258.02676459033097,
+    "y": 64.9194345424215,
+    "z": -506.431282862389
   },
   "invulnerable": true,
-  "lookAtPlayer": true,
+  "lookAtPlayer": false,
+  "movementType": "STATIC",
   "healthRegen": 0,
+  "ambientSoundLocation": "",
+  "textureLocation": "http://novask.in/1624283027.png",
+  "talkData": {
+    "talkRange": 10,
+    "interactLines": [
+      {
+        "text": "Hello!"
+      }
+    ],
+    "deathLines": [],
+    "hurtLines": [],
+    "initationDialogues": []
+  },
+  "equipment": {
+    "mainHand": "minecraft:fishing_rod"
+  },
   "attributes": [
     {
       "name": "minecraft:generic.max_health",
       "value": 20.0
+    },
+    {
+      "name": "minecraft:generic.follow_range",
+      "value": 32.0
     },
     {
       "name": "minecraft:generic.knockback_resistance",
@@ -48,39 +68,5 @@
       "name": "craftpolis:npc.respawn_time",
       "value": 5.0
     }
-  ],
-  "equipment": {
-    "head": "minecraft:",
-    "chest": "minecraft:",
-    "legs": "minecraft:",
-    "feet": "minecraft:",
-    "mainHand": "minecraft:",
-    "offHand": "minecraft:"
-  },
-  "job": {
-    "type": "Trader",
-    "items": [
-      {
-        "item": "craftpolis:camp",
-        "buy": 10000,
-        "sell": 5000,
-        "count": 1,
-        "nbt": null
-      }
-    ]
-  },
-  "movementType": "STATIC",
-  "paths": [],
-  "talkData": {
-    "talkRange": 10,
-    "interactLines": [],
-    "deathLines": [],
-    "hurtLines": [],
-    "initationDialogues": [
-      0
-    ]
-  },
-  "ambientSoundLocation": "",
-  "deathSoundLocation": "",
-  "hurtSoundLocation": ""
+  ]
 }

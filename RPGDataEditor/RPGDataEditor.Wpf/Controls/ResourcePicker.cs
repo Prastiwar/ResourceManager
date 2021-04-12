@@ -1,6 +1,4 @@
-﻿using Prism;
-using Prism.Ioc;
-using Prism.Services.Dialogs;
+﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Models;
 using System.Linq;
@@ -128,10 +126,18 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 resourceTextBlock.Text = "Loading...";
             }
-            string[] locations = await RpgDataEditorApplication.Current.Session.Client.GetAllLocationsAsync((int)Resource);
-            ILocationToSimpleResourceConverter converter = Application.Current.TryResolve<ILocationToSimpleResourceConverter>();
-            SimpleIdentifiableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
-            PickedItem = pickedItem;
+            try
+            {
+                string[] locations = await RpgDataEditorApplication.Current.Session.Client.GetAllLocationsAsync((int)Resource);
+                ILocationToSimpleResourceConverter converter = Application.Current.TryResolve<ILocationToSimpleResourceConverter>();
+                SimpleIdentifiableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
+                PickedItem = pickedItem;
+            }
+            catch (System.Exception ex)
+            {
+                resourceTextBlock.Text = "Failed to load";
+                Logger.Error("Couldn't load locations", ex);
+            }
             isLoading = false;
             if (loadingOverlay != null)
             {

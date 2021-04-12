@@ -38,7 +38,6 @@ namespace RPGDataEditor.Core.Connection
                         RelativePath = host[slashIndex..];
                         host = host.Substring(0, slashIndex + 1);
                     }
-                    Client.Host = host;
                 }
                 catch (Exception ex)
                 {
@@ -62,38 +61,64 @@ namespace RPGDataEditor.Core.Connection
         private string userName = "";
         public string UserName {
             get => userName;
-            set {
-                SetProperty(ref userName, value ?? "");
-                Client.Credentials.UserName = userName;
-            }
+            set => SetProperty(ref userName, value ?? "");
         }
 
         private SecureString password = new SecureString();
         public SecureString Password {
             get => password;
-            set {
-                SetProperty(ref password, value ?? new SecureString());
-                Client.Credentials.SecurePassword = password;
-            }
+            set => SetProperty(ref password, value ?? new SecureString());
         }
 
         private int port = 0;
         public int Port {
             get => port;
-            set {
-                SetProperty(ref port, value);
-                Client.Port = port;
-            }
+            set => SetProperty(ref port, value);
         }
 
-        protected FtpClient Client { get; } = new FtpClient() {
-            Credentials = new NetworkCredential(),
-            BulkListing = true
-        };
+        private FtpClient client;
+        protected FtpClient Client {
+            get {
+                if (client == null)
+                {
+                    client = CreateDefaultClient();
+                    return client;
+                }
+                if (!client.IsConnected)
+                {
+                    client.Port = Port;
+                    client.Host = Host;
+                    client.Credentials.SecurePassword = Password;
+                    client.Credentials.UserName = UserName;
+                    return client;
+                }
+                return CreateDefaultClient();
+            }
+        }
 
         private readonly IResourceToPathConverter pathConverter;
 
         private readonly IResourceToTypeConverter typeConverter;
+
+        protected virtual FtpClient CreateDefaultClient() => new FtpClient() {
+            Credentials = new NetworkCredential(UserName, Password),
+            Host = host,
+            Port = port,
+            BulkListing = true,
+            OnLogEvent = LogFtp
+        };
+
+        protected virtual void LogFtp(FtpTraceLevel traceLevel, string message)
+        {
+            if (traceLevel == FtpTraceLevel.Error)
+            {
+                Logger.Error(message);
+            }
+            else
+            {
+                Logger.Log(message);
+            }
+        }
 
         public async Task<bool> UpdateAsync(IIdentifiable oldResource, IIdentifiable newResource)
         {
@@ -130,7 +155,6 @@ namespace RPGDataEditor.Core.Connection
         {
             try
             {
-                await EnsureConnectedAsync();
                 string targetPath = Path.Combine(RelativePath, pathConverter.ToRelativePath(resource));
                 await Client.DeleteFileAsync(targetPath);
             }
@@ -188,7 +212,6 @@ namespace RPGDataEditor.Core.Connection
         {
             try
             {
-                await EnsureConnectedAsync();
                 MemoryStream stream = new MemoryStream();
                 byte[] fileContents = Encoding.UTF8.GetBytes(json);
                 string targetPath = Path.Combine(RelativePath, filePath);
@@ -215,7 +238,6 @@ namespace RPGDataEditor.Core.Connection
 
         protected async Task<string> GetFileContentAsync(string relativePath)
         {
-            await EnsureConnectedAsync();
             string targetPath = Path.Combine(RelativePath, relativePath);
             byte[] bytes = await Client.DownloadAsync(targetPath, default);
             if (bytes == null)
@@ -229,20 +251,11 @@ namespace RPGDataEditor.Core.Connection
 
         protected async Task<string[]> GetFiles(string relativePath)
         {
-            await EnsureConnectedAsync();
             MemoryStream stream = new MemoryStream();
             string targetPath = Path.Combine(RelativePath, relativePath);
             FtpListItem[] items = await Client.GetListingAsync(targetPath, FtpListOption.Recursive);
             return items.Where(item => item.Type == FtpFileSystemObjectType.File)
                         .Select(item => item.FullName).ToArray();
-        }
-
-        protected async Task EnsureConnectedAsync()
-        {
-            if (!Client.IsConnected)
-            {
-                await Client.ConnectAsync();
-            }
         }
 
         public async Task<bool> ConnectAsync()

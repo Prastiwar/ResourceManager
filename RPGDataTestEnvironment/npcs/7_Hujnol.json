@@ -1,20 +1,43 @@
 {
-  "id": 1,
-  "name": "Bob",
-  "title": "Handlarz",
-  "textureLocation": "",
+  "id": 7,
+  "name": "Hujnol",
+  "title": "Stra?nik",
   "position": {
-    "x": -297,
-    "y": 66,
-    "z": -500
+    "x": -286.0142134524783,
+    "y": 72.0,
+    "z": -379.7625620908265
   },
   "invulnerable": true,
   "lookAtPlayer": true,
+  "movementType": "STATIC",
   "healthRegen": 0,
+  "ambientSoundLocation": "",
+  "textureLocation": "http://lh3.googleusercontent.com/pPx13vLRD27ECWP-rtB_rTmWu0jbfrXaPTI8xVPmAaBb1LnGDFqcllJzcm7367lueX2xmK0WYcpmDauDP0PV2JssI68J3GfX0Tk",
+  "talkData": {
+    "talkRange": 10,
+    "interactLines": [
+      {
+        "text": "Hello!"
+      }
+    ],
+    "deathLines": [],
+    "hurtLines": [],
+    "initationDialogues": []
+  },
+  "job": {
+    "type": "Guard"
+  },
+  "equipment": {
+    "mainHand": "iceandfire:hippogryph_sword"
+  },
   "attributes": [
     {
       "name": "minecraft:generic.max_health",
       "value": 20.0
+    },
+    {
+      "name": "minecraft:generic.follow_range",
+      "value": 32.0
     },
     {
       "name": "minecraft:generic.knockback_resistance",
@@ -48,39 +71,5 @@
       "name": "craftpolis:npc.respawn_time",
       "value": 5.0
     }
-  ],
-  "equipment": {
-    "head": "minecraft:",
-    "chest": "minecraft:",
-    "legs": "minecraft:",
-    "feet": "minecraft:",
-    "mainHand": "minecraft:",
-    "offHand": "minecraft:"
-  },
-  "job": {
-    "type": "Trader",
-    "items": [
-      {
-        "item": "craftpolis:camp",
-        "buy": 10000,
-        "sell": 5000,
-        "count": 1,
-        "nbt": null
-      }
-    ]
-  },
-  "movementType": "STATIC",
-  "paths": [],
-  "talkData": {
-    "talkRange": 10,
-    "interactLines": [],
-    "deathLines": [],
-    "hurtLines": [],
-    "initationDialogues": [
-      0
-    ]
-  },
-  "ambientSoundLocation": "",
-  "deathSoundLocation": "",
-  "hurtSoundLocation": ""
+  ]
 }

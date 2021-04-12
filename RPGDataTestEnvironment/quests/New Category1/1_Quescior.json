@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "title": "Quescior",
+  "message": "Fancy quescior",
+  "category": "New Category1",
+  "completionTask": {
+    "type": "Kill",
+    "kill": "minecraft:creeper",
+    "amount": 1
+  },
+  "tasks": [
+    {
+      "type": "Reach",
+      "pos": {
+        "x": 1,
+        "y": 3120,
+        "z": 130
+      },
+      "distance": 1.0
+    }
+  ],
+  "requirements": [
+    {
+      "type": "Dialogue",
+      "dialogueId": 0,
+      "completed": true
+    }
+  ]
+}
