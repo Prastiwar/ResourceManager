@@ -1,16 +1,21 @@
 using FluentFTP;
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core
+namespace RPGDataEditor.Core.Connection
 {
     public class FtpConnectionChecker : ConnectionChecker, IDisposable
     {
-        public FtpConnectionChecker(string host, NetworkCredential credentials, int port, int interval = 1000) : base(interval)
+        public FtpConnectionChecker(string host, NetworkCredential credentials, int port = 0, int interval = 1000) : base(interval)
         {
             Host = host;
             Client = new FtpClient(host) {
+                ConnectTimeout = Timeout,
+                DataConnectionConnectTimeout = Timeout,
+                DataConnectionReadTimeout = Timeout,
+                ReadTimeout = Timeout,
                 Port = port,
             };
             if (credentials != null)
@@ -23,11 +28,13 @@ namespace RPGDataEditor.Core
 
         public string Host { get; }
 
+        protected int Timeout { get; } = 1000;
+
         protected FtpClient Client { get; }
 
         private bool disposed;
 
-        public override async Task<bool> ForceCheckAsync()
+        public override async Task<bool> ForceCheckAsync(CancellationToken token)
         {
             if (disposed)
             {
@@ -35,10 +42,10 @@ namespace RPGDataEditor.Core
             }
             try
             {
-                await Client.ConnectAsync();
-                await Client.DisconnectAsync();
+                await Client.ConnectAsync(token).ConfigureAwait(true);
+                await Client.DisconnectAsync(token).ConfigureAwait(true);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -51,6 +58,7 @@ namespace RPGDataEditor.Core
             {
                 if (disposing)
                 {
+                    Stop();
                     Client.Dispose();
                 }
                 disposed = true;

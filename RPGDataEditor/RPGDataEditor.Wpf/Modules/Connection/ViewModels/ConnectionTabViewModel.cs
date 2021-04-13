@@ -3,6 +3,7 @@ using Prism.Regions;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
@@ -18,9 +19,9 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             if (result.IsValid)
             {
                 bool connected = await Session.Client.ConnectAsync();
-                if(!connected)
+                if (!connected)
                 {
-                    Context.SnackbarService.Enqueue("Connection lost");
+                    Context.SnackbarService.Enqueue("Connection cannot be established");
                     return false;
                 }
                 try
@@ -35,8 +36,26 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             return result.IsValid;
         }
 
-        public override async Task OnNavigatedToAsync(NavigationContext navigationContext) => await Session.Client.DisconnectAsync();
+        public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
+        {
+            await Session.Client.DisconnectAsync();
+            Context.ConnectionService.StopChecking();
+        }
 
-        public override async Task OnNavigatedFromAsync(NavigationContext navigationContext) => await Session.Client.ConnectAsync();
+        public override async Task OnNavigatedFromAsync(NavigationContext navigationContext)
+        {
+            await Session.Client.ConnectAsync();
+            Context.ConnectionService.StartChecking();
+            Context.ConnectionService.ConnectionChanged -= ConnectionChecker_Changed;
+            Context.ConnectionService.ConnectionChanged += ConnectionChecker_Changed;
+        }
+
+        private async void ConnectionChecker_Changed(object sender, bool hasConnection)
+        {
+            if (!hasConnection)
+            {
+                await Application.Current.Dispatcher.Invoke(async () => await Context.DialogService.ShowDialogAsync(DialogNames.ConnectionDialog));
+            }
+        }
     }
 }

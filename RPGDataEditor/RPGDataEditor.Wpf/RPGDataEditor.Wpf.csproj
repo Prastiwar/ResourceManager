@@ -19,6 +19,9 @@
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Modules\Shared\Views\ConnectionDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Themes\DataTemplates.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

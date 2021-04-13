@@ -115,6 +115,7 @@ namespace RPGDataEditor.Wpf
         }
 
         protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Session,
+                                                                                            Container.Resolve<IConnectionService>(),
                                                                                             Container.Resolve<IDialogService>(),
                                                                                             Container.Resolve<IValidationProvider>(),
                                                                                             Container.Resolve<ISnackbarService>());
@@ -140,8 +141,8 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterInstance(Session);
 
             RegisterValidators(containerRegistry);
-            RegisterServices(containerRegistry);
             RegisterProviders(containerRegistry);
+            RegisterServices(containerRegistry);
             RegisterDialogs(containerRegistry);
             RegisterConverters(containerRegistry);
 
@@ -151,6 +152,7 @@ namespace RPGDataEditor.Wpf
 
             OnRegistrationFinished(containerRegistry);
         }
+
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
         {
             Session.ClientProvider = Container.Resolve<IClientProvider>();
@@ -171,7 +173,7 @@ namespace RPGDataEditor.Wpf
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterInstance<ISnackbarService>(new SnackbarService());
-            containerRegistry.RegisterInstance<IAppLifetimeService>(new AppLifetimeService());
+            containerRegistry.RegisterInstance<IConnectionService>(new ConnectionService(Session, containerRegistry.GetContainer().Resolve<IConnectionCheckerProvider>()));
         }
 
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
@@ -185,10 +187,14 @@ namespace RPGDataEditor.Wpf
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
+            containerRegistry.RegisterInstance<IConnectionCheckerProvider>(new DefaultConnectionCheckerProvider());
         }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
-            => containerRegistry.RegisterDialog<UpdateDialog>(nameof(UpdateDialog));
+        {
+            containerRegistry.RegisterDialog<UpdateDialog>(typeof(UpdateDialog).Name);
+            containerRegistry.RegisterDialog<ConnectionDialog>(typeof(ConnectionDialog).Name);
+        }
 
         protected virtual void RegisterConverters(IContainerRegistry containerRegistry)
         {

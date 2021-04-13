@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="RPGDataEditor.Wpf.Views.ConnectionDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:local="clr-namespace:RPGDataEditor.Wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Style="{DynamicResource DefaultControlStyle}"
+             Background="{DynamicResource MaterialDialogColor}"
+             AllowDrop="False">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="prism:DialogWindow">
+            <Setter Property="ResizeMode"
+                    Value="NoResize" />
+            <Setter Property="MinHeight"
+                    Value="150" />
+            <Setter Property="MinWidth"
+                    Value="360" />
+            <Setter Property="MaxHeight"
+                    Value="150" />
+            <Setter Property="MaxWidth"
+                    Value="360" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="local:WindowHelper.HideCloseButton"
+                    Value="True" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <StackPanel Margin="15">
+        <TextBlock Text="Couldn't establish connection"
+                   FontSize="24"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        <Button x:Name="CircleButton"
+                Foreground="WhiteSmoke"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Padding="0"
+                IsEnabled="False"
+                Width="64"
+                Height="64"
+                Content="{materialDesign:PackIcon Kind=Refresh, Size=64}"
+                RenderTransformOrigin="0.5, 0.5" />
+    </StackPanel>
+</UserControl>

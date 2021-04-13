@@ -1,7 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core
+namespace RPGDataEditor.Core.Connection
 {
     public class SqlConnectionChecker : ConnectionChecker, IDisposable
     {
@@ -17,7 +18,7 @@ namespace RPGDataEditor.Core
 
         private bool disposed;
 
-        public override Task<bool> ForceCheckAsync()
+        public override Task<bool> ForceCheckAsync(CancellationToken token)
         {
             if (disposed)
             {

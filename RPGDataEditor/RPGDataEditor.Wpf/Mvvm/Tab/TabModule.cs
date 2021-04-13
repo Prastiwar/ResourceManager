@@ -28,7 +28,7 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
             containerRegistry.RegisterDialog<NpcDataModelEditor>(typeof(NpcDataModel).Name);
             containerRegistry.RegisterDialog<QuestEditor>(typeof(QuestModel).Name);
-            containerRegistry.RegisterDialog<PickerDialog>(nameof(PickerDialog));
+            containerRegistry.RegisterDialog<PickerDialog>(typeof(PickerDialog).Name);
         }
 
     }

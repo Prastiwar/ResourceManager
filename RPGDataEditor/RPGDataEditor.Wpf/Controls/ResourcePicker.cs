@@ -150,7 +150,7 @@ namespace RPGDataEditor.Wpf.Controls
         protected virtual async Task PickItemAsync()
         {
             IDialogService service = Application.Current.TryResolve<IDialogService>();
-            IDialogResult result = await service.ShowDialogAsync("PickerDialog", new PickerDialogParameters(Resource.Value, PickedItem, PickedId).Build()).ConfigureAwait(true);
+            IDialogResult result = await service.ShowDialogAsync(DialogNames.PickerDialog, new PickerDialogParameters(Resource.Value, PickedItem, PickedId).Build()).ConfigureAwait(true);
             if (result.Result == ButtonResult.OK)
             {
                 IIdentifiable pickedItem = result.Parameters.GetValue<IIdentifiable>(nameof(PickerDialogParameters.PickedItem));

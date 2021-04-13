@@ -29,7 +29,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             bool isUpdated = await VersionChecker.CheckVersionAsync();
             if (!isUpdated)
             {
-                await Context.DialogService.ShowDialogAsync("UpdateDialog");
+                await Context.DialogService.ShowDialogAsync(DialogNames.UpdateDialog);
                 Application.Current.Shutdown();
             }
         }

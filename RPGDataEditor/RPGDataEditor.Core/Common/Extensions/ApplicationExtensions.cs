@@ -21,5 +21,16 @@ namespace RPGDataEditor.Core
 
         public static T TryResolve<T>(this Application app) => TryResolve(app, typeof(T)) is T item ? item : default;
 
+        public static Window FindWindow(this Application app, Predicate<Window> predicate)
+        {
+            foreach (object window in app.Windows)
+            {
+                if (window is Window win && predicate(win))
+                {
+                    return win;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -41,5 +41,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 ## TODO
 
-- [ ] Check for connection status and inform user about problems
 - [ ] Support MSSQL database

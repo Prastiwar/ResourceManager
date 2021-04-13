@@ -24,8 +24,7 @@ namespace RPGDataEditor.Core.Connection
         public string Host {
             get => host;
             set {
-                SetProperty(ref this.host, value ?? "");
-                string host = this.host;
+                string host = value ?? "";
                 try
                 {
                     if (host.StartsWith("ftp://"))
@@ -36,8 +35,9 @@ namespace RPGDataEditor.Core.Connection
                     if (slashIndex >= 0)
                     {
                         RelativePath = host[slashIndex..];
-                        host = host.Substring(0, slashIndex + 1);
+                        host = host.Substring(0, slashIndex);
                     }
+                    SetProperty(ref this.host, host);
                 }
                 catch (Exception ex)
                 {
