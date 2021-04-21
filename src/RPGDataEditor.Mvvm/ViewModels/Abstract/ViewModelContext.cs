@@ -1,23 +1,26 @@
-﻿using RPGDataEditor.Services;
+﻿using MediatR;
 using RPGDataEditor.Core.Validation;
-using MediatR;
+using RPGDataEditor.Mvvm.Services;
+using RPGDataEditor.Services;
 
 namespace RPGDataEditor.Mvvm
 {
     public class ViewModelContext
     {
-        public ViewModelContext(IConnectionService connectionService,
+        public ViewModelContext(IMediator mediator,
+                                IDialogService dialogService,
                                 IValidationProvider validationProvider,
                                 ISnackbarService snackbarService)
         {
-            ConnectionService = connectionService;
+            Mediator = mediator;
+            DialogService = dialogService;
             ValidationProvider = validationProvider;
             SnackbarService = snackbarService;
         }
 
-        public IConnectionService ConnectionService { get; }
+        public IMediator Mediator { get; }
+        public IDialogService DialogService { get; }
         public IValidationProvider ValidationProvider { get; }
         public ISnackbarService SnackbarService { get; }
-        public IMediator Mediator { get; }
     }
 }

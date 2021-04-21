@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract partial class SimpleIdentifiableTabViewModel<TModel> : IdentifiableTabViewModel<SimpleIdentifiableData> where TModel : ObservableModel, IIdentifiable
+    public abstract partial class SimpleIdentifiableTabViewModel<TModel> : ModelsManagerViewModel<SimpleIdentifiableData> where TModel : ObservableModel, IIdentifiable
     {
         public SimpleIdentifiableTabViewModel(ViewModelContext context) : base(context) { }
 

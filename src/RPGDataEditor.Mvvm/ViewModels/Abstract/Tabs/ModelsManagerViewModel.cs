@@ -1,8 +1,10 @@
-﻿using ResourceManager.Commands;
-using ResourceManager.Services;
+﻿using ResourceManager;
+using ResourceManager.Commands;
 using RPGDataEditor.Core;
 using RPGDataEditor.Mvvm.Models;
+using RPGDataEditor.Mvvm.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +12,9 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class IdentifiableTabViewModel<TModel> : TabViewModel where TModel : ObservableModel, IIdentifiable
+    public abstract class ModelsManagerViewModel<TModel> : ScreenViewModel where TModel : ObservableModel, IIdentifiable
     {
-        public IdentifiableTabViewModel(ViewModelContext context) : base(context) { }
+        public ModelsManagerViewModel(ViewModelContext context) : base(context) { }
 
         private ObservableCollection<TModel> models;
         public ObservableCollection<TModel> Models {
@@ -35,11 +37,8 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<TModel>();
             try
             {
-                IResourceDescriptorService descriptorService;
-                ResourceManager.Data.IResourceDescriptor descriptor = descriptorService.Describe(typeof(TModel));
-                TModel models = await Context.Mediator.Send(new GetResourceByIdQuery<TModel>());
-                IIdentifiable[] foundModels = await Context.ConnectionService.Client.GetAllAsync(ResourceConverter.ToResource(typeof(TModel)));
-                Models.AddRange(foundModels.Select(resource => resource as TModel));
+                IEnumerable<TModel> models = await Context.Mediator.Send(new GetResourceByIdQuery<IEnumerable<TModel>>());
+                Models.AddRange(models);
             }
             catch (Exception ex)
             {
@@ -49,7 +48,7 @@ namespace RPGDataEditor.Mvvm
             IsLoading = false;
         }
 
-        public override Task OnNavigatedToAsync(NavigationContext navigationContext) => Refresh();
+        public override Task OnNavigatedToAsync(INavigationContext navigationContext) => Refresh();
 
         private async void OpenEditor(TModel model) => await OpenEditorAsync(model);
 
@@ -59,7 +58,8 @@ namespace RPGDataEditor.Mvvm
             bool save = await Context.DialogService.ShowModelDialogAsync(newModel);
             if (save)
             {
-                bool saved = await Context.ConnectionService.Client.UpdateAsync(model, newModel);
+                UpdateResourceResults results = await Context.Mediator.Send(new UpdateResourceQuery<TModel>(model, newModel));
+                bool saved = results.IsSuccess;
                 if (saved)
                 {
                     model.CopyValues(newModel);
@@ -82,7 +82,8 @@ namespace RPGDataEditor.Mvvm
             bool save = await Context.DialogService.ShowModelDialogAsync(newModel);
             if (save)
             {
-                bool saved = await Context.ConnectionService.Client.CreateAsync(newModel);
+                CreateResourceResults results = await Context.Mediator.Send(new CreateResourceQuery<TModel>(newModel));
+                bool saved = results.IsSuccess;
                 if (saved)
                 {
                     Models.Add(newModel);
@@ -99,7 +100,8 @@ namespace RPGDataEditor.Mvvm
             bool removed = Models.Remove(model);
             if (removed)
             {
-                bool deleted = await Context.ConnectionService.Client.DeleteAsync(model);
+                DeleteResourceResults results = await Context.Mediator.Send(new DeleteResourceQuery<TModel>(model));
+                bool deleted = results.IsSuccess;
                 if (!deleted)
                 {
                     Models.Add(model);

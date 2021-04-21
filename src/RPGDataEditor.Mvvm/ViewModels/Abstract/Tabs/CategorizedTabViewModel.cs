@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class CategorizedTabViewModel<TModel> : IdentifiableTabViewModel<TModel>, ICategorizedTabViewModel where TModel : IdentifiableData
+    public abstract class CategorizedTabViewModel<TModel> : ModelsManagerViewModel<TModel>, ICategorizedTabViewModel where TModel : IdentifiableData
     {
         public CategorizedTabViewModel(ViewModelContext context) : base(context) { }
 
