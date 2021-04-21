@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace RPGDataEditor.Mvvm.Navigation
 {
-    public class DialogParametersBuilder
+    public class DialogParametersBuilder : IEnumerable<KeyValuePair<string, object>>
     {
         private readonly Dictionary<string, object> properties = new Dictionary<string, object>();
 
@@ -61,5 +62,8 @@ namespace RPGDataEditor.Mvvm.Navigation
             variable = value;
             properties[propertyName] = value;
         }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => ((IEnumerable<KeyValuePair<string, object>>)properties).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)properties).GetEnumerator();
     }
 }

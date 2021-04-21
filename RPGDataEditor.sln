@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor", "src\RPGDat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Mvvm", "src\RPGDataEditor.Mvvm\RPGDataEditor.Mvvm.csproj", "{03E47443-71B9-4063-9498-3BD1AF97614B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Prism.Wpf", "src\RPGDataEditor.Prism\RPGDataEditor.Prism.Wpf.csproj", "{E1C6C79A-5313-487D-AA0B-F2F1D472D1BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Extensions.Prism.Wpf", "src\RPGDataEditor.Prism\RPGDataEditor.Extensions.Prism.Wpf.csproj", "{E1C6C79A-5313-487D-AA0B-F2F1D472D1BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{C33C4115-C633-4C19-B271-7D80F36BE425}"
 EndProject

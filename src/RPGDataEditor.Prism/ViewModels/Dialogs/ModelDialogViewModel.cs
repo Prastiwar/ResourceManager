@@ -1,5 +1,6 @@
 ﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core.Validation;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace RPGDataEditor.Mvvm
             if (!isCancelled)
             {
                 await OnDialogClosing(result).ConfigureAwait(true);
-                Close(new ModelDialogParameters<TModel>(Model) { IsSuccess = result }.Build());
+                Close(new Navigation.ModelDialogParameters<TModel>(Model) { IsSuccess = result }.BuildPrism());
             }
         }
 
@@ -41,7 +42,7 @@ namespace RPGDataEditor.Mvvm
 
         protected override Task InitializeAsync(IDialogParameters parameters)
         {
-            string keyName = nameof(ModelDialogParameters<TModel>.Model);
+            string keyName = nameof(Navigation.ModelDialogParameters<TModel>.Model);
             Model = parameters.GetValue<TModel>(keyName) ?? throw new ArgumentNullException(keyName, "Cannot show model dialog when model is not passed");
             return Task.CompletedTask;
         }

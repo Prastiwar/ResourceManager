@@ -8,10 +8,4 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\DeleteResource\" />
-    <Folder Include="Commands\CreateResource\" />
-    <Folder Include="Commands\UpdateResource\" />
-  </ItemGroup>
-
 </Project>

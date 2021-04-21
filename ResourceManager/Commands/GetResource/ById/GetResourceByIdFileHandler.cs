@@ -17,14 +17,14 @@ namespace ResourceManager.Commands
         }
 
         protected IResourceDescriptorService DescriptorService { get; }
-
         protected IFileClient Client { get; }
         protected ISerializer Serializer { get; }
 
         protected override async Task<TResource> GetResourceAsync(GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)
         {
-            request.Id;
-            return (TResource)await GetResourceByPath(path);
+            throw new NotImplementedException();
+            //request.Id;
+            //return (TResource)await GetResourceByPath(path);
         }
 
         protected override async Task ProcessResourcesAsync(IList<object> resources, GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)

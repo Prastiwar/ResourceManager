@@ -1,6 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Services.Dialogs;
-using RPGDataEditor.Core;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -30,7 +30,7 @@ namespace RPGDataEditor.Mvvm
 
         public void Close(IDialogParameters parameters)
         {
-            bool isSuccess = parameters.GetValue<bool>(nameof(DialogParametersBuilder.IsSuccess));
+            bool isSuccess = parameters.GetValue<bool>(nameof(Navigation.DialogParametersBuilder.IsSuccess));
             ButtonResult result = isSuccess ? ButtonResult.OK : ButtonResult.Cancel;
             RaiseRequestClose(new DialogResult(result, parameters));
         }
@@ -61,8 +61,8 @@ namespace RPGDataEditor.Mvvm
             }
             catch (Exception ex)
             {
-                Logger.Error("Couldn't initialize dialog", ex);
-                RaiseRequestClose(new DialogResult(ButtonResult.Abort, new DialogParametersBuilder() { Exception = ex }.Build()));
+                Context.Logger.Error("Couldn't initialize dialog", ex);
+                RaiseRequestClose(new DialogResult(ButtonResult.Abort, new Navigation.DialogParametersBuilder() { Exception = ex }.BuildPrism()));
             }
         }
 

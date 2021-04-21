@@ -38,7 +38,6 @@ namespace RPGDataEditor.Core.Connection
             byte[] bytes = await Client.DownloadAsync(targetPath, default);
             if (bytes == null)
             {
-                Logger.Error("Couldn't download file at " + file);
                 return null;
             }
             string content = Encoding.UTF8.GetString(bytes);
