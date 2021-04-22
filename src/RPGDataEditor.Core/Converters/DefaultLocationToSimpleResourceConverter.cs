@@ -1,22 +1,15 @@
-﻿//using RPGDataEditor.Connection;
-//using RPGDataEditor.Models;
-//using System;
-//using System.IO;
-
-//namespace RPGDataEditor.Core
-//{
-//    public class DefaultLocationToSimpleResourceConverter : ILocationToSimpleResourceConverter
+﻿//    public class DefaultLocationToSimpleResourceConverter : ILocationToSimpleResourceConverter
 //    {
-//        public SimpleIdentifiableData CreateSimpleData(string location)
+//        public PresentableData CreateSimpleData(string location)
 //        {
 //            int resource = GetResource(location);
 //            if (resource == 0 || resource == 1)
 //            {
-//                SimpleIdentifiableData data = CreateSimpleData(resource, location);
+//                PresentableData data = CreateSimpleData(resource, location);
 //                int lastDimIndex = location.LastIndexOf('/');
 //                int categoryStartIndex = location.LastIndexOf('/', lastDimIndex - 1) + 1;
 //                string category = location[categoryStartIndex..lastDimIndex];
-//                return new SimpleCategorizedData(data.RealType) {
+//                return new PresentableCategoryData(data.RealType) {
 //                    Id = data.Id,
 //                    Name = data.Name,
 //                    Category = category
@@ -29,7 +22,7 @@
 //            throw new NotSupportedException("Creating simple data from unknown location is not supported");
 //        }
 
-//        private SimpleIdentifiableData CreateSimpleData(int resource, string location)
+//        private PresentableData CreateSimpleData(int resource, string location)
 //        {
 //            string fileName = Path.GetFileNameWithoutExtension(location);
 //            int id = -1;
@@ -44,7 +37,7 @@
 //                }
 //                name = fileName[(index + 1)..];
 //            }
-//            return new SimpleIdentifiableData(typeConverter.GetResourceType(resource)) {
+//            return new PresentableData(typeConverter.GetResourceType(resource)) {
 //                Id = id,
 //                Name = name
 //            };
@@ -69,5 +62,3 @@
 //            }
 //            return -1;
 //        }
-//    }
-//}

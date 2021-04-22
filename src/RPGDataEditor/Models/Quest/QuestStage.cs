@@ -2,8 +2,8 @@
 {
     public enum QuestStage
     {
-        UNKNOWN,
-        INPROGRESS,
-        DONE
+        Unknown,
+        InProgress,
+        Done
     }
 }

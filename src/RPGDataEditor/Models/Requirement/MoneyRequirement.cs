@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class MoneyRequirement : PlayerRequirementModel
+    public class MoneyRequirement : Requirement
     {
         public decimal Money { get; set; }
     }

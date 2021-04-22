@@ -3,7 +3,7 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class DialogueOptionModelValidator : AbstractValidator<DialogueOptionModel>
+    public class DialogueOptionModelValidator : AbstractValidator<DialogueOption>
     {
         public DialogueOptionModelValidator()
         {

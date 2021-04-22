@@ -5,6 +5,6 @@ namespace RPGDataEditor.Services
 {
     public class SqlQuestPathResourceDescriptor : PathResourceDescriptor
     {
-        public SqlQuestPathResourceDescriptor() : base(typeof(QuestModel), "quests", ".{id}") { }
+        public SqlQuestPathResourceDescriptor() : base(typeof(Quest), "quests", ".{id}") { }
     }
 }

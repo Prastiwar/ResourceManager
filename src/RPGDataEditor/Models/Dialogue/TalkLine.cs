@@ -2,11 +2,7 @@
 {
     public class TalkLine
     {
-        private string text = "";
-        public string Text {
-            get => text;
-            set => text = value ?? "";
-        }
+        public string Text { get; set; }
 
         public object SoundId { get; set; }
     }

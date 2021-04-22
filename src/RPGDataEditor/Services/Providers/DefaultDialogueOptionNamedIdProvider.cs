@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace RPGDataEditor.Providers
 {
-    public sealed class DefaultDialogueOptionNamedIdProvider : INamedIdProvider<DialogueOptionModel>
+    public sealed class DefaultDialogueOptionNamedIdProvider : INamedIdProvider<DialogueOption>
     {
         private List<KeyValuePair<string, int>> Set { get; } = new List<KeyValuePair<string, int>>();
 

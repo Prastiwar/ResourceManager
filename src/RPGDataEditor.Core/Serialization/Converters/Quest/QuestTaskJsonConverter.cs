@@ -2,9 +2,9 @@
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class QuestTaskJsonConverter : AbstractClassJsonConverter<QuestTask>
+    public class QuestTaskJsonConverter : AbstractClassJsonConverter<IQuestTask>
     {
-        public QuestTaskJsonConverter() : base(new[] { typeof(QuestTask).Assembly }, "RPGDataEditor.Models") { }
+        public QuestTaskJsonConverter() : base(new[] { typeof(IQuestTask).Assembly }, "RPGDataEditor.Models") { }
 
         protected override string Suffix => "QuestTask";
     }

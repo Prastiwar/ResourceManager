@@ -4,9 +4,12 @@ namespace RPGDataEditor.Mvvm.Navigation
 {
     public class DialogParameters : IDialogParameters
     {
-        public IEnumerable<string> Parameters => throw new System.NotImplementedException();
+        private readonly Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        public void Add(string parameter, object value) => throw new System.NotImplementedException();
-        public object GetValue(string parameter) => throw new System.NotImplementedException();
+        public IEnumerable<string> Parameters => parameters.Keys;
+
+        public void Add(string parameter, object value) => parameters[parameter] = value;
+
+        public object GetValue(string parameter) => parameters.TryGetValue(parameter, out object value) ? value : null;
     }
 }

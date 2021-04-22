@@ -1,23 +1,6 @@
-﻿//using RPGDataEditor.Connection;
-//using RPGDataEditor.Services;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Threading.Tasks;
-
-//namespace RPGDataEditor.Core.Connection
-//{
-//    public class LocalResourceClient : IContentResourceClient
+﻿//    public class LocalResourceClient : IContentResourceClient
 //    {
-//        public LocalResourceClient(ISerializer serializer) => Serializer = serializer;
-
-//        public string FolderPath { get; set; }
-
-//        public string FileSearchPattern { get; set; }
-
 //        public IResourceDescriptorCollection Descriptors { get; set; }
-
 //        protected ISerializer Serializer { get; }
 
 //        public async Task<bool> UpdateAsync(object oldResource, object newResource)
@@ -151,5 +134,3 @@
 //        public Task<bool> ConnectAsync() => Task.FromResult(Directory.Exists(FolderPath));
 
 //        public Task<bool> DisconnectAsync() => Task.FromResult(true);
-//    }
-//}

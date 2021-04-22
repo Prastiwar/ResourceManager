@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class ItemRequirement : PlayerRequirementModel
+    public class ItemRequirement : Requirement
     {
         public object ItemId { get; set; }
     }

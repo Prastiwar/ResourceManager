@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class RightItemInteractQuestTask : InteractQuestTask
+    public class ItemInteractQuestTask : IQuestTask
     {
         public object ItemId { get; set; }
     }

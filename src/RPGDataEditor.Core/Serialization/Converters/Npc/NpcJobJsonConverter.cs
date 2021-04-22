@@ -2,9 +2,9 @@
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class NpcJobJsonConverter : AbstractClassJsonConverter<NpcJobModel>
+    public class NpcJobJsonConverter : AbstractClassJsonConverter<NpcJob>
     {
-        public NpcJobJsonConverter() : base(new[] { typeof(NpcJobModel).Assembly }, "RPGDataEditor.Models") { }
+        public NpcJobJsonConverter() : base(new[] { typeof(NpcJob).Assembly }, "RPGDataEditor.Models") { }
 
         protected override string Suffix => "NpcJobModel";
     }

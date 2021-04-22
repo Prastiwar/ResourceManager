@@ -17,6 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
+    <ProjectReference Include="..\RPGDataEditor.Mvvm\RPGDataEditor.Mvvm.csproj" />
+    <ProjectReference Include="..\RPGDataEditor.Extensions.Prism.Wpf\RPGDataEditor.Extensions.Prism.Wpf.Mvvm.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Modules\Shared\Views\ConnectionDialog.xaml">

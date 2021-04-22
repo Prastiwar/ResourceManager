@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class KillQuestTask : QuestTask
+    public class KillQuestTask : IQuestTask
     {
         public object TargetId { get; set; }
 

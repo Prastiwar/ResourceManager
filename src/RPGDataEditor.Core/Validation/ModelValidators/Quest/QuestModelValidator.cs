@@ -3,7 +3,7 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class QuestModelValidator : AbstractValidator<QuestModel>
+    public class QuestModelValidator : AbstractValidator<Quest>
     {
         public QuestModelValidator()
         {

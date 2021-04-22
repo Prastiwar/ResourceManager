@@ -14,9 +14,9 @@ namespace RPGDataEditor.Core.Serialization
             object id = obj.GetValue<object>(nameof(NpcDataModel.Id));
             string name = obj.GetValue<string>(nameof(NpcDataModel.Name));
             Position position = obj.GetValue<Position>(nameof(NpcDataModel.Position), default);
-            IList<AttributeDataModel> attributes = obj.GetValue<List<AttributeDataModel>>(nameof(NpcDataModel.Attributes));
-            NpcJobModel job = obj.GetValue<NpcJobModel>(nameof(NpcDataModel.Job));
-            TalkDataModel talkData = obj.GetValue<TalkDataModel>(nameof(NpcDataModel.TalkData));
+            IList<AttributeData> attributes = obj.GetValue<List<AttributeData>>(nameof(NpcDataModel.Attributes));
+            NpcJob job = obj.GetValue<NpcJob>(nameof(NpcDataModel.Job));
+            TalkData talkData = obj.GetValue<TalkData>(nameof(NpcDataModel.TalkData));
             NpcDataModel model = new NpcDataModel() {
                 Id = id,
                 Name = name,

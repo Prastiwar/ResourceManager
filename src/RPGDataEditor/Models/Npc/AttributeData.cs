@@ -1,9 +1,9 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class AttributeDataModel
+    public class AttributeData
     {
-        public AttributeDataModel() { }
-        public AttributeDataModel(string name, double value = 0.0)
+        public AttributeData() { }
+        public AttributeData(string name, double value = 0.0)
         {
             Name = name;
             Value = value;

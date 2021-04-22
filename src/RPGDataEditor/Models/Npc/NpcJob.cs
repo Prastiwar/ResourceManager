@@ -1,4 +1,4 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public interface IQuestTask { }
+    public abstract class NpcJob { }
 }

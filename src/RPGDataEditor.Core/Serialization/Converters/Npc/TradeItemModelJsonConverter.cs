@@ -5,15 +5,15 @@ using System;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class TradeItemModelJsonConverter : ExtendableJsonConverter<TradeItemModel>
+    public class TradeItemJsonConverter : ExtendableJsonConverter<TradeItem>
     {
-        public override TradeItemModel ReadJObject(Type objectType, JObject obj)
+        public override TradeItem ReadJObject(Type objectType, JObject obj)
         {
-            object item = obj.GetValue<object>(nameof(TradeItemModel.ItemId), null);
-            int buy = obj.GetValue<int>(nameof(TradeItemModel.Buy), 0);
-            int sell = obj.GetValue<int>(nameof(TradeItemModel.Sell), 0);
-            int count = obj.GetValue(nameof(TradeItemModel.Count), 1);
-            TradeItemModel model = new TradeItemModel() {
+            object item = obj.GetValue<object>(nameof(TradeItem.ItemId), null);
+            int buy = obj.GetValue<int>(nameof(TradeItem.Buy), 0);
+            int sell = obj.GetValue<int>(nameof(TradeItem.Sell), 0);
+            int count = obj.GetValue(nameof(TradeItem.Count), 1);
+            TradeItem model = new TradeItem() {
                 ItemId = item,
                 Buy = buy,
                 Sell = sell,
@@ -22,11 +22,11 @@ namespace RPGDataEditor.Core.Serialization
             return model;
         }
 
-        public override JObject ToJObject(TradeItemModel value, JsonSerializer serializer) => new JObject() {
-                { nameof(TradeItemModel.ItemId).ToFirstLower(), JToken.FromObject(value.ItemId) },
-                { nameof(TradeItemModel.Buy).ToFirstLower(), value.Buy },
-                { nameof(TradeItemModel.Sell).ToFirstLower(), value.Sell },
-                { nameof(TradeItemModel.Count).ToFirstLower(), value.Count }
+        public override JObject ToJObject(TradeItem value, JsonSerializer serializer) => new JObject() {
+                { nameof(TradeItem.ItemId).ToFirstLower(), JToken.FromObject(value.ItemId) },
+                { nameof(TradeItem.Buy).ToFirstLower(), value.Buy },
+                { nameof(TradeItem.Sell).ToFirstLower(), value.Sell },
+                { nameof(TradeItem.Count).ToFirstLower(), value.Count }
             };
     }
 }

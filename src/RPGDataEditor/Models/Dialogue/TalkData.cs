@@ -2,7 +2,7 @@
 
 namespace RPGDataEditor.Models
 {
-    public class TalkDataModel
+    public class TalkData
     {
         public int TalkRange { get; set; }
 

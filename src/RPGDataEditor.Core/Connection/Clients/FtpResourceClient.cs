@@ -1,18 +1,4 @@
-﻿//using FluentFTP;
-//using RPGDataEditor.Connection;
-//using RPGDataEditor.Services;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Net;
-//using System.Security;
-//using System.Text;
-//using System.Threading.Tasks;
-
-//namespace RPGDataEditor.Core.Connection
-//{
-//    public class FtpResourceClient : IContentResourceClient
+﻿//    public class FtpResourceClient : IContentResourceClient
 //    {
 //        public FtpResourceClient(ISerializer serializer) => Serializer = serializer;
 
@@ -53,12 +39,6 @@
 //                relativePath = value;
 //            }
 //        }
-
-//        public string UserName { get; set; }
-
-//        public SecureString Password { get; set; }
-
-//        public int Port { get; set; }
 
 //        private FtpClient client;
 //        protected FtpClient Client {
@@ -270,5 +250,3 @@
 //            }
 //            return true;
 //        }
-//    }
-//}

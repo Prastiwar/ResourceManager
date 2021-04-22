@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class TradeItemModel
+    public class TradeItem
     {
         public object ItemId { get; set; }
 

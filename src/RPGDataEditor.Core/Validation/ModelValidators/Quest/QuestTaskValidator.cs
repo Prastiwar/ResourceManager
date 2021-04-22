@@ -3,7 +3,7 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class QuestTaskValidator : AbstractValidator<QuestTask>
+    public class QuestTaskValidator : AbstractValidator<IQuestTask>
     {
         public QuestTaskValidator()
         {
@@ -13,9 +13,9 @@ namespace RPGDataEditor.Core.Validation
 
             RuleFor(x => (x as EntityInteractQuestTask).EntityId).NotEmpty().WithMessage(CustomMessages.Empty).When(x => x is EntityInteractQuestTask);
 
-            RuleFor(x => (x as RightItemInteractQuestTask).ItemId).NotEmpty()
+            RuleFor(x => (x as ItemInteractQuestTask).ItemId).NotEmpty()
                                                                 .WithMessage(CustomMessages.Empty)
-                                                                .When(x => x is RightItemInteractQuestTask);
+                                                                .When(x => x is ItemInteractQuestTask);
         }
     }
 }

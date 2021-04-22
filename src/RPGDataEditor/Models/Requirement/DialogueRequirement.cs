@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Models
 {
-    public class DialogueRequirement : PlayerRequirementModel
+    public class DialogueRequirement : Requirement
     {
         public object DialogueId { get; set; }
 
