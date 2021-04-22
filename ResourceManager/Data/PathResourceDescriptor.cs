@@ -9,7 +9,7 @@ namespace ResourceManager.Data
 
         public PathResourceDescriptor(Type type, string relativeFullPathFormat, string relativeRootPath) : base(type)
         {
-            RelativeFullPathFormat = relativeRootPath + "/" + relativeFullPathFormat;
+            RelativeFullPathFormat = relativeRootPath + relativeFullPathFormat;
             RelativeRootPath = relativeRootPath;
         }
 

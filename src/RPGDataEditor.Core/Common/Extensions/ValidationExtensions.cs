@@ -69,7 +69,6 @@ namespace RPGDataEditor.Core
             Severity = failure.Severity,
             CustomState = failure.CustomState,
             ErrorCode = failure.ErrorCode,
-            FormattedMessageArguments = failure.FormattedMessageArguments,
             FormattedMessagePlaceholderValues = failure.FormattedMessagePlaceholderValues
         };
 

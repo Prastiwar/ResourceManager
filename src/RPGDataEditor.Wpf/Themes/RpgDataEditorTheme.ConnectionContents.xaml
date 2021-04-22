@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
-    <DataTemplate x:Key="ExplorerConnectionContent">
+    <DataTemplate x:Key="LocalConnectionContent">
         <StackPanel Margin="64">
             <controls:AutoControl DataContext="{Binding Client}"
                                   PropertyName="FolderPath" />

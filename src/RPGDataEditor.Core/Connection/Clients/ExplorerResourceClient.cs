@@ -8,9 +8,9 @@
 
 //namespace RPGDataEditor.Core.Connection
 //{
-//    public class ExplorerResourceClient : IContentResourceClient
+//    public class LocalResourceClient : IContentResourceClient
 //    {
-//        public ExplorerResourceClient(ISerializer serializer) => Serializer = serializer;
+//        public LocalResourceClient(ISerializer serializer) => Serializer = serializer;
 
 //        public string FolderPath { get; set; }
 

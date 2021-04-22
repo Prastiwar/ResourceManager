@@ -22,9 +22,13 @@ namespace ResourceManager.Commands
 
         protected override async Task<TResource> GetResourceAsync(GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            //request.Id;
-            //return (TResource)await GetResourceByPath(path);
+            //IResourceDescriptor descriptor = DescriptorService.Create<TResource>();
+            //if (descriptor is PathResourceDescriptor pathDescriptor)
+            //{
+            //  request.Id
+            //}
+            //throw new InvalidOperationException("Cannot retrieve resources which is not described by path descriptor");
+            ; throw new NotImplementedException();
         }
 
         protected override async Task ProcessResourcesAsync(IList<object> resources, GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)

@@ -7,7 +7,7 @@ namespace RPGDataEditor.Wpf.Controls
     {
         private static readonly string[] types = new string[] {
             "Ftp",
-            "Explorer",
+            "Local",
             //"Mssql"
         };
 

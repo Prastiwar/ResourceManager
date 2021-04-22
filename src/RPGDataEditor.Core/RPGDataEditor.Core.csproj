@@ -14,7 +14,4 @@
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\RPGDataEditor\RPGDataEditor.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
 </Project>

@@ -159,7 +159,7 @@ namespace RPGDataEditor.Wpf
             Session.ClientProvider = Container.Resolve<IClientProvider>();
             if (Session.Client == null)
             {
-                Session.SetConnection("Explorer");
+                Session.SetConnection("Local");
             }
         }
 

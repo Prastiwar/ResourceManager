@@ -1,4 +1,5 @@
 ﻿using Prism.Services.Dialogs;
+using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
@@ -34,7 +35,7 @@ namespace RPGDataEditor.Mvvm
         {
             if (result)
             {
-                FluentValidation.Results.ValidationResult validationResult = await Context.ValidationProvider.ValidateAsync(Model);
+                FluentValidation.Results.ValidationResult validationResult = await Context.Mediator.Send(new ValidateResourceQuery<TModel>(Model));
                 return !validationResult.IsValid;
             }
             return false;

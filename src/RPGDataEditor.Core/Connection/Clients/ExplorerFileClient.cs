@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Connection
 {
-    public class ExplorerFileClient : IFileClient
+    public class LocalFileClient : IFileClient
     {
         public string FolderPath { get; set; }
 
