@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Mvvm;
 using System;
 using System.ComponentModel;
 using System.Windows;

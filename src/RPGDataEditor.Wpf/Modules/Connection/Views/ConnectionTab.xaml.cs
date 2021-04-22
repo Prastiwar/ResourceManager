@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Mvvm;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Connection.Views

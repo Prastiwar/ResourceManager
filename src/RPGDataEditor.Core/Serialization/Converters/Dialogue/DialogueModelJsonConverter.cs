@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class DialogueModelJsonConverter : ExtendableJsonConverter<Dialogue>
+    public class DialogueJsonConverter : ExtendableJsonConverter<Dialogue>
     {
         public override Dialogue ReadJObject(Type objectType, JObject obj)
         {

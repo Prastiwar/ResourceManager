@@ -1,31 +1,22 @@
-﻿using Newtonsoft.Json;
-using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
-using RPGDataEditor.Core.Serialization;
-using System;
+﻿using RPGDataEditor.Models;
+using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
-    public class QuestTabViewModel : SimpleCategorizedTabViewModel<QuestModel>
+    public class QuestTabViewModel : PresentableCategoryDataViewModel<Models.Quest>
     {
-        public QuestTabViewModel(ViewModelContext context,
-                                 ITypeToResourceConverter resourceConverter,
-                                 ILocationToSimpleResourceConverter simpleResourceConverter)
-            : base(context, resourceConverter, simpleResourceConverter) { }
+        public QuestTabViewModel(ViewModelContext context) : base(context) { }
 
-        protected override QuestModel CreateNewExactModel(SimpleIdentifiableData model) => new QuestModel() {
+        protected override Models.Quest CreateResource(PresentableData model) => new Models.Quest() {
             Id = model.Id,
             Title = model.Name,
-            Category = (model as SimpleCategorizedData).Category
+            Category = (model as PresentableCategoryData).Category
         };
 
-        protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
+        protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
         {
-            Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
             EditorResults results = await base.OpenEditorAsync(model);
-            JsonConvert.DefaultSettings = cachedSettings;
             if (results.Success)
             {
                 Session.OnResourceChanged(RPGResource.Quest);
@@ -35,9 +26,7 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 
         public override async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
         {
-            Func<JsonSerializerSettings> cachedSettings = IgnoreTasksProgress();
             bool renamed = await base.RenameCategoryAsync(oldCategory, newCategory);
-            JsonConvert.DefaultSettings = cachedSettings;
             if (renamed)
             {
                 Session.OnResourceChanged(RPGResource.Quest);
@@ -45,7 +34,7 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
             return renamed;
         }
 
-        protected override async Task<bool> RemoveModelAsync(SimpleIdentifiableData model)
+        protected override async Task<bool> RemoveModelAsync(PresentableData model)
         {
             bool result = await base.RemoveModelAsync(model);
             Session.OnResourceChanged(RPGResource.Quest);
@@ -57,24 +46,6 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
             bool result = await base.RemoveCategoryAsync(category);
             Session.OnResourceChanged(RPGResource.Quest);
             return result;
-        }
-
-        /// <summary> Adds ignore properties to default JsonSerializerSettings </summary>
-        /// <returns> Previous default JsonSerializerSettings </returns>
-        private Func<JsonSerializerSettings> IgnoreTasksProgress()
-        {
-            Func<JsonSerializerSettings> cachedSettings = JsonConvert.DefaultSettings;
-            JsonConvert.DefaultSettings = () => {
-                JsonSerializerSettings settings = cachedSettings();
-                if (settings.ContractResolver is PropertyContractResolver resolver)
-                {
-                    resolver.IgnoreProperty(typeof(InteractQuestTask), nameof(InteractQuestTask.Completed));
-                    resolver.IgnoreProperty(typeof(KillQuestTask), nameof(KillQuestTask.Counter));
-                    resolver.IgnoreProperty(typeof(ReachQuestTask), nameof(ReachQuestTask.Reached));
-                }
-                return settings;
-            };
-            return cachedSettings;
         }
     }
 }

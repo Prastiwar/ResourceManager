@@ -1,9 +1,8 @@
-﻿using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
-    public class DialogueEditorViewModel : ModelDialogViewModel<DialogueModel>
+    public class DialogueEditorViewModel : ModelDialogViewModel<Models.Dialogue>
     {
         public DialogueEditorViewModel(ViewModelContext context) : base(context) { }
 

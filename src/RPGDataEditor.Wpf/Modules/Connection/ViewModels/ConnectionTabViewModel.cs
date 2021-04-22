@@ -1,13 +1,13 @@
 ﻿using FluentValidation.Results;
 using Prism.Regions;
 using RPGDataEditor.Core;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
-    public class ConnectionTabViewModel : TabViewModel
+    public class ConnectionTabViewModel : ScreenViewModel
     {
         public ConnectionTabViewModel(ViewModelContext context) : base(context) { }
 

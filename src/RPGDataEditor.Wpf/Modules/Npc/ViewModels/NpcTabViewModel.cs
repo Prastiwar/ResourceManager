@@ -1,18 +1,14 @@
-﻿using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Models;
+using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
-    public class NpcTabViewModel : SimpleIdentifiableTabViewModel<NpcDataModel>
+    public class NpcTabViewModel : PresentableDataViewModel<Models.Npc>
     {
-        public NpcTabViewModel(ViewModelContext context,
-                               ITypeToResourceConverter resourceConverter,
-                               ILocationToSimpleResourceConverter simpleResourceConverter)
-            : base(context, resourceConverter, simpleResourceConverter) { }
+        public NpcTabViewModel(ViewModelContext context) : base(context) { }
 
-        protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
+        protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
         {
             EditorResults results = await base.OpenEditorAsync(model);
             if (results.Success)
@@ -22,7 +18,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
             return results;
         }
 
-        protected override async Task<bool> RemoveModelAsync(SimpleIdentifiableData model)
+        protected override async Task<bool> RemoveModelAsync(PresentableData model)
         {
             bool result = await base.RemoveModelAsync(model);
             Session.OnResourceChanged(RPGResource.Npc);

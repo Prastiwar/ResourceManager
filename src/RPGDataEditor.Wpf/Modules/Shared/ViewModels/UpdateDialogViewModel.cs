@@ -1,5 +1,5 @@
 ﻿using Prism.Services.Dialogs;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Wpf.ViewModels

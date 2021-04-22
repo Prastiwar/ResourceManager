@@ -1,5 +1,5 @@
 ﻿using RPGDataEditor.Core;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Wpf.ViewModels
 {

@@ -1,9 +1,8 @@
-﻿using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
-    public class QuestEditorViewModel : ModelDialogViewModel<QuestModel>
+    public class QuestEditorViewModel : ModelDialogViewModel<Models.Quest>
     {
         public QuestEditorViewModel(ViewModelContext context) : base(context) { }
 

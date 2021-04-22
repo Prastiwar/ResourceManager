@@ -1,6 +1,6 @@
 ﻿using Prism.Ioc;
 using Prism.Regions;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Mvvm;
 using RPGDataEditor.Wpf.Connection.Views;
 using RPGDataEditor.Wpf.Dialogue.Views;
 using RPGDataEditor.Wpf.Npc.Views;
@@ -25,9 +25,9 @@ namespace RPGDataEditor.Wpf
 
         protected override void RegisterDialogs(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterDialog<DialogueEditor>(typeof(DialogueModel).Name);
-            containerRegistry.RegisterDialog<NpcDataModelEditor>(typeof(NpcDataModel).Name);
-            containerRegistry.RegisterDialog<QuestEditor>(typeof(QuestModel).Name);
+            containerRegistry.RegisterDialog<DialogueEditor>(typeof(Models.Dialogue).Name);
+            containerRegistry.RegisterDialog<NpcEditor>(typeof(Models.Npc).Name);
+            containerRegistry.RegisterDialog<QuestEditor>(typeof(Models.Quest).Name);
             containerRegistry.RegisterDialog<PickerDialog>(typeof(PickerDialog).Name);
         }
 

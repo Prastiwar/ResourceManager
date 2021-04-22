@@ -5,7 +5,5 @@
         public Position Pos { get; set; }
 
         public double Distance { get; set; } = 1;
-
-        public bool Reached { get; set; }
     }
 }

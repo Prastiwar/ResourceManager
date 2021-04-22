@@ -1,24 +1,20 @@
-﻿using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Models;
+using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
-    public class DialogueTabViewModel : SimpleCategorizedTabViewModel<DialogueModel>
+    public class DialogueTabViewModel : PresentableCategoryDataViewModel<Models.Dialogue>
     {
-        public DialogueTabViewModel(ViewModelContext context,
-                                    ITypeToResourceConverter resourceConverter,
-                                    ILocationToSimpleResourceConverter simpleResourceConverter)
-            : base(context, resourceConverter, simpleResourceConverter) { }
+        public DialogueTabViewModel(ViewModelContext context)            : base(context) { }
 
-        protected override DialogueModel CreateNewExactModel(SimpleIdentifiableData model) => new DialogueModel() {
+        protected override Models.Dialogue CreateResource(PresentableData model) => new DModels.ialogue() {
             Id = model.Id,
             Title = model.Name,
-            Category = (model as SimpleCategorizedData).Category
+            Category = (model as PresentableCategoryData).Category
         };
 
-        protected override async Task<EditorResults> OpenEditorAsync(SimpleIdentifiableData model)
+        protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
         {
             EditorResults results = await base.OpenEditorAsync(model);
             if (results.Success)
@@ -35,7 +31,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
             return renamed;
         }
 
-        protected override async Task<bool> RemoveModelAsync(SimpleIdentifiableData model)
+        protected override async Task<bool> RemoveModelAsync(PresentableData model)
         {
             bool result = await base.RemoveModelAsync(model);
             Session.OnResourceChanged(RPGResource.Dialogue);

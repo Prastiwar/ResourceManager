@@ -19,8 +19,8 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<PresentableData>();
             try
             {
-                IEnumerable<PresentableData> models = await Context.Mediator.Send(new GetPresentableResourceByIdQuery<IEnumerable<PresentableData>>());
-                Models.AddRange(models);
+                //IEnumerable<PresentableData> models = await Context.Mediator.Send(new GetPresentableResourceByIdQuery<IEnumerable<PresentableData>>());
+                //Models.AddRange(models);
             }
             catch (Exception ex)
             {

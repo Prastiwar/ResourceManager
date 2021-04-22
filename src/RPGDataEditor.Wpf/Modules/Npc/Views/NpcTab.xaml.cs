@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System;
 using System.Windows.Controls;
 
@@ -18,10 +18,10 @@ namespace RPGDataEditor.Wpf.Npc.Views
             {
                 return true;
             }
-            SimpleIdentifiableData npc = (SimpleIdentifiableData)item;
+            PresentableData npc = (PresentableData)item;
             if (int.TryParse(searchText, out int id))
             {
-                return npc.Id == id;
+                return (int)npc.Id == id;
             }
             return npc.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase);
         }

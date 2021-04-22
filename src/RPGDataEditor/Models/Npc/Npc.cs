@@ -2,7 +2,7 @@
 
 namespace RPGDataEditor.Models
 {
-    public class NpcDataModel : IIdentifiable
+    public class Npc : IIdentifiable
     {
         public object Id { get; set; }
 

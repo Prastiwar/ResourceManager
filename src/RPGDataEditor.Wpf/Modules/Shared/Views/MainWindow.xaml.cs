@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Mvvm;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +15,7 @@ namespace RPGDataEditor.Wpf.Views
 
         private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            if (!(MainTabControl.SelectedContent is FrameworkElement currentContent) || !(currentContent.DataContext is TabViewModel vm) || !canRefresh)
+            if (!(MainTabControl.SelectedContent is FrameworkElement currentContent) || !(currentContent.DataContext is ScreenViewModel vm) || !canRefresh)
             {
                 return;
             }

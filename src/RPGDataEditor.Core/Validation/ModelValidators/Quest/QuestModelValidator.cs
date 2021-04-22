@@ -3,9 +3,9 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class QuestModelValidator : AbstractValidator<Quest>
+    public class QuestValidator : AbstractValidator<Quest>
     {
-        public QuestModelValidator()
+        public QuestValidator()
         {
             RuleFor(x => x.CompletionTask).NotEmpty().WithMessage(CustomMessages.Empty);
             RuleFor(x => x.Title).NotEmpty().WithMessage(CustomMessages.Empty);

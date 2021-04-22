@@ -1,6 +1,6 @@
 ﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;

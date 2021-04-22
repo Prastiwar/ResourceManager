@@ -1,19 +1,19 @@
-﻿using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Models;
+using RPGDataEditor.Mvvm;
 using System.Linq;
 
 namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
-    public class NpcDataModelEditorViewModel : ModelDialogViewModel<NpcDataModel>
+    public class NpcEditorViewModel : ModelDialogViewModel<Models.Npc>
     {
-        public NpcDataModelEditorViewModel(ViewModelContext context) : base(context) { }
+        public NpcEditorViewModel(ViewModelContext context) : base(context) { }
 
         public override string Title => "Npc Editor";
 
         /// <summary> Finds attribute by name and returns its value </summary>
         protected double GetFromAttributes(string name)
         {
-            AttributeDataModel attribute = Model.Attributes.Where(x => x.Name == name).FirstOrDefault();
+            AttributeData attribute = Model.Attributes.Where(x => x.Name == name).FirstOrDefault();
             if (attribute != null)
             {
                 return attribute.Value;

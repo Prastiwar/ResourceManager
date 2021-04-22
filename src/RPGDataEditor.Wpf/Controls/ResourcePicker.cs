@@ -1,6 +1,5 @@
 ﻿using Prism.Services.Dialogs;
-using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -130,7 +129,7 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 string[] locations = await RpgDataEditorApplication.Current.Session.Client.GetAllLocationsAsync((int)Resource);
                 ILocationToSimpleResourceConverter converter = Application.Current.TryResolve<ILocationToSimpleResourceConverter>();
-                SimpleIdentifiableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
+                PresentableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
                 PickedItem = pickedItem;
             }
             catch (System.Exception ex)

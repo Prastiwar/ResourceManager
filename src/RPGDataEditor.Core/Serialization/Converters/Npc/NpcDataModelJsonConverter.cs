@@ -7,17 +7,17 @@ using System.Collections.Generic;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class NpcDataModelJsonConverter : ExtendableJsonConverter<NpcDataModel>
+    public class NpcJsonConverter : ExtendableJsonConverter<Npc>
     {
-        public override NpcDataModel ReadJObject(Type objectType, JObject obj)
+        public override Npc ReadJObject(Type objectType, JObject obj)
         {
-            object id = obj.GetValue<object>(nameof(NpcDataModel.Id));
-            string name = obj.GetValue<string>(nameof(NpcDataModel.Name));
-            Position position = obj.GetValue<Position>(nameof(NpcDataModel.Position), default);
-            IList<AttributeData> attributes = obj.GetValue<List<AttributeData>>(nameof(NpcDataModel.Attributes));
-            NpcJob job = obj.GetValue<NpcJob>(nameof(NpcDataModel.Job));
-            TalkData talkData = obj.GetValue<TalkData>(nameof(NpcDataModel.TalkData));
-            NpcDataModel model = new NpcDataModel() {
+            object id = obj.GetValue<object>(nameof(Npc.Id));
+            string name = obj.GetValue<string>(nameof(Npc.Name));
+            Position position = obj.GetValue<Position>(nameof(Npc.Position), default);
+            IList<AttributeData> attributes = obj.GetValue<List<AttributeData>>(nameof(Npc.Attributes));
+            NpcJob job = obj.GetValue<NpcJob>(nameof(Npc.Job));
+            TalkData talkData = obj.GetValue<TalkData>(nameof(Npc.TalkData));
+            Npc model = new Npc() {
                 Id = id,
                 Name = name,
                 Position = position,
@@ -28,13 +28,13 @@ namespace RPGDataEditor.Core.Serialization
             return model;
         }
 
-        public override JObject ToJObject(NpcDataModel value, JsonSerializer serializer) => new JObject() {
-                { nameof(NpcDataModel.Id).ToFirstLower(), JToken.FromObject(value.Id) },
-                { nameof(NpcDataModel.Name).ToFirstLower(), value.Name },
-                { nameof(NpcDataModel.Position).ToFirstLower(), JToken.FromObject(value.Position, serializer) },
-                { nameof(NpcDataModel.Attributes).ToFirstLower(), JArray.FromObject(value.Attributes, serializer) },
-                { nameof(NpcDataModel.Job).ToFirstLower(), JToken.FromObject(value.Job, serializer) },
-                { nameof(NpcDataModel.TalkData).ToFirstLower(), JToken.FromObject(value.TalkData, serializer) }
+        public override JObject ToJObject(Npc value, JsonSerializer serializer) => new JObject() {
+                { nameof(Npc.Id).ToFirstLower(), JToken.FromObject(value.Id) },
+                { nameof(Npc.Name).ToFirstLower(), value.Name },
+                { nameof(Npc.Position).ToFirstLower(), JToken.FromObject(value.Position, serializer) },
+                { nameof(Npc.Attributes).ToFirstLower(), JArray.FromObject(value.Attributes, serializer) },
+                { nameof(Npc.Job).ToFirstLower(), JToken.FromObject(value.Job, serializer) },
+                { nameof(Npc.TalkData).ToFirstLower(), JToken.FromObject(value.TalkData, serializer) }
             };
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Prism.Regions;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm.Navigation;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +37,7 @@ namespace RPGDataEditor.Wpf.Mvvm
                 }
                 AttachProperties.SetIsLoading(regionTarget, true);
                 string toUri = "navigation://" + addedTab.Header;
-                NavigationContext context = new NavigationContext(region.NavigationService, new System.Uri(toUri));
+                INavigationContext context = new NavigationContext(region.NavigationService, new System.Uri(toUri));
                 bool canNavigate = await CanNavigateAsync(removedTab, addedTab, context);
                 if (!canNavigate)
                 {
@@ -48,10 +48,10 @@ namespace RPGDataEditor.Wpf.Mvvm
                     AttachProperties.SetIsLoading(regionTarget, false);
                     return;
                 }
-                await Notifier.CallAsync<ITabSwitchAsyncAware>(removedTab?.DataContext, aware => aware.OnNavigatedFromAsync(context));
-                await Notifier.CallAsync<ITabSwitchAsyncAware>(removedTab?.Content, aware => aware.OnNavigatedFromAsync(context));
-                await Notifier.CallAsync<ITabSwitchAsyncAware>(addedTab.DataContext, aware => aware.OnNavigatedToAsync(context));
-                await Notifier.CallAsync<ITabSwitchAsyncAware>(addedTab.Content, aware => aware.OnNavigatedToAsync(context));
+                await Notifier.CallAsync<RPGDataEditor.Mvvm.Navigation.INavigationAware>(removedTab?.DataContext, aware => aware.OnNavigatedFromAsync(context));
+                await Notifier.CallAsync<RPGDataEditor.Mvvm.Navigation.INavigationAware>(removedTab?.Content, aware => aware.OnNavigatedFromAsync(context));
+                await Notifier.CallAsync<RPGDataEditor.Mvvm.Navigation.INavigationAware>(addedTab.DataContext, aware => aware.OnNavigatedToAsync(context));
+                await Notifier.CallAsync<RPGDataEditor.Mvvm.Navigation.INavigationAware>(addedTab.Content, aware => aware.OnNavigatedToAsync(context));
                 AttachProperties.SetIsLoading(regionTarget, false);
             };
         }
@@ -75,12 +75,12 @@ namespace RPGDataEditor.Wpf.Mvvm
             }
         }
 
-        protected virtual async Task<bool> CanNavigateAsync(TabItem fromTab, TabItem toTab, NavigationContext context)
+        protected virtual async Task<bool> CanNavigateAsync(TabItem fromTab, TabItem toTab, INavigationContext context)
         {
-            ITabSwitchAsyncAware removedTabAware = GetSwitchAsyncAware(fromTab);
-            ITabSwitchAsyncAware addedTabAware = GetSwitchAsyncAware(toTab);
-            bool canNavigate = removedTabAware == null || await removedTabAware.CanSwitchFrom(context);
-            canNavigate = canNavigate && (addedTabAware == null || await addedTabAware.CanSwitchTo(context));
+            RPGDataEditor.Mvvm.Navigation.INavigationAware removedTabAware = GetSwitchAsyncAware(fromTab);
+            RPGDataEditor.Mvvm.Navigation.INavigationAware addedTabAware = GetSwitchAsyncAware(toTab);
+            bool canNavigate = removedTabAware == null || await removedTabAware.CanNavigateFrom(context);
+            canNavigate = canNavigate && (addedTabAware == null || await addedTabAware.CanNavigateTo(context));
             return canNavigate;
         }
 
@@ -99,7 +99,7 @@ namespace RPGDataEditor.Wpf.Mvvm
 
         protected override IRegion CreateRegion() => new SingleActiveRegion();
 
-        private ITabSwitchAsyncAware GetSwitchAsyncAware(TabItem item)
-            => item?.Content is FrameworkElement el ? el.DataContext as ITabSwitchAsyncAware : null;
+        private RPGDataEditor.Mvvm.Navigation.INavigationAware GetSwitchAsyncAware(TabItem item)
+            => item?.Content is FrameworkElement el ? el.DataContext as RPGDataEditor.Mvvm.Navigation.INavigationAware : null;
     }
 }

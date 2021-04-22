@@ -1,27 +1,26 @@
 ﻿using Prism.Commands;
-using Prism.Regions;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm;
+using RPGDataEditor.Mvvm.Navigation;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Settings.ViewModels
 {
-    public class SettingsTabViewModel : TabViewModel
+    public class SettingsTabViewModel : ScreenViewModel
     {
         public SettingsTabViewModel(ViewModelContext context) : base(context) { }
 
         private ICommand ceateBackupCommand;
         public ICommand CreateBackupCommand => ceateBackupCommand ??= new DelegateCommand<object>((obj) => CreateBackup((RPGResource)obj), obj => obj is RPGResource);
 
-        public override async Task<bool> CanSwitchFrom(NavigationContext navigationContext)
+        public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
             FluentValidation.Results.ValidationResult validationResult = await Context.ValidationProvider.ValidateAsync(Session);
             return validationResult.IsValid;
         }
 
-        public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
+        public override async Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
             await base.OnNavigatedToAsync(navigationContext);
             if (Session is DefaultSessionContext context)

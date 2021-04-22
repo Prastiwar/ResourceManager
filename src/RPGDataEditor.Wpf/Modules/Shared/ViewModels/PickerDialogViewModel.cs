@@ -1,7 +1,5 @@
 ﻿using Prism.Services.Dialogs;
-using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
+using RPGDataEditor.Mvvm;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +8,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class PickerDialogViewModel : DialogViewModelBase
     {
-        public PickerDialogViewModel(ViewModelContext context, ILocationToSimpleResourceConverter simpleResourceConverter) : base(context) => this.simpleResourceConverter = simpleResourceConverter;
+        public PickerDialogViewModel(ViewModelContext context) : base(context) { }
 
         public override string Title => "Resource Picker";
 
@@ -31,8 +29,6 @@ namespace RPGDataEditor.Wpf.ViewModels
             get => models;
             set => SetProperty(ref models, value);
         }
-
-        private readonly ILocationToSimpleResourceConverter simpleResourceConverter;
 
         protected sealed override void CloseDialog(object result) => Close(result is bool b && b);
 

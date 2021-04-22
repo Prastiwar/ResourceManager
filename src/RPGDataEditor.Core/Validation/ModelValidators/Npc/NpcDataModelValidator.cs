@@ -3,15 +3,15 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class NpcDataModelValidator : AbstractValidator<NpcDataModel>
+    public class NpcValidator : AbstractValidator<Npc>
     {
-        public NpcDataModelValidator()
+        public NpcValidator()
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage("Npc name should not be empty");
 
             RuleFor(x => x.Job).SetValidator(new NpcJobModelValidator());
 
-            TalkDataModelValidator talkDataValidator = new TalkDataModelValidator();
+            TalkDataValidator talkDataValidator = new TalkDataValidator();
             RuleFor(x => x.TalkData).SetValidator(talkDataValidator);
         }
 

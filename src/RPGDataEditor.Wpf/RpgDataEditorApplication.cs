@@ -6,13 +6,8 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using RPGDataEditor.Core;
-using RPGDataEditor.Core.Connection;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Mvvm;
-using RPGDataEditor.Core.Providers;
+using RPGDataEditor.Mvvm;
 using RPGDataEditor.Core.Serialization;
-using RPGDataEditor.Core.Services;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
@@ -20,9 +15,10 @@ using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using MediatR;
+using RPGDataEditor.Services;
 
 namespace RPGDataEditor.Wpf
 {
@@ -79,8 +75,8 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new PlayerRequirementJsonConverter());
 
             settings.Converters.Add(new NpcJobJsonConverter());
-            settings.Converters.Add(new NpcDataModelJsonConverter());
-            settings.Converters.Add(new TradeItemModelJsonConverter());
+            settings.Converters.Add(new NpcJsonConverter());
+            settings.Converters.Add(new TradeItemJsonConverter());
             settings.Converters.Add(new AttributeDataModelJsonConverter());
 
             settings.Converters.Add(new PositionJsonConverter());
@@ -88,7 +84,7 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new QuestTaskJsonConverter());
             settings.Converters.Add(new QuestDataJsonConverter());
 
-            settings.Converters.Add(new DialogueModelJsonConverter());
+            settings.Converters.Add(new DialogueJsonConverter());
             settings.Converters.Add(new DialogueOptionModelJsonConverter());
             settings.Converters.Add(new TalkDataModelJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
@@ -115,11 +111,9 @@ namespace RPGDataEditor.Wpf
             return session;
         }
 
-        protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Session,
-                                                                                            Container.Resolve<IConnectionService>(),
+        protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Container.Resolve<IMediator>(),
                                                                                             Container.Resolve<IDialogService>(),
-                                                                                            Container.Resolve<IValidationProvider>(),
-                                                                                            Container.Resolve<ISnackbarService>());
+                                                                                            Container.Resolve<ILogger>());
 
         protected virtual AppVersionChecker CreateVersionChecker() => new AppVersionChecker() {
             VersionPath = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json",
@@ -166,9 +160,9 @@ namespace RPGDataEditor.Wpf
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IValidator<ISessionContext>, SessionContextValidator>();
-            containerRegistry.Register<IValidator<NpcDataModel>, NpcDataModelValidator>();
-            containerRegistry.Register<IValidator<QuestModel>, QuestModelValidator>();
-            containerRegistry.Register<IValidator<DialogueModel>, DialogueModelValidator>();
+            containerRegistry.Register<IValidator<Models.Npc>, NpcValidator>();
+            containerRegistry.Register<IValidator<Models.Quest>, QuestValidator>();
+            containerRegistry.Register<IValidator<Models.Dialogue>, DialogueValidator>();
         }
 
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
