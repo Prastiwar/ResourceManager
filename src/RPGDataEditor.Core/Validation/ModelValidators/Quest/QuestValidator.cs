@@ -17,7 +17,7 @@ namespace RPGDataEditor.Core.Validation
 
             RuleForEach(x => x.Tasks).SetValidator(taskValidator);
 
-            PlayerRequirementModelValidator requirementValidator = new PlayerRequirementModelValidator();
+            RequirementValidator requirementValidator = new RequirementValidator();
             RuleForEach(x => x.Requirements).SetValidator(requirementValidator);
         }
     }

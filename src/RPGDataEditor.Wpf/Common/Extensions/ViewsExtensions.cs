@@ -1,6 +1,5 @@
 using Prism;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Providers;
+using Prism.Modularity;
 using RPGDataEditor.Wpf.Controls;
 using System;
 using System.Collections;
@@ -18,7 +17,6 @@ namespace RPGDataEditor.Wpf
     public static class ViewsExtensions
     {
         public static void ChangeType<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e, object sender)
-            where TModel : ObservableModel
         {
             if (sender is FrameworkElement element)
             {
@@ -62,12 +60,11 @@ namespace RPGDataEditor.Wpf
         }
 
         public static void ChangeTypeInList<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e, IList<TModel> list, ItemsControl itemsControl = null)
-            where TModel : ObservableModel
         {
             TModel newModel = e.CreateModel<TModel>();
             if (newModel != null)
-            {
-                int index = list.IndexOf(e.Item as TModel);
+{
+                int index = list.IndexOf((TModel)e.Item);
                 if (index > -1)
                 {
                     list.RemoveAt(index);
@@ -84,7 +81,7 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        public static TModel CreateModel<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e) where TModel : ObservableModel
+        public static TModel CreateModel<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e)
         {
             if (Application.Current is PrismApplicationBase prismApp)
             {
@@ -93,7 +90,7 @@ namespace RPGDataEditor.Wpf
                     return provider.CreateModel(e.TargetType);
                 }
             }
-            return null;
+            return default;
         }
 
         public static void Refresh(this IEnumerable itemsSource) => CollectionViewSource.GetDefaultView(itemsSource)?.Refresh();

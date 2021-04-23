@@ -1,13 +1,12 @@
 ﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core.Commands;
-using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase where TModel : IValidable
+    public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase
     {
         public ModelDialogViewModel(ViewModelContext context) : base(context) { }
 

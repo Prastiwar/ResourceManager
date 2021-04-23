@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,7 +13,7 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(OrientationProperty, value);
         }
 
-        public static DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(Position), typeof(BlockPosField), new PropertyMetadata(new Position()));
+        public static DependencyProperty PositionProperty = DependencyProperty.Register(nameof(Position), typeof(Position), typeof(BlockPosField));
         public Position Position {
             get => (Position)GetValue(PositionProperty);
             set => SetValue(PositionProperty, value);

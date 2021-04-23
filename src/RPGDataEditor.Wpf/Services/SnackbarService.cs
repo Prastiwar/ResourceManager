@@ -1,5 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
-using RPGDataEditor.Core.Services;
+using RPGDataEditor.Services;
 using System;
 
 namespace RPGDataEditor.Wpf.Services

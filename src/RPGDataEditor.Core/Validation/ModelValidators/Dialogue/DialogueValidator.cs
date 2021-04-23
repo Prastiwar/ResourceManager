@@ -10,10 +10,10 @@ namespace RPGDataEditor.Core.Validation
             RuleFor(x => x.Title).NotEmpty().WithMessage(CustomMessages.Empty);
             RuleFor(x => x.Message).NotEmpty().WithMessage(CustomMessages.Empty);
 
-            DialogueOptionModelValidator optionValidator = new DialogueOptionModelValidator();
+            DialogueOptionValidator optionValidator = new DialogueOptionValidator();
             RuleForEach(x => x.Options).SetValidator(optionValidator);
 
-            PlayerRequirementModelValidator requirementValidator = new PlayerRequirementModelValidator();
+            RequirementValidator requirementValidator = new RequirementValidator();
             RuleForEach(x => x.Requirements).SetValidator(requirementValidator);
         }
     }

@@ -1,10 +1,10 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class QuestTaskAutoTemplate : AutoTemplate<QuestTask>
+    public class QuestTaskAutoTemplate : AutoTemplate<IQuestTask>
     {
         public override DependencyObject LoadContent(PropertyInfo info = null)
         {
@@ -14,6 +14,6 @@ namespace RPGDataEditor.Wpf.Controls
             return view;
         }
 
-        private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeType<QuestTask>(sender);
+        private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeType<IQuestTask>(sender);
     }
 }

@@ -1,6 +1,4 @@
-﻿using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Providers;
+﻿using RPGDataEditor.Models;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -34,9 +32,9 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected override string GetDataContextItemName()
         {
-            if (DataContext is DialogueOptionModel model)
+            if (DataContext is DialogueOption model)
             {
-                return Application.Current.TryResolve<INamedIdProvider<DialogueOptionModel>>()?.GetName(model.NextDialogId);
+                return Application.Current.TryResolve<INamedIdProvider<DialogueOption>>()?.GetName(model.NextDialogId);
             }
             return null;
         }

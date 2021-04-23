@@ -1,10 +1,10 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls.AutoGeneration.Models
 {
-    public class RequirementAutoTemplate : AutoTemplate<PlayerRequirementModel>
+    public class RequirementAutoTemplate : AutoTemplate<Requirement>
     {
         public override DependencyObject LoadContent(PropertyInfo info = null)
         {
@@ -14,6 +14,6 @@ namespace RPGDataEditor.Wpf.Controls.AutoGeneration.Models
             return view;
         }
 
-        private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeType<PlayerRequirementModel>(sender);
+        private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeType<Requirement>(sender);
     }
 }

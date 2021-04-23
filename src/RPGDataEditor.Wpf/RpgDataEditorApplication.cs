@@ -1,14 +1,18 @@
-﻿using DryIoc;
+﻿using AutoUpdaterDotNET;
+using DryIoc;
 using FluentValidation;
+using MediatR;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using RPGDataEditor.Mvvm;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Validation;
+using RPGDataEditor.Mvvm;
+using RPGDataEditor.Services;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
@@ -17,8 +21,6 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using MediatR;
-using RPGDataEditor.Services;
 
 namespace RPGDataEditor.Wpf
 {
@@ -49,7 +51,7 @@ namespace RPGDataEditor.Wpf
         public ISessionContext Session { get; private set; }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-            => Logger.Error("Unhandled exception", e.Exception);
+            => Container.Resolve<ILogger>().Error("Unhandled exception", e.Exception);
 
         protected virtual async void OnExit(object sender, ExitEventArgs e) => await Session.Client.DisconnectAsync();
 
@@ -85,14 +87,12 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new QuestDataJsonConverter());
 
             settings.Converters.Add(new DialogueJsonConverter());
-            settings.Converters.Add(new DialogueOptionModelJsonConverter());
+            settings.Converters.Add(new DialogueOptionJsonConverter());
             settings.Converters.Add(new TalkDataModelJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
 
 
-            settings.Converters.Add(new ResourceClientJsonConverter());
-            settings.Converters.Add(new OptionsDataJsonConverter());
-            settings.Converters.Add(new SessionContextJsonConverter());
+            settings.Converters.Add(new FileClientJsonConverter());
             if (Session is DefaultSessionContext context)
             {
                 settings.Formatting = context.Options.PrettyPrint ? Formatting.Indented : Formatting.None;
@@ -115,10 +115,24 @@ namespace RPGDataEditor.Wpf
                                                                                             Container.Resolve<IDialogService>(),
                                                                                             Container.Resolve<ILogger>());
 
-        protected virtual AppVersionChecker CreateVersionChecker() => new AppVersionChecker() {
-            VersionPath = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json",
-            ActualVersion = new AppVersion("1.0.0")
-        };
+        protected virtual void InitializeAutoUpdater()
+        {
+            AutoUpdater.AppCastURL = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json";
+            AutoUpdater.ParseUpdateInfoEvent += AutoUpdater_ParseUpdateInfoEvent;
+        }
+
+        private void AutoUpdater_ParseUpdateInfoEvent(ParseUpdateInfoEventArgs args)
+        {
+            UpdateInfo updateInfo = JsonConvert.DeserializeObject<UpdateInfo>(args.RemoteData);
+            args.UpdateInfo = new UpdateInfoEventArgs() {
+                CurrentVersion = updateInfo.Version,
+                DownloadURL = updateInfo.Url,
+                ChangelogURL = updateInfo.Changelog,
+                InstallerArgs = updateInfo.Args,
+                Mandatory = updateInfo.Mandatory,
+                CheckSum = updateInfo.CheckSum
+            };
+        }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
@@ -134,6 +148,7 @@ namespace RPGDataEditor.Wpf
                 throw;
             }
             containerRegistry.RegisterInstance(Session);
+            RegisterLogging(containerRegistry);
 
             RegisterValidators(containerRegistry);
             RegisterProviders(containerRegistry);
@@ -141,12 +156,14 @@ namespace RPGDataEditor.Wpf
             RegisterDialogs(containerRegistry);
             RegisterConverters(containerRegistry);
 
-            containerRegistry.RegisterInstance(CreateVersionChecker());
+            InitializeAutoUpdater();
 
             containerRegistry.RegisterInstance(CreateViewModelContext());
 
             OnRegistrationFinished(containerRegistry);
         }
+
+        protected virtual void RegisterLogging(IContainerRegistry containerRegistry) => containerRegistry.RegisterInstance<ILogger>(new LocalFileLogger());
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
         {
@@ -174,9 +191,9 @@ namespace RPGDataEditor.Wpf
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterInstance<IValidationProvider>(new ValidatorProvider(Container));
-            containerRegistry.RegisterInstance<IModelProvider<PlayerRequirementModel>>(new DefaultRequirementProvider());
+            containerRegistry.RegisterInstance<IModelProvider<Requirement>>(new DefaultRequirementProvider());
             containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
-            containerRegistry.RegisterInstance<INamedIdProvider<DialogueOptionModel>>(new DefaultDialogueOptionNamedIdProvider());
+            containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
             containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
             containerRegistry.Register<IClientProvider, DefaultClientProvider>();
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);

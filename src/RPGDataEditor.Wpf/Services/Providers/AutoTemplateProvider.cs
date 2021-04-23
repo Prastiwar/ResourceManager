@@ -1,5 +1,5 @@
 ﻿using Prism.Ioc;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Models;
 using RPGDataEditor.Wpf.Controls;
 using RPGDataEditor.Wpf.Controls.AutoGeneration.Models;
 using System;
@@ -39,17 +39,17 @@ namespace RPGDataEditor.Wpf.Providers
             RegisterAutoTemplate<Color>(containerRegistry, new ColorAutoTemplate());
             RegisterAutoTemplate<SecureString>(containerRegistry, new SecureStringAutoTemplate());
 
-            RegisterAutoTemplate<DialogueOptionModel>(containerRegistry, new DialogueOptionAutoTemplate());
-            RegisterAutoTemplate<QuestTask>(containerRegistry, new QuestTaskAutoTemplate());
-            RegisterAutoTemplate<PlayerRequirementModel>(containerRegistry, new RequirementAutoTemplate());
+            RegisterAutoTemplate<DialogueOption>(containerRegistry, new DialogueOptionAutoTemplate());
+            RegisterAutoTemplate<IQuestTask>(containerRegistry, new QuestTaskAutoTemplate());
+            RegisterAutoTemplate<Requirement>(containerRegistry, new RequirementAutoTemplate());
             RegisterAutoTemplate<TalkLine>(containerRegistry, new TalkLineAutoTemplate());
-            RegisterAutoTemplate<TradeItemModel>(containerRegistry, new TradeItemAutoTemplate());
+            RegisterAutoTemplate<TradeItem>(containerRegistry, new TradeItemAutoTemplate());
 
-            RegisterListDataAutoTemplate<PlayerRequirementModel>(containerRegistry);
-            RegisterListDataAutoTemplate<DialogueOptionModel>(containerRegistry);
-            RegisterListDataAutoTemplate<QuestTask>(containerRegistry);
+            RegisterListDataAutoTemplate<Requirement>(containerRegistry);
+            RegisterListDataAutoTemplate<DialogueOption>(containerRegistry);
+            RegisterListDataAutoTemplate<IQuestTask>(containerRegistry);
             RegisterListDataAutoTemplate<TalkLine>(containerRegistry);
-            RegisterListDataAutoTemplate<TradeItemModel>(containerRegistry);
+            RegisterListDataAutoTemplate<TradeItem>(containerRegistry);
         }
 
         protected void RegisterListDataAutoTemplate<T>(IContainerRegistry containerRegistry)

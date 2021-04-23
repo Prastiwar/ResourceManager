@@ -3,9 +3,9 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class NpcJobModelValidator : AbstractValidator<NpcJob>
+    public class NpcJobValidator : AbstractValidator<NpcJob>
     {
-        public NpcJobModelValidator()
+        public NpcJobValidator()
         {
             TradeItemValidator itemValidator = new TradeItemValidator();
             RuleForEach(x => (x as TraderNpcJob).Items).SetValidator(itemValidator).When(x => x is TraderNpcJob);

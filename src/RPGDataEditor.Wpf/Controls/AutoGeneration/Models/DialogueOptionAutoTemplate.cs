@@ -1,12 +1,10 @@
-﻿using RPGDataEditor.Core;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Providers;
+﻿using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class DialogueOptionAutoTemplate : AutoTemplate<DialogueOptionModel>
+    public class DialogueOptionAutoTemplate : AutoTemplate<DialogueOption>
     {
         public override DependencyObject LoadContent(PropertyInfo info = null)
         {
@@ -18,8 +16,8 @@ namespace RPGDataEditor.Wpf.Controls
 
         private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e)
         {
-            DialogueOptionModel targetModel = (DialogueOptionModel)e.Item;
-            int? id = Application.Current.TryResolve<INamedIdProvider<DialogueOptionModel>>()?.GetId(e.TargetType);
+            DialogueOption targetModel = (DialogueOption)e.Item;
+            int? id = Application.Current.TryResolve<INamedIdProvider<DialogueOption>>()?.GetId(e.TargetType);
             if (id.HasValue)
             {
                 targetModel.NextDialogId = id.Value;

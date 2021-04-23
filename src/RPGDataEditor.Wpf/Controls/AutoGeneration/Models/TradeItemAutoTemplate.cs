@@ -1,12 +1,12 @@
 ﻿using MaterialDesignThemes.Wpf;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Controls
 {
-    public class TradeItemAutoTemplate : AutoTemplate<TradeItemModel>
+    public class TradeItemAutoTemplate : AutoTemplate<TradeItem>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {
@@ -22,18 +22,18 @@ namespace RPGDataEditor.Wpf.Controls
         protected virtual StackPanel BuildPanel(PropertyInfo info)
         {
             StackPanel panel = new StackPanel();
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItemModel.Item) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItem.ItemId) });
             StackPanel numericPanel = new StackPanel() { Orientation = Orientation.Horizontal };
             numericPanel.Children.Add(new AutoControl() {
-                PropertyName = nameof(TradeItemModel.Count),
+                PropertyName = nameof(TradeItem.Count),
                 MinWidth = 128
             });
             numericPanel.Children.Add(new AutoControl() {
-                PropertyName = nameof(TradeItemModel.Buy),
+                PropertyName = nameof(TradeItem.Buy),
                 MinWidth = 128
             });
             numericPanel.Children.Add(new AutoControl() {
-                PropertyName = nameof(TradeItemModel.Sell),
+                PropertyName = nameof(TradeItem.Sell),
                 MinWidth = 128
             });
             panel.Children.Add(numericPanel);

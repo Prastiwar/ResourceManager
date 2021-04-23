@@ -1,8 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
-using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Providers;
-using RPGDataEditor.Core;
+using RPGDataEditor.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,7 +48,7 @@ namespace RPGDataEditor.Wpf
 
         public static ICommand AddRequirementCommand {
             get {
-                IModelProvider<PlayerRequirementModel> modelProvider = Application.Current.TryResolve<IModelProvider<PlayerRequirementModel>>();
+                IModelProvider<Requirement> modelProvider = Application.Current.TryResolve<IModelProvider<Requirement>>();
                 return AddParameterListItemCommand(() => modelProvider.CreateModel("Dialogue"));
             }
         }

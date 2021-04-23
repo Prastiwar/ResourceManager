@@ -1,7 +1,6 @@
 ﻿using FluentValidation.Results;
-using Prism.Regions;
-using RPGDataEditor.Core;
 using RPGDataEditor.Mvvm;
+using RPGDataEditor.Mvvm.Navigation;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -11,9 +10,9 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
     {
         public ConnectionTabViewModel(ViewModelContext context) : base(context) { }
 
-        public override Task<bool> CanSwitchTo(NavigationContext navigationContext) => Task.FromResult(true);
+        public override Task<bool> CanNavigateTo(INavigationContext navigationContext) => Task.FromResult(true);
 
-        public override async Task<bool> CanSwitchFrom(NavigationContext navigationContext)
+        public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
             ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
             if (result.IsValid)
@@ -21,7 +20,6 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
                 bool connected = await Session.Client.ConnectAsync();
                 if (!connected)
                 {
-                    Context.SnackbarService.Enqueue("Connection cannot be established");
                     return false;
                 }
                 try
@@ -30,19 +28,19 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
                 }
                 catch (System.Exception ex)
                 {
-                    Logger.Error("Couldn't save session", ex);
+                    Context.Logger.Error("Couldn't save session", ex);
                 }
             }
             return result.IsValid;
         }
 
-        public override async Task OnNavigatedToAsync(NavigationContext navigationContext)
+        public override async Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
             await Session.Client.DisconnectAsync();
             Context.ConnectionService.StopChecking();
         }
 
-        public override async Task OnNavigatedFromAsync(NavigationContext navigationContext)
+        public override async Task OnNavigatedFromAsync(INavigationContext navigationContext)
         {
             await Session.Client.ConnectAsync();
             Context.ConnectionService.StartChecking();

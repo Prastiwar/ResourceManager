@@ -8,6 +8,8 @@ namespace RPGDataEditor.Mvvm
     {
         public static T GetValue<T>(this IDialogParameters parameters, string parameter) => (T)parameters.GetValue(parameter);
 
+        public static Task<IDialogResult> ShowDialogAsync(this IDialogService dialogService, string name) => dialogService.ShowDialogAsync(name, null);
+
         public static Task<bool> ShowModelDialogAsync<TModel>(this IDialogService dialogService, TModel model)
             => dialogService.ShowModelDialogAsync(typeof(TModel).Name, model);
 

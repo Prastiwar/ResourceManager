@@ -1,5 +1,4 @@
 ﻿using MaterialDesignThemes.Wpf;
-using RPGDataEditor.Core;
 using RPGDataEditor.Wpf.Behaviors;
 using System.Reflection;
 using System.Windows;

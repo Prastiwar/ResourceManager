@@ -3,9 +3,9 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class PlayerRequirementModelValidator : AbstractValidator<Requirement>
+    public class RequirementValidator : AbstractValidator<Requirement>
     {
-        public PlayerRequirementModelValidator()
+        public RequirementValidator()
         {
             RuleFor(x => (x as DialogueRequirement).DialogueId).NotEmpty().WithMessage(CustomMessages.Empty).When(x => x is DialogueRequirement);
 

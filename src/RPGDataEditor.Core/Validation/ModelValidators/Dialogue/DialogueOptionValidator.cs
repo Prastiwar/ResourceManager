@@ -3,13 +3,13 @@ using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class DialogueOptionModelValidator : AbstractValidator<DialogueOption>
+    public class DialogueOptionValidator : AbstractValidator<DialogueOption>
     {
-        public DialogueOptionModelValidator()
+        public DialogueOptionValidator()
         {
             RuleFor(x => x.Message).NotEmpty().WithMessage(CustomMessages.Empty);
 
-            PlayerRequirementModelValidator requirementValidator = new PlayerRequirementModelValidator();
+            RequirementValidator requirementValidator = new RequirementValidator();
             RuleForEach(x => x.Requirements).SetValidator(requirementValidator);
         }
     }

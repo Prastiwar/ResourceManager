@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +13,7 @@ namespace RPGDataEditor.Wpf.Controls
                 Orientation = Orientation.Horizontal
             };
             panel.Children.Add(new AutoControl() { PropertyName = nameof(TalkLine.Text) });
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(TalkLine.SoundLocation) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(TalkLine.SoundId) });
             return panel;
         }
     }
