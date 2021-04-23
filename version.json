@@ -1,3 +1,10 @@
 {
-    "Version": "1.0.0"
+   "version":" 1.0.0.0",
+   "url": "https://github.com/Prastiwar/RPGDataEditor/releases/1.0.0.0",
+   "changelog": "https://github.com/Prastiwar/RPGDataEditor/releases",
+   "mandatory": {
+      "value": true,
+      "minVersion": "1.0.0.0",
+      "mode": 1
+   }
 }
