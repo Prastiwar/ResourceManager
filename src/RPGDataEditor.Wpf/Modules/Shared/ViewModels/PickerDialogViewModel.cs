@@ -1,5 +1,8 @@
 ﻿using Prism.Services.Dialogs;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm;
+using RPGDataEditor.Wpf.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +41,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             if (!isCancelled)
             {
                 await OnDialogClosing(result).ConfigureAwait(true);
-                Close(new PickerDialogParameters(Model is NullResource ? null : Model).WithResult(result).Build());
+                Close(new PickerDialogParameters(Model is NullResource ? null : Model).WithResult(result).BuildPrism());
             }
         }
 
@@ -49,7 +52,7 @@ namespace RPGDataEditor.Wpf.ViewModels
         protected override async Task InitializeAsync(IDialogParameters parameters)
         {
             IsLoading = true;
-            RPGResource resource = parameters.GetValue<RPGResource>(nameof(PickerDialogParameters.PickResource));
+            Type resource = parameters.GetValue<Type>(nameof(PickerDialogParameters.ResourceType));
             List<IIdentifiable> list = await LoadResourcesAsync(resource);
             list.Sort(new IdentifiableComparer());
             Models = list;
@@ -68,17 +71,13 @@ namespace RPGDataEditor.Wpf.ViewModels
             IsLoading = false;
         }
 
-        protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(RPGResource resource)
+        protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
         {
-            string[] locations = await Session.Client.GetAllLocationsAsync((int)resource);
-            List<IIdentifiable> list = new List<IIdentifiable>(locations.Length + 1) {
+            var resources = await Context.Mediator.Send(new GetResourceByIdQuery(resourceType));
+            List<IIdentifiable> list = new List<IIdentifiable>() {
                 new NullResource()
             };
-            foreach (string location in locations)
-            {
-                list.Add(simpleResourceConverter.CreateSimpleData(location));
-            }
-            return list;
+            return list.AddRange(resources.Cast<IIdentifiable>());
         }
 
         private class NullResource : IIdentifiable

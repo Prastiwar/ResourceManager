@@ -12,40 +12,40 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override Task<bool> CanNavigateTo(INavigationContext navigationContext) => Task.FromResult(true);
 
-        public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
-        {
-            ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
-            if (result.IsValid)
-            {
-                bool connected = await Session.Client.ConnectAsync();
-                if (!connected)
-                {
-                    return false;
-                }
-                try
-                {
-                    Session.SaveSession();
-                }
-                catch (System.Exception ex)
-                {
-                    Context.Logger.Error("Couldn't save session", ex);
-                }
-            }
-            return result.IsValid;
-        }
+        //public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
+        //{
+        //    ValidationResult result = await Context.ValidationProvider.ValidateAsync(Session);
+        //    if (result.IsValid)
+        //    {
+        //        bool connected = await Session.Client.ConnectAsync();
+        //        if (!connected)
+        //        {
+        //            return false;
+        //        }
+        //        try
+        //        {
+        //            Session.SaveSession();
+        //        }
+        //        catch (System.Exception ex)
+        //        {
+        //            Context.Logger.Error("Couldn't save session", ex);
+        //        }
+        //    }
+        //    return result.IsValid;
+        //}
 
         public override async Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
-            await Session.Client.DisconnectAsync();
-            Context.ConnectionService.StopChecking();
+            //await Session.Client.DisconnectAsync();
+            //Context.ConnectionService.StopChecking();
         }
 
         public override async Task OnNavigatedFromAsync(INavigationContext navigationContext)
         {
-            await Session.Client.ConnectAsync();
-            Context.ConnectionService.StartChecking();
-            Context.ConnectionService.ConnectionChanged -= ConnectionChecker_Changed;
-            Context.ConnectionService.ConnectionChanged += ConnectionChecker_Changed;
+            //await Session.Client.ConnectAsync();
+            //Context.ConnectionService.StartChecking();
+            //Context.ConnectionService.ConnectionChanged -= ConnectionChecker_Changed;
+            //Context.ConnectionService.ConnectionChanged += ConnectionChecker_Changed;
         }
 
         private async void ConnectionChecker_Changed(object sender, bool hasConnection)

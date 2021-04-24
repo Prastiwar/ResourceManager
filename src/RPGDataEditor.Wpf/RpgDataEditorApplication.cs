@@ -7,11 +7,12 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Validation;
+using RPGDataEditor.Extensions.Prism.Wpf.Services;
 using RPGDataEditor.Mvvm;
+using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Services;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
@@ -48,12 +49,12 @@ namespace RPGDataEditor.Wpf
 
         protected virtual string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
 
-        public ISessionContext Session { get; private set; }
+        //public ISessionContext Session { get; private set; }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Container.Resolve<ILogger>().Error("Unhandled exception", e.Exception);
 
-        protected virtual async void OnExit(object sender, ExitEventArgs e) => await Session.Client.DisconnectAsync();
+        protected virtual void OnExit(object sender, ExitEventArgs e) { }// => await Session.Client.DisconnectAsync();
 
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
@@ -67,8 +68,6 @@ namespace RPGDataEditor.Wpf
         {
             PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
             propResolver.SetAllLetterCase(Lettercase.CamelCase);
-            propResolver.IgnoreProperty(typeof(IdentifiableData), nameof(IdentifiableData.RepresentableString));
-            propResolver.IgnoreProperty(typeof(ISessionContext), nameof(ISessionContext.ClientProvider));
             JsonSerializerSettings settings = new JsonSerializerSettings {
                 ContractResolver = propResolver,
                 Formatting = Formatting.Indented
@@ -93,26 +92,26 @@ namespace RPGDataEditor.Wpf
 
 
             settings.Converters.Add(new FileClientJsonConverter());
-            if (Session is DefaultSessionContext context)
-            {
-                settings.Formatting = context.Options.PrettyPrint ? Formatting.Indented : Formatting.None;
-            }
+            //if (Session is DefaultSessionContext context)
+            //{
+            //    settings.Formatting = context.Options.PrettyPrint ? Formatting.Indented : Formatting.None;
+            //}
             return settings;
         }
 
-        protected virtual ISessionContext CreateSession()
-        {
-            ISessionContext session = new DefaultSessionContext(SessionFilePath);
-            FileInfo sessionFile = new FileInfo(SessionFilePath);
-            if (sessionFile.Exists)
-            {
-                session = session.LoadSession();
-            }
-            return session;
-        }
+        //protected virtual ISessionContext CreateSession()
+        //{
+        //    ISessionContext session = new DefaultSessionContext(SessionFilePath);
+        //    FileInfo sessionFile = new FileInfo(SessionFilePath);
+        //    if (sessionFile.Exists)
+        //    {
+        //        session = session.LoadSession();
+        //    }
+        //    return session;
+        //}
 
         protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Container.Resolve<IMediator>(),
-                                                                                            Container.Resolve<IDialogService>(),
+                                                                                            Container.Resolve<RPGDataEditor.Mvvm.Services.IDialogService>(),
                                                                                             Container.Resolve<ILogger>());
 
         protected virtual void InitializeAutoUpdater()
@@ -140,26 +139,25 @@ namespace RPGDataEditor.Wpf
 
             try
             {
-                Session = CreateSession();
+                //Session = CreateSession();
             }
             catch (Exception ex)
             {
-                Logger.Error("Couldn't load session", ex);
+                //Logger.Error("Couldn't load session", ex);
                 throw;
             }
-            containerRegistry.RegisterInstance(Session);
+            //containerRegistry.RegisterInstance(Session);
             RegisterLogging(containerRegistry);
 
             RegisterValidators(containerRegistry);
             RegisterProviders(containerRegistry);
             RegisterServices(containerRegistry);
             RegisterDialogs(containerRegistry);
-            RegisterConverters(containerRegistry);
+            RegisterDescriptors(containerRegistry);
 
             InitializeAutoUpdater();
 
             containerRegistry.RegisterInstance(CreateViewModelContext());
-
             OnRegistrationFinished(containerRegistry);
         }
 
@@ -167,16 +165,16 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
         {
-            Session.ClientProvider = Container.Resolve<IClientProvider>();
-            if (Session.Client == null)
-            {
-                Session.SetConnection("Local");
-            }
+            //Session.ClientProvider = Container.Resolve<IClientProvider>();
+            //if (Session.Client == null)
+            //{
+            //    Session.SetConnection("Local");
+            //}
         }
 
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IValidator<ISessionContext>, SessionContextValidator>();
+            //containerRegistry.Register<IValidator<ISessionContext>, SessionContextValidator>();
             containerRegistry.Register<IValidator<Models.Npc>, NpcValidator>();
             containerRegistry.Register<IValidator<Models.Quest>, QuestValidator>();
             containerRegistry.Register<IValidator<Models.Dialogue>, DialogueValidator>();
@@ -185,21 +183,19 @@ namespace RPGDataEditor.Wpf
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterInstance<ISnackbarService>(new SnackbarService());
-            containerRegistry.RegisterInstance<IConnectionService>(new ConnectionService(Session, containerRegistry.GetContainer().Resolve<IConnectionCheckerProvider>()));
+            containerRegistry.RegisterSingleton<IDialogService, PrismDialogService>();
         }
 
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance<IValidationProvider>(new ValidatorProvider(Container));
-            containerRegistry.RegisterInstance<IModelProvider<Requirement>>(new DefaultRequirementProvider());
-            containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
-            containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
-            containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
-            containerRegistry.Register<IClientProvider, DefaultClientProvider>();
+            //containerRegistry.RegisterInstance<IModelProvider<Requirement>>(new DefaultRequirementProvider());
+            //containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
+            //containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
+            //containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
-            containerRegistry.RegisterInstance<IConnectionCheckerProvider>(new DefaultConnectionCheckerProvider());
+            //containerRegistry.RegisterInstance<IConnectionCheckerProvider>(new DefaultConnectionCheckerProvider());
         }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
@@ -208,14 +204,9 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterDialog<ConnectionDialog>(typeof(ConnectionDialog).Name);
         }
 
-        protected virtual void RegisterConverters(IContainerRegistry containerRegistry)
+        protected virtual void RegisterDescriptors(IContainerRegistry containerRegistry)
         {
-            DefaultResourceToPathConverter resourceToPathConverter = new DefaultResourceToPathConverter();
-            containerRegistry.RegisterInstance<IResourceToPathConverter>(resourceToPathConverter);
-            DefaultResourceToTypeConverter typeConverter = new DefaultResourceToTypeConverter();
-            containerRegistry.RegisterInstance<IResourceToTypeConverter>(typeConverter);
-            containerRegistry.RegisterInstance<ITypeToResourceConverter>(new DefaultTypeToResourceConverter());
-            containerRegistry.RegisterInstance<ILocationToSimpleResourceConverter>(new DefaultLocationToSimpleResourceConverter(resourceToPathConverter, typeConverter));
+            // TODO: Register descriptors
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();

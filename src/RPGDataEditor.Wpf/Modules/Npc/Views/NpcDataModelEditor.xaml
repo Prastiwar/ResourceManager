@@ -67,7 +67,7 @@
                                        HeaderText="{Binding InitationDialogues.Count, StringFormat='({0}) Initation Dialogues'}">
                     <DataTemplate>
                         <controls:ResourcePicker VerticalAlignment="Center"
-                                                 Resource="Dialogue"
+                                                 ResourceType="Dialogue"
                                                  EmptyText="Select initaition dialogue"
                                                  PickedId="{Binding .}" />
                     </DataTemplate>

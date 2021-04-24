@@ -1,6 +1,8 @@
-﻿using Prism.Services.Dialogs;
-using RPGDataEditor.Models;
-using System.Linq;
+﻿using MediatR;
+using Prism.Services.Dialogs;
+using RPGDataEditor.Extensions.Prism.Wpf;
+using RPGDataEditor.Wpf.Mvvm;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,10 +11,10 @@ namespace RPGDataEditor.Wpf.Controls
 {
     public class ResourcePicker : UserControl
     {
-        public static DependencyProperty ResourceProperty = DependencyProperty.Register(nameof(Resource), typeof(RPGResource?), typeof(ResourcePicker), new PropertyMetadata(null, OnResourceChanged));
-        private static void OnResourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ResourcePicker).OnResourceChanged((RPGResource?)e.OldValue, (RPGResource?)e.NewValue);
-        public RPGResource? Resource {
-            get => (RPGResource?)GetValue(ResourceProperty);
+        public static DependencyProperty ResourceProperty = DependencyProperty.Register(nameof(ResourceType), typeof(Type), typeof(ResourcePicker), new PropertyMetadata(null, OnResourceChanged));
+        private static void OnResourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ResourcePicker).OnResourceChanged((Type)e.OldValue, (Type)e.NewValue);
+        public Type ResourceType {
+            get => (Type)GetValue(ResourceProperty);
             set => SetValue(ResourceProperty, value);
         }
 
@@ -98,7 +100,7 @@ namespace RPGDataEditor.Wpf.Controls
             await ReassignItemAsync();
         }
 
-        protected virtual async void OnResourceChanged(RPGResource? oldValue, RPGResource? newValue)
+        protected virtual async void OnResourceChanged(Type oldValue, Type newValue)
         {
             PickedItem = null;
             await ReassignItemAsync();
@@ -107,7 +109,7 @@ namespace RPGDataEditor.Wpf.Controls
         protected virtual async Task ReassignItemAsync()
         {
             int id = PickedId;
-            if (Resource == null || id == -1)
+            if (ResourceType == null || id == -1)
             {
                 return;
             }
@@ -127,15 +129,13 @@ namespace RPGDataEditor.Wpf.Controls
             }
             try
             {
-                string[] locations = await RpgDataEditorApplication.Current.Session.Client.GetAllLocationsAsync((int)Resource);
-                ILocationToSimpleResourceConverter converter = Application.Current.TryResolve<ILocationToSimpleResourceConverter>();
-                PresentableData pickedItem = locations.Select(loc => converter.CreateSimpleData(loc)).FirstOrDefault(data => data.Id == id);
-                PickedItem = pickedItem;
+                IMediator mediator = Application.Current.TryResolve<IMediator>();
+                object resource = await mediator.Send(new GetResourceByIdQuery(ResourceType, id));
+                PickedItem = resource as IIdentifiable;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 resourceTextBlock.Text = "Failed to load";
-                Logger.Error("Couldn't load locations", ex);
             }
             isLoading = false;
             if (loadingOverlay != null)
@@ -148,11 +148,11 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual async Task PickItemAsync()
         {
-            IDialogService service = Application.Current.TryResolve<IDialogService>();
-            IDialogResult result = await service.ShowDialogAsync(DialogNames.PickerDialog, new PickerDialogParameters(Resource.Value, PickedItem, PickedId).Build()).ConfigureAwait(true);
-            if (result.Result == ButtonResult.OK)
+            RPGDataEditor.Mvvm.Services.IDialogService service = Application.Current.TryResolve<RPGDataEditor.Mvvm.Services.IDialogService>();
+            RPGDataEditor.Mvvm.Navigation.IDialogResult result = await service.ShowDialogAsync(DialogNames.PickerDialog, new PickerDialogParameters(ResourceType, PickedItem, PickedId).Build()).ConfigureAwait(true);
+            if (result.IsSuccess)
             {
-                IIdentifiable pickedItem = result.Parameters.GetValue<IIdentifiable>(nameof(PickerDialogParameters.PickedItem));
+                IIdentifiable pickedItem = result.Parameters.GetValue(nameof(PickerDialogParameters.PickedItem)) as IIdentifiable;
                 PickedItem = pickedItem;
             }
         }

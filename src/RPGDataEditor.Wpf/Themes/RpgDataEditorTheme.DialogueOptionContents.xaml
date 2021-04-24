@@ -5,7 +5,7 @@
         <StackPanel>
             <StackPanel>
                 <controls:ResourcePicker x:Name="NextDialoguePicker"
-                                         Resource="Dialogue"
+                                         ResourceType="Dialogue"
                                          PickedId="{Binding NextDialogId, Mode=TwoWay}"
                                          Margin="5"
                                          Visibility="{Binding NextDialogId, Converter={StaticResource NextDialogIdToVisibility}}" />

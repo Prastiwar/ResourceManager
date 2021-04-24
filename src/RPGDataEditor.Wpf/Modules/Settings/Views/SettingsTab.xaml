@@ -4,7 +4,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core"
+             xmlns:models="clr-namespace:RPGDataEditor.Models;assembly=RPGDataEditor"
              Name="SETTINGS"
              Style="{DynamicResource DefaultControlStyle}">
     <StackPanel DataContext="{Binding Session}"
@@ -22,7 +22,7 @@
             <Button Content="CREATE"
                     Margin="5"
                     Command="{Binding DataContext.CreateBackupCommand, ElementName=SETTINGS}"
-                    CommandParameter="{x:Static models:RPGResource.Npc}" />
+                    CommandParameter="{x:Type models:Npc}" />
             <TextBox Text="{Binding NpcBackupPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Options}"
                      Margin="8,8,8,8"
@@ -38,7 +38,7 @@
             <Button Content="CREATE"
                     Margin="5"
                     Command="{Binding DataContext.CreateBackupCommand, ElementName=SETTINGS}"
-                    CommandParameter="{x:Static models:RPGResource.Dialogue}" />
+                    CommandParameter="{x:Type models:Dialogue}" />
             <TextBox Text="{Binding DialoguesBackupPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Options}"
                      Margin="8,8,8,8"
@@ -54,7 +54,7 @@
             <Button Content="CREATE"
                     Margin="5"
                     Command="{Binding DataContext.CreateBackupCommand, ElementName=SETTINGS}"
-                    CommandParameter="{x:Static models:RPGResource.Quest}" />
+                    CommandParameter="{x:Type models:Quest}" />
             <TextBox Text="{Binding QuestsBackupPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      DataContext="{Binding Options}"
                      Margin="8,8,8,8"

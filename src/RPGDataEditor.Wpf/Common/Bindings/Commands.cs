@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Models;
 using System;
 using System.Collections;

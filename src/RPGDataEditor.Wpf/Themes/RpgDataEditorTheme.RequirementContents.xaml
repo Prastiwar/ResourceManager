@@ -7,7 +7,7 @@
     <DataTemplate x:Key="DialogueRequirementContent">
         <StackPanel Margin="5">
             <controls:ResourcePicker x:Name="DialoguePicker"
-                                     Resource="Dialogue"
+                                     ResourceType="Dialogue"
                                      PickedId="{Binding DialogueId, Mode=TwoWay}"
                                      EmptyText="Select Dialogue"
                                      Margin="5" />
@@ -22,7 +22,7 @@
     <DataTemplate x:Key="QuestRequirementContent">
         <StackPanel Margin="5">
             <controls:ResourcePicker x:Name="QuestPicker"
-                                     Resource="Quest"
+                                     ResourceType="Quest"
                                      PickedId="{Binding QuestId, Mode=TwoWay}"
                                      EmptyText="Select Quest"
                                      Margin="5" />

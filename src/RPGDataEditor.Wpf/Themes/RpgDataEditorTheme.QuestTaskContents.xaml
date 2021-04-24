@@ -4,7 +4,7 @@
     <DataTemplate x:Key="EntityInteractQuestTaskContent">
         <StackPanel>
             <controls:ResourcePicker PickedId="{Binding Entity}"
-                                     Resource="Npc"
+                                     ResourceType="Npc"
                                      Margin="5" />
         </StackPanel>
     </DataTemplate>
@@ -38,7 +38,7 @@
     <DataTemplate x:Key="DialogueQuestTaskContent">
         <StackPanel>
             <controls:ResourcePicker PickedId="{Binding DialogueId}"
-                                     Resource="Dialogue"
+                                     ResourceType="Dialogue"
                                      Margin="5" />
         </StackPanel>
     </DataTemplate>
