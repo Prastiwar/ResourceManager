@@ -49,8 +49,7 @@ namespace RPGDataEditor.Wpf
 
         public static ICommand AddRequirementCommand {
             get {
-                IModelProvider<Requirement> modelProvider = Application.Current.TryResolve<IModelProvider<Requirement>>();
-                return AddParameterListItemCommand(() => modelProvider.CreateModel("Dialogue"));
+                return AddParameterListItemCommand(() => Application.Current.TryResolve<IImplementationProvider<Requirement>>().Get());
             }
         }
     }

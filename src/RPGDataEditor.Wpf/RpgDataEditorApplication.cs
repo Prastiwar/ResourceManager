@@ -13,6 +13,7 @@ using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
+using RPGDataEditor.Providers;
 using RPGDataEditor.Services;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
@@ -192,6 +193,7 @@ namespace RPGDataEditor.Wpf
             //containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
             //containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
             //containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
+            containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
