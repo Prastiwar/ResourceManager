@@ -8,7 +8,7 @@ namespace RPGDataEditor.Wpf.Controls
         private static readonly TypeSource[] sources = new TypeSource[] {
             new TypeSource("Ftp", typeof(FtpFileClient)),
             new TypeSource("Local", typeof(LocalFileClient)),
-            //new TypeSource("Mssql", typeof(SqlClient))
+            new TypeSource("Mssql", typeof(SqlClient))
         };
 
         protected override void OnTemplateApplied()

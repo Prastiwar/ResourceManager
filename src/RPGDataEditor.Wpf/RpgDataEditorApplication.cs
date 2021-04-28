@@ -2,7 +2,9 @@
 using DryIoc;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -12,7 +14,6 @@ using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
-using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Providers;
@@ -58,7 +59,7 @@ namespace RPGDataEditor.Wpf
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Container.Resolve<ILogger>().Error("Unhandled exception", e.Exception);
 
-        protected virtual void OnExit(object sender, ExitEventArgs e) { }// => await Session.Client.DisconnectAsync();
+        protected virtual void OnExit(object sender, ExitEventArgs e) { }
 
         protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
@@ -96,23 +97,23 @@ namespace RPGDataEditor.Wpf
 
 
             settings.Converters.Add(new FileClientJsonConverter());
-            //if (Session is DefaultSessionContext context)
-            //{
-            //    settings.Formatting = context.Options.PrettyPrint ? Formatting.Indented : Formatting.None;
-            //}
             return settings;
         }
 
-        //protected virtual ISessionContext CreateSession()
-        //{
-        //    ISessionContext session = new DefaultSessionContext(SessionFilePath);
-        //    FileInfo sessionFile = new FileInfo(SessionFilePath);
-        //    if (sessionFile.Exists)
-        //    {
-        //        session = session.LoadSession();
-        //    }
-        //    return session;
-        //}
+        protected virtual void LoadSession()
+        {
+            FileInfo sessionFile = new FileInfo(SessionFilePath);
+            if (sessionFile.Exists)
+            {
+                IMemoryCache cache = Container.Resolve<IMemoryCache>();
+                string json = File.ReadAllText(SessionFilePath);
+                JObject obj = JsonConvert.DeserializeObject<JObject>(json);
+                foreach (System.Collections.Generic.KeyValuePair<string, JToken> item in obj)
+                {
+                    cache.Set(item.Key, item.Value.ToObject(typeof(object)));
+                }
+            }
+        }
 
         protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Container.Resolve<IMediator>(),
                                                                                             Container.Resolve<RPGDataEditor.Mvvm.Services.IDialogService>(),
@@ -141,17 +142,17 @@ namespace RPGDataEditor.Wpf
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
 
+            RegisterCache(containerRegistry);
+            RegisterLogging(containerRegistry);
             try
             {
-                //Session = CreateSession();
+                LoadSession();
             }
             catch (Exception ex)
             {
-                //Logger.Error("Couldn't load session", ex);
+                containerRegistry.GetContainer().Resolve<ILogger>().Error("Couldn't load session", ex);
                 throw;
             }
-            //containerRegistry.RegisterInstance(Session);
-            RegisterLogging(containerRegistry);
 
             RegisterValidators(containerRegistry);
             RegisterProviders(containerRegistry);
@@ -163,6 +164,12 @@ namespace RPGDataEditor.Wpf
 
             containerRegistry.RegisterInstance(CreateViewModelContext());
             OnRegistrationFinished(containerRegistry);
+        }
+
+        protected virtual void RegisterCache(IContainerRegistry containerRegistry)
+        {
+            MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
+            containerRegistry.RegisterInstance<IMemoryCache>(cache);
         }
 
         protected virtual void RegisterLogging(IContainerRegistry containerRegistry) => containerRegistry.RegisterInstance<ILogger>(new LocalFileLogger());

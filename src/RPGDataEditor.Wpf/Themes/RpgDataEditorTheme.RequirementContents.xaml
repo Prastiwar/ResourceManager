@@ -3,11 +3,11 @@
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
-                    xmlns:models="clr-namespace:RPGDataEditor.Core.Models;assembly=RPGDataEditor.Core">
+                    xmlns:models="clr-namespace:RPGDataEditor.Models;assembly=RPGDataEditor">
     <DataTemplate x:Key="DialogueRequirementContent">
         <StackPanel Margin="5">
             <controls:ResourcePicker x:Name="DialoguePicker"
-                                     ResourceType="Dialogue"
+                                     ResourceType="{x:Type models:Dialogue}"
                                      PickedId="{Binding DialogueId, Mode=TwoWay}"
                                      EmptyText="Select Dialogue"
                                      Margin="5" />
@@ -22,7 +22,7 @@
     <DataTemplate x:Key="QuestRequirementContent">
         <StackPanel Margin="5">
             <controls:ResourcePicker x:Name="QuestPicker"
-                                     ResourceType="Quest"
+                                     ResourceType="{x:Type models:Quest}"
                                      PickedId="{Binding QuestId, Mode=TwoWay}"
                                      EmptyText="Select Quest"
                                      Margin="5" />

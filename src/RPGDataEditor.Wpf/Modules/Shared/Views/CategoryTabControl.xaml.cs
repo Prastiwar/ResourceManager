@@ -1,5 +1,4 @@
-﻿using RPGDataEditor.Mvvm;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -81,18 +80,16 @@ namespace RPGDataEditor.Wpf.Views
                 if (editorPanel.Children[0] is TextBox textBox)
                 {
                     string newCategory = textBox.Text;
-                    if (DataContext is PresentableCategoryDataViewModel<> vm)
+                    string oldCategory = senderButton.DataContext as string;
+                    dynamic viewModel = DataContext;
+                    bool canRename = await viewModel.RenameCategoryAsync(oldCategory, newCategory);
+                    if (senderButton.Tag is TextBlock categoryLabel)
                     {
-                        string oldCategory = senderButton.DataContext as string;
-                        bool canRename = await vm.RenameCategoryAsync(oldCategory, newCategory);
-                        if (senderButton.Tag is TextBlock categoryLabel)
+                        if (canRename)
                         {
-                            if (canRename)
-                            {
-                                categoryLabel.Text = newCategory;
-                            }
-                            categoryLabel.Visibility = Visibility.Visible;
+                            categoryLabel.Text = newCategory;
                         }
+                        categoryLabel.Visibility = Visibility.Visible;
                     }
                 }
             }

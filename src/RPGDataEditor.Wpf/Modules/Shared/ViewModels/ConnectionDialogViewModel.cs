@@ -16,8 +16,8 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected override Task InitializeAsync(IDialogParameters parameters)
         {
-            Context.ConnectionService.ConnectionChanged -= OnConnectionChanged;
-            Context.ConnectionService.ConnectionChanged += OnConnectionChanged;
+            //Context.ConnectionService.ConnectionChanged -= OnConnectionChanged;
+            //Context.ConnectionService.ConnectionChanged += OnConnectionChanged;
             Window window = Application.Current.FindWindow(win => win.DataContext == this);
             if (window != null)
             {
@@ -30,7 +30,7 @@ namespace RPGDataEditor.Wpf.ViewModels
         {
             if (hasConnection)
             {
-                Context.ConnectionService.ConnectionChanged -= OnConnectionChanged;
+                //Context.ConnectionService.ConnectionChanged -= OnConnectionChanged;
                 Application.Current.Dispatcher.Invoke(() => Close(new RPGDataEditor.Mvvm.Navigation.DialogParametersBuilder().WithResult(true).BuildPrism()));
             }
         }
