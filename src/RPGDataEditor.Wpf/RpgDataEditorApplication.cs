@@ -7,10 +7,12 @@ using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+using ResourceManager;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
+using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Providers;
@@ -21,6 +23,7 @@ using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -189,10 +192,12 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
         {
-            //containerRegistry.RegisterInstance<IModelProvider<Requirement>>(new DefaultRequirementProvider());
-            //containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new DefaultQuestTaskProvider());
-            //containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
-            //containerRegistry.Register(typeof(IModelProvider<>), typeof(DefaultModelProvider<>));
+            AssemblyName[] referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
+            Assembly[] assembliesToScan = new Assembly[referencedAssemblies.Length + 1];
+            assembliesToScan[0] = Assembly.GetEntryAssembly();
+            referencedAssemblies.CopyTo(assembliesToScan, 1);
+            containerRegistry.RegisterInstance<IFluentAssemblyScanner>(new FluentAssemblyScanner(assembliesToScan));
+            containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
             containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);

@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core;
+﻿using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Providers;
 using System;
 using System.Reflection;

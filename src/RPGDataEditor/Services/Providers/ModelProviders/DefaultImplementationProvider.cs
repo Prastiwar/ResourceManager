@@ -14,8 +14,8 @@ namespace RPGDataEditor.Providers
         {
             try
             {
-                Type implementationType = GetImplementationType();
-                return (T)Activator.CreateInstance(implementationType);
+                Type implementationType = GetImplementationType(typeof(T));
+                return Get(implementationType);
             }
             catch (Exception ex)
             {
@@ -23,6 +23,15 @@ namespace RPGDataEditor.Providers
             }
         }
 
-        protected virtual Type GetImplementationType() => Scanner.Scan().Select(typeof(T)).Get().ResultTypes.First().ResultTypes.First();
+        public virtual T Get(Type targetType)
+        {
+            if (targetType.IsAbstract)
+            {
+                return Get(GetImplementationType(targetType));
+            }
+            return (T)Activator.CreateInstance(targetType);
+        }
+
+        protected virtual Type GetImplementationType(Type baseType) => Scanner.Scan().Select(baseType).Get().ResultTypes.First().ResultTypes.First();
     }
 }

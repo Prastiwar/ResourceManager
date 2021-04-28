@@ -1,5 +1,6 @@
 ﻿using Prism.Services.Dialogs;
 using RPGDataEditor.Core;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,7 +31,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             if (hasConnection)
             {
                 Context.ConnectionService.ConnectionChanged -= OnConnectionChanged;
-                Application.Current.Dispatcher.Invoke(() => Close(new DialogParametersBuilder().WithResult(true).Build()));
+                Application.Current.Dispatcher.Invoke(() => Close(new RPGDataEditor.Mvvm.Navigation.DialogParametersBuilder().WithResult(true).BuildPrism()));
             }
         }
 

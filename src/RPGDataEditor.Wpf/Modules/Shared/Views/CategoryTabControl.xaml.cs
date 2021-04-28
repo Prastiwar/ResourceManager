@@ -1,9 +1,11 @@
 ﻿using RPGDataEditor.Mvvm;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Views
 {
@@ -60,6 +62,16 @@ namespace RPGDataEditor.Wpf.Views
             }
         }
 
+        public static class CommandExtensions
+        {
+            public static Task<object> ExecuteAsync(ICommand command)
+            {
+                TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+                command.Execute(tcs);
+                return tcs.Task;
+            }
+        }
+
         private async void AcceptRenameCategory_Click(object sender, RoutedEventArgs e)
         {
             Button senderButton = (Button)sender;
@@ -69,7 +81,7 @@ namespace RPGDataEditor.Wpf.Views
                 if (editorPanel.Children[0] is TextBox textBox)
                 {
                     string newCategory = textBox.Text;
-                    if (DataContext is ICategorizedTabViewModel vm)
+                    if (DataContext is PresentableCategoryDataViewModel<> vm)
                     {
                         string oldCategory = senderButton.DataContext as string;
                         bool canRename = await vm.RenameCategoryAsync(oldCategory, newCategory);

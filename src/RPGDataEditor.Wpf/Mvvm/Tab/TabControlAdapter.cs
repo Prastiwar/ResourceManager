@@ -1,4 +1,5 @@
 ﻿using Prism.Regions;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm.Navigation;
 using System.Collections.Specialized;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace RPGDataEditor.Wpf.Mvvm
                 }
                 AttachProperties.SetIsLoading(regionTarget, true);
                 string toUri = "navigation://" + addedTab.Header;
-                INavigationContext context = new NavigationContext(region.NavigationService, new System.Uri(toUri));
+                INavigationContext context = new NavigationContext(region.NavigationService, new System.Uri(toUri)).ToDomain();
                 bool canNavigate = await CanNavigateAsync(removedTab, addedTab, context);
                 if (!canNavigate)
                 {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,14 +15,14 @@ namespace RPGDataEditor.Wpf.Controls
 
         public class ChangeTypeEventArgs : RoutedEventArgs
         {
-            public ChangeTypeEventArgs(object item, string targetType)
+            public ChangeTypeEventArgs(object item, Type targetType)
             {
                 Item = item;
                 TargetType = targetType;
             }
 
             public object Item { get; }
-            public string TargetType { get; }
+            public Type TargetType { get; }
         }
 
         public ChangeableUserControl() => DataContextChanged += OnDataContextChanged;
@@ -34,9 +35,9 @@ namespace RPGDataEditor.Wpf.Controls
         }
 
         public static DependencyProperty TypesSourceProperty =
-            DependencyProperty.Register(nameof(TypesSource), typeof(IEnumerable<object>), typeof(ChangeableUserControl));
-        public IEnumerable<object> TypesSource {
-            get => (IEnumerable<object>)GetValue(TypesSourceProperty);
+            DependencyProperty.Register(nameof(TypesSource), typeof(IEnumerable<TypeSource>), typeof(ChangeableUserControl));
+        public IEnumerable<TypeSource> TypesSource {
+            get => (IEnumerable<TypeSource>)GetValue(TypesSourceProperty);
             set => SetValue(TypesSourceProperty, value);
         }
 
@@ -80,34 +81,30 @@ namespace RPGDataEditor.Wpf.Controls
                 return;
             }
             typeComboBox.SelectionChanged -= OnTypeComboBoxSelectionChanged;
-            string name = GetDataContextItemName();
-            if (!string.IsNullOrEmpty(name))
+            Type type = GetDataContextItemType();
+            if (type != null)
             {
-                ApplyActualContent(name);
-                typeComboBox.SelectedItem = typeComboBox.Items.Cast<object>().FirstOrDefault(item => CompareItem(item, name));
+                ApplyActualContent(type);
+                typeComboBox.SelectedItem = typeComboBox.Items.Cast<object>().FirstOrDefault(item => CompareItem(item, type));
             }
             typeComboBox.SelectionChanged += OnTypeComboBoxSelectionChanged;
         }
 
-        protected virtual bool CompareItem(object item, string name)
+        protected virtual bool CompareItem(object item, Type type)
         {
-            string str = null;
-            if (item is ComboBoxItem boxItem)
-            {
-                str = boxItem.Name;
-            }
-            else
-            {
-                str = item.ToString();
-            }
-            return string.Compare(name, str, true) == 0;
+            Type itemType = item switch {
+                ComboBoxItem boxItem => boxItem.Content as Type,
+                TypeSource source => source.Type,
+                _ => item as Type,
+            };
+            return itemType == type;
         }
 
-        protected abstract string GetDataContextItemName();
+        protected abstract Type GetDataContextItemType();
 
-        protected virtual void ApplyActualContent(string name)
+        protected virtual void ApplyActualContent(Type type)
         {
-            object content = GetActualContentResource(name);
+            object content = GetActualContentResource(type);
             if (content is DataTemplate template)
             {
                 content = template.LoadContent();
@@ -115,27 +112,23 @@ namespace RPGDataEditor.Wpf.Controls
             actualContent.Content = content;
         }
 
-        protected virtual object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "ChangeableContent");
+        protected virtual object GetActualContentResource(Type type) => Application.Current.TryFindResource(type.Name + "ChangeableContent");
 
         protected void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
-                string name = null;
-                if (e.AddedItems[0] is ComboBoxItem selected)
-                {
-                    name = selected.Name;
-                }
-                else
-                {
-                    name = e.AddedItems[0].ToString();
-                }
-                RequestChangeType(name);
-                ApplyActualContent(name);
+                Type type = e.AddedItems[0] switch {
+                    ComboBoxItem selected => selected.Content as Type,
+                    TypeSource source => source.Type,
+                    _ => e.AddedItems[0] as Type,
+                };
+                RequestChangeType(type);
+                ApplyActualContent(type);
             }
         }
 
-        protected virtual void RequestChangeType(string name)
+        protected virtual void RequestChangeType(Type type)
         {
             if (ChangeTypeCommand != null)
             {
@@ -143,7 +136,7 @@ namespace RPGDataEditor.Wpf.Controls
             }
             else
             {
-                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, name) {
+                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, type) {
                     RoutedEvent = TypeChangeEvent
                 };
                 RaiseEvent(changeTypeArgs);

@@ -2,6 +2,7 @@
 using Prism.Commands;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Models;
+using RPGDataEditor.Providers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +38,8 @@ namespace RPGDataEditor.Wpf
         });
 
         /// <summary> Gets FrameworkElement as parameter and toggles its visibility </summary>
-        public static ICommand ToggleVisibilityCommand => new DelegateCommand<FrameworkElement>(x => x.Visibility = x.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
+        public static ICommand ToggleVisibilityCommand 
+            => new DelegateCommand<FrameworkElement>(x => x.Visibility = x.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible);
 
         public static void ToggleExpandIcon(Button btn)
         {
@@ -47,10 +49,7 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        public static ICommand AddRequirementCommand {
-            get {
-                return AddParameterListItemCommand(() => Application.Current.TryResolve<IImplementationProvider<Requirement>>().Get());
-            }
-        }
+        public static ICommand AddRequirementCommand
+            => AddParameterListItemCommand(() => Application.Current.TryResolve<IImplementationProvider<Requirement>>().Get());
     }
 }

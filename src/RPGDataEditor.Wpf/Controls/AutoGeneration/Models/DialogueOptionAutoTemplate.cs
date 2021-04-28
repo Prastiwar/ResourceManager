@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Models;
+﻿using RPGDataEditor.Extensions.Prism.Wpf;
+using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 

@@ -1,4 +1,7 @@
-﻿using RPGDataEditor.Models;
+﻿using RPGDataEditor.Extensions.Prism.Wpf;
+using RPGDataEditor.Models;
+using RPGDataEditor.Providers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -6,10 +9,10 @@ namespace RPGDataEditor.Wpf.Controls
 {
     public class DialogueOptionView : ChangeableUserControl
     {
-        private static readonly string[] types = new string[] {
-            "Quit",
-            "Job",
-            "Dialogue"
+        private static readonly TypeSource[] sources = new TypeSource[] {
+            new TypeSource("Quit", ),
+            new TypeSource("Job", ),
+            new TypeSource("Dialogue", )
         };
         private ContentPresenter actualContent;
 
@@ -17,7 +20,7 @@ namespace RPGDataEditor.Wpf.Controls
         {
             if (GetBindingExpression(TypesSourceProperty) == null)
             {
-                TypesSource = GetOptionNames();
+                TypesSource = GetSources();
             }
             if (Template != null)
             {
@@ -26,15 +29,15 @@ namespace RPGDataEditor.Wpf.Controls
             base.OnTemplateApplied();
         }
 
-        protected virtual string[] GetOptionNames() => types;
+        protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(string name) => actualContent.Content ?? Application.Current.TryFindResource("DialogueOptionContent");
+        protected override object GetActualContentResource(Type type) => actualContent.Content ?? Application.Current.TryFindResource("DialogueOptionContent");
 
-        protected override string GetDataContextItemName()
+        protected override Type GetDataContextItemType()
         {
             if (DataContext is DialogueOption model)
             {
-                return Application.Current.TryResolve<INamedIdProvider<DialogueOption>>()?.GetName(model.NextDialogId);
+                return Application.Current.TryResolve<INamedIdProvider<DialogueOption>>()?.GetName((int)model.NextDialogId);
             }
             return null;
         }

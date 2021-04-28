@@ -9,6 +9,7 @@
                       materialDesign:HintAssist.Hint="{TemplateBinding HintText}"
                       Margin="5"
                       ItemsSource="{TemplateBinding TypesSource}"
+                      DisplayMemberPath="Name"
                       Style="{DynamicResource MaterialDesignFloatingHintComboBox}" />
             <ContentPresenter x:Name="ActualContent" />
         </StackPanel>

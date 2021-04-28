@@ -1,32 +1,31 @@
-﻿using System.Windows;
+﻿using RPGDataEditor.Models;
+using System;
+using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
 {
     public class QuestTaskView : ChangeableUserControl
     {
-        private static readonly string[] types = new string[] {
-            "EntityInteract",
-            "Kill",
-            "Reach",
-            "LeftBlockInteract",
-            "RightBlockInteract",
-            "RightItemInteract",
-            "Dialogue"
+        private static readonly TypeSource[] sources = new TypeSource[] {
+            new TypeSource("EntityInteract", typeof(EntityInteractQuestTask)),
+            new TypeSource("Kill", typeof(KillQuestTask)),
+            new TypeSource("Reach", typeof(ReachQuestTask)),
+            new TypeSource("Dialogue", typeof(DialogueQuestTask))
         };
 
         protected override void OnTemplateApplied()
         {
             if (GetBindingExpression(TypesSourceProperty) == null)
             {
-                TypesSource = GetTasksNames();
+                TypesSource = GetSources();
             }
             base.OnTemplateApplied();
         }
 
-        protected virtual string[] GetTasksNames() => types;
+        protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(string name) => Application.Current.TryFindResource(name + "QuestTaskContent");
+        protected override object GetActualContentResource(Type type) => Application.Current.TryFindResource(type.Name + "QuestTaskContent");
 
-        protected override string GetDataContextItemName() => DataContext?.GetType().Name.Replace("QuestTask", "");
+        protected override Type GetDataContextItemType() => DataContext?.GetType();
     }
 }

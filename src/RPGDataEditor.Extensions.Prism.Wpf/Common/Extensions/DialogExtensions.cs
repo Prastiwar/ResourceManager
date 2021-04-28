@@ -1,10 +1,13 @@
 ﻿using Prism.Services.Dialogs;
+using RPGDataEditor.Extensions.Prism.Wpf.Navigation;
 using System.Collections.Generic;
 
 namespace RPGDataEditor.Extensions.Prism.Wpf
 {
     public static class DialogExtensions
     {
+        public static Mvvm.Navigation.INavigationContext ToDomain(this global::Prism.Regions.NavigationContext context) => new PrismNavigationContext(context);
+
         public static IDialogParameters BuildPrism(this Mvvm.Navigation.DialogParametersBuilder builder)
         {
             DialogParameters prismParameters = new DialogParameters();
