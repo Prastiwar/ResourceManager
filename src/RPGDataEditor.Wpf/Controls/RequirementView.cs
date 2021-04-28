@@ -1,5 +1,4 @@
 ﻿using RPGDataEditor.Models;
-using System;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
@@ -23,8 +22,15 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(Type type) => Application.Current.TryFindResource(type.Name + "Content");
+        protected override object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "Content");
 
-        protected override Type GetDataContextItemType() => DataContext?.GetType();
+        protected override TypeSource GetDataContextTypeSource()
+        {
+            if (DataContext == null)
+            {
+                return null;
+            }
+            return new TypeSource(DataContext.GetType().Name.Replace("Requirement", ""), DataContext.GetType());
+        }
     }
 }

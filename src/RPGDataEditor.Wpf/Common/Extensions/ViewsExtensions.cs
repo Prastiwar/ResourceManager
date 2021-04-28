@@ -86,9 +86,9 @@ namespace RPGDataEditor.Wpf
             IImplementationProvider<TModel> implementationProvider = Application.Current.TryResolve<IImplementationProvider<TModel>>();
             if (implementationProvider != null)
             {
-                return implementationProvider.Get(e.TargetType);
+                return implementationProvider.Get(e.TargetType.Type);
             }
-            return (TModel)Activator.CreateInstance(e.TargetType);
+            return (TModel)Activator.CreateInstance(e.TargetType.Type);
         }
 
         public static void Refresh(this IEnumerable itemsSource) => CollectionViewSource.GetDefaultView(itemsSource)?.Refresh();

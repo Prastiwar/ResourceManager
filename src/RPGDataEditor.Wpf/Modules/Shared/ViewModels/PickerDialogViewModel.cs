@@ -1,4 +1,5 @@
 ﻿using Prism.Services.Dialogs;
+using ResourceManager.Commands;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Wpf.Mvvm;
@@ -73,11 +74,15 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
         {
-            var resources = await Context.Mediator.Send(new GetResourceByIdQuery(resourceType));
+            object queryResult = await Context.Mediator.Send(new GetResourceByIdQuery(resourceType));
             List<IIdentifiable> list = new List<IIdentifiable>() {
                 new NullResource()
             };
-            return list.AddRange(resources.Cast<IIdentifiable>());
+            if (queryResult is IEnumerable<object> resources)
+            {
+                list.AddRange(resources.Cast<IIdentifiable>());
+            }
+            return list;
         }
 
         private class NullResource : IIdentifiable

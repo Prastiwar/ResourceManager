@@ -1,5 +1,4 @@
 ﻿using RPGDataEditor.Core.Connection;
-using System;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
@@ -23,15 +22,15 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(Type type) => Application.Current.TryFindResource(type.Name + "ConnectionContent");
+        protected override object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "ConnectionContent");
 
-        protected override Type GetDataContextItemType()
+        protected override TypeSource GetDataContextTypeSource()
         {
-            if (DataContext is ISessionContext session)
+            if (DataContext == null)
             {
-                return session.Client?.GetType().Name.Replace("ResourceClient", "");
+                return null;
             }
-            return null;
+            return new TypeSource(DataContext.GetType().Name.Replace("Client", ""), DataContext.GetType());
         }
     }
 }

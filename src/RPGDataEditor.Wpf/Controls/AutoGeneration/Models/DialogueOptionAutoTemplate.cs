@@ -1,5 +1,4 @@
-﻿using RPGDataEditor.Extensions.Prism.Wpf;
-using RPGDataEditor.Models;
+﻿using RPGDataEditor.Models;
 using System.Reflection;
 using System.Windows;
 
@@ -18,10 +17,18 @@ namespace RPGDataEditor.Wpf.Controls
         private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e)
         {
             DialogueOption targetModel = (DialogueOption)e.Item;
-            int? id = Application.Current.TryResolve<INamedIdProvider<DialogueOption>>()?.GetId(e.TargetType);
-            if (id.HasValue)
+            string optionName = e.TargetType.Name;
+            if (string.Compare(optionName, "quit", true) == 0)
             {
-                targetModel.NextDialogId = id.Value;
+                targetModel.NextDialogId = -1;
+            }
+            else if (string.Compare(optionName, "job", true) == 0)
+            {
+                targetModel.NextDialogId = -2;
+            }
+            else
+            {
+                targetModel.NextDialogId = 0;
             }
         }
     }

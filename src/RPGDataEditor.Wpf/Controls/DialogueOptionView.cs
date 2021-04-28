@@ -1,7 +1,4 @@
-﻿using RPGDataEditor.Extensions.Prism.Wpf;
-using RPGDataEditor.Models;
-using RPGDataEditor.Providers;
-using System;
+﻿using RPGDataEditor.Models;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,10 +7,11 @@ namespace RPGDataEditor.Wpf.Controls
     public class DialogueOptionView : ChangeableUserControl
     {
         private static readonly TypeSource[] sources = new TypeSource[] {
-            new TypeSource("Quit", ),
-            new TypeSource("Job", ),
-            new TypeSource("Dialogue", )
+            new TypeSource("Quit", typeof(DialogueOption)),
+            new TypeSource("Job", typeof(DialogueOption)),
+            new TypeSource("Dialogue", typeof(DialogueOption))
         };
+
         private ContentPresenter actualContent;
 
         protected override void OnTemplateApplied()
@@ -31,13 +29,18 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(Type type) => actualContent.Content ?? Application.Current.TryFindResource("DialogueOptionContent");
+        protected override object GetActualContentResource(TypeSource type) => actualContent.Content ?? Application.Current.TryFindResource("DialogueOptionContent");
 
-        protected override Type GetDataContextItemType()
+        protected override TypeSource GetDataContextTypeSource()
         {
             if (DataContext is DialogueOption model)
             {
-                return Application.Current.TryResolve<INamedIdProvider<DialogueOption>>()?.GetName((int)model.NextDialogId);
+                return model.NextDialogId switch {
+                    -1 => sources[0],
+                    -2 => sources[1],
+                    0 => null,
+                    _ => sources[2],
+                };
             }
             return null;
         }

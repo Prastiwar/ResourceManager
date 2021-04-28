@@ -167,18 +167,10 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterLogging(IContainerRegistry containerRegistry) => containerRegistry.RegisterInstance<ILogger>(new LocalFileLogger());
 
-        protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
-        {
-            //Session.ClientProvider = Container.Resolve<IClientProvider>();
-            //if (Session.Client == null)
-            //{
-            //    Session.SetConnection("Local");
-            //}
-        }
+        protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry) { }
 
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {
-            //containerRegistry.Register<IValidator<ISessionContext>, SessionContextValidator>();
             containerRegistry.Register<IValidator<Models.Npc>, NpcValidator>();
             containerRegistry.Register<IValidator<Models.Quest>, QuestValidator>();
             containerRegistry.Register<IValidator<Models.Dialogue>, DialogueValidator>();
@@ -197,12 +189,10 @@ namespace RPGDataEditor.Wpf
             assembliesToScan[0] = Assembly.GetEntryAssembly();
             referencedAssemblies.CopyTo(assembliesToScan, 1);
             containerRegistry.RegisterInstance<IFluentAssemblyScanner>(new FluentAssemblyScanner(assembliesToScan));
-            containerRegistry.RegisterInstance<INamedIdProvider<DialogueOption>>(new DefaultDialogueOptionNamedIdProvider());
             containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
-            //containerRegistry.RegisterInstance<IConnectionCheckerProvider>(new DefaultConnectionCheckerProvider());
         }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)

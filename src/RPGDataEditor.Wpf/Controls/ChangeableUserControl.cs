@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,14 +14,14 @@ namespace RPGDataEditor.Wpf.Controls
 
         public class ChangeTypeEventArgs : RoutedEventArgs
         {
-            public ChangeTypeEventArgs(object item, Type targetType)
+            public ChangeTypeEventArgs(object item, TypeSource targetType)
             {
                 Item = item;
                 TargetType = targetType;
             }
 
             public object Item { get; }
-            public Type TargetType { get; }
+            public TypeSource TargetType { get; }
         }
 
         public ChangeableUserControl() => DataContextChanged += OnDataContextChanged;
@@ -81,28 +80,20 @@ namespace RPGDataEditor.Wpf.Controls
                 return;
             }
             typeComboBox.SelectionChanged -= OnTypeComboBoxSelectionChanged;
-            Type type = GetDataContextItemType();
+            TypeSource type = GetDataContextTypeSource();
             if (type != null)
             {
                 ApplyActualContent(type);
-                typeComboBox.SelectedItem = typeComboBox.Items.Cast<object>().FirstOrDefault(item => CompareItem(item, type));
+                typeComboBox.SelectedItem = typeComboBox.Items.Cast<TypeSource>().FirstOrDefault(item => CompareItem(item, type));
             }
             typeComboBox.SelectionChanged += OnTypeComboBoxSelectionChanged;
         }
 
-        protected virtual bool CompareItem(object item, Type type)
-        {
-            Type itemType = item switch {
-                ComboBoxItem boxItem => boxItem.Content as Type,
-                TypeSource source => source.Type,
-                _ => item as Type,
-            };
-            return itemType == type;
-        }
+        protected virtual bool CompareItem(TypeSource item, TypeSource type) => string.Compare(item.Name, type.Name) == 0;
 
-        protected abstract Type GetDataContextItemType();
+        protected abstract TypeSource GetDataContextTypeSource();
 
-        protected virtual void ApplyActualContent(Type type)
+        protected virtual void ApplyActualContent(TypeSource type)
         {
             object content = GetActualContentResource(type);
             if (content is DataTemplate template)
@@ -112,23 +103,21 @@ namespace RPGDataEditor.Wpf.Controls
             actualContent.Content = content;
         }
 
-        protected virtual object GetActualContentResource(Type type) => Application.Current.TryFindResource(type.Name + "ChangeableContent");
+        protected virtual object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "ChangeableContent");
 
         protected void OnTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
-                Type type = e.AddedItems[0] switch {
-                    ComboBoxItem selected => selected.Content as Type,
-                    TypeSource source => source.Type,
-                    _ => e.AddedItems[0] as Type,
-                };
-                RequestChangeType(type);
-                ApplyActualContent(type);
+                if (e.AddedItems[0] is TypeSource source)
+                {
+                    RequestChangeType(source);
+                    ApplyActualContent(source);
+                }
             }
         }
 
-        protected virtual void RequestChangeType(Type type)
+        protected virtual void RequestChangeType(TypeSource source)
         {
             if (ChangeTypeCommand != null)
             {
@@ -136,7 +125,7 @@ namespace RPGDataEditor.Wpf.Controls
             }
             else
             {
-                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, type) {
+                ChangeTypeEventArgs changeTypeArgs = new ChangeTypeEventArgs(DataContext, source) {
                     RoutedEvent = TypeChangeEvent
                 };
                 RaiseEvent(changeTypeArgs);
