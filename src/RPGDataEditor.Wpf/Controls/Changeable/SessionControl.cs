@@ -6,9 +6,9 @@ namespace RPGDataEditor.Wpf.Controls
     public class SessionControl : ChangeableUserControl
     {
         private static readonly TypeSource[] sources = new TypeSource[] {
-            new TypeSource("Ftp", typeof(FtpFileClient)),
-            new TypeSource("Local", typeof(LocalFileClient)),
-            new TypeSource("Mssql", typeof(SqlClient))
+            new TypeSource("Ftp", typeof(FtpConnectionConfig)),
+            new TypeSource("Local", typeof(LocalConnectionConfig)),
+            new TypeSource("Mssql", typeof(SqlConnectionConfig))
         };
 
         protected override void OnTemplateApplied()
@@ -22,7 +22,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "ConnectionContent");
+        protected override object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "Content");
 
         protected override TypeSource GetDataContextTypeSource()
         {
@@ -30,7 +30,7 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 return null;
             }
-            return new TypeSource(DataContext.GetType().Name.Replace("Client", ""), DataContext.GetType());
+            return new TypeSource(DataContext.GetType().Name.Replace("ConnectionConfig", ""), DataContext.GetType());
         }
     }
 }

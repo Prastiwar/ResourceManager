@@ -2,15 +2,14 @@
 using DryIoc;
 using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using ResourceManager;
 using RPGDataEditor.Core;
+using RPGDataEditor.Core.Connection;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
@@ -53,8 +52,6 @@ namespace RPGDataEditor.Wpf
         }
 
         protected virtual string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
-
-        //public ISessionContext Session { get; private set; }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Container.Resolve<ILogger>().Error("Unhandled exception", e.Exception);
@@ -100,23 +97,20 @@ namespace RPGDataEditor.Wpf
             return settings;
         }
 
-        protected virtual void LoadSession()
+        protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
         {
             FileInfo sessionFile = new FileInfo(SessionFilePath);
+            IConnectionSettings settings = new ConnectionSettings();
             if (sessionFile.Exists)
             {
-                IMemoryCache cache = Container.Resolve<IMemoryCache>();
                 string json = File.ReadAllText(SessionFilePath);
-                JObject obj = JsonConvert.DeserializeObject<JObject>(json);
-                foreach (System.Collections.Generic.KeyValuePair<string, JToken> item in obj)
-                {
-                    cache.Set(item.Key, item.Value.ToObject(typeof(object)));
-                }
+                settings.Config = JsonConvert.DeserializeObject<IConnectionConfig>(json);
             }
+            containerRegistry.RegisterInstance(settings);
         }
 
         protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Container.Resolve<IMediator>(),
-                                                                                            Container.Resolve<RPGDataEditor.Mvvm.Services.IDialogService>(),
+                                                                                            Container.Resolve<IDialogService>(),
                                                                                             Container.Resolve<ILogger>());
 
         protected virtual void InitializeAutoUpdater()
@@ -142,15 +136,14 @@ namespace RPGDataEditor.Wpf
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
 
-            RegisterCache(containerRegistry);
             RegisterLogging(containerRegistry);
             try
             {
-                LoadSession();
+                RegisterConfiguration(containerRegistry);
             }
             catch (Exception ex)
             {
-                containerRegistry.GetContainer().Resolve<ILogger>().Error("Couldn't load session", ex);
+                containerRegistry.GetContainer().Resolve<ILogger>().Error("Couldn't load configuration", ex);
                 throw;
             }
 
@@ -164,12 +157,6 @@ namespace RPGDataEditor.Wpf
 
             containerRegistry.RegisterInstance(CreateViewModelContext());
             OnRegistrationFinished(containerRegistry);
-        }
-
-        protected virtual void RegisterCache(IContainerRegistry containerRegistry)
-        {
-            MemoryCache cache = new MemoryCache(new MemoryCacheOptions());
-            containerRegistry.RegisterInstance<IMemoryCache>(cache);
         }
 
         protected virtual void RegisterLogging(IContainerRegistry containerRegistry) => containerRegistry.RegisterInstance<ILogger>(new LocalFileLogger());

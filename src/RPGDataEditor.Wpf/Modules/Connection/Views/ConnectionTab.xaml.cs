@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Mvvm;
+﻿using RPGDataEditor.Core.Connection;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Connection.Views
@@ -9,11 +9,10 @@ namespace RPGDataEditor.Wpf.Connection.Views
 
         private void SessionControl_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
-            //e.TargetType.Type
-            //if (SessionControl.DataContext is ISessionContext context)
-            //{
-            //    context.SetConnection(e.TargetType);
-            //}
+            if (SessionControl.DataContext is ConnectionSettings settings)
+            {
+                settings.Config = e.CreateModel<IConnectionConfig>();
+            }
         }
     }
 }
