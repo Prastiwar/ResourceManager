@@ -1,7 +1,11 @@
-﻿namespace RPGDataEditor.Core.Connection
+﻿using RPGDataEditor.Connection;
+
+namespace RPGDataEditor.Wpf.Converters
 {
-    public class LocalConnectionConfig : ConnectionConfig
+    public class LocalProxyConnectionSettings : ProxyConnectionSettings
     {
+        public LocalProxyConnectionSettings(IConnectionSettings settings) : base(settings) { }
+
         public string FolderPath {
             get => (string)Get();
             set => Set(value);

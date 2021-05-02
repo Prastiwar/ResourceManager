@@ -3,27 +3,27 @@
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
     <DataTemplate x:Key="LocalConnectionContent">
         <StackPanel Margin="64">
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource LocalProxyConnectionSettingsConverter}}"
                                   PropertyName="FolderPath" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="FtpConnectionContent">
         <StackPanel Margin="64">
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
                                   PropertyName="Host" />
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
                                   PropertyName="Port" />
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
                                   PropertyName="RelativePath" />
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
                                   PropertyName="UserName" />
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
                                   PropertyName="Password" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="MssqlConnectionContent">
         <StackPanel Margin="64">
-            <controls:AutoControl DataContext="{Binding Client}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource SqlProxyConnectionSettingsConverter}}"
                                   PropertyName="ConnectionString" />
         </StackPanel>
     </DataTemplate>

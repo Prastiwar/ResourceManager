@@ -1,15 +1,14 @@
 ﻿using AutoUpdaterDotNET;
 using DryIoc;
 using FluentValidation;
-using MediatR;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using ResourceManager;
+using RPGDataEditor.Connection;
 using RPGDataEditor.Core;
-using RPGDataEditor.Core.Connection;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
@@ -22,6 +21,7 @@ using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows;
@@ -104,14 +104,14 @@ namespace RPGDataEditor.Wpf
             if (sessionFile.Exists)
             {
                 string json = File.ReadAllText(SessionFilePath);
-                settings.Config = JsonConvert.DeserializeObject<IConnectionConfig>(json);
+                Dictionary<string, object> parameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                foreach (KeyValuePair<string, object> parameter in parameters)
+                {
+                    settings.Set(parameter.Key, parameter.Value);
+                }
             }
             containerRegistry.RegisterInstance(settings);
         }
-
-        protected virtual ViewModelContext CreateViewModelContext() => new ViewModelContext(Container.Resolve<IMediator>(),
-                                                                                            Container.Resolve<IDialogService>(),
-                                                                                            Container.Resolve<ILogger>());
 
         protected virtual void InitializeAutoUpdater()
         {
@@ -155,7 +155,8 @@ namespace RPGDataEditor.Wpf
 
             InitializeAutoUpdater();
 
-            containerRegistry.RegisterInstance(CreateViewModelContext());
+            containerRegistry.RegisterSingleton<ViewModelContext>();
+
             OnRegistrationFinished(containerRegistry);
         }
 
@@ -172,8 +173,9 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterInstance<ISnackbarService>(new SnackbarService());
+            containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
             containerRegistry.RegisterSingleton<IDialogService, PrismDialogService>();
+            containerRegistry.RegisterSingleton<ICheckConnectionService, DefaultCheckConnectionService>();
         }
 
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)

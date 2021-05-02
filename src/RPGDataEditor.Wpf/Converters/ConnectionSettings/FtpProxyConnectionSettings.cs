@@ -1,9 +1,12 @@
-﻿using System.Security;
+﻿using RPGDataEditor.Connection;
+using System.Security;
 
-namespace RPGDataEditor.Core.Connection
+namespace RPGDataEditor.Wpf.Converters
 {
-    public class FtpConnectionConfig : ConnectionConfig
+    public class FtpProxyConnectionSettings : ProxyConnectionSettings
     {
+        public FtpProxyConnectionSettings(IConnectionSettings settings) : base(settings) { }
+
         public string Host {
             get => (string)Get();
             set => Set(value);
