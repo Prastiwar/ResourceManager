@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPGDataEditor.Extensions.Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager", "src\ResourceManager\ResourceManager.csproj", "{C33C4115-C633-4C19-B271-7D80F36BE425}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager.Tests", "tests\ResourceManager.Tests\ResourceManager.Tests.csproj", "{CDD2580A-99DB-4F01-B95B-A655EE0F5835}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{C33C4115-C633-4C19-B271-7D80F36BE425}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C33C4115-C633-4C19-B271-7D80F36BE425}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C33C4115-C633-4C19-B271-7D80F36BE425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDD2580A-99DB-4F01-B95B-A655EE0F5835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDD2580A-99DB-4F01-B95B-A655EE0F5835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDD2580A-99DB-4F01-B95B-A655EE0F5835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDD2580A-99DB-4F01-B95B-A655EE0F5835}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{71EE45D3-E5C7-4EE8-AC16-1AD8C2D50F49} = {DC25D476-5651-47F9-931E-F76E608E8B5F}
 		{966E7199-0E76-4A10-9608-9EC0437313EE} = {99A3A3BE-E65E-4B6B-9ACF-738A91DB9C49}
 		{BF305074-78FE-4AE3-B5EB-A5BF526A54FB} = {99A3A3BE-E65E-4B6B-9ACF-738A91DB9C49}
+		{CDD2580A-99DB-4F01-B95B-A655EE0F5835} = {99A3A3BE-E65E-4B6B-9ACF-738A91DB9C49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9A67AE6-2C21-464D-95B1-3D51844ABAAA}

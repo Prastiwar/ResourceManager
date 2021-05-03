@@ -1,6 +1,8 @@
 ﻿using Prism.Ioc;
 using RPGDataEditor.Connection;
+using RPGDataEditor.Core.Connection;
 using System;
+using System.Security;
 
 namespace RPGDataEditor.Wpf.Connection
 {
@@ -15,8 +17,12 @@ namespace RPGDataEditor.Wpf.Connection
         public virtual void Configure(IConnectionConfig config)
         {
             Config = config;
-            // TODO: resolve checker based on config
-            //Checker = 
+            Checker = Config.Get(nameof(ConnectionSettings.Type)).ToString() switch {
+                ConnectionSettings.Connection.FTP => new FtpConnectionChecker(Config.Get("Host").ToString(), new System.Net.NetworkCredential(Config.Get("UserName").ToString(), Config.Get("Password") as SecureString)),
+                ConnectionSettings.Connection.LOCAL => new LocalConnectionChecker(),
+                ConnectionSettings.Connection.SQL => new SqlConnectionChecker(Config.Get("ConnectionString").ToString()),
+                _ => null,
+            };
             OnConfigured(config);
         }
 

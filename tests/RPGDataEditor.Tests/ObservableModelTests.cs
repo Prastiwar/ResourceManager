@@ -1,5 +1,5 @@
 using FluentValidation.Results;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Core;
 using RPGDataEditor.Core.Validation;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace RPGDataEditor.Tests
             }
         }
 
-        public class TestObservableModel : ObservableModel
+        public class TestObservableModel : IValidable
         {
             public TestObservableModel()
             {
@@ -38,6 +38,10 @@ namespace RPGDataEditor.Tests
             public int TestProperty { get; }
             public TestValidable Validable { get; }
             public IList<TestValidable> Validables { get; }
+
+            public event EventHandler<ValidationResult> Validated;
+
+            public void NotifyValidate(ValidationResult result) => this.NotifyValidateRecursive(result);
         }
 
         [Fact]
