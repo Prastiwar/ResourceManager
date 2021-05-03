@@ -21,8 +21,8 @@ using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -93,24 +93,20 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new TalkLineJsonConverter());
 
 
-            settings.Converters.Add(new FileClientJsonConverter());
+            settings.Converters.Add(new ConnectionSettingsJsonConverter());
             return settings;
         }
 
         protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
         {
             FileInfo sessionFile = new FileInfo(SessionFilePath);
-            IConnectionSettings settings = new ConnectionSettings();
+            IConnectionSettings settings = null;
             if (sessionFile.Exists)
             {
                 string json = File.ReadAllText(SessionFilePath);
-                Dictionary<string, object> parameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-                foreach (KeyValuePair<string, object> parameter in parameters)
-                {
-                    settings.Set(parameter.Key, parameter.Value);
-                }
+                settings = JsonConvert.DeserializeObject<IConnectionSettings>(json);
             }
-            containerRegistry.RegisterInstance(settings);
+            containerRegistry.RegisterInstance(settings ?? new ConnectionSettings() { Type = "Local" });
         }
 
         protected virtual void InitializeAutoUpdater()
@@ -147,6 +143,7 @@ namespace RPGDataEditor.Wpf
                 throw;
             }
 
+            RegisterAssemblyScanner(containerRegistry);
             RegisterValidators(containerRegistry);
             RegisterProviders(containerRegistry);
             RegisterServices(containerRegistry);
@@ -164,11 +161,24 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry) { }
 
+        protected virtual void RegisterAssemblyScanner(IContainerRegistry containerRegistry)
+        {
+            AssemblyName[] referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
+            Assembly[] assembliesToScan = new Assembly[referencedAssemblies.Length + 1];
+            assembliesToScan[0] = Assembly.GetEntryAssembly();
+            referencedAssemblies.CopyTo(assembliesToScan, 1);
+            containerRegistry.RegisterInstance<IFluentAssemblyScanner>(new FluentAssemblyScanner(assembliesToScan));
+        }
+
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IValidator<Models.Npc>, NpcValidator>();
-            containerRegistry.Register<IValidator<Models.Quest>, QuestValidator>();
-            containerRegistry.Register<IValidator<Models.Dialogue>, DialogueValidator>();
+            IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
+            TypeScanResult results = scanner.Scan().Select(typeof(AbstractValidator<>)).Get();
+            foreach (Type validatorType in results.ResultTypes.First().ResultTypes)
+            {
+                Type interfaceType = validatorType.GetInterfaces().First(i => typeof(IValidator<>).IsAssignableFrom(i.GetGenericTypeDefinition()));
+                containerRegistry.Register(interfaceType, validatorType);
+            }
         }
 
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
@@ -180,11 +190,6 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
         {
-            AssemblyName[] referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-            Assembly[] assembliesToScan = new Assembly[referencedAssemblies.Length + 1];
-            assembliesToScan[0] = Assembly.GetEntryAssembly();
-            referencedAssemblies.CopyTo(assembliesToScan, 1);
-            containerRegistry.RegisterInstance<IFluentAssemblyScanner>(new FluentAssemblyScanner(assembliesToScan));
             containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);

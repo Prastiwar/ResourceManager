@@ -1,6 +1,8 @@
-﻿namespace RPGDataEditor.Connection
+﻿using System.Collections.Generic;
+
+namespace RPGDataEditor.Connection
 {
-    public interface IConnectionSettings
+    public interface IConnectionSettings : IEnumerable<KeyValuePair<string, object>>
     {
         IConnectionConfig CreateConfig();
 
