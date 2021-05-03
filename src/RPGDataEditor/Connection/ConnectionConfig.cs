@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace RPGDataEditor.Connection
 {
@@ -9,5 +10,9 @@ namespace RPGDataEditor.Connection
         private readonly Dictionary<string, object> parameters;
 
         public object Get(string parameter) => parameters[parameter];
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => parameters.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => parameters.GetEnumerator();
     }
 }

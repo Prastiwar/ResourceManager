@@ -5,12 +5,11 @@ using System.Security;
 
 namespace RPGDataEditor.Core.Validation
 {
-    public class ConnectionSettingsValidator : AbstractValidator<IConnectionSettings>
+    public class ConnectionConfigValidator : AbstractValidator<IConnectionConfig>
     {
-        public ConnectionSettingsValidator()
+        public ConnectionConfigValidator()
         {
-
-            RuleFor(x => nameof(ConnectionSettings.Type)).NotNull().WithMessage($"{nameof(ConnectionSettings.Type)} must be provided");
+            RuleFor(x => x.Get(nameof(ConnectionSettings.Type))).NotNull().WithMessage($"{nameof(ConnectionSettings.Type)} must be provided");
 
             RuleFor(x => x.Get("ConnectionString")).NotEmpty().WithMessage(CustomMessages.Empty)
                                        .When(x => IsType(x, "sql"));
@@ -27,7 +26,7 @@ namespace RPGDataEditor.Core.Validation
             RuleFor(x => (x.Get("Password") as string).Length).GreaterThan(0).WithMessage(CustomMessages.Empty)
                                                                     .When(x => IsType(x, "ftp") && x.Get("Password") is string);
 
-            static bool IsType(IConnectionSettings x, string type) => string.Compare(x.Get(nameof(ConnectionSettings.Type)).ToString(), type, true) == 0;
+            static bool IsType(IConnectionConfig x, string type) => string.Compare(x.Get(nameof(ConnectionSettings.Type)).ToString(), type, true) == 0;
         }
     }
 }

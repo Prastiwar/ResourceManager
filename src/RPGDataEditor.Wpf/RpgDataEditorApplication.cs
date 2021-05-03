@@ -10,12 +10,13 @@ using ResourceManager;
 using RPGDataEditor.Connection;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
-using RPGDataEditor.Core.Validation;
+using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Providers;
 using RPGDataEditor.Services;
+using RPGDataEditor.Wpf.Connection;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
@@ -66,67 +67,7 @@ namespace RPGDataEditor.Wpf
             regionAdapterMappings.RegisterMapping(typeof(TabControl), Container.Resolve<TabControlAdapter>());
         }
 
-        protected virtual JsonSerializerSettings CreateJsonSettings()
-        {
-            PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
-            propResolver.SetAllLetterCase(Lettercase.CamelCase);
-            JsonSerializerSettings settings = new JsonSerializerSettings {
-                ContractResolver = propResolver,
-                Formatting = Formatting.Indented
-            };
-            settings.Converters.Add(new NumberCastsConverter());
-            settings.Converters.Add(new PlayerRequirementJsonConverter());
-
-            settings.Converters.Add(new NpcJobJsonConverter());
-            settings.Converters.Add(new NpcJsonConverter());
-            settings.Converters.Add(new TradeItemJsonConverter());
-            settings.Converters.Add(new AttributeDataModelJsonConverter());
-
-            settings.Converters.Add(new PositionJsonConverter());
-
-            settings.Converters.Add(new QuestTaskJsonConverter());
-            settings.Converters.Add(new QuestDataJsonConverter());
-
-            settings.Converters.Add(new DialogueJsonConverter());
-            settings.Converters.Add(new DialogueOptionJsonConverter());
-            settings.Converters.Add(new TalkDataModelJsonConverter());
-            settings.Converters.Add(new TalkLineJsonConverter());
-
-
-            settings.Converters.Add(new ConnectionSettingsJsonConverter());
-            return settings;
-        }
-
-        protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
-        {
-            FileInfo sessionFile = new FileInfo(SessionFilePath);
-            IConnectionSettings settings = null;
-            if (sessionFile.Exists)
-            {
-                string json = File.ReadAllText(SessionFilePath);
-                settings = JsonConvert.DeserializeObject<IConnectionSettings>(json);
-            }
-            containerRegistry.RegisterInstance(settings ?? new ConnectionSettings() { Type = "Local" });
-        }
-
-        protected virtual void InitializeAutoUpdater()
-        {
-            AutoUpdater.AppCastURL = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json";
-            AutoUpdater.ParseUpdateInfoEvent += AutoUpdater_ParseUpdateInfoEvent;
-        }
-
-        private void AutoUpdater_ParseUpdateInfoEvent(ParseUpdateInfoEventArgs args)
-        {
-            UpdateInfo updateInfo = JsonConvert.DeserializeObject<UpdateInfo>(args.RemoteData);
-            args.UpdateInfo = new UpdateInfoEventArgs() {
-                CurrentVersion = updateInfo.Version,
-                DownloadURL = updateInfo.Url,
-                ChangelogURL = updateInfo.Changelog,
-                InstallerArgs = updateInfo.Args,
-                Mandatory = updateInfo.Mandatory,
-                CheckSum = updateInfo.CheckSum
-            };
-        }
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
@@ -157,9 +98,44 @@ namespace RPGDataEditor.Wpf
             OnRegistrationFinished(containerRegistry);
         }
 
+        protected virtual JsonSerializerSettings CreateJsonSettings()
+        {
+            PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
+            propResolver.SetAllLetterCase(Lettercase.CamelCase);
+            JsonSerializerSettings settings = new JsonSerializerSettings {
+                ContractResolver = propResolver,
+                Formatting = Formatting.Indented
+            };
+            settings.Converters.Add(new NumberCastsConverter());
+            settings.Converters.Add(new PlayerRequirementJsonConverter());
+
+            settings.Converters.Add(new NpcJobJsonConverter());
+            settings.Converters.Add(new NpcJsonConverter());
+            settings.Converters.Add(new TradeItemJsonConverter());
+            settings.Converters.Add(new AttributeDataModelJsonConverter());
+
+            settings.Converters.Add(new PositionJsonConverter());
+
+            settings.Converters.Add(new QuestTaskJsonConverter());
+            settings.Converters.Add(new QuestDataJsonConverter());
+
+            settings.Converters.Add(new DialogueJsonConverter());
+            settings.Converters.Add(new DialogueOptionJsonConverter());
+            settings.Converters.Add(new TalkDataModelJsonConverter());
+            settings.Converters.Add(new TalkLineJsonConverter());
+
+            settings.Converters.Add(new ConnectionSettingsJsonConverter());
+            return settings;
+        }
+
         protected virtual void RegisterLogging(IContainerRegistry containerRegistry) => containerRegistry.RegisterInstance<ILogger>(new LocalFileLogger());
 
-        protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry) { }
+        protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterSingleton<ISerializer, NewtonsoftSerializer>();
+            containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
+            containerRegistry.RegisterSingleton<IConnectionConfiguration, ConnectionConfiguration>();
+        }
 
         protected virtual void RegisterAssemblyScanner(IContainerRegistry containerRegistry)
         {
@@ -181,19 +157,18 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        protected virtual void RegisterServices(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
-            containerRegistry.RegisterSingleton<IDialogService, PrismDialogService>();
-            containerRegistry.RegisterSingleton<ICheckConnectionService, DefaultCheckConnectionService>();
-        }
-
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
+        }
+
+        protected virtual void RegisterServices(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
+            containerRegistry.RegisterSingleton<IDialogService, PrismDialogService>();
         }
 
         protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
@@ -207,6 +182,42 @@ namespace RPGDataEditor.Wpf
             // TODO: Register descriptors
         }
 
-        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
+        protected virtual void InitializeAutoUpdater()
+        {
+            AutoUpdater.AppCastURL = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json";
+            AutoUpdater.ParseUpdateInfoEvent += AutoUpdater_ParseUpdateInfoEvent;
+        }
+
+        private void AutoUpdater_ParseUpdateInfoEvent(ParseUpdateInfoEventArgs args)
+        {
+            UpdateInfo updateInfo = JsonConvert.DeserializeObject<UpdateInfo>(args.RemoteData);
+            args.UpdateInfo = new UpdateInfoEventArgs() {
+                CurrentVersion = updateInfo.Version,
+                DownloadURL = updateInfo.Url,
+                ChangelogURL = updateInfo.Changelog,
+                InstallerArgs = updateInfo.Args,
+                Mandatory = updateInfo.Mandatory,
+                CheckSum = updateInfo.CheckSum
+            };
+        }
+
+        protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
+        {
+            FileInfo sessionFile = new FileInfo(SessionFilePath);
+            IConnectionSettings settings = null;
+            if (sessionFile.Exists)
+            {
+                string json = File.ReadAllText(SessionFilePath);
+                settings = JsonConvert.DeserializeObject<IConnectionSettings>(json);
+            }
+            IConnectionConfig config = settings != null ? settings.CreateConfig() : new ConnectionSettings() { Type = "Local" }.CreateConfig();
+            IConnectionConfiguration configuration = containerRegistry.GetContainer().Resolve<IConnectionConfiguration>();
+            configuration.Configure(config);
+
+            if (containerRegistry.GetContainer().Resolve<IAppPersistanceService>() is LocalAppPersistanceService service)
+            {
+                service.FolderPath = SessionFilePath;
+            }
+        }
     }
 }
