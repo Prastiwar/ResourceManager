@@ -14,10 +14,24 @@ namespace ResourceManager
 
         protected Assembly[] Assemblies { get; }
 
+        protected HashSet<Type> IgnoredTypes { get; set; }
+
         private bool selectAbstract;
         private bool selectInterface;
 
         private Predicate<Type> customPredicate;
+
+        public IFluentTypeSelector Ignore(HashSet<Type> types)
+        {
+            IgnoredTypes = types ?? new HashSet<Type>();
+            return this;
+        }
+
+        public IFluentTypeSelector Ignore(params Type[] types)
+        {
+            IgnoredTypes = new HashSet<Type>(types);
+            return this;
+        }
 
         public IFluentTypeSelector ScanTypes(Predicate<Type> predicate)
         {
@@ -139,6 +153,5 @@ namespace ResourceManager
         }
 
         private static bool HasSimpleRelationship(Type scanType, Type assemblyType) => scanType.IsAssignableFrom(assemblyType) && (scanType.IsInterface || assemblyType.IsSubclassOf(scanType));
-
     }
 }

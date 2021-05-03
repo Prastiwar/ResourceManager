@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class TalkDataModelJsonConverter : ExtendableJsonConverter<TalkData>
+    public class TalkDataJsonConverter : ExtendableJsonConverter<TalkData>
     {
         public override TalkData ReadJObject(Type objectType, JObject obj)
         {

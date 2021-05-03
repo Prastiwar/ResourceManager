@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
+    <ProjectReference Include="..\..\src\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
   </ItemGroup>
   
 </Project>

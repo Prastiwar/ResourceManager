@@ -1,8 +1,8 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class RightItemInteractQuestTask : Core.Models.RightItemInteractQuestTask
+    public class RightItemInteractQuestTask : RPGDataEditor.Models.RightItemInteractQuestTask
     {
         private bool respectNbt;
         public bool RespectNbt {

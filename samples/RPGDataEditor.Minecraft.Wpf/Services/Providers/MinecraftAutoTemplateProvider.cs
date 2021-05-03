@@ -14,12 +14,12 @@ namespace RPGDataEditor.Minecraft.Wpf.Providers
         public override void RegisterDefaults(IContainerRegistry containerRegistry)
         {
             base.RegisterDefaults(containerRegistry);
-            RegisterAutoTemplate<EquipmentModel>(containerRegistry, new EquipmentModelAutoTemplate());
-            RegisterAutoTemplate<Core.Models.TradeItemModel>(containerRegistry, new Controls.TradeItemAutoTemplate());
-            RegisterAutoTemplate<TradeItemModel>(containerRegistry, new Controls.TradeItemAutoTemplate());
+            RegisterAutoTemplate<Equipment>(containerRegistry, new EquipmentAutoTemplate());
+            RegisterAutoTemplate<RPGDataEditor.Models.TradeItem>(containerRegistry, new Controls.TradeItemAutoTemplate());
+            RegisterAutoTemplate<TradeItem>(containerRegistry, new Controls.TradeItemAutoTemplate());
 
-            RegisterListDataAutoTemplate<TradeItemModel>(containerRegistry, new TradeItemsDataCollectionAutoTemplate());
-            containerRegistry.RegisterInstance<AutoTemplate>(new TradeItemsDataCollectionAutoTemplate(), typeof(IList<Core.Models.TradeItemModel>).FullName);
+            RegisterListDataAutoTemplate<TradeItem>(containerRegistry, new TradeItemsDataCollectionAutoTemplate());
+            containerRegistry.RegisterInstance<AutoTemplate>(new TradeItemsDataCollectionAutoTemplate(), typeof(IList<RPGDataEditor.Models.TradeItem>).FullName);
         }
     }
 }

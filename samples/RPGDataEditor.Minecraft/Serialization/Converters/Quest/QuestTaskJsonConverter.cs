@@ -1,12 +1,12 @@
-﻿using RPGDataEditor.Core.Models;
-using RPGDataEditor.Core.Serialization;
+﻿using RPGDataEditor.Core.Serialization;
+using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Minecraft.Serialization
 {
-    public class QuestTaskJsonConverter : AbstractClassJsonConverter<QuestTask>
+    public class QuestTaskJsonConverter : AbstractClassJsonConverter<IQuestTask>
     {
-        public QuestTaskJsonConverter() : base(new[] { typeof(QuestTaskJsonConverter).Assembly, typeof(QuestTask).Assembly },
-                                                "RPGDataEditor.Minecraft.Models", "RPGDataEditor.Core.Models")
+        public QuestTaskJsonConverter() : base(new[] { typeof(QuestTaskJsonConverter).Assembly, typeof(IQuestTask).Assembly },
+                                                "RPGDataEditor.Minecraft.Models", "RPGDataEditor.Models")
         { }
 
         protected override string Suffix => "QuestTask";

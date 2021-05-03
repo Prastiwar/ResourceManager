@@ -1,4 +1,4 @@
-﻿namespace RPGDataEditor.Core.Models
+﻿namespace RPGDataEditor.Models
 {
     public class RightBlockInteractQuestTask : BlockInteractQuestTask { }
 }

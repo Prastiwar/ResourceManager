@@ -1,8 +1,8 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class EquipmentModel : ObservableModel
+    public class Equipment : ObservableModel
     {
         private string chest = "";
         public string Chest {

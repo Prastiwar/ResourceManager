@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Minecraft.Models
 {
-    public class ItemRequirement : Core.Models.ItemRequirement
+    public class ItemRequirement : RPGDataEditor.Models.ItemRequirement
     {
         private bool respectNbt;
         public bool RespectNbt {

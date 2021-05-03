@@ -1,10 +1,10 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class TalkDataModel : Core.Models.TalkDataModel
+    public class TalkData : RPGDataEditor.Models.TalkData
     {
         private IList<TalkLine> interactLines = new ObservableCollection<TalkLine>();
         public IList<TalkLine> InteractLines {

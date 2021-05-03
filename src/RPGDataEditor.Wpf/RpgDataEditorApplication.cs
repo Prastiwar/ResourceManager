@@ -7,6 +7,8 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 using ResourceManager;
+using ResourceManager.Data;
+using ResourceManager.Services;
 using RPGDataEditor.Connection;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
@@ -121,7 +123,7 @@ namespace RPGDataEditor.Wpf
 
             settings.Converters.Add(new DialogueJsonConverter());
             settings.Converters.Add(new DialogueOptionJsonConverter());
-            settings.Converters.Add(new TalkDataModelJsonConverter());
+            settings.Converters.Add(new TalkDataJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
 
             settings.Converters.Add(new ConnectionSettingsJsonConverter());
@@ -132,7 +134,7 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<ISerializer, NewtonsoftSerializer>();
+            containerRegistry.RegisterSingleton<RPGDataEditor.Services.ISerializer, NewtonsoftSerializer>();
             containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
             containerRegistry.RegisterSingleton<IConnectionConfiguration, ConnectionConfiguration>();
         }
@@ -179,7 +181,26 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterDescriptors(IContainerRegistry containerRegistry)
         {
-            // TODO: Register descriptors
+            ResourceDescriptorService service = new ResourceDescriptorService();
+            IResourceDescriptor fileQuestDescriptor = new FileQuestPathResourceDescriptor();
+            IResourceDescriptor sqlQuestDescriptor = new SqlQuestPathResourceDescriptor();
+
+            //service.Register(typeof(Models.Quest), fileQuestDescriptor);
+            //service.Register(typeof(Models.Quest), sqlQuestDescriptor);
+
+            IResourceDescriptor fileDialogueDescriptor = new FileDialoguePathResourceDescriptor();
+            IResourceDescriptor sqlDialogueDescriptor = new SqlDialoguePathResourceDescriptor();
+
+            //service.Register(typeof(Models.Dialogue), fileDialogueDescriptor);
+            //service.Register(typeof(Models.Dialogue), sqlDialogueDescriptor);
+
+            IResourceDescriptor fileNpcDescriptor = new FileNpcPathResourceDescriptor();
+            IResourceDescriptor sqlNpcDescriptor = new SqlNpcPathResourceDescriptor();
+
+            //service.Register(typeof(Models.Dialogue), fileNpcDescriptor);
+            //service.Register(typeof(Models.Dialogue), sqlNpcDescriptor);
+
+            containerRegistry.RegisterInstance<IResourceDescriptorService>(service);
         }
 
         protected virtual void InitializeAutoUpdater()

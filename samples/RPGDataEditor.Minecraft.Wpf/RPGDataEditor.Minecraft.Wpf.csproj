@@ -23,7 +23,7 @@
     <Page Update="Modules\Dialogue\Views\DialogueEditor.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-    <Page Update="Modules\Npc\Views\NpcDataModelEditor.xaml">
+    <Page Update="Modules\Npc\Views\NpcEditor.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Themes\McRpgDataEditorTheme.xaml">

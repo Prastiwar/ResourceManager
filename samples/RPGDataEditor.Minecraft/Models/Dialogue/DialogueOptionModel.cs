@@ -1,6 +1,6 @@
 ﻿namespace RPGDataEditor.Minecraft.Models
 {
-    public class DialogueOptionModel : Core.Models.DialogueOptionModel
+    public class DialogueOption : RPGDataEditor.Models.DialogueOption
     {
         private string command = "";
         public string Command {

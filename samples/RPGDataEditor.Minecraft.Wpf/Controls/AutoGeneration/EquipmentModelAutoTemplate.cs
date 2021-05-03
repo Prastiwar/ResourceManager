@@ -6,17 +6,17 @@ using System.Windows.Controls;
 
 namespace RPGDataEditor.Minecraft.Wpf.Controls
 {
-    public class EquipmentModelAutoTemplate : AutoTemplate<EquipmentModel>
+    public class EquipmentAutoTemplate : AutoTemplate<Equipment>
     {
         public override DependencyObject LoadContent(PropertyInfo info)
         {
             StackPanel panel = new StackPanel();
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(EquipmentModel.MainHand) });
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(EquipmentModel.OffHand) });
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(EquipmentModel.Head) });
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(EquipmentModel.Chest) });
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(EquipmentModel.Legs) });
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(EquipmentModel.Feet) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.MainHand) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.OffHand) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.Head) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.Chest) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.Legs) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.Feet) });
             AutoControl.SetPreserveDataContext(panel, false);
             return panel;
         }

@@ -10,7 +10,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Controls
         protected override StackPanel BuildPanel(PropertyInfo info)
         {
             StackPanel panel = base.BuildPanel(info);
-            panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItemModel.Nbt) });
+            panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItem.Nbt) });
             return panel;
         }
     }

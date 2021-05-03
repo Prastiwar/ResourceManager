@@ -2,9 +2,9 @@
 
 namespace RPGDataEditor.Minecraft.Validation
 {
-    public class QuestModelValidator : Core.Validation.QuestModelValidator
+    public class QuestValidator : Core.Validation.QuestValidator
     {
-        public QuestModelValidator() : base()
+        public QuestValidator() : base()
         {
             QuestTaskValidator taskValidator = new QuestTaskValidator();
             RuleFor(x => x.CompletionTask).NotEmpty().WithMessage(Core.Validation.CustomMessages.Empty)
@@ -12,7 +12,7 @@ namespace RPGDataEditor.Minecraft.Validation
 
             RuleForEach(x => x.Tasks).SetValidator(taskValidator);
 
-            PlayerRequirementModelValidator requirementValidator = new PlayerRequirementModelValidator();
+            RequirementValidator requirementValidator = new RequirementValidator();
             RuleForEach(x => x.Requirements).SetValidator(requirementValidator);
         }
     }

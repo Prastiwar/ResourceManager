@@ -6,13 +6,13 @@ using System;
 
 namespace RPGDataEditor.Minecraft.Serialization
 {
-    public class DialogueModelJsonConverter : Core.Serialization.DialogueModelJsonConverter
+    public class DialogueJsonConverter : Core.Serialization.DialogueJsonConverter
     {
-        public override Core.Models.DialogueModel ReadJObject(Type objectType, JObject obj)
+        public override RPGDataEditor.Models.Dialogue ReadJObject(Type objectType, JObject obj)
         {
-            Core.Models.DialogueModel coreModel = base.ReadJObject(objectType, obj);
-            bool allowEscape = obj.GetValue(nameof(DialogueModel.AllowEscape), false);
-            DialogueModel model = new DialogueModel() {
+            RPGDataEditor.Models.Dialogue coreModel = base.ReadJObject(objectType, obj);
+            bool allowEscape = obj.GetValue(nameof(Dialogue.AllowEscape), false);
+            Dialogue model = new Dialogue() {
                 Id = coreModel.Id,
                 Title = coreModel.Title,
                 Message = coreModel.Message,
@@ -25,10 +25,10 @@ namespace RPGDataEditor.Minecraft.Serialization
             return model;
         }
 
-        public override JObject ToJObject(Core.Models.DialogueModel value, JsonSerializer serializer)
+        public override JObject ToJObject(RPGDataEditor.Models.Dialogue value, JsonSerializer serializer)
         {
             JObject obj = base.ToJObject(value, serializer);
-            obj.Add(nameof(DialogueModel.AllowEscape).ToFirstLower(), (value as DialogueModel).AllowEscape);
+            obj.Add(nameof(Dialogue.AllowEscape).ToFirstLower(), (value as Dialogue).AllowEscape);
             return obj;
         }
     }

@@ -11,7 +11,7 @@
     <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
+    <ProjectReference Include="..\..\src\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
   </ItemGroup>
 
 </Project>

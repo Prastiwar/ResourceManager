@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Models;
 using RPGDataEditor.Core.Mvvm;
 using RPGDataEditor.Core.Providers;
 using RPGDataEditor.Core.Serialization;
@@ -27,7 +27,7 @@ namespace RPGDataEditor.Minecraft.Wpf
                 string viewName = viewType.FullName;
                 string minecraftAssembly = typeof(App).Assembly.FullName;
                 string viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-                string shortViewModelName = viewName.Replace(".Views.", ".ViewModels.");
+                string shortViewModelName = viewName.Replace(".Views.", ".ViewRPGDataEditor.Models.");
                 string shortMcViewModelName = shortViewModelName.Replace("RPGDataEditor.Wpf", "RPGDataEditor.Minecraft.Wpf");
 
                 string minecraftViewModelName = $"{shortMcViewModelName}ViewModel, {minecraftAssembly}";
@@ -51,9 +51,9 @@ namespace RPGDataEditor.Minecraft.Wpf
             settings.Converters.Add(new Serialization.PlayerRequirementJsonConverter());
 
             settings.Converters.Add(new Serialization.NpcJobJsonConverter());
-            settings.Converters.Add(new EquipmentModelJsonConverter());
-            settings.Converters.Add(new Serialization.NpcDataModelJsonConverter());
-            settings.Converters.Add(new Serialization.TradeItemModelJsonConverter());
+            settings.Converters.Add(new EquipmentJsonConverter());
+            settings.Converters.Add(new Serialization.NpcJsonConverter());
+            settings.Converters.Add(new Serialization.TradeItemJsonConverter());
             settings.Converters.Add(new AttributeDataModelJsonConverter());
 
             settings.Converters.Add(new PositionJsonConverter());
@@ -61,9 +61,9 @@ namespace RPGDataEditor.Minecraft.Wpf
             settings.Converters.Add(new Serialization.QuestTaskJsonConverter());
             settings.Converters.Add(new QuestDataJsonConverter());
 
-            settings.Converters.Add(new Serialization.DialogueModelJsonConverter());
-            settings.Converters.Add(new Serialization.DialogueOptionModelJsonConverter());
-            settings.Converters.Add(new Serialization.TalkDataModelJsonConverter());
+            settings.Converters.Add(new Serialization.DialogueJsonConverter());
+            settings.Converters.Add(new Serialization.DialogueOptionJsonConverter());
+            settings.Converters.Add(new Serialization.TalkDataJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
 
             settings.Converters.Add(new ResourceClientJsonConverter());
@@ -79,7 +79,7 @@ namespace RPGDataEditor.Minecraft.Wpf
         protected override void RegisterProviders(IContainerRegistry containerRegistry)
         {
             base.RegisterProviders(containerRegistry);
-            containerRegistry.RegisterInstance<IModelProvider<PlayerRequirementModel>>(new RequirementProvider());
+            containerRegistry.RegisterInstance<IModelProvider<Requirement>>(new RequirementProvider());
             containerRegistry.RegisterInstance<IModelProvider<QuestTask>>(new QuestTaskProvider());
             containerRegistry.Register(typeof(IModelProvider<>), typeof(McModelProvider<>));
             AutoTemplateProvider controlProvider = new MinecraftAutoTemplateProvider(Container);
@@ -90,10 +90,10 @@ namespace RPGDataEditor.Minecraft.Wpf
         protected override void RegisterValidators(IContainerRegistry containerRegistry)
         {
             base.RegisterValidators(containerRegistry);
-            containerRegistry.Register<IValidator<Core.Models.NpcDataModel>, NpcDataModelValidator>();
-            containerRegistry.Register<IValidator<QuestModel>, QuestModelValidator>();
-            containerRegistry.Register<IValidator<Core.Models.DialogueModel>, DialogueModelValidator>();
-            containerRegistry.Register<IValidator<EquipmentModel>, EquipmentModelValidator>();
+            containerRegistry.Register<IValidator<RPGDataEditor.Models.Npc>, NpcValidator>();
+            containerRegistry.Register<IValidator<Quest>, QuestValidator>();
+            containerRegistry.Register<IValidator<RPGDataEditor.Models.Dialogue>, DialogueValidator>();
+            containerRegistry.Register<IValidator<Equipment>, EquipmentValidator>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();

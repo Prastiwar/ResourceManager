@@ -8,13 +8,13 @@ namespace RPGDataEditor.Minecraft.Validation
     {
         public QuestTaskValidator() : base()
         {
-            RuleFor(x => (x as Core.Models.KillQuestTask).Kill).ResourceLocation(false)
+            RuleFor(x => (x as RPGDataEditor.Models.KillQuestTask).TargetId).ResourceLocation(false)
                                                                .WithMessage(CustomMessages.ResourceLocation)
-                                                               .When(x => x is Core.Models.KillQuestTask);
+                                                               .When(x => x is RPGDataEditor.Models.KillQuestTask);
 
-            RuleFor(x => (x as RightItemInteractQuestTask).Item).ResourceLocation(false)
-                                                                .WithMessage(CustomMessages.ResourceLocation)
-                                                                .When(x => x is RightItemInteractQuestTask);
+            RuleFor(x => (x as RightItemInteractQuestTask).ItemId).ResourceLocation(false)
+                                                                  .WithMessage(CustomMessages.ResourceLocation)
+                                                                  .When(x => x is RightItemInteractQuestTask);
 
             RuleFor(x => (x as RightItemInteractQuestTask).Nbt).Json()
                                                                 .WithMessage(Core.Validation.CustomMessages.Json)

@@ -1,13 +1,13 @@
 ﻿using Prism.Services.Dialogs;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Models;
 using RPGDataEditor.Core.Mvvm;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Minecraft.Wpf.Npc.ViewModels
 {
-    public class NpcDataModelEditorViewModel : RPGDataEditor.Wpf.Npc.ViewModels.NpcDataModelEditorViewModel
+    public class NpcEditorViewModel : RPGDataEditor.Wpf.Npc.ViewRPGDataEditor.Models.NpcEditorViewModel
     {
-        public NpcDataModelEditorViewModel(ViewModelContext context) : base(context) { }
+        public NpcEditorViewModel(ViewModelContext context) : base(context) { }
 
         public override string Title => "Npc Editor";
 

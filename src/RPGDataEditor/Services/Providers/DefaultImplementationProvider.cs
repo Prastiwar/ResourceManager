@@ -1,5 +1,6 @@
 ﻿using ResourceManager;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RPGDataEditor.Providers
@@ -7,6 +8,8 @@ namespace RPGDataEditor.Providers
     public class DefaultImplementationProvider<T> : IImplementationProvider<T> where T : class
     {
         public DefaultImplementationProvider(IFluentAssemblyScanner scanner) => Scanner = scanner;
+
+        protected virtual HashSet<Type> GetIgnoredTypes() => new HashSet<Type>();
 
         protected IFluentAssemblyScanner Scanner { get; }
 
@@ -32,6 +35,6 @@ namespace RPGDataEditor.Providers
             return (T)Activator.CreateInstance(targetType);
         }
 
-        protected virtual Type GetImplementationType(Type baseType) => Scanner.Scan().Select(baseType).Get().ResultTypes.First().ResultTypes.First();
+        protected virtual Type GetImplementationType(Type baseType) => Scanner.Scan().Select(baseType).Ignore(GetIgnoredTypes()).Get().ResultTypes.First().ResultTypes.First();
     }
 }

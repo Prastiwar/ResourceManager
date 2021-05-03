@@ -1,6 +1,6 @@
 ﻿using Prism.Ioc;
 using Prism.Regions;
-using RPGDataEditor.Core.Models;
+using RPGDataEditor.Models;
 using RPGDataEditor.Minecraft.Wpf.Dialogue.Views;
 using RPGDataEditor.Minecraft.Wpf.Npc.ViewModels;
 using RPGDataEditor.Minecraft.Wpf.Npc.Views;
@@ -15,8 +15,8 @@ namespace RPGDataEditor.Minecraft.Wpf
         protected override void RegisterDialogs(IContainerRegistry containerRegistry)
         {
             base.RegisterDialogs(containerRegistry);
-            containerRegistry.RegisterDialog<DialogueEditor, DialogueEditorViewModel>(typeof(DialogueModel).Name);
-            containerRegistry.RegisterDialog<NpcDataModelEditor, NpcDataModelEditorViewModel>(typeof(NpcDataModel).Name);
+            containerRegistry.RegisterDialog<DialogueEditor, DialogueEditorViewModel>(typeof(Dialogue).Name);
+            containerRegistry.RegisterDialog<NpcEditor, NpcEditorViewModel>(typeof(Npc).Name);
         }
     }
 }

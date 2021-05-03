@@ -1,10 +1,10 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class NpcDataModel : Core.Models.NpcDataModel
+    public class Npc : RPGDataEditor.Models.Npc
     {
         private string title = "";
         public string Title {
@@ -66,10 +66,10 @@ namespace RPGDataEditor.Minecraft.Models
             set => SetProperty(ref healthRegen, value);
         }
 
-        private EquipmentModel equipment = new EquipmentModel();
-        public EquipmentModel Equipment {
+        private Equipment equipment = new Equipment();
+        public Equipment Equipment {
             get => equipment;
-            set => SetProperty(ref equipment, value ?? new EquipmentModel());
+            set => SetProperty(ref equipment, value ?? new Equipment());
         }
     }
 }

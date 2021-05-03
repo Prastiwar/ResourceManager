@@ -1,8 +1,8 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class GuardNpcJobModel : NpcJobModel
+    public class GuardNpcJob : NpcJob
     {
     }
 }

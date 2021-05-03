@@ -1,8 +1,8 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class TradeItemModel : Core.Models.TradeItemModel
+    public class TradeItem : RPGDataEditor.Models.TradeItem
     {
         private string nbt;
         public string Nbt {

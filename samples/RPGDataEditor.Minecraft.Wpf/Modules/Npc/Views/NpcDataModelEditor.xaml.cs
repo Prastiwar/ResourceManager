@@ -1,12 +1,12 @@
-﻿using RPGDataEditor.Core.Models;
+﻿using RPGDataEditor.Models;
 using RPGDataEditor.Minecraft.Models;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
 {
-    public partial class NpcDataModelEditor : UserControl
+    public partial class NpcEditor : UserControl
     {
-        public NpcDataModelEditor() => InitializeComponent();
+        public NpcEditor() => InitializeComponent();
 
         private void JobComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -18,15 +18,15 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
                     bool isTrader = string.Compare(selected.Name, "trader", true) == 0;
                     RefreshJobPanelVisibility(selected.Name);
                     ComboBox comboBox = (ComboBox)sender;
-                    if (comboBox.DataContext is Models.NpcDataModel model)
+                    if (comboBox.DataContext is RPGDataEditor.Models.Npc model)
                     {
                         if (isGuard)
                         {
-                            model.Job = new GuardNpcJobModel();
+                            model.Job = new GuardNpcJob();
                         }
                         else if (isTrader)
                         {
-                            model.Job = new TraderNpcJobModel();
+                            model.Job = new TraderNpcJob();
                         }
                         else
                         {
@@ -49,10 +49,10 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
         {
             ComboBox comboBox = (ComboBox)sender;
             comboBox.SelectionChanged -= JobComboBox_SelectionChanged;
-            if (comboBox.DataContext is Models.NpcDataModel model)
+            if (comboBox.DataContext is RPGDataEditor.Models.Npc model)
             {
                 comboBox.SelectedIndex = model.Job == null
-                                         ? 0 : model.Job is GuardNpcJobModel
+                                         ? 0 : model.Job is GuardNpcJob
                                          ? 1 : 2;
                 RefreshJobPanelVisibility((comboBox.SelectedItem as ComboBoxItem).Name);
             }

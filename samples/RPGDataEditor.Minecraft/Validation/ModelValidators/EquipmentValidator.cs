@@ -3,9 +3,9 @@ using RPGDataEditor.Minecraft.Models;
 
 namespace RPGDataEditor.Minecraft.Validation
 {
-    public class EquipmentModelValidator : AbstractValidator<EquipmentModel>
+    public class EquipmentValidator : AbstractValidator<Equipment>
     {
-        public EquipmentModelValidator()
+        public EquipmentValidator()
         {
             RuleFor(x => x.MainHand).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
             RuleFor(x => x.OffHand).ResourceLocation().WithMessage(CustomMessages.ResourceLocation);
