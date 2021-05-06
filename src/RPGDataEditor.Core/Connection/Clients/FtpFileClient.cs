@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Connection
 {
-    public class FtpFileClient : IFileClient
+    public class FtpFileClient : IFtpFileClient
     {
         public string Host { get; set; }
 

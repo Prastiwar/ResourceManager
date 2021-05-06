@@ -11,6 +11,7 @@ using ResourceManager.Data;
 using ResourceManager.Services;
 using RPGDataEditor.Connection;
 using RPGDataEditor.Core;
+using RPGDataEditor.Core.Connection;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
@@ -27,6 +28,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -137,6 +139,10 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterSingleton<RPGDataEditor.Services.ISerializer, NewtonsoftSerializer>();
             containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
             containerRegistry.RegisterSingleton<IConnectionConfiguration, ConnectionConfiguration>();
+
+            containerRegistry.RegisterInstance<IFileClient>(new LocalFileClient() { FileSearchPattern = "*.json" });
+            containerRegistry.RegisterInstance<IFtpFileClient>(new FtpFileClient());
+            containerRegistry.RegisterInstance<ISqlClient>(new SqlClient());
         }
 
         protected virtual void RegisterAssemblyScanner(IContainerRegistry containerRegistry)
@@ -184,21 +190,15 @@ namespace RPGDataEditor.Wpf
             ResourceDescriptorService service = new ResourceDescriptorService();
             IResourceDescriptor fileQuestDescriptor = new FileQuestPathResourceDescriptor();
             IResourceDescriptor sqlQuestDescriptor = new SqlQuestPathResourceDescriptor();
-
-            //service.Register(typeof(Models.Quest), fileQuestDescriptor);
-            //service.Register(typeof(Models.Quest), sqlQuestDescriptor);
+            service.Register<Models.Quest>(fileQuestDescriptor, sqlQuestDescriptor);
 
             IResourceDescriptor fileDialogueDescriptor = new FileDialoguePathResourceDescriptor();
             IResourceDescriptor sqlDialogueDescriptor = new SqlDialoguePathResourceDescriptor();
-
-            //service.Register(typeof(Models.Dialogue), fileDialogueDescriptor);
-            //service.Register(typeof(Models.Dialogue), sqlDialogueDescriptor);
+            service.Register<Models.Dialogue>(fileDialogueDescriptor, sqlDialogueDescriptor);
 
             IResourceDescriptor fileNpcDescriptor = new FileNpcPathResourceDescriptor();
             IResourceDescriptor sqlNpcDescriptor = new SqlNpcPathResourceDescriptor();
-
-            //service.Register(typeof(Models.Dialogue), fileNpcDescriptor);
-            //service.Register(typeof(Models.Dialogue), sqlNpcDescriptor);
+            service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
 
             containerRegistry.RegisterInstance<IResourceDescriptorService>(service);
         }
@@ -239,6 +239,29 @@ namespace RPGDataEditor.Wpf
             {
                 service.FolderPath = SessionFilePath;
             }
+
+            configuration.Configured += Configuration_Configured;
+        }
+
+        private void Configuration_Configured(object sender, IConnectionConfig e)
+        {
+            if (Container.Resolve<IFileClient>() is LocalFileClient localClient)
+            {
+                localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath)).ToString();
+            }
+            if (Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
+            {
+                ftpClient.Host = e.Get(nameof(FtpFileClient.Host)).ToString();
+                ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath)).ToString();
+                ftpClient.UserName = e.Get(nameof(FtpFileClient.UserName)).ToString();
+                ftpClient.Password = e.Get(nameof(FtpFileClient.Password)) as SecureString;
+                ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port));
+            }
+            if (Container.Resolve<ISqlClient>() is SqlClient sqlClient)
+            {
+                sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString)).ToString();
+            }
+            // TODO: configure registration of command handlers 
         }
     }
 }

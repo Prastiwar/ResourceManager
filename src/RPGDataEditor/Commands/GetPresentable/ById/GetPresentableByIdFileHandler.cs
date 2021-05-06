@@ -1,4 +1,5 @@
-﻿using ResourceManager.Data;
+﻿using ResourceManager;
+using ResourceManager.Data;
 using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.Commands
+namespace RPGDataEditor.Commands
 {
-    public class GetResourceByIdFileHandler<TResource> : GetResourceByIdHandler<TResource>
+    public class GetPresentableByIdFileHandler<TResource> : GetPresentableByIdHandler<TResource>
     {
-        public GetResourceByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
+        public GetPresentableByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
         {
             DescriptorService = descriptorService;
             Client = client;
@@ -21,7 +22,7 @@ namespace ResourceManager.Commands
         protected IFileClient Client { get; }
         protected ISerializer Serializer { get; }
 
-        protected override async Task<TResource> GetResourceAsync(GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)
+        protected override async Task<TResource> GetResourceAsync(GetPresentableByIdQuery<TResource> request, CancellationToken cancellationToken)
         {
             //IResourceDescriptor descriptor = DescriptorService.Create<TResource>();
             //if (descriptor is PathResourceDescriptor pathDescriptor)
@@ -32,7 +33,7 @@ namespace ResourceManager.Commands
             ; throw new NotImplementedException();
         }
 
-        protected override async Task ProcessResourcesAsync(IList<object> resources, GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)
+        protected override async Task ProcessResourcesAsync(IList<object> resources, GetPresentableByIdQuery<TResource> request, CancellationToken cancellationToken)
         {
             IEnumerable<IResourceDescriptor> descriptors = DescriptorService.Describe<TResource>();
             PathResourceDescriptor pathDescriptor = descriptors.OfType<PathResourceDescriptor>().FirstOrDefault();

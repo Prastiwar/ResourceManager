@@ -1,10 +1,11 @@
 ﻿using ResourceManager.Data;
 using System;
+using System.Collections.Generic;
 
 namespace ResourceManager.Services
 {
     public interface IResourceDescriptorService
     {
-        IResourceDescriptor Describe(Type type, object key);
+        IEnumerable<IResourceDescriptor> Describe(Type type);
     }
 }

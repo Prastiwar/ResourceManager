@@ -1,13 +1,12 @@
 ﻿using ResourceManager.Data;
 using ResourceManager.Services;
-using System;
+using System.Collections.Generic;
 
 namespace ResourceManager
 {
     public static class ResourceDescriptorServiceExtensions
     {
-        public static IResourceDescriptor Create<T>(this IResourceDescriptorService creator, object key = null) => creator.Describe(typeof(T), key);
-
-        public static IResourceDescriptor Create(this IResourceDescriptorService creator, Type type) => creator.Describe(type, null);
+        public static IEnumerable<IResourceDescriptor> Describe<T>(this IResourceDescriptorService creator) => creator.Describe(typeof(T));
+        public static void Register<T>(this ResourceDescriptorService creator, params IResourceDescriptor[] descriptors) => creator.Register(typeof(T), RegisterOptions.Replace, descriptors);
     }
 }
