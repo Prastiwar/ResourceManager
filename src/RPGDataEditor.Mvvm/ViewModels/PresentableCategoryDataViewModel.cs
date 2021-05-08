@@ -34,26 +34,6 @@ namespace RPGDataEditor.Mvvm
 
         protected virtual void ShowCategory(string category) => CurrentCategory = category;
 
-        protected override async Task<PresentableData> CreateModelAsync()
-        {
-            PresentableData newModel = await base.CreateModelAsync();
-            if (newModel != null)
-            {
-                if (newModel is PresentableCategoryData data)
-                {
-                    data.Category = CurrentCategory;
-                    return data;
-                }
-                PresentableCategoryData categorizedData = new PresentableCategoryData(typeof(TResource)) {
-                    Name = newModel.Name,
-                    Id = newModel.Id,
-                    Category = CurrentCategory
-                };
-                return categorizedData;
-            }
-            return newModel;
-        }
-
         protected string CreateCategory()
         {
             string newName = "New Category";

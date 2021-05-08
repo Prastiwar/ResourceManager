@@ -1,5 +1,6 @@
 ﻿using ResourceManager;
 using ResourceManager.Commands;
+using RPGDataEditor.Commands;
 using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,8 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<PresentableData>();
             try
             {
-                //IEnumerable<PresentableData> models = await Context.Mediator.Send(new GetPresentableResourceByIdQuery<IEnumerable<PresentableData>>());
-                //Models.AddRange(models);
+                IEnumerable<PresentableData> models = await Context.Mediator.Send(new GetPresentableByIdQuery<IEnumerable<PresentableData>>());
+                Models.AddRange(models);
             }
             catch (Exception ex)
             {
@@ -51,17 +52,22 @@ namespace RPGDataEditor.Mvvm
 
         protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
         {
-            TResource oldModel = await RetrieveResource(model);
-            if (oldModel == null)
+            TResource oldResource = await RetrieveResource(model);
+            if (oldResource == null)
             {
                 return new EditorResults(null, false);
             }
-            TResource newModel = (TResource)oldModel.DeepClone();
-            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newModel);
-            EditorResults results = new EditorResults(newModel, saveRequested);
-            if (saveRequested)
+            TResource newResource = (TResource)oldResource.DeepClone();
+            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newResource);
+            EditorResults results = new EditorResults(newResource, saveRequested);
+            if (results.Success)
             {
-                UpdateResourceResults updateResults = await Context.Mediator.Send(new UpdateResourceQuery<TResource>(oldModel, newModel));
+                UpdateResourceResults updateResults = await Context.Mediator.Send(new UpdateResourceQuery<TResource>(oldResource, newResource));
+                results.Success = updateResults.IsSuccess;
+                if (results.Success)
+                {
+                    model.Update(newResource);
+                }
             }
             return results;
         }

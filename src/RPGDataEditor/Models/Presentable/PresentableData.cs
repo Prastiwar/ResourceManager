@@ -13,5 +13,15 @@ namespace RPGDataEditor.Models
         public string Name { get; set; }
 
         public override string ToString() => $"(ID: {Id}) {Name}";
+
+        public void Update(object obj)
+        {
+            if (PresentingType.IsAssignableFrom(obj.GetType()))
+            {
+                UpdateFromResource(obj);
+            }
+        }
+
+        protected virtual void UpdateFromResource(object resource) { }
     }
 }

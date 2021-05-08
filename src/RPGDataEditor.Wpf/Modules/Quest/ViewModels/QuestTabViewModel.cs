@@ -7,6 +7,8 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
     {
         public QuestTabViewModel(ViewModelContext context) : base(context) { }
 
+        protected override PresentableData CreateModelInstance() => new PresentableQuest() { Category = CurrentCategory };
+
         protected override Models.Quest CreateResource(PresentableData model) => new Models.Quest() {
             Id = model.Id,
             Title = model.Name,

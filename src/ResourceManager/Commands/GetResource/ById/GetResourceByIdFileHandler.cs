@@ -23,13 +23,23 @@ namespace ResourceManager.Commands
 
         protected override async Task<TResource> GetResourceAsync(GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)
         {
-            //IResourceDescriptor descriptor = DescriptorService.Create<TResource>();
-            //if (descriptor is PathResourceDescriptor pathDescriptor)
-            //{
-            //  request.Id
-            //}
-            //throw new InvalidOperationException("Cannot retrieve resources which is not described by path descriptor");
-            ; throw new NotImplementedException();
+            IEnumerable<IResourceDescriptor> descriptors = DescriptorService.Describe<TResource>();
+            PathResourceDescriptor pathDescriptor = descriptors.OfType<PathResourceDescriptor>().FirstOrDefault();
+            if (pathDescriptor == null)
+            {
+                throw new InvalidOperationException("Cannot retrieve resources which is not described by path descriptor");
+            }
+            IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
+            foreach (string file in files)
+            {
+                KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
+                KeyValuePair<string, object> parameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
+                if (parameter.Key != null && parameter.Value == request.Id)
+                {
+                    return (TResource)await GetResourceByPath(file);
+                }
+            }
+            return default;
         }
 
         protected override async Task ProcessResourcesAsync(IList<object> resources, GetResourceByIdQuery<TResource> request, CancellationToken cancellationToken)

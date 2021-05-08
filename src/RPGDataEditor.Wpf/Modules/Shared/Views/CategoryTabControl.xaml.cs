@@ -61,16 +61,6 @@ namespace RPGDataEditor.Wpf.Views
             }
         }
 
-        public static class CommandExtensions
-        {
-            public static Task<object> ExecuteAsync(ICommand command)
-            {
-                TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
-                command.Execute(tcs);
-                return tcs.Task;
-            }
-        }
-
         private async void AcceptRenameCategory_Click(object sender, RoutedEventArgs e)
         {
             Button senderButton = (Button)sender;

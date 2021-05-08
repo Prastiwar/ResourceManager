@@ -7,6 +7,8 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
     {
         public DialogueTabViewModel(ViewModelContext context) : base(context) { }
 
+        protected override PresentableData CreateModelInstance() => new PresentableDialogue() { Category = CurrentCategory };
+
         protected override Models.Dialogue CreateResource(PresentableData model) => new Models.Dialogue() {
             Id = model.Id,
             Title = model.Name,

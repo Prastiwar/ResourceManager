@@ -8,7 +8,7 @@ namespace ResourceManager.Data
 
         public Type Type { get; protected set; }
 
-        public virtual bool CanDescribe<T>(T resource) => CanDescribe(resource.GetType());
+        public virtual bool CanDescribe<T>(T resource) => resource != null && CanDescribe(resource.GetType());
         public virtual bool CanDescribe(Type resourceType) => Type.IsAssignableFrom(resourceType);
     }
 }

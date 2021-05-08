@@ -2,8 +2,8 @@
 {
     public enum RegisterOptions
     {
-        Append,
         Replace,
+        Append,
         Ignore
     }
 }
