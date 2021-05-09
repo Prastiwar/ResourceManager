@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Core.Serialization
 {
-    public class QuestDataJsonConverter : ExtendableJsonConverter<Quest>
+    public class QuestJsonConverter : ExtendableJsonConverter<Quest>
     {
         public override Quest ReadJObject(Type objectType, JObject obj)
         {

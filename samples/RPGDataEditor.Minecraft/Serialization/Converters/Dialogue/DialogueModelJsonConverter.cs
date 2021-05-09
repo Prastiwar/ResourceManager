@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RPGDataEditor.Minecraft.Models;
 using RPGDataEditor.Core;
 using System;
+using ResourceManager;
 
 namespace RPGDataEditor.Minecraft.Serialization
 {
@@ -18,10 +19,10 @@ namespace RPGDataEditor.Minecraft.Serialization
                 Message = coreModel.Message,
                 Category = coreModel.Category,
                 AllowEscape = allowEscape,
-                StartQuest = coreModel.StartQuest,
-                Requirements = coreModel.Requirements,
-                Options = coreModel.Options
+                StartQuestId = coreModel.StartQuestId
             };
+            model.Requirements.AddRange(coreModel.Requirements);
+            model.Options.AddRange(coreModel.Options);
             return model;
         }
 

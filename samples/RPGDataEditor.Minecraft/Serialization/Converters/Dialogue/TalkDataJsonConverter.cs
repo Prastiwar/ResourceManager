@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ResourceManager;
 using RPGDataEditor.Core;
 using RPGDataEditor.Models;
 using System;
@@ -20,9 +21,9 @@ namespace RPGDataEditor.Minecraft.Serialization
                 TalkRange = coreModel.TalkRange,
                 InteractLines = interactLines,
                 DeathLines = deathLines,
-                HurtLines = hurtLines,
-                InitationDialogues = coreModel.InitationDialogues
+                HurtLines = hurtLines
             };
+            model.InitationDialogues.AddRange(coreModel.InitationDialogues);
             return model;
         }
 

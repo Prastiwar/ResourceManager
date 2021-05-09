@@ -1,5 +1,4 @@
-﻿using RPGDataEditor.Models;
-using RPGDataEditor.Wpf;
+﻿using RPGDataEditor.Minecraft.Models;
 using RPGDataEditor.Wpf.Controls;
 using System.Collections.Generic;
 using System.Reflection;
@@ -12,7 +11,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Controls
         public override DependencyObject LoadContent(PropertyInfo info)
         {
             ListDataCard listCard = base.LoadContent(info) as ListDataCard;
-            listCard.AddItemCommand = Commands.AddListItemCommand(() => listCard.ItemsSource, () => new RPGDataEditor.Models.TradeItem());
+            listCard.AddItemCommand = RPGDataEditor.Wpf.Commands.AddListItemCommand(() => listCard.ItemsSource, () => new TradeItem());
             return listCard;
         }
     }

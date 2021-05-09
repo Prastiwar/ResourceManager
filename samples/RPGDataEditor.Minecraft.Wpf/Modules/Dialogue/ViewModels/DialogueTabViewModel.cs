@@ -1,20 +1,17 @@
-﻿using RPGDataEditor.Core;
-using RPGDataEditor.Models;
-using RPGDataEditor.Core.Mvvm;
+﻿using RPGDataEditor.Models;
+using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Minecraft.Wpf.Dialogue.ViewModels
 {
-    public class DialogueTabViewModel : RPGDataEditor.Wpf.Dialogue.ViewRPGDataEditor.Models.DialogueTabViewModel
+    public class DialogueTabViewModel : RPGDataEditor.Wpf.Dialogue.ViewModels.DialogueTabViewModel
     {
-        public DialogueTabViewModel(ViewModelContext context,
-                                    ITypeToResourceConverter resourceConverter,
-                                    ILocationToSimpleResourceConverter simpleResourceConverter)
-            : base(context, resourceConverter, simpleResourceConverter) { }
+        public DialogueTabViewModel(ViewModelContext context) : base(context) { }
 
-        protected override Dialogue CreateNewExactModel(SimpleIdentifiableData model) => new RPGDataEditor.Models.Dialogue() {
+        protected override RPGDataEditor.Models.Dialogue CreateResource(PresentableData model) => new Models.Dialogue() {
             Id = model.Id,
             Title = model.Name,
-            Category = (model as SimpleCategorizedData).Category
+            Category = (model as PresentableCategoryData).Category
         };
+
     }
 }

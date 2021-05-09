@@ -121,7 +121,7 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new PositionJsonConverter());
 
             settings.Converters.Add(new QuestTaskJsonConverter());
-            settings.Converters.Add(new QuestDataJsonConverter());
+            settings.Converters.Add(new QuestJsonConverter());
 
             settings.Converters.Add(new DialogueJsonConverter());
             settings.Converters.Add(new DialogueOptionJsonConverter());

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -15,9 +15,9 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
+    <ProjectReference Include="..\..\src\RPGDataEditor\RPGDataEditor.csproj" />
     <ProjectReference Include="..\RPGDataEditor.Minecraft\RPGDataEditor.Minecraft.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
-    <ProjectReference Include="..\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Modules\Dialogue\Views\DialogueEditor.xaml">

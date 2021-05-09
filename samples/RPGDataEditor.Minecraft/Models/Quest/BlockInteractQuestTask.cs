@@ -1,11 +1,9 @@
-﻿namespace RPGDataEditor.Models
+﻿using RPGDataEditor.Models;
+
+namespace RPGDataEditor.Minecraft.Models
 {
-    public abstract class BlockInteractQuestTask : InteractQuestTask
+    public abstract class BlockInteractQuestTask : IQuestTask
     {
-        private Position pos = new Position();
-        public Position Pos {
-            get => pos;
-            set => SetProperty(ref pos, value ?? new Position());
-        }
+        public Position Pos { get; set; }
     }
 }

@@ -2,18 +2,10 @@
 
 namespace RPGDataEditor.Minecraft.Models
 {
-    public class RightItemInteractQuestTask : RPGDataEditor.Models.RightItemInteractQuestTask
+    public class RightItemInteractQuestTask : ItemInteractQuestTask
     {
-        private bool respectNbt;
-        public bool RespectNbt {
-            get => respectNbt;
-            set => SetProperty(ref respectNbt, value);
-        }
+        public bool RespectNbt { get; set; }
 
-        private string nbt;
-        public string Nbt {
-            get => nbt;
-            set => SetProperty(ref nbt, value);
-        }
+        public string Nbt { get; set; }
     }
 }
