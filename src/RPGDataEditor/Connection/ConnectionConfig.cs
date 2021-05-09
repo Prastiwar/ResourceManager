@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace RPGDataEditor.Connection
 {
     public class ConnectionConfig : IConnectionConfig
     {
-        public ConnectionConfig(Dictionary<string, object> parameters) => this.parameters = parameters ?? new Dictionary<string, object>();
+        public ConnectionConfig(Dictionary<string, object> parameters) => this.parameters = parameters ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         private readonly Dictionary<string, object> parameters;
 

@@ -150,7 +150,10 @@ namespace RPGDataEditor.Wpf
             AssemblyName[] referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
             Assembly[] assembliesToScan = new Assembly[referencedAssemblies.Length + 1];
             assembliesToScan[0] = Assembly.GetEntryAssembly();
-            referencedAssemblies.CopyTo(assembliesToScan, 1);
+            for (int i = 1; i < assembliesToScan.Length; i++)
+            {
+                assembliesToScan[i] = Assembly.Load(referencedAssemblies[i - 1]);
+            }
             containerRegistry.RegisterInstance<IFluentAssemblyScanner>(new FluentAssemblyScanner(assembliesToScan));
         }
 
@@ -161,7 +164,8 @@ namespace RPGDataEditor.Wpf
             foreach (Type validatorType in results.ResultTypes.First().ResultTypes)
             {
                 Type interfaceType = validatorType.GetInterfaces().First(i => typeof(IValidator<>).IsAssignableFrom(i.GetGenericTypeDefinition()));
-                containerRegistry.Register(interfaceType, validatorType);
+                // FIX: Generic type is not allowed
+                // containerRegistry.Register(interfaceType, validatorType);
             }
         }
 

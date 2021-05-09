@@ -141,7 +141,15 @@ namespace ResourceManager
                 {
                     if (assemblyType.GetGenericArguments().Length == scanType.GetGenericArguments().Length)
                     {
-                        genericType = assemblyType.MakeGenericType(scanType.GetGenericArguments());
+                        try
+                        {
+                            genericType = assemblyType.MakeGenericType(scanType.GetGenericArguments());
+                        }
+                        catch (ArgumentException)
+                        {
+                            // violates contrains, so it can be made into this generic
+                            return false;
+                        }
                     }
                 }
                 if (isEqualToScan || isGenericEqualToScan || isEqualToGenericScan)

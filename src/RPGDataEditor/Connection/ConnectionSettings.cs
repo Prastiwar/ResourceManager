@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -13,7 +14,7 @@ namespace RPGDataEditor.Connection
             public const string FTP = "Ftp";
         }
 
-        private readonly Dictionary<string, object> parameters = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         public IConnectionConfig CreateConfig() => new ConnectionConfig(parameters);
 
