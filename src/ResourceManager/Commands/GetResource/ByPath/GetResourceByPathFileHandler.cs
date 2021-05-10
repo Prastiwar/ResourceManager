@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.Commands
 {
-    public class GetResourceByPathFileHandler<TResource> : GetResourceByPathHandler<TResource>
+    public class GetResourceByPathFileHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {
         public GetResourceByPathFileHandler(IFileClient client, ISerializer serializer)
         {
@@ -18,17 +18,22 @@ namespace ResourceManager.Commands
 
         protected ISerializer Serializer { get; }
 
-        protected override async Task<TResource> GetResourceAsync(GetResourceByPathQuery<TResource> request, CancellationToken cancellationToken) => (TResource)await GetResourceByPath(request.Path);
+        public override Task<object> Handle(GetResourceByPathQuery request, CancellationToken cancellationToken)
+            => GetResourceByPath(request.ResourceType, request.Path);
 
-        protected override async Task ProcessResourcesAsync(IList<object> resources, GetResourceByPathQuery<TResource> request, CancellationToken cancellationToken)
+        public override Task<IEnumerable<object>> Handle(GetResourcesByPathQuery request, CancellationToken cancellationToken)
+            => GetResourcesByPath(request.ResourceType, request.Path);
+
+        protected async Task<IEnumerable<object>> GetResourcesByPath(Type resourceType, string path)
         {
-            IEnumerable<string> files = await Client.ListFilesAsync(request.Path);
+            IEnumerable<string> files = await Client.ListFilesAsync(path);
             List<Exception> exceptions = new List<Exception>();
+            IList<object> resources = new List<object>();
             foreach (string file in files)
             {
                 try
                 {
-                    object resource = await GetResourceByPath(file);
+                    object resource = await GetResourceByPath(resourceType, file);
                     if (!(resource is null))
                     {
                         resources.Add(resource);
@@ -43,13 +48,13 @@ namespace ResourceManager.Commands
             {
                 throw new AggregateException("One or more resources threw error while retrieving them", exceptions);
             }
+            return resources;
         }
 
-        protected async Task<object> GetResourceByPath(string path)
+        protected async Task<object> GetResourceByPath(Type resourceType, string path)
         {
             string content = await Client.ReadFileAsync(path);
-            Type elementType = typeof(TResource);
-            object resource = Serializer.Deserialize(content, elementType);
+            object resource = Serializer.Deserialize(content, resourceType);
             return resource;
         }
     }

@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using System;
 
 namespace ResourceManager.Commands
 {
-    public class GetResourceByPathQuery<TResource> : IRequest<TResource>
+    public class GetResourceByPathQuery : ResourceQuery
     {
-        public GetResourceByPathQuery(string path) => Path = path;
+        public GetResourceByPathQuery(Type resourceType, string path) : base(resourceType) => Path = path;
 
         public string Path { get; }
     }

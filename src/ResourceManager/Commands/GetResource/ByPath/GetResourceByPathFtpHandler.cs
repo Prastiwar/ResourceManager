@@ -2,7 +2,7 @@
 
 namespace ResourceManager.Commands
 {
-    public class GetResourceByPathFtpHandler<TResource> : GetResourceByPathFileHandler<TResource>
+    public class GetResourceByPathFtpHandler : GetResourceByPathFileHandler
     {
         public GetResourceByPathFtpHandler(IFtpFileClient client, ISerializer serializer) : base(client, serializer) { }
     }

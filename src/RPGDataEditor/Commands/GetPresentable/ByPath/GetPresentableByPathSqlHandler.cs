@@ -1,4 +1,6 @@
 ﻿using ResourceManager;
+using ResourceManager.Services;
+using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -6,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Commands
 {
-    /// <summary> Handles GetResourceByPath where path should be formatted as [TableName].ResourceId </summary>
+    /// <summary> Handles GetPresentableByPath where path should be formatted as [TableName].ResourceId </summary>
     public class GetPresentableByPathSqlHandler<TResource> : GetPresentableByPathHandler<TResource>
     {
-        public GetPresentableByPathSqlHandler(ISqlClient client) => Client = client;
+        public GetPresentableByPathSqlHandler(ISqlClient client, IResourceDescriptorService descriptorService)
+            : base(descriptorService) => Client = client;
 
         protected ISqlClient Client { get; }
 
-        protected override async Task<TResource> GetResourceAsync(GetPresentableByPathQuery<TResource> request, CancellationToken cancellationToken) => (TResource)await GetResourceByPath(request.Path);
+        protected override async Task<PresentableData> GetResourceAsync(GetPresentableByPathQuery<TResource> request, CancellationToken cancellationToken) 
+            => await GetPresentableByPath(request.Path);
 
         protected override async Task ProcessResourcesAsync(IList<object> resources, GetPresentableByPathQuery<TResource> request, CancellationToken cancellationToken)
         {

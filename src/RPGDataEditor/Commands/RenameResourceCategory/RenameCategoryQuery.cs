@@ -2,7 +2,7 @@
 
 namespace RPGDataEditor.Commands
 {
-    public class RenameCategoryQuery<TResource> : ResourceQuery<TResource, RenameCategoryResults>
+    public class RenameCategoryQuery<TResource> : ResourceRequest<TResource, RenameCategoryResults>
     {
         public RenameCategoryQuery(TResource resource, string oldCategory, string newCategory) : base(resource)
         {

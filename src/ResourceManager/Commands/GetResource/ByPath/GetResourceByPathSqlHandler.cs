@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 namespace ResourceManager.Commands
 {
     /// <summary> Handles GetResourceByPath where path should be formatted as [TableName].ResourceId </summary>
-    public class GetResourceByPathSqlHandler<TResource> : GetResourceByPathHandler<TResource>
+    public class GetResourceByPathSqlHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {
         public GetResourceByPathSqlHandler(ISqlClient client) => Client = client;
 
         protected ISqlClient Client { get; }
 
-        protected override async Task<TResource> GetResourceAsync(GetResourceByPathQuery<TResource> request, CancellationToken cancellationToken) => (TResource)await GetResourceByPath(request.Path);
+        public override Task<object> Handle(GetResourceByPathQuery request, CancellationToken cancellationToken)
+            => GetResourceByPath(request.ResourceType, request.Path);
 
-        protected override async Task ProcessResourcesAsync(IList<object> resources, GetResourceByPathQuery<TResource> request, CancellationToken cancellationToken)
+        public override Task<IEnumerable<object>> Handle(GetResourcesByPathQuery request, CancellationToken cancellationToken)
         {
             FormatPath(request.Path, out string tableName, out string id);
-            IEnumerable<object> entities = await Client.SelectAsync(tableName, typeof(TResource));
-            resources.AddRange(entities);
+            return Client.SelectAsync(tableName, request.ResourceType);
         }
 
-        protected async Task<object> GetResourceByPath(string path)
+        protected async Task<object> GetResourceByPath(Type resourceType, string path)
         {
             FormatPath(path, out string tableName, out string id);
-            return await Client.SelectScalarAsync(tableName, typeof(TResource), id);
+            return await Client.SelectScalarAsync(tableName, resourceType, id);
         }
 
         protected virtual void FormatPath(string path, out string tableName, out string id)

@@ -15,7 +15,7 @@ namespace ResourceManager.Services
             {
                 return typedResources;
             }
-            throw new DescribtionException($"{type.Name} cannot be described by any descriptor");
+            throw new MissingDescriptorException($"{type.Name} cannot be described by any descriptor");
         }
 
         public void Register(Type type, RegisterOptions options, params IResourceDescriptor[] descriptors)

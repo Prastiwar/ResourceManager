@@ -1,6 +1,6 @@
 ﻿namespace ResourceManager.Commands
 {
-    public class CreateResourceQuery<TResource> : ResourceQuery<TResource, CreateResourceResults>
+    public class CreateResourceQuery<TResource> : ResourceRequest<TResource, CreateResourceResults>
     {
         public CreateResourceQuery(TResource resource) : base(resource) { }
     }
