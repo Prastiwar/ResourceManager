@@ -4,8 +4,8 @@ namespace ResourceManager.Commands
 {
     public class GetResourcesByPathQuery : EnumerableResourceQuery
     {
-        public GetResourcesByPathQuery(Type resourceType, string path) : base(resourceType) => Path = path;
+        public GetResourcesByPathQuery(Type resourceType, string[] paths) : base(resourceType) => Paths = paths;
 
-        public string Path { get; }
+        public string[] Paths { get; }
     }
 }

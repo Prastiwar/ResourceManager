@@ -20,7 +20,7 @@ namespace ResourceManager.Commands
         public override Task<IEnumerable<object>> Handle(GetResourcesByIdQuery request, CancellationToken cancellationToken)
         {
             string table = GetTableName(request.ResourceType);
-            return Client.SelectAsync(table, request.ResourceType);
+            return Client.SelectAsync(table, request.ResourceType, request.Ids);
         }
 
         private string GetTableName(Type resourceType) => BraceTableName(Client.GetTableName(resourceType));

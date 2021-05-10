@@ -1,43 +1,56 @@
-﻿using System;
+﻿using ResourceManager.Data;
+using ResourceManager.Services;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ResourceManager.Commands
 {
-    /// <summary> Handles GetResourceByPath where path should be formatted as [TableName].ResourceId </summary>
     public class GetResourceByPathSqlHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {
-        public GetResourceByPathSqlHandler(ISqlClient client) => Client = client;
+        public GetResourceByPathSqlHandler(IResourceDescriptorService descriptorService, ISqlClient client)
+        {
+            DescriptorService = descriptorService;
+            Client = client;
+        }
+
+        protected IResourceDescriptorService DescriptorService { get; }
 
         protected ISqlClient Client { get; }
 
         public override Task<object> Handle(GetResourceByPathQuery request, CancellationToken cancellationToken)
             => GetResourceByPath(request.ResourceType, request.Path);
 
-        public override Task<IEnumerable<object>> Handle(GetResourcesByPathQuery request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<object>> Handle(GetResourcesByPathQuery request, CancellationToken cancellationToken)
         {
-            FormatPath(request.Path, out string tableName, out string id);
-            return Client.SelectAsync(tableName, request.ResourceType);
+            string tableName = Client.GetTableName(request.ResourceType);
+            IList<object> ids = new List<object>();
+            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
+            foreach (string path in request.Paths)
+            {
+                KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
+                KeyValuePair<string, object> idParameter = parameters.FirstOrDefault(parameter => string.Compare(parameter.Key, "id", true) == 0);
+                if (idParameter.Key != null)
+                {
+                    ids.Add(idParameter.Value);
+                }
+            }
+            return await Client.SelectAsync(tableName, request.ResourceType, ids.ToArray());
         }
 
         protected async Task<object> GetResourceByPath(Type resourceType, string path)
         {
-            FormatPath(path, out string tableName, out string id);
-            return await Client.SelectScalarAsync(tableName, resourceType, id);
-        }
-
-        protected virtual void FormatPath(string path, out string tableName, out string id)
-        {
-            try
+            string tableName = Client.GetTableName(resourceType);
+            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+            KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
+            KeyValuePair<string, object> idParameter = parameters.FirstOrDefault(parameter => string.Compare(parameter.Key, "id", true) == 0);
+            if (idParameter.Key != null)
             {
-                tableName = path.Substring(0, path.LastIndexOf(']'));
-                id = path.Substring(tableName.Length + 1);
+                return await Client.SelectScalarAsync(tableName, resourceType, idParameter.Value);
             }
-            catch (Exception ex)
-            {
-                throw new FormatException("Path to sql should have format [TableName].ResourceId, is: " + path, ex);
-            }
+            return default;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ResourceManager;
+using ResourceManager.Data;
 using ResourceManager.Services;
 using RPGDataEditor.Models;
 using System;
@@ -9,39 +10,56 @@ using System.Threading.Tasks;
 namespace RPGDataEditor.Commands
 {
     /// <summary> Handles GetPresentableByPath where path should be formatted as [TableName].ResourceId </summary>
-    public class GetPresentableByPathSqlHandler<TResource> : GetPresentableByPathHandler<TResource>
+    public class GetPresentableByPathSqlHandler : GetPresentableHandler<GetPresentableByPathQuery, GetPresentablesByPathQuery>
     {
-        public GetPresentableByPathSqlHandler(ISqlClient client, IResourceDescriptorService descriptorService)
+        public GetPresentableByPathSqlHandler(IResourceDescriptorService descriptorService, ISqlClient client) 
             : base(descriptorService) => Client = client;
 
         protected ISqlClient Client { get; }
 
-        protected override async Task<PresentableData> GetResourceAsync(GetPresentableByPathQuery<TResource> request, CancellationToken cancellationToken) 
-            => await GetPresentableByPath(request.Path);
+        public override Task<PresentableData> Handle(GetPresentableByPathQuery request, CancellationToken cancellationToken)
+            => GetPresentableByPath(request.ResourceType, request.Path);
 
-        protected override async Task ProcessResourcesAsync(IList<object> resources, GetPresentableByPathQuery<TResource> request, CancellationToken cancellationToken)
-        {
-            FormatPath(request.Path, out string tableName, out string id);
-            IEnumerable<object> entities = await Client.SelectAsync(tableName, typeof(TResource));
-            resources.AddRange(entities);
-        }
+        public override Task<IEnumerable<PresentableData>> Handle(GetPresentablesByPathQuery request, CancellationToken cancellationToken)
+            => GetPresentablesByPath(request.ResourceType, request.Paths);
 
-        protected async Task<object> GetResourceByPath(string path)
+        protected async Task<IEnumerable<PresentableData>> GetPresentablesByPath(Type resourceType, string[] paths)
         {
-            FormatPath(path, out string tableName, out string id);
-            return await Client.SelectScalarAsync(tableName, typeof(TResource), id);
-        }
-
-        protected virtual void FormatPath(string path, out string tableName, out string id)
-        {
-            try
+            IList<PresentableData> presentables = new List<PresentableData>();
+            List<Exception> exceptions = new List<Exception>();
+            if (paths == null || paths.Length == 0)
             {
-                tableName = path.Substring(0, path.LastIndexOf(']'));
-                id = path.Substring(tableName.Length + 1);
+                PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+                IEnumerable<string> files = await Client.SelectAsync(pathDescriptor.RelativeRootPath, resourceType);
+                await AddResourcesByPaths(resourceType, files, presentables, exceptions);
             }
-            catch (Exception ex)
+            else
             {
-                throw new FormatException("Path to sql should have format [TableName].ResourceId, is: " + path, ex);
+                await AddResourcesByPaths(resourceType, paths, presentables, exceptions);
+            }
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException("One or more resources threw error while retrieving them", exceptions);
+            }
+            return presentables;
+        }
+
+        private async Task AddResourcesByPaths(Type resourceType, IEnumerable<string> paths, IList<PresentableData> resources, List<Exception> exceptions)
+        {
+            foreach (string path in paths)
+            {
+                try
+                {
+                    PresentableData resource = await GetPresentableByPath(resourceType, path);
+                    if (!(resource is null))
+                    {
+                        resources.Add(resource);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
             }
         }
     }

@@ -12,9 +12,7 @@ namespace ResourceManager.Commands
                                                                              IRequestHandler<GetResourcesByIdQuery, IEnumerable<object>>
     {
         public GetResourceByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
-            : base(client, serializer) => DescriptorService = descriptorService;
-
-        protected IResourceDescriptorService DescriptorService { get; }
+            : base(client, serializer, descriptorService) { }
 
         public async Task<object> Handle(GetResourceByIdQuery request, CancellationToken cancellationToken)
         {
@@ -32,11 +30,24 @@ namespace ResourceManager.Commands
             return default;
         }
 
-        public Task<IEnumerable<object>> Handle(GetResourcesByIdQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<object>> Handle(GetResourcesByIdQuery request, CancellationToken cancellationToken)
         {
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
-            string path = pathDescriptor.RelativeRootPath;
-            return GetResourcesByPath(request.ResourceType, path);
+            IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
+            IList<string> paths = new List<string>();
+            if (request.Ids != null && request.Ids.Length > 0)
+            {
+                foreach (string file in files)
+                {
+                    KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
+                    KeyValuePair<string, object> parameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
+                    if (parameter.Key != null && request.Ids.Any(id => id == parameter.Value))
+                    {
+                        paths.Add(file);
+                    }
+                }
+            }
+            return await GetResourcesByPath(request.ResourceType, paths.ToArray());
         }
     }
 }

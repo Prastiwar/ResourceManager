@@ -1,34 +1,54 @@
 ﻿using ResourceManager;
 using ResourceManager.Services;
 using RPGDataEditor.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Commands
 {
-    public class GetPresentableByIdSqlHandler<TResource> : GetPresentableByIdHandler<TResource>
+    public class GetPresentableByIdSqlHandler : GetPresentableHandler<GetPresentableByIdQuery, GetPresentablesByIdQuery>
     {
-        public GetPresentableByIdSqlHandler(ISqlClient client, IResourceDescriptorService descriptorService)
+        public GetPresentableByIdSqlHandler(IResourceDescriptorService descriptorService, ISqlClient client)
             : base(descriptorService) => Client = client;
 
         protected ISqlClient Client { get; }
 
-        protected override async Task<PresentableData> GetResourceAsync(GetPresentableByIdQuery<TResource> request, CancellationToken cancellationToken)
+        public override Task<PresentableData> Handle(GetPresentableByIdQuery request, CancellationToken cancellationToken)
         {
-            string table = GetTableName();
-            return (PresentableData)(await Client.SelectScalarAsync(table, typeof(TResource), request.Id));
+            string table = GetTableName(request.ResourceType);
+            return GetPresentableByPath(request.ResourceType, table + "." + request.Id);
         }
 
-        protected override async Task ProcessResourcesAsync(IList<object> resources, GetPresentableByIdQuery<TResource> request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<PresentableData>> Handle(GetPresentablesByIdQuery request, CancellationToken cancellationToken)
         {
-            string table = GetTableName();
-            IEnumerable<object> entities = await Client.SelectAsync(table, typeof(TResource).GetEnumerableElementType());
-            // TODO: Change to presentable
-            resources.AddRange(entities);
+            string table = GetTableName(request.ResourceType);
+            IList<PresentableData> presentables = new List<PresentableData>();
+            List<Exception> exceptions = new List<Exception>();
+            foreach (object id in request.Ids)
+            {
+                try
+                {
+                    PresentableData presentable = await GetPresentableByPath(request.ResourceType, table + "." + id);
+                    if (presentable != null)
+                    {
+                        presentables.Add(presentable);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+            }
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException("One or more presentables threw error while retrieving them", exceptions);
+            }
+            return presentables;
         }
 
-        private string GetTableName() => BraceTableName(Client.GetTableName(typeof(TResource)));
+        private string GetTableName(Type resourceType) => BraceTableName(Client.GetTableName(resourceType));
 
         private string BraceTableName(string table)
         {

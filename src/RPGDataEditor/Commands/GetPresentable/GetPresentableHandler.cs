@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using ResourceManager;
-using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.Services;
 using RPGDataEditor.Models;
@@ -12,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Commands
 {
-    public abstract class GetPresentableHandler<TQuery, TEnumerableQuery> : IRequestHandler<TQuery, object>,
-                                                                            IRequestHandler<TEnumerableQuery, IEnumerable<object>>
-        where TQuery : IResourceQuery
-        where TEnumerableQuery : IEnumerableResourceQuery
+    public abstract class GetPresentableHandler<TQuery, TEnumerableQuery> : IRequestHandler<TQuery, PresentableData>,
+                                                                            IRequestHandler<TEnumerableQuery, IEnumerable<PresentableData>>
+        where TQuery : IRequest<PresentableData>
+        where TEnumerableQuery : IRequest<IEnumerable<PresentableData>>
     {
         protected GetPresentableHandler(IResourceDescriptorService descriptorService) => DescriptorService = descriptorService;
 
         protected IResourceDescriptorService DescriptorService { get; }
 
-        public abstract Task<object> Handle(TQuery request, CancellationToken cancellationToken);
+        public abstract Task<PresentableData> Handle(TQuery request, CancellationToken cancellationToken);
 
-        public abstract Task<IEnumerable<object>> Handle(TEnumerableQuery request, CancellationToken cancellationToken);
+        public abstract Task<IEnumerable<PresentableData>> Handle(TEnumerableQuery request, CancellationToken cancellationToken);
 
         protected Task<PresentableData> GetPresentableByPath(Type resourceType, string path)
         {

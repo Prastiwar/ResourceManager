@@ -14,7 +14,7 @@ namespace ResourceManager.Tests
     public class DescriptorTests
     {
         [Fact]
-        public void ParsePathDescriptor()
+        public void ParseFilePathDescriptor()
         {
             PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "dummies", "/{category}/{id}_{name}x");
             string path = "dummies/SomeCategory/1_Foox";
@@ -28,6 +28,19 @@ namespace ResourceManager.Tests
             Assert.Equal("SomeCategory", parameters[0].Value);
             Assert.Equal("1", parameters[1].Value);
             Assert.Equal("Foo", parameters[2].Value);
+        }
+
+        [Fact]
+        public void ParseSqlPathDescriptor()
+        {
+            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "dummies", ".{id}");
+            string path = "[dummies].1";
+            KeyValuePair<string, object>[] parameters = descriptor.ParseParameters(path);
+            Assert.Single(parameters);
+
+            Assert.Equal("id", parameters[0].Key);
+
+            Assert.Equal("1", parameters[0].Value);
         }
     }
 }
