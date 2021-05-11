@@ -35,6 +35,6 @@ namespace RPGDataEditor.Providers
             return (T)Activator.CreateInstance(targetType);
         }
 
-        protected virtual Type GetImplementationType(Type baseType) => Scanner.Scan().Select(baseType).Ignore(GetIgnoredTypes()).Get().ResultTypes.First().ResultTypes.First();
+        protected virtual Type GetImplementationType(Type baseType) => Scanner.Scan().Select(baseType).Ignore(GetIgnoredTypes()).Get().Scans.First().ResultTypes.First();
     }
 }

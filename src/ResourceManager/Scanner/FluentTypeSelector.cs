@@ -41,7 +41,7 @@ namespace ResourceManager
 
         public IFluentTypeSelector ScanTypes(IFluentTypeSelector selector)
         {
-            foreach (TypeScan scan in selector.Get().ResultTypes)
+            foreach (TypeScan scan in selector.Get().Scans)
             {
                 foreach (Type item in scan.ResultTypes)
                 {
@@ -74,32 +74,37 @@ namespace ResourceManager
 
         public TypeScanResult Get()
         {
-            IEnumerable<KeyValuePair<Type, Type>> singleResults = QueryAssemblies();
-            IEnumerable<KeyValuePair<Type, Type>> QueryAssemblies()
+            IEnumerable<TypeScan> QueryAssemblies()
             {
                 foreach (Type scanType in TypesToScan)
                 {
-                    foreach (Assembly assembly in Assemblies)
+                    TypeScan scan = new TypeScan(scanType, EnumerateResultsForType(scanType));
+                    yield return scan;
+                }
+            }
+            return new TypeScanResult(QueryAssemblies());
+        }
+
+        protected virtual IEnumerable<Type> EnumerateResultsForType(Type scanType)
+        {
+            foreach (Assembly assembly in Assemblies)
+            {
+                foreach (Type assemblyType in assembly.GetExportedTypes())
+                {
+                    bool acceptByAbstract = selectAbstract ? assemblyType.IsAbstract : !assemblyType.IsAbstract;
+                    if (acceptByAbstract && (customPredicate == null || customPredicate.Invoke(assemblyType)))
                     {
-                        foreach (Type assemblyType in assembly.GetExportedTypes())
+                        if (HasSimpleRelationship(scanType, assemblyType))
                         {
-                            bool acceptByAbstract = selectAbstract ? assemblyType.IsAbstract : !assemblyType.IsAbstract;
-                            if (acceptByAbstract && (customPredicate == null || customPredicate.Invoke(assemblyType)))
-                            {
-                                if (HasSimpleRelationship(scanType, assemblyType))
-                                {
-                                    yield return new KeyValuePair<Type, Type>(scanType, assemblyType);
-                                }
-                                else if (HasGenericRelationship(scanType, assemblyType, out Type genericAssemblyType))
-                                {
-                                    yield return new KeyValuePair<Type, Type>(scanType, genericAssemblyType ?? assemblyType);
-                                }
-                            }
+                            yield return assemblyType;
+                        }
+                        else if (HasGenericRelationship(scanType, assemblyType, out Type genericAssemblyType))
+                        {
+                            yield return genericAssemblyType ?? assemblyType;
                         }
                     }
                 }
             }
-            return new TypeScanResult(singleResults.GroupBy(x => x.Key, (scanType, results) => new TypeScan(scanType, results.Select(resultTypes => resultTypes.Value))));
         }
 
         private static bool HasGenericRelationship(Type scanType, Type assemblyType, out Type genericType)

@@ -3,7 +3,6 @@ using DryIoc;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using MediatR.Pipeline;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -164,7 +163,7 @@ namespace RPGDataEditor.Wpf
         {
             IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
             TypeScanResult results = scanner.Scan().ScanTypes(t => !t.IsGenericType).Select(typeof(AbstractValidator<>)).Get();
-            foreach (Type validatorType in results.ResultTypes.First().ResultTypes)
+            foreach (Type validatorType in results.Scans.First().ResultTypes)
             {
                 Type interfaceType = validatorType.GetInterfaces().First(i => typeof(IValidator<>).IsAssignableFrom(i.GetGenericTypeDefinition()));
                 containerRegistry.Register(interfaceType, validatorType);
@@ -231,8 +230,20 @@ namespace RPGDataEditor.Wpf
         protected virtual void RegisterMediator(IContainerRegistry containerRegistry)
         {
             IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
+
+            Type genericNotificationHandlerType = typeof(INotificationHandler<>);
+            TypeScan scan = scanner.Scan().Select(genericNotificationHandlerType).Get().Scans.First();
+            foreach (Type result in scan.ResultTypes)
+            {
+                System.Collections.Generic.IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericNotificationHandlerType);
+                foreach (Type handlerInterface in handlerInterfaces)
+                {
+                    containerRegistry.RegisterSingleton(handlerInterface, result);
+                }
+            }
+
             Type genericHandlerType = typeof(IRequestHandler<,>);
-            TypeScan scan = scanner.Scan().Select(genericHandlerType).Get().ResultTypes.First();
+            scan = scanner.Scan().Select(genericHandlerType).Get().Scans.First();
             foreach (Type result in scan.ResultTypes)
             {
                 System.Collections.Generic.IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericHandlerType);
@@ -242,9 +253,8 @@ namespace RPGDataEditor.Wpf
                 }
             }
 
-
             Type genericPipelineType = typeof(IPipelineBehavior<,>);
-            scan = scanner.Scan().Select(genericPipelineType).Get().ResultTypes.First();
+            scan = scanner.Scan().Select(genericPipelineType).Get().Scans.First();
             foreach (Type result in scan.ResultTypes)
             {
                 if (result.IsGenericType)
@@ -303,7 +313,7 @@ namespace RPGDataEditor.Wpf
             {
                 sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString)).ToString();
             }
-            // TODO: configure registration of command handlers 
+            // TODO: configure registration of command handlers
         }
     }
 }
