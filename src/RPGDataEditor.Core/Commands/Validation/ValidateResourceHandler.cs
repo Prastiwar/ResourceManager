@@ -1,16 +1,15 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using MediatR;
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Commands
 {
-    public class ValidateResourceHandler<TResource> : ValidatorDecorator<TResource>, IRequestHandler<ValidateResourceQuery<TResource>, ValidationResult>
+    public class ValidateResourceHandler : ValidatorRequestDecorator, IRequestHandler<ValidateResourceQuery, ValidationResult>
     {
-        public ValidateResourceHandler(IEnumerable<IValidator<TResource>> validators) : base(validators) { }
+        public ValidateResourceHandler(IServiceProvider provider) : base(provider) { }
 
-        public Task<ValidationResult> Handle(ValidateResourceQuery<TResource> request, CancellationToken cancellationToken) => ValidateAsync(request.Resource, cancellationToken);
+        public Task<ValidationResult> Handle(ValidateResourceQuery request, CancellationToken cancellationToken) => ValidateAsync(request.Resource, cancellationToken);
     }
 }

@@ -15,7 +15,7 @@ namespace RPGDataEditor.Wpf.Converters
             {
                 throw new ArgumentNullException($"{nameof(TargetProxyType)} is required to create proper proxy instance");
             }
-            if (typeof(IProxyConnectionSettings).IsAssignableFrom(TargetProxyType))
+            if (!typeof(IProxyConnectionSettings).IsAssignableFrom(TargetProxyType))
             {
                 throw new InvalidOperationException($"{nameof(TargetProxyType)} is invalid type. It should be assignable to {typeof(IProxyConnectionSettings)}");
             }

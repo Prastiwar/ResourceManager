@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using RPGDataEditor.Connection;
 using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Navigation;
@@ -16,7 +15,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
-            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery<IConnectionConfig>(Context.Connection.Config));
+            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery(Context.Connection.Config));
             if (result.IsValid)
             {
                 bool connected = await Context.Connection.Checker.ForceCheckAsync(default);

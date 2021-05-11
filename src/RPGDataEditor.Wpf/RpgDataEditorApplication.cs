@@ -1,6 +1,8 @@
 ﻿using AutoUpdaterDotNET;
 using DryIoc;
 using FluentValidation;
+using FluentValidation.Results;
+using MediatR;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -11,6 +13,7 @@ using ResourceManager.Data;
 using ResourceManager.Services;
 using RPGDataEditor.Connection;
 using RPGDataEditor.Core;
+using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Core.Connection;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
@@ -30,7 +33,6 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf
 {
@@ -68,7 +70,7 @@ namespace RPGDataEditor.Wpf
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
         {
             base.ConfigureRegionAdapterMappings(regionAdapterMappings);
-            regionAdapterMappings.RegisterMapping(typeof(TabControl), Container.Resolve<TabControlAdapter>());
+            regionAdapterMappings.RegisterMapping(typeof(System.Windows.Controls.TabControl), Container.Resolve<TabControlAdapter>());
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
@@ -76,7 +78,6 @@ namespace RPGDataEditor.Wpf
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
-
             RegisterLogging(containerRegistry);
             try
             {
@@ -94,6 +95,7 @@ namespace RPGDataEditor.Wpf
             RegisterServices(containerRegistry);
             RegisterDialogs(containerRegistry);
             RegisterDescriptors(containerRegistry);
+            RegisterMediator(containerRegistry);
 
             InitializeAutoUpdater();
 
@@ -224,6 +226,25 @@ namespace RPGDataEditor.Wpf
                 Mandatory = updateInfo.Mandatory,
                 CheckSum = updateInfo.CheckSum
             };
+        }
+
+        protected virtual void RegisterMediator(IContainerRegistry containerRegistry)
+        {
+            IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
+            Type genericHandlerType = typeof(IRequestHandler<,>);
+            TypeScan scan = scanner.Scan().Select(genericHandlerType).Get().ResultTypes.First();
+            foreach (Type result in scan.ResultTypes)
+            {
+                System.Collections.Generic.IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericHandlerType);
+                foreach (Type item in handlerInterfaces)
+                {
+                    containerRegistry.RegisterSingleton(item, result);
+                }
+            }
+            containerRegistry.RegisterSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            containerRegistry.RegisterSingleton(typeof(IRequestHandler<ValidateResourceQuery, ValidationResult>), typeof(ValidateResourceHandler));
+            containerRegistry.RegisterInstance(typeof(ServiceFactory), (ServiceFactory)Container.Resolve);
+            containerRegistry.RegisterSingleton<IMediator, Mediator>();
         }
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)

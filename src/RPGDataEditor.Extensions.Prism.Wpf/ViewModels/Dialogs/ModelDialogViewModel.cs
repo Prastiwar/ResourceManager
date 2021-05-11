@@ -34,7 +34,7 @@ namespace RPGDataEditor.Mvvm
         {
             if (result)
             {
-                FluentValidation.Results.ValidationResult validationResult = await Context.Mediator.Send(new ValidateResourceQuery<TModel>(Model));
+                FluentValidation.Results.ValidationResult validationResult = await Context.Mediator.Send(new ValidateResourceQuery(Model));
                 return !validationResult.IsValid;
             }
             return false;

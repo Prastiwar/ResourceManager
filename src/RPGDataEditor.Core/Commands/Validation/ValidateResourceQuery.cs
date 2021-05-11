@@ -3,8 +3,8 @@ using ResourceManager.Commands;
 
 namespace RPGDataEditor.Core.Commands
 {
-    public class ValidateResourceQuery<TResource> : ResourceRequest<TResource, ValidationResult>
+    public class ValidateResourceQuery : ResourceRequest<object, ValidationResult>
     {
-        public ValidateResourceQuery(TResource resource) : base(resource) { }
+        public ValidateResourceQuery(object resource) : base(resource) { }
     }
 }
