@@ -176,6 +176,7 @@ namespace RPGDataEditor.Wpf
             AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
+            containerRegistry.RegisterSingleton<IServiceProvider, PrismServiceProvider>();
         }
 
         protected virtual void RegisterServices(IContainerRegistry containerRegistry)
@@ -283,7 +284,7 @@ namespace RPGDataEditor.Wpf
                 string json = File.ReadAllText(SessionFilePath);
                 settings = JsonConvert.DeserializeObject<IConnectionSettings>(json);
             }
-            IConnectionConfig config = settings != null ? settings.CreateConfig() : new ConnectionSettings() { Type = "Local" }.CreateConfig();
+            IConnectionConfig config = settings != null ? settings.CreateConfig() : new ConnectionSettings() { Type = ConnectionSettings.Connection.LOCAL }.CreateConfig();
             IConnectionConfiguration configuration = containerRegistry.GetContainer().Resolve<IConnectionConfiguration>();
             configuration.Configure(config);
 
@@ -297,11 +298,12 @@ namespace RPGDataEditor.Wpf
 
         private void Configuration_Configured(object sender, IConnectionConfig e)
         {
-            if (Container.Resolve<IFileClient>() is LocalFileClient localClient)
+            string type = (string)e.Get(nameof(ConnectionSettings.Type));
+            if (type == ConnectionSettings.Connection.LOCAL && Container.Resolve<IFileClient>() is LocalFileClient localClient)
             {
                 localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath)).ToString();
             }
-            if (Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
+            if (type == ConnectionSettings.Connection.FTP && Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
             {
                 ftpClient.Host = e.Get(nameof(FtpFileClient.Host)).ToString();
                 ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath)).ToString();
@@ -309,7 +311,7 @@ namespace RPGDataEditor.Wpf
                 ftpClient.Password = e.Get(nameof(FtpFileClient.Password)) as SecureString;
                 ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port));
             }
-            if (Container.Resolve<ISqlClient>() is SqlClient sqlClient)
+            if (type == ConnectionSettings.Connection.SQL && Container.Resolve<ISqlClient>() is SqlClient sqlClient)
             {
                 sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString)).ToString();
             }

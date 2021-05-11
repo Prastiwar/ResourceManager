@@ -6,6 +6,6 @@
              Style="{DynamicResource DefaultControlStyle}">
     <controls:SessionControl x:Name="SessionControl"
                              Margin="32"
-                             DataContext="{Binding Session}"
+                             DataContext="{Binding ConnectionSettings}"
                              TypeChange="SessionControl_TypeChange" />
 </UserControl>

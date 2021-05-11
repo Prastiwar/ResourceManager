@@ -16,8 +16,19 @@ namespace RPGDataEditor.Core.Commands
         {
             ValidationContext<object> context = new ValidationContext<object>(instance);
             Type validatorType = typeof(IValidator<>).MakeGenericType(instance.GetType());
-            IValidator validator = Provider.GetService(validatorType) as IValidator;
-            return validator != null ? await validator.ValidateAsync(context) : new ValidationResult();
+            try
+            {
+                IValidator validator = Provider.GetService(validatorType) as IValidator;
+                return await validator.ValidateAsync(context);
+            }
+            catch (ValidationException ex)
+            {
+                return new ValidationResult(ex.Errors);
+            }
+            catch (Exception)
+            {
+                return new ValidationResult();
+            }
         }
     }
 }

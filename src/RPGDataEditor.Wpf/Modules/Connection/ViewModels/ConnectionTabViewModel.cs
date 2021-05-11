@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using RPGDataEditor.Connection;
 using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Navigation;
@@ -10,6 +11,12 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
     public class ConnectionTabViewModel : ScreenViewModel
     {
         public ConnectionTabViewModel(ViewModelContext context) : base(context) { }
+
+        private IConnectionSettings connectionSettings;
+        public IConnectionSettings ConnectionSettings {
+            get => connectionSettings;
+            set => SetProperty(ref connectionSettings, value);
+        }
 
         public override Task<bool> CanNavigateTo(INavigationContext navigationContext) => Task.FromResult(true);
 
@@ -37,12 +44,14 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
+            ConnectionSettings = new ConnectionSettings(Context.Connection.Config);
             Context.Connection.Checker.Stop();
             return Task.CompletedTask;
         }
 
         public override Task OnNavigatedFromAsync(INavigationContext navigationContext)
         {
+            Context.Connection.Configure(ConnectionSettings.CreateConfig());
             Context.Connection.Checker.Start();
             Context.Connection.Checker.Changed -= ConnectionChecker_Changed;
             Context.Connection.Checker.Changed += ConnectionChecker_Changed;

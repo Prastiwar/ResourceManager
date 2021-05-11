@@ -14,6 +14,16 @@ namespace RPGDataEditor.Connection
             public const string FTP = "Ftp";
         }
 
+        public ConnectionSettings() { }
+
+        public ConnectionSettings(IConnectionConfig currentConfig)
+        {
+            foreach (KeyValuePair<string, object> parameter in currentConfig)
+            {
+                Set(parameter.Key, parameter.Value);
+            }
+        }
+
         private readonly Dictionary<string, object> parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         public IConnectionConfig CreateConfig() => new ConnectionConfig(parameters);
