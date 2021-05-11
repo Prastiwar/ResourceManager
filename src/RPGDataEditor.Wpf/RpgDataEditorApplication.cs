@@ -3,6 +3,7 @@ using DryIoc;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using MediatR.Pipeline;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -162,12 +163,11 @@ namespace RPGDataEditor.Wpf
         protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
         {
             IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
-            TypeScanResult results = scanner.Scan().Select(typeof(AbstractValidator<>)).Get();
+            TypeScanResult results = scanner.Scan().ScanTypes(t => !t.IsGenericType).Select(typeof(AbstractValidator<>)).Get();
             foreach (Type validatorType in results.ResultTypes.First().ResultTypes)
             {
                 Type interfaceType = validatorType.GetInterfaces().First(i => typeof(IValidator<>).IsAssignableFrom(i.GetGenericTypeDefinition()));
-                // TODO: fix generic type is not allowed
-                // containerRegistry.Register(interfaceType, validatorType);
+                containerRegistry.Register(interfaceType, validatorType);
             }
         }
 
@@ -236,11 +236,28 @@ namespace RPGDataEditor.Wpf
             foreach (Type result in scan.ResultTypes)
             {
                 System.Collections.Generic.IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericHandlerType);
-                foreach (Type item in handlerInterfaces)
+                foreach (Type handlerInterface in handlerInterfaces)
                 {
-                    containerRegistry.RegisterSingleton(item, result);
+                    containerRegistry.RegisterSingleton(handlerInterface, result);
                 }
             }
+
+
+            Type genericPipelineType = typeof(IPipelineBehavior<,>);
+            scan = scanner.Scan().Select(genericPipelineType).Get().ResultTypes.First();
+            foreach (Type result in scan.ResultTypes)
+            {
+                if (result.IsGenericType)
+                {
+                    continue;
+                }
+                System.Collections.Generic.IEnumerable<Type> pipelineInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericPipelineType);
+                foreach (Type pipelineInterface in pipelineInterfaces)
+                {
+                    containerRegistry.RegisterSingleton(pipelineInterface, result);
+                }
+            }
+
             containerRegistry.RegisterSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             containerRegistry.RegisterSingleton(typeof(IRequestHandler<ValidateResourceQuery, ValidationResult>), typeof(ValidateResourceHandler));
             containerRegistry.RegisterInstance(typeof(ServiceFactory), (ServiceFactory)Container.Resolve);
