@@ -4,6 +4,7 @@ namespace ResourceManager.Commands
 {
     public class GetResourceByPathFtpHandler : GetResourceByPathFileHandler
     {
-        public GetResourceByPathFtpHandler(IFtpFileClient client, ISerializer serializer) : base(client, serializer) { }
+        public GetResourceByPathFtpHandler(IResourceDescriptorService descriptorService, IFtpFileClient client, ISerializer serializer)
+            : base(descriptorService, client, serializer) { }
     }
 }

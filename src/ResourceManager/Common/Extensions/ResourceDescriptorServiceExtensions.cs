@@ -17,7 +17,7 @@ namespace ResourceManager
             where TDescriptor : IResourceDescriptor
         {
             IEnumerable<IResourceDescriptor> descriptors = service.Describe(type);
-            TDescriptor descriptor = descriptors.OfType<TDescriptor>().FirstOrDefault();
+            TDescriptor descriptor = descriptors.Where(x => x.GetType() == typeof(TDescriptor)).Cast<TDescriptor>().FirstOrDefault();
             if (descriptor == null)
             {
                 throw new MissingDescriptorException($"Descriptor of type {typeof(TDescriptor)} was not found for resource: {type}");

@@ -74,14 +74,11 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
         {
-            object queryResult = await Context.Mediator.Send(new GetResourceByIdQuery(resourceType));
+            IEnumerable<object> resources = await Context.Mediator.Send(new GetResourcesByIdQuery(resourceType, null));
             List<IIdentifiable> list = new List<IIdentifiable>() {
                 new NullResource()
             };
-            if (queryResult is IEnumerable<object> resources)
-            {
-                list.AddRange(resources.Cast<IIdentifiable>());
-            }
+            list.AddRange(resources.Cast<IIdentifiable>());
             return list;
         }
 

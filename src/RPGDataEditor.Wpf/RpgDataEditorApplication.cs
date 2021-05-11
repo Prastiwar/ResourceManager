@@ -164,7 +164,7 @@ namespace RPGDataEditor.Wpf
             foreach (Type validatorType in results.ResultTypes.First().ResultTypes)
             {
                 Type interfaceType = validatorType.GetInterfaces().First(i => typeof(IValidator<>).IsAssignableFrom(i.GetGenericTypeDefinition()));
-                // FIX: Generic type is not allowed
+                // TODO: fix generic type is not allowed
                 // containerRegistry.Register(interfaceType, validatorType);
             }
         }

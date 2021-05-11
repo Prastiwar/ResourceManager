@@ -24,6 +24,7 @@ namespace ResourceManager.Services
             {
                 throw new ArgumentNullException(nameof(descriptors));
             }
+            CheckDuplication(descriptors);
             if (resources.TryGetValue(type, out IResourceDescriptor[] currentDescriptors))
             {
                 switch (options)
@@ -41,6 +42,19 @@ namespace ResourceManager.Services
             else
             {
                 resources[type] = descriptors;
+            }
+        }
+
+        private static void CheckDuplication(IResourceDescriptor[] descriptors)
+        {
+            HashSet<IResourceDescriptor> descriptorsHashset = new HashSet<IResourceDescriptor>(descriptors.Length);
+            foreach (IResourceDescriptor item in descriptors)
+            {
+                bool added = descriptorsHashset.Add(item);
+                if (!added)
+                {
+                    throw new DuplicateDescriptorException($"Descriptor of type {item.GetType()} is duplicated.");
+                }
             }
         }
     }

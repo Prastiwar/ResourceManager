@@ -9,11 +9,11 @@ namespace ResourceManager.Commands
 {
     public class GetResourceByPathFileHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {
-        public GetResourceByPathFileHandler(IFileClient client, ISerializer serializer, IResourceDescriptorService descriptorService)
+        public GetResourceByPathFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
         {
+            DescriptorService = descriptorService;
             Client = client;
             Serializer = serializer;
-            DescriptorService = descriptorService;
         }
 
         protected IFileClient Client { get; }

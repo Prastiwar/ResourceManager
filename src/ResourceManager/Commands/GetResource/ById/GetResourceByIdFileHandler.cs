@@ -12,7 +12,7 @@ namespace ResourceManager.Commands
                                                                              IRequestHandler<GetResourcesByIdQuery, IEnumerable<object>>
     {
         public GetResourceByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
-            : base(client, serializer, descriptorService) { }
+            : base(descriptorService, client, serializer) { }
 
         public async Task<object> Handle(GetResourceByIdQuery request, CancellationToken cancellationToken)
         {

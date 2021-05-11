@@ -24,9 +24,12 @@ namespace RPGDataEditor.Commands
 
         public abstract Task<IEnumerable<PresentableData>> Handle(TEnumerableQuery request, CancellationToken cancellationToken);
 
-        protected Task<PresentableData> GetPresentableByPath(Type resourceType, string path)
+        protected Task<PresentableData> GetPresentableByPath(Type resourceType, string path, PathResourceDescriptor pathDescriptor = null)
         {
-            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+            if (pathDescriptor == null)
+            {
+                pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+            }
             KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
             PresentableData data = null;
             KeyValuePair<string, object> categoryParameter = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableCategoryData.Category)) == 0);
