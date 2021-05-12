@@ -31,7 +31,7 @@ namespace RPGDataEditor.Wpf.Controls
             HintAssist.SetHint(box, info.Name.MakeFriendlyName());
             box.SetResourceReference(FrameworkElement.StyleProperty, "MaterialDesignFloatingHintTextBox");
             BehaviorCollection behaviours = Interaction.GetBehaviors(box);
-            behaviours.Add(new CatchValidationBehavior());
+            behaviours.Add(new ValidationListenerBehavior());
             behaviours.Add(new NumericFieldBehaviour() {
                 EmptyValue = Type == typeof(int) ? "0" : "0.0",
                 IsPrecise = Type != typeof(int)

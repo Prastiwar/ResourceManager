@@ -20,5 +20,12 @@ namespace RPGDataEditor.Wpf
             DependencyProperty.RegisterAttached("ValidablePathValues", typeof(IList<object>), typeof(ValidableHelper));
         public static void SetValidablePathValues(UIElement element, IList<object> value) => element.SetValue(ValidablePathValuesProperty, value);
         public static IList<object> GetValidablePathValues(UIElement element) => (IList<object>)element.GetValue(ValidablePathValuesProperty);
+
+        public static readonly DependencyProperty ValidableHookProperty =
+            DependencyProperty.RegisterAttached("ValidableHook", typeof(IValidationHook), typeof(ValidableHelper));
+        public static void SetValidableHook(DependencyObject element, IValidationHook value) => element.SetValue(ValidableHookProperty, value);
+        public static IValidationHook GetValidableHook(DependencyObject element) => (IValidationHook)element.GetValue(ValidableHookProperty);
+
+        public static bool HasHook(DependencyObject obj) => obj.HasBinding(ValidableHookProperty);
     }
 }

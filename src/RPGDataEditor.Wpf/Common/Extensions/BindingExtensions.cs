@@ -13,6 +13,8 @@ namespace RPGDataEditor.Wpf
                 DependencyProperty.Register("Value", typeof(object), typeof(Dummy), new PropertyMetadata(null));
         }
 
+        public static bool HasBinding(this DependencyObject element, DependencyProperty property) => BindingOperations.GetBindingExpression(element, property) != null;
+
         public static T GetResolvedValue<T>(this BindingExpression binding)
         {
             object val = binding.GetResolvedValue();

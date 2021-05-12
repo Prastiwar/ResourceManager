@@ -2,7 +2,7 @@
 
 namespace ResourceManager.Commands
 {
-    public class ResourceRequest<TResource, TResults> : IRequest<TResults>
+    public abstract class ResourceRequest<TResource, TResults> : IRequest<TResults>
     {
         public ResourceRequest(TResource resource) => Resource = resource;
 

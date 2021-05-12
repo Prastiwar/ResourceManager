@@ -12,10 +12,23 @@ namespace RPGDataEditor.Core.Commands
 
         protected IServiceProvider Provider { get; }
 
-        protected virtual async Task<ValidationResult> ValidateAsync(object instance, CancellationToken cancellationToken)
+        protected virtual async Task<ValidationResult> ValidateAsync(object instance, Type instanceType = default, CancellationToken cancellationToken = default)
         {
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            if (instanceType is null)
+            {
+                instanceType = instance.GetType();
+            }
+            if (!instanceType.IsAssignableFrom(instance.GetType()))
+            {
+                throw new ArgumentException($"{nameof(instanceType)} is not assignable from {instance}");
+            }
             ValidationContext<object> context = new ValidationContext<object>(instance);
-            Type validatorType = typeof(IValidator<>).MakeGenericType(instance.GetType());
+            Type validatorType = typeof(IValidator<>).MakeGenericType(instanceType);
             try
             {
                 IValidator validator = Provider.GetService(validatorType) as IValidator;
@@ -25,7 +38,7 @@ namespace RPGDataEditor.Core.Commands
             {
                 return new ValidationResult(ex.Errors);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ValidationResult();
             }

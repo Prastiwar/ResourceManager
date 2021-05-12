@@ -301,19 +301,19 @@ namespace RPGDataEditor.Wpf
             string type = (string)e.Get(nameof(ConnectionSettings.Type));
             if (type == ConnectionSettings.Connection.LOCAL && Container.Resolve<IFileClient>() is LocalFileClient localClient)
             {
-                localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath)).ToString();
+                localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath), "").ToString();
             }
             if (type == ConnectionSettings.Connection.FTP && Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
             {
-                ftpClient.Host = e.Get(nameof(FtpFileClient.Host)).ToString();
-                ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath)).ToString();
-                ftpClient.UserName = e.Get(nameof(FtpFileClient.UserName)).ToString();
-                ftpClient.Password = e.Get(nameof(FtpFileClient.Password)) as SecureString;
-                ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port));
+                ftpClient.Host = e.Get(nameof(FtpFileClient.Host), "").ToString();
+                ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath), "").ToString();
+                ftpClient.UserName = e.Get(nameof(FtpFileClient.UserName), "").ToString();
+                ftpClient.Password = e.Get(nameof(FtpFileClient.Password), new SecureString()) as SecureString;
+                ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port), 0);
             }
             if (type == ConnectionSettings.Connection.SQL && Container.Resolve<ISqlClient>() is SqlClient sqlClient)
             {
-                sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString)).ToString();
+                sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString), "").ToString();
             }
             // TODO: configure registration of command handlers
         }

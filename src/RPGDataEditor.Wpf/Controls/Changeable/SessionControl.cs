@@ -6,9 +6,9 @@ namespace RPGDataEditor.Wpf.Controls
     public class SessionControl : ChangeableUserControl
     {
         private static readonly TypeSource[] sources = new TypeSource[] {
-            new TypeSource("Ftp", typeof(ConnectionSettings)),
-            new TypeSource("Local", typeof(ConnectionSettings)),
-            new TypeSource("Mssql", typeof(ConnectionSettings))
+            new TypeSource(ConnectionSettings.Connection.FTP, typeof(ConnectionSettings)),
+            new TypeSource(ConnectionSettings.Connection.LOCAL, typeof(ConnectionSettings)),
+            new TypeSource(ConnectionSettings.Connection.SQL, typeof(ConnectionSettings))
         };
 
         protected override void OnTemplateApplied()

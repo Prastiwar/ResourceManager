@@ -1,14 +1,16 @@
 ﻿using FluentValidation.Results;
 using RPGDataEditor.Connection;
 using RPGDataEditor.Core.Commands;
+using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Navigation;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
-    public class ConnectionTabViewModel : ScreenViewModel
+    public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
         public ConnectionTabViewModel(ViewModelContext context) : base(context) { }
 
@@ -18,11 +20,16 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             set => SetProperty(ref connectionSettings, value);
         }
 
+        public event EventHandler<ValidatedEventArgs> Validated;
+
+        protected void RaiseValidated(object instance, ValidationResult result) => Validated?.Invoke(this, new ValidatedEventArgs(instance, result));
+
         public override Task<bool> CanNavigateTo(INavigationContext navigationContext) => Task.FromResult(true);
 
         public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
-            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery(Context.Connection.Config));
+            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery(ConnectionSettings, typeof(IConnectionSettings)));
+            RaiseValidated(ConnectionSettings, result);
             if (result.IsValid)
             {
                 bool connected = await Context.Connection.Checker.ForceCheckAsync(default);
@@ -34,7 +41,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
                 {
                     await Context.Persistance.SaveConfigAsync(Context.Connection.Config);
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     Context.Logger.Error("Couldn't save session", ex);
                 }

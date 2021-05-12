@@ -13,7 +13,7 @@ namespace RPGDataEditor.Core.Commands
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            ValidationResult results = await ValidateAsync(request, cancellationToken);
+            ValidationResult results = await ValidateAsync(request, request.GetType(), cancellationToken);
             if (!results.IsValid)
             {
                 throw new ValidationException(results.Errors);

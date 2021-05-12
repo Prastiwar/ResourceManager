@@ -10,6 +10,6 @@ namespace RPGDataEditor.Core.Commands
     {
         public ValidateResourceHandler(IServiceProvider provider) : base(provider) { }
 
-        public Task<ValidationResult> Handle(ValidateResourceQuery request, CancellationToken cancellationToken) => ValidateAsync(request.Resource, cancellationToken);
+        public Task<ValidationResult> Handle(ValidateResourceQuery request, CancellationToken cancellationToken) => ValidateAsync(request.Resource, request.ResourceType, cancellationToken);
     }
 }
