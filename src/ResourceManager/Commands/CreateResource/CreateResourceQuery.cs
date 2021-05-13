@@ -1,7 +1,9 @@
-﻿namespace ResourceManager.Commands
+﻿using System;
+
+namespace ResourceManager.Commands
 {
-    public sealed class CreateResourceQuery<TResource> : ResourceRequest<TResource, CreateResourceResults>
+    public sealed class CreateResourceQuery : ResourceRequest<CreateResourceResults>
     {
-        public CreateResourceQuery(TResource resource) : base(resource) { }
+        public CreateResourceQuery(Type resourceType, object resource) : base(resourceType, resource) { }
     }
 }

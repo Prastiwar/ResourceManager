@@ -1,6 +1,7 @@
-﻿using System;
+﻿using ResourceManager.Data;
+using System;
 
-namespace ResourceManager.Data
+namespace ResourceManager.DataSource.Sql.Data
 {
     public class SqlPathResourceDescriptor : PathResourceDescriptor
     {

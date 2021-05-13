@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.Commands
 {
-    public abstract class UpdateResourceHandler<TResource> : IRequestHandler<UpdateResourceQuery<TResource>, UpdateResourceResults>
+    public abstract class UpdateResourceHandler : IRequestHandler<UpdateResourceQuery, UpdateResourceResults>
     {
-        public abstract Task<UpdateResourceResults> Handle(UpdateResourceQuery<TResource> request, CancellationToken cancellationToken);
+        public abstract Task<UpdateResourceResults> Handle(UpdateResourceQuery request, CancellationToken cancellationToken);
     }
 }

@@ -1,10 +1,9 @@
-﻿using ResourceManager;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Connection
+namespace ResourceManager.DataSource.Sql.Data
 {
     public class SqlClient : ISqlClient
     {

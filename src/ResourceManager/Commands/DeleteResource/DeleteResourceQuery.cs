@@ -1,11 +1,9 @@
-﻿using MediatR;
+﻿using System;
 
 namespace ResourceManager.Commands
 {
-    public sealed class DeleteResourceQuery<TResource> : IRequest<DeleteResourceResults>
+    public sealed class DeleteResourceQuery : ResourceRequest<DeleteResourceResults>
     {
-        public DeleteResourceQuery(TResource resource) => Resource = resource;
-
-        public TResource Resource { get; }
+        public DeleteResourceQuery(Type resourceType, object resource) : base(resourceType, resource) { }
     }
 }

@@ -1,6 +1,9 @@
-﻿using ResourceManager.Services;
+﻿using ResourceManager.DataSource.Ftp.Data;
+using ResourceManager.DataSource.Local.Commands;
+using ResourceManager.DataSource.Local.Services;
+using ResourceManager.Services;
 
-namespace ResourceManager.Commands
+namespace ResourceManager.DataSource.Ftp.Commands
 {
     public class GetResourceByIdFtpHandler : GetResourceByIdFileHandler
     {

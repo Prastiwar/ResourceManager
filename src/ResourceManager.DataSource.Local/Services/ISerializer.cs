@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ResourceManager.Services
+namespace ResourceManager.DataSource.Local.Services
 {
     public interface ISerializer
     {

@@ -1,4 +1,7 @@
-﻿using ResourceManager.Data;
+﻿using ResourceManager;
+using ResourceManager.Commands;
+using ResourceManager.Data;
+using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
@@ -6,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.Commands
+namespace ResourceManager.DataSource.Sql.Commands
 {
     public class GetResourceByPathSqlHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {

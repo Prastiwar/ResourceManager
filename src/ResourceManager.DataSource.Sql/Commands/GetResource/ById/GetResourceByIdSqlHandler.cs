@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ResourceManager.Commands;
+using ResourceManager.DataSource.Sql.Data;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.Commands
+namespace ResourceManager.DataSource.Sql.Commands
 {
     public class GetResourceByIdSqlHandler : ResourceRequestHandler<GetResourceByIdQuery, GetResourcesByIdQuery>
     {

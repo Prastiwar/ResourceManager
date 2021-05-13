@@ -1,10 +1,9 @@
-﻿using ResourceManager;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Connection
+namespace ResourceManager.DataSource.Local.Data
 {
     public class LocalFileClient : IFileClient
     {
@@ -14,6 +13,6 @@ namespace RPGDataEditor.Core.Connection
 
         public Task<IEnumerable<string>> ListFilesAsync(string path) => Task.FromResult(Directory.EnumerateFiles(path, FileSearchPattern, SearchOption.AllDirectories).Select(file => file.Replace("\\", "/")));
 
-        public Task<string> ReadFileAsync(string file) => Task.FromResult(File.ReadAllText(file));
+        public Task<string> ReadFileAsync(string file) => File.ReadAllTextAsync(file);
     }
 }

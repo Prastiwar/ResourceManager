@@ -1,11 +1,14 @@
-﻿using ResourceManager.Data;
+﻿using ResourceManager.Commands;
+using ResourceManager.Data;
+using ResourceManager.DataSource.Local.Data;
+using ResourceManager.DataSource.Local.Services;
 using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.Commands
+namespace ResourceManager.DataSource.Local.Commands
 {
     public class GetResourceByPathFileHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {

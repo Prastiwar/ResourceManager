@@ -1,5 +1,4 @@
 ﻿using FluentFTP;
-using ResourceManager;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Connection
+namespace ResourceManager.DataSource.Ftp.Data
 {
     public class FtpFileClient : IFtpFileClient
     {

@@ -1,11 +1,17 @@
 ﻿using MediatR;
+using System;
 
 namespace ResourceManager.Commands
 {
-    public abstract class ResourceRequest<TResource, TResults> : IRequest<TResults>
+    public abstract class ResourceRequest<TResults> : IRequest<TResults>
     {
-        public ResourceRequest(TResource resource) => Resource = resource;
+        public ResourceRequest(Type resourceType, object resource)
+        {
+            ResourceType = resourceType;
+            Resource = resource;
+        }
 
-        public TResource Resource { get; }
+        public Type ResourceType { get; }
+        public object Resource { get; }
     }
 }

@@ -62,7 +62,7 @@ namespace RPGDataEditor.Mvvm
             EditorResults results = new EditorResults(newResource, saveRequested);
             if (results.Success)
             {
-                UpdateResourceResults updateResults = await Context.Mediator.Send(new UpdateResourceQuery<TResource>(oldResource, newResource));
+                UpdateResourceResults updateResults = await Context.Mediator.Send(new UpdateResourceQuery(typeof(TResource), oldResource, newResource));
                 results.Success = updateResults.IsSuccess;
                 if (results.Success)
                 {
@@ -82,7 +82,7 @@ namespace RPGDataEditor.Mvvm
             bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newResource);
             if (saveRequested)
             {
-                CreateResourceResults createResults = await Context.Mediator.Send(new CreateResourceQuery<TResource>(newResource));
+                CreateResourceResults createResults = await Context.Mediator.Send(new CreateResourceQuery(typeof(TResource), newResource));
                 if (createResults.IsSuccess)
                 {
                     Models.Add(newPresentable);

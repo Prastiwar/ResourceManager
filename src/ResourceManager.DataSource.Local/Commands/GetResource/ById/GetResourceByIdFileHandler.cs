@@ -1,12 +1,15 @@
 ﻿using MediatR;
+using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource.Local.Data;
+using ResourceManager.DataSource.Local.Services;
 using ResourceManager.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.Commands
+namespace ResourceManager.DataSource.Local.Commands
 {
     public class GetResourceByIdFileHandler : GetResourceByPathFileHandler, IRequestHandler<GetResourceByIdQuery, object>,
                                                                              IRequestHandler<GetResourcesByIdQuery, IEnumerable<object>>
