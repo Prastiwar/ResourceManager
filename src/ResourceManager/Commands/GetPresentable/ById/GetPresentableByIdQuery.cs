@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using RPGDataEditor.Models;
+using ResourceManager.Data;
 using System;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.Commands
 {
     public class GetPresentableByIdQuery : IRequest<PresentableData>
     {
@@ -14,10 +14,5 @@ namespace RPGDataEditor.Commands
 
         public Type ResourceType { get; }
         public object Id { get; }
-    }
-
-    public class GetPresentableByIdQuery<TResource> : GetPresentableByIdQuery
-    {
-        public GetPresentableByIdQuery(object id) : base(typeof(TResource), id) { }
     }
 }

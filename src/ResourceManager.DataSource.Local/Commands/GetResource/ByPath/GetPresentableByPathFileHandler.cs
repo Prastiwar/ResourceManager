@@ -1,21 +1,20 @@
-﻿using ResourceManager;
+﻿using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource.Local.Data;
 using ResourceManager.Services;
-using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.DataSource.Local.Commands
 {
-    /// <summary> Handles GetPresentableByPath where path should be formatted as [TableName].ResourceId </summary>
-    public class GetPresentableByPathSqlHandler : GetPresentableHandler<GetPresentableByPathQuery, GetPresentablesByPathQuery>
+    public class GetPresentableByPathFileHandler : GetPresentableHandler<GetPresentableByPathQuery, GetPresentablesByPathQuery>
     {
-        public GetPresentableByPathSqlHandler(IResourceDescriptorService descriptorService, ISqlClient client)
+        public GetPresentableByPathFileHandler(IResourceDescriptorService descriptorService, IFileClient client)
             : base(descriptorService) => Client = client;
 
-        protected ISqlClient Client { get; }
+        protected IFileClient Client { get; }
 
         public override Task<PresentableData> Handle(GetPresentableByPathQuery request, CancellationToken cancellationToken)
             => GetPresentableByPath(request.ResourceType, request.Path);
@@ -29,14 +28,9 @@ namespace RPGDataEditor.Commands
             List<Exception> exceptions = new List<Exception>();
             if (paths == null || paths.Length == 0)
             {
-                SqlPathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlPathResourceDescriptor>(resourceType);
-                IEnumerable<object> resources = await Client.SelectAsync(pathDescriptor.TableName, resourceType);
-                IList<string> resourcePaths = new List<string>();
-                foreach (object resource in resources)
-                {
-                    resourcePaths.Add(pathDescriptor.GetRelativeFullPath(resource));
-                }
-                await AddResourcesByPaths(resourceType, resourcePaths, presentables, exceptions);
+                PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+                IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
+                await AddResourcesByPaths(resourceType, files, presentables, exceptions);
             }
             else
             {
@@ -51,12 +45,11 @@ namespace RPGDataEditor.Commands
 
         private async Task AddResourcesByPaths(Type resourceType, IEnumerable<string> paths, IList<PresentableData> resources, List<Exception> exceptions)
         {
-            SqlPathResourceDescriptor sqlPathDescriptor = DescriptorService.GetRequiredDescriptor<SqlPathResourceDescriptor>(resourceType);
             foreach (string path in paths)
             {
                 try
                 {
-                    PresentableData resource = await GetPresentableByPath(resourceType, path, sqlPathDescriptor);
+                    PresentableData resource = await GetPresentableByPath(resourceType, path);
                     if (!(resource is null))
                     {
                         resources.Add(resource);

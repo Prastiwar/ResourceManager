@@ -1,12 +1,13 @@
-﻿using ResourceManager;
+﻿using ResourceManager.Commands;
+using ResourceManager.Data;
+using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
-using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.DataSource.Sql.Commands
 {
     public class GetPresentableByIdSqlHandler : GetPresentableHandler<GetPresentableByIdQuery, GetPresentablesByIdQuery>
     {

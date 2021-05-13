@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGDataEditor.Models
+namespace ResourceManager.Data
 {
     public class PresentableCategoryData : PresentableData
     {

@@ -1,6 +1,6 @@
 ﻿using ResourceManager.Commands;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.Commands
 {
     public class RenameCategoryResults : CommandResults
     {

@@ -1,7 +1,9 @@
-﻿using ResourceManager;
-using ResourceManager.Services;
+﻿using ResourceManager.Services;
+using ResourceManager.DataSource.Local.Commands;
+using ResourceManager.DataSource.Local.Services;
+using ResourceManager.DataSource.Ftp.Data;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.DataSource.Ftp.Commands
 {
     public class GetPresentableByIdFtpHandler : GetPresentableByIdFileHandler
     {

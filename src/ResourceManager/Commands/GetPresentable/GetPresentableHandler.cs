@@ -1,15 +1,13 @@
 ﻿using MediatR;
-using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.Services;
-using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.Commands
 {
     public abstract class GetPresentableHandler<TQuery, TEnumerableQuery> : IRequestHandler<TQuery, PresentableData>,
                                                                             IRequestHandler<TEnumerableQuery, IEnumerable<PresentableData>>

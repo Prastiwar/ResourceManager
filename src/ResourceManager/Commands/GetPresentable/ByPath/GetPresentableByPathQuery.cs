@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using RPGDataEditor.Models;
+using ResourceManager.Data;
 using System;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.Commands
 {
     public class GetPresentableByPathQuery : IRequest<PresentableData>
     {
@@ -14,10 +14,5 @@ namespace RPGDataEditor.Commands
 
         public Type ResourceType { get; }
         public string Path { get; }
-    }
-
-    public class GetPresentableByPathQuery<TResource> : GetPresentableByPathQuery
-    {
-        public GetPresentableByPathQuery(string path) : base(typeof(TResource), path) { }
     }
 }

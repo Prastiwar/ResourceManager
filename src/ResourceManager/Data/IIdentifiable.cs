@@ -1,4 +1,4 @@
-﻿namespace RPGDataEditor
+﻿namespace ResourceManager.Data
 {
     public interface IIdentifiable
     {

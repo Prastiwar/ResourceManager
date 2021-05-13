@@ -1,8 +1,9 @@
 ﻿using FluentFTP;
+using Microsoft.Extensions.Options;
+using ResourceManager.DataSource.Ftp.Configuration;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,22 +11,28 @@ namespace ResourceManager.DataSource.Ftp.Data
 {
     public class FtpFileClient : IFtpFileClient
     {
-        public string Host { get; set; }
+        public FtpFileClient(IOptions<FtpDataSourceOptions> options) => Options = options;
 
-        public string RelativePath { get; set; }
+        protected IOptions<FtpDataSourceOptions> Options { get; }
 
-        public string UserName { get; set; }
-
-        public SecureString Password { get; set; }
-
-        public int Port { get; set; }
-
-        protected FtpClient Client { get; set; }
+        private FtpClient client;
+        protected FtpClient Client {
+            get {
+                if (client == null)
+                {
+                    client = new FtpClient();
+                }
+                client.Host = Options.Value.Host;
+                client.Port = Options.Value.Port;
+                client.Credentials.UserName = Options.Value.UserName;
+                client.Credentials.SecurePassword = Options.Value.Password;
+                return client;
+            }
+        }
 
         public async Task<IEnumerable<string>> ListFilesAsync(string path)
         {
-
-            string targetPath = Path.Combine(RelativePath, path);
+            string targetPath = Path.Combine(Options.Value.RelativePath, path);
             FtpListItem[] items = await Client.GetListingAsync(targetPath, FtpListOption.Recursive);
             return items.Where(item => item.Type == FtpFileSystemObjectType.File)
                         .Select(item => item.FullName).ToArray();
@@ -33,7 +40,7 @@ namespace ResourceManager.DataSource.Ftp.Data
 
         public async Task<string> ReadFileAsync(string file)
         {
-            string targetPath = Path.Combine(RelativePath, file);
+            string targetPath = Path.Combine(Options.Value.RelativePath, file);
             byte[] bytes = await Client.DownloadAsync(targetPath, default);
             if (bytes == null)
             {

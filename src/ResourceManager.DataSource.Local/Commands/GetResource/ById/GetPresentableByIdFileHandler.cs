@@ -1,14 +1,15 @@
 ﻿using MediatR;
-using ResourceManager;
+using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource.Local.Data;
+using ResourceManager.DataSource.Local.Services;
 using ResourceManager.Services;
-using RPGDataEditor.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.DataSource.Local.Commands
 {
     public class GetPresentableByIdFileHandler : GetPresentableByPathFileHandler, IRequestHandler<GetPresentableByIdQuery, PresentableData>,
                                                                                   IRequestHandler<GetPresentablesByIdQuery, IEnumerable<PresentableData>>

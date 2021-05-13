@@ -1,4 +1,6 @@
-﻿namespace RPGDataEditor.Models
+﻿using ResourceManager.Data;
+
+namespace RPGDataEditor.Models
 {
     public class PresentableNpc : PresentableData
     {

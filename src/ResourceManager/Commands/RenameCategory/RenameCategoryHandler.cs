@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Commands
+namespace ResourceManager.Commands
 {
-    public abstract class RenameCategoryHandler<TResource> : IRequestHandler<RenameCategoryQuery<TResource>, RenameCategoryResults>
+    public abstract class RenameCategoryHandler : IRequestHandler<RenameCategoryQuery, RenameCategoryResults>
     {
-        public async Task<RenameCategoryResults> Handle(RenameCategoryQuery<TResource> request, CancellationToken cancellationToken)
+        public async Task<RenameCategoryResults> Handle(RenameCategoryQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -28,6 +28,6 @@ namespace RPGDataEditor.Commands
 
         protected abstract Task RenameCategoryAsync(string oldCategory, string newCategory);
 
-        protected abstract Task RenameCategoryAsync(TResource resource, string newCategory);
+        protected abstract Task RenameCategoryAsync(object resource, string newCategory);
     }
 }

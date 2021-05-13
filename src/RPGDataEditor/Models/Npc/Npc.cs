@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ResourceManager.Data;
+using System.Collections.Generic;
 
 namespace RPGDataEditor.Models
 {
