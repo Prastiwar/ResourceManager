@@ -61,6 +61,7 @@ namespace RPGDataEditor.Minecraft.Wpf
             settings.Converters.Add(new Serialization.TalkDataJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
 
+            settings.Converters.Add(new ConnectionConfigJsonConverter());
             settings.Converters.Add(new ConnectionSettingsJsonConverter());
             return settings;
         }

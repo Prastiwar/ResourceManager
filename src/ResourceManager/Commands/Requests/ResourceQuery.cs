@@ -2,7 +2,7 @@
 
 namespace ResourceManager.Commands
 {
-    public class ResourceQuery : IResourceQuery
+    public abstract class ResourceQuery : IResourceQuery
     {
         public ResourceQuery(Type type) => ResourceType = type;
 

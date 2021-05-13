@@ -5,8 +5,10 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              xmlns:models="clr-namespace:RPGDataEditor.Models;assembly=RPGDataEditor"
+             xmlns:attach="clr-namespace:RPGDataEditor.Wpf"
              Name="SETTINGS"
-             Style="{DynamicResource DefaultControlStyle}">
+             Style="{DynamicResource DefaultControlStyle}"
+             attach:ValidableHelper.ValidableHook="{Binding DataContext}">
     <StackPanel DataContext="{Binding Session}"
                 Margin="64">
         <CheckBox x:Name="IsPrettyJsonCheckbox"
@@ -30,7 +32,7 @@
                      materialDesign:HintAssist.Hint="Npc backup file path (Relative to connection path)"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
+                    <behaviors:ValidationListenerBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>
@@ -46,7 +48,7 @@
                      materialDesign:HintAssist.Hint="Dialogues backup file path (Relative to connection path)"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
+                    <behaviors:ValidationListenerBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>
@@ -62,7 +64,7 @@
                      materialDesign:HintAssist.Hint="Quests backup file path (Relative to connection path)"
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
                 <i:Interaction.Behaviors>
-                    <behaviors:CatchValidationBehavior />
+                    <behaviors:ValidationListenerBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
         </StackPanel>

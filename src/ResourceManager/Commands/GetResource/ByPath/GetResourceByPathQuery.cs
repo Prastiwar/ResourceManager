@@ -2,7 +2,7 @@
 
 namespace ResourceManager.Commands
 {
-    public class GetResourceByPathQuery : ResourceQuery
+    public sealed class GetResourceByPathQuery : ResourceQuery
     {
         public GetResourceByPathQuery(Type resourceType, string path) : base(resourceType) => Path = path;
 

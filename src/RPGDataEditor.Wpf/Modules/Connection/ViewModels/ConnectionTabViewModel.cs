@@ -39,7 +39,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
                 }
                 try
                 {
-                    await Context.Persistance.SaveConfigAsync(Context.Connection.Config);
+                    await Context.Persistance.SaveConfigAsync(ConnectionSettings.CreateConfig());
                 }
                 catch (Exception ex)
                 {

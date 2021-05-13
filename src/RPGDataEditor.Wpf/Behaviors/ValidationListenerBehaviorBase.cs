@@ -95,6 +95,7 @@ namespace RPGDataEditor.Wpf.Behaviors
                 parent.DataContextChanged += UpdateValidableInstance;
                 ValidableInstance = parent.DataContext;
                 UpdateValidableInstance(parent, new DependencyPropertyChangedEventArgs(FrameworkElement.DataContextProperty, ValidableInstance, parent.DataContext));
+                break;
             }
         }
 

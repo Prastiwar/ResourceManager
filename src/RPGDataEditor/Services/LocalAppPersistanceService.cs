@@ -16,9 +16,8 @@ namespace RPGDataEditor.Services
             string text = Serializer.Serialize(obj);
             lock (FolderPath)
             {
-                File.AppendAllText(Path.Combine(FolderPath, name, ".json"), text);
+                return File.WriteAllTextAsync(Path.Combine(FolderPath, name + ".json"), text);
             }
-            return Task.CompletedTask;
         }
     }
 }

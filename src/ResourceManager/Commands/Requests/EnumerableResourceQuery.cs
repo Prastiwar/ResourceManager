@@ -2,7 +2,7 @@
 
 namespace ResourceManager.Commands
 {
-    public class EnumerableResourceQuery : IEnumerableResourceQuery
+    public abstract class EnumerableResourceQuery : IEnumerableResourceQuery
     {
         public EnumerableResourceQuery(Type type) => ResourceType = type;
 

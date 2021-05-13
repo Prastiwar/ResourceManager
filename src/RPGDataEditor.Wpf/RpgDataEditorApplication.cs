@@ -58,8 +58,6 @@ namespace RPGDataEditor.Wpf
             }
         }
 
-        protected virtual string SessionFilePath => Path.Combine(CacheDirectoryPath, "session.json");
-
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Container.Resolve<ILogger>().Error("Unhandled exception", e.Exception);
 
@@ -130,6 +128,7 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new TalkDataJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
 
+            settings.Converters.Add(new ConnectionConfigJsonConverter());
             settings.Converters.Add(new ConnectionSettingsJsonConverter());
             return settings;
         }
@@ -277,11 +276,12 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
         {
-            FileInfo sessionFile = new FileInfo(SessionFilePath);
+            string sessionFilePath = Path.Combine(CacheDirectoryPath, "Connection.json");
+            FileInfo sessionFile = new FileInfo(sessionFilePath);
             IConnectionSettings settings = null;
             if (sessionFile.Exists)
             {
-                string json = File.ReadAllText(SessionFilePath);
+                string json = File.ReadAllText(sessionFilePath);
                 settings = JsonConvert.DeserializeObject<IConnectionSettings>(json);
             }
             IConnectionConfig config = settings != null ? settings.CreateConfig() : new ConnectionSettings() { Type = ConnectionSettings.Connection.LOCAL }.CreateConfig();
@@ -290,7 +290,7 @@ namespace RPGDataEditor.Wpf
 
             if (containerRegistry.GetContainer().Resolve<IAppPersistanceService>() is LocalAppPersistanceService service)
             {
-                service.FolderPath = SessionFilePath;
+                service.FolderPath = CacheDirectoryPath;
             }
 
             configuration.Configured += Configuration_Configured;

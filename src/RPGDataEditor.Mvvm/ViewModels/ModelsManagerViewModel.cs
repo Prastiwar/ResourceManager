@@ -27,7 +27,7 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<TModel>();
             try
             {
-                IEnumerable<TModel> models = (await Context.Mediator.Send(new GetResourcesByIdQuery<TModel>(null))).Cast<TModel>();
+                IEnumerable<TModel> models = (await Context.Mediator.Send(new GetResourcesByIdQuery(typeof(TModel), null))).Cast<TModel>();
                 Models.AddRange(models);
             }
             catch (Exception ex)

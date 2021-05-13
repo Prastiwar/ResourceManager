@@ -23,7 +23,7 @@
                            Margin="5" />
                 <controls:AutoControl PropertyName="CompletionTask">
                     <i:Interaction.Behaviors>
-                        <behaviors:CatchValidationBehaviorView PropertyName="CompletionTask" />
+                        <behaviors:ValidationListenerBehaviorView PropertyName="CompletionTask" />
                     </i:Interaction.Behaviors>
                 </controls:AutoControl>
             </StackPanel>
