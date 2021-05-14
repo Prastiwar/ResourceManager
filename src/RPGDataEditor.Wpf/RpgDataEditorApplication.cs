@@ -11,6 +11,7 @@ using Prism.Modularity;
 using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
+using ResourceManager.DataSource;
 using ResourceManager.Services;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Commands;
@@ -26,6 +27,7 @@ using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -136,12 +138,12 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterSingleton<RPGDataEditor.Services.ISerializer, NewtonsoftSerializer>();
             containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
 
-            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(CacheDirectoryPath + "session.json", true, true).Build();
+            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true).Build();
             containerRegistry.RegisterInstance<IConfiguration>(configurationRoot);
 
-            //containerRegistry.RegisterInstance<IFileClient>(new LocalFileClient() { FileSearchPattern = "*.json" });
-            //containerRegistry.RegisterInstance<IFtpFileClient>(new FtpFileClient());
-            //containerRegistry.RegisterInstance<ISqlClient>(new SqlClient());
+            IConfigurableDataSource configurator = new ConfigurableDataSourceBuilder().AddLocalDataSource().Build();
+            containerRegistry.RegisterInstance(configurator);
+            containerRegistry.RegisterInstance<IDataSource>(configurator);
         }
 
         protected virtual void RegisterAssemblyScanner(IContainerRegistry containerRegistry)
@@ -233,7 +235,7 @@ namespace RPGDataEditor.Wpf
             TypeScan scan = scanner.Scan().Select(genericNotificationHandlerType).Get().Scans.First();
             foreach (Type result in scan.ResultTypes)
             {
-                System.Collections.Generic.IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericNotificationHandlerType);
+                IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericNotificationHandlerType);
                 foreach (Type handlerInterface in handlerInterfaces)
                 {
                     containerRegistry.RegisterSingleton(handlerInterface, result);
@@ -244,7 +246,7 @@ namespace RPGDataEditor.Wpf
             scan = scanner.Scan().Select(genericHandlerType).Get().Scans.First();
             foreach (Type result in scan.ResultTypes)
             {
-                System.Collections.Generic.IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericHandlerType);
+                IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericHandlerType);
                 foreach (Type handlerInterface in handlerInterfaces)
                 {
                     containerRegistry.RegisterSingleton(handlerInterface, result);
@@ -259,7 +261,7 @@ namespace RPGDataEditor.Wpf
                 {
                     continue;
                 }
-                System.Collections.Generic.IEnumerable<Type> pipelineInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericPipelineType);
+                IEnumerable<Type> pipelineInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericPipelineType);
                 foreach (Type pipelineInterface in pipelineInterfaces)
                 {
                     containerRegistry.RegisterSingleton(pipelineInterface, result);
@@ -274,38 +276,20 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
         {
+            IConfiguration configuration = containerRegistry.GetContainer().Resolve<IConfiguration>();
             if (containerRegistry.GetContainer().Resolve<IAppPersistanceService>() is LocalAppPersistanceService service)
             {
                 service.FolderPath = CacheDirectoryPath;
             }
-            IConfiguration configuration = containerRegistry.GetContainer().Resolve<IConfiguration>();
-            configuration.GetReloadToken().RegisterChangeCallback((config) => Configuration_Reloaded((IConfiguration)config), configuration);
-        }
-
-        private void Configuration_Reloaded(IConfiguration configuration)
-        {
-            // TODO: delegate job to DataSource
             IConfigurationSection dataSourceSection = configuration.GetDataSourceSection();
-            string type = dataSourceSection["Type"];
-            //string type = (string)e.Get(nameof(ConnectionSettings.Type));
-            //if (type == ConnectionSettings.Connection.LOCAL && Container.Resolve<IFileClient>() is LocalFileClient localClient)
-            //{
-            //    localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath), "").ToString();
-            //}
-            //if (type == ConnectionSettings.Connection.FTP && Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
-            //{
-            //    ftpClient.Host = e.Get(nameof(FtpFileClient.Host), "").ToString();
-            //    ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath), "").ToString();
-            //    ftpClient.UserName = e.Get(nameof(FtpFileClient.UserName), "").ToString();
-            //    ftpClient.Password = e.Get(nameof(FtpFileClient.Password), new SecureString()) as SecureString;
-            //    ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port), 0);
-            //}
-            //if (type == ConnectionSettings.Connection.SQL && Container.Resolve<ISqlClient>() is SqlClient sqlClient)
-            //{
-            //    sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString), "").ToString();
-            //}
+            if (!dataSourceSection.GetSection(DataSourceExtensions.NameKey).Exists())
+            {
+                dataSourceSection[DataSourceExtensions.NameKey] = LocalDataSourceExtensions.Name;
+            }
 
-            // TODO: configure registration of command handlers
+            IConfigurableDataSource configurableDataSource = Container.Resolve<IConfigurableDataSource>();
+            configurableDataSource.Configure(dataSourceSection);
+            configuration.GetReloadToken().RegisterChangeCallback((config) => configurableDataSource.Configure((IConfiguration)config), dataSourceSection);
         }
     }
 }

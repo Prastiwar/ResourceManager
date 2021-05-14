@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using ResourceManager;
+using ResourceManager.DataSource;
 using System.IO;
 
 namespace RPGDataEditor.Core.Validation
@@ -27,7 +28,7 @@ namespace RPGDataEditor.Core.Validation
                                                                      .When(x => IsType(x, "ftp"))
                                                                      .WithName("Password");
 
-            static bool IsType(IConfiguration x, string type) => string.Compare(x["Type"], type, true) == 0;
+            static bool IsType(IConfiguration x, string type) => string.Compare(x[DataSourceExtensions.NameKey], type, true) == 0;
         }
     }
 }

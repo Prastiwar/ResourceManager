@@ -7,7 +7,7 @@
              Style="{DynamicResource DefaultControlStyle}">
     <controls:SessionControl x:Name="SessionControl"
                              Margin="32"
-                             DataContext="{Binding ConnectionSettings}"
+                             DataContext="{Binding Configuration}"
                              TypeChange="SessionControl_TypeChange"
                              attach:ValidableHelper.ValidableHook="{Binding DataContext, ElementName=CONNECTION}" />
 </UserControl>

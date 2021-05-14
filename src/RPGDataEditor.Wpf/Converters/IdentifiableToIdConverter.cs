@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Core;
+﻿using ResourceManager.Data;
 using System;
 using System.Globalization;
 using System.Windows.Data;

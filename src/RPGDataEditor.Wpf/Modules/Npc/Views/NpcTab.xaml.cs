@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Models;
+﻿using ResourceManager.Data;
 using System;
 using System.Windows.Controls;
 

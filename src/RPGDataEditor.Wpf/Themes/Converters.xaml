@@ -28,10 +28,10 @@
     <converters:PathToNameConverter x:Key="PathToNameConverter" />
     <converters:BindMultiValueConverter x:Key="BindMultiValueConverter" />
     <converters:GenericTupleConverter x:Key="GenericTupleConverter" />
-    <converters:ProxyConnectionSettingsConverter x:Key="LocalProxyConnectionSettingsConverter"
-                                                 TargetProxyType="{x:Type converters:LocalProxyConnectionSettings}"/>
-    <converters:ProxyConnectionSettingsConverter x:Key="FtpProxyConnectionSettingsConverter"
-                                                 TargetProxyType="{x:Type converters:FtpProxyConnectionSettings}" />
-    <converters:ProxyConnectionSettingsConverter x:Key="SqlProxyConnectionSettingsConverter"
-                                                 TargetProxyType="{x:Type converters:SqlProxyConnectionSettings}" />
+    <converters:ProxyConnectionSettingsConverter x:Key="LocalProxyConfigurationConverter"
+                                                 TargetProxyType="{x:Type converters:LocalProxyConfiguration}"/>
+    <converters:ProxyConnectionSettingsConverter x:Key="FtpProxyConfigurationConverter"
+                                                 TargetProxyType="{x:Type converters:FtpProxyConfiguration}" />
+    <converters:ProxyConnectionSettingsConverter x:Key="SqlProxyConfigurationConverter"
+                                                 TargetProxyType="{x:Type converters:SqlProxyConfiguration}" />
 </ResourceDictionary>

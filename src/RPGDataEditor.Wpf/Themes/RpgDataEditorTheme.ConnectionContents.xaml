@@ -3,27 +3,27 @@
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
     <DataTemplate x:Key="LocalConnectionContent">
         <StackPanel Margin="64">
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource LocalProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource LocalProxyConfigurationConverter}}"
                                   PropertyName="FolderPath" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="FtpConnectionContent">
         <StackPanel Margin="64">
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConfigurationConverter}}"
                                   PropertyName="Host" />
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConfigurationConverter}}"
                                   PropertyName="Port" />
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConfigurationConverter}}"
                                   PropertyName="RelativePath" />
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConfigurationConverter}}"
                                   PropertyName="UserName" />
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource FtpProxyConfigurationConverter}}"
                                   PropertyName="Password" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="MssqlConnectionContent">
         <StackPanel Margin="64">
-            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource SqlProxyConnectionSettingsConverter}}"
+            <controls:AutoControl DataContext="{Binding ., Converter={StaticResource SqlProxyConfigurationConverter}}"
                                   PropertyName="ConnectionString" />
         </StackPanel>
     </DataTemplate>

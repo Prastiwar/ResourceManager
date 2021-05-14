@@ -2,8 +2,8 @@
 
 namespace RPGDataEditor.Wpf.Converters
 {
-    public interface IProxyConnectionSettings
+    public interface IProxyConfiguration
     {
-        IConfiguration Settings { get; }
+        IConfiguration Configuration { get; }
     }
 }

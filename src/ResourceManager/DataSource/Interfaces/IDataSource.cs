@@ -2,10 +2,10 @@
 
 namespace ResourceManager.DataSource
 {
-    public interface IDataSourceConfiguration
+    public interface IDataSource
     {
-        string Type { get; }
-
         IConfiguration Configuration { get; }
+
+        IConnectionMonitor Monitor { get; }
     }
 }

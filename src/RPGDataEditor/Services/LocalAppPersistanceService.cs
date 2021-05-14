@@ -11,6 +11,15 @@ namespace RPGDataEditor.Services
 
         protected ISerializer Serializer { get; }
 
+        public void Save(string name, object obj)
+        {
+            string text = Serializer.Serialize(obj);
+            lock (FolderPath)
+            {
+                File.WriteAllText(Path.Combine(FolderPath, name + ".json"), text);
+            }
+        }
+
         public Task SaveAsync(string name, object obj)
         {
             string text = Serializer.Serialize(obj);
