@@ -1,11 +1,10 @@
-using RPGDataEditor.Connection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Connection
+namespace ResourceManager.DataSource.Local
 {
-    public class LocalConnectionChecker : IConnectionChecker
+    public class LocalConnectionMonitor : IConnectionMonitor
     {
         public bool IsRunning => false;
 

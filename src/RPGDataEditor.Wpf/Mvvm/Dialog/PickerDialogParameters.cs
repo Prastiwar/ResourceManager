@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Mvvm.Navigation;
+﻿using ResourceManager.Data;
+using RPGDataEditor.Mvvm.Navigation;
 using System;
 
 namespace RPGDataEditor.Wpf.Mvvm

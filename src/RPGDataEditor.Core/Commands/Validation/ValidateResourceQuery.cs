@@ -4,11 +4,10 @@ using System;
 
 namespace RPGDataEditor.Core.Commands
 {
-    public sealed class ValidateResourceQuery : ResourceRequest<object, ValidationResult>
+    public sealed class ValidateResourceQuery : ResourceRequest<ValidationResult>
     {
-        public ValidateResourceQuery(object resource) : this(resource, resource.GetType()) { }
-        public ValidateResourceQuery(object resource, Type resourceType) : base(resource) => ResourceType = resourceType ?? throw new ArgumentNullException(nameof(resourceType));
+        public ValidateResourceQuery(object resource) : this(resource.GetType(), resource) { }
 
-        public Type ResourceType { get; }
+        public ValidateResourceQuery(Type resourceType, object resource) : base(resourceType, resource) { }
     }
 }

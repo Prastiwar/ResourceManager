@@ -1,5 +1,5 @@
 ﻿using Prism.Services.Dialogs;
-using RPGDataEditor.Connection;
+using ResourceManager.DataSource;
 using RPGDataEditor.Core;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm;
@@ -11,17 +11,17 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class ConnectionDialogViewModel : DialogViewModelBase
     {
-        public ConnectionDialogViewModel(ViewModelContext context, IConnectionChecker connectionChecker) 
-            : base(context) => ConnectionChecker = connectionChecker;
+        public ConnectionDialogViewModel(ViewModelContext context, IConnectionMonitor connectionMonitor)
+            : base(context) => ConnectionMonitor = connectionMonitor;
 
         public override string Title => "Connection problem";
 
-        protected IConnectionChecker ConnectionChecker { get; }
+        protected IConnectionMonitor ConnectionMonitor { get; }
 
         protected override Task InitializeAsync(IDialogParameters parameters)
         {
-            ConnectionChecker.Changed -= OnConnectionChanged;
-            ConnectionChecker.Changed += OnConnectionChanged;
+            ConnectionMonitor.Changed -= OnConnectionChanged;
+            ConnectionMonitor.Changed += OnConnectionChanged;
             Window window = Application.Current.FindWindow(win => win.DataContext == this);
             if (window != null)
             {
@@ -34,7 +34,7 @@ namespace RPGDataEditor.Wpf.ViewModels
         {
             if (hasConnection)
             {
-                ConnectionChecker.Changed -= OnConnectionChanged;
+                ConnectionMonitor.Changed -= OnConnectionChanged;
                 Application.Current.Dispatcher.Invoke(() => Close(new RPGDataEditor.Mvvm.Navigation.DialogParametersBuilder().WithResult(true).BuildPrism()));
             }
         }

@@ -1,15 +1,14 @@
 using FluentFTP;
-using RPGDataEditor.Connection;
 using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Connection
+namespace ResourceManager.DataSource.Ftp
 {
-    public class FtpConnectionChecker : ConnectionChecker, IDisposable
+    public class FtpConnectionMonitor : ConnectionMonitor, IDisposable
     {
-        public FtpConnectionChecker(string host, NetworkCredential credentials, int port = 0, int interval = 1000) : base(interval)
+        public FtpConnectionMonitor(string host, NetworkCredential credentials, int port = 0, int interval = 1000) : base(interval)
         {
             Host = host;
             Client = new FtpClient(host) {
@@ -25,7 +24,7 @@ namespace RPGDataEditor.Core.Connection
             }
         }
 
-        public FtpConnectionChecker(string host, int interval = 1000) : this(host, null, 0, interval) { }
+        public FtpConnectionMonitor(string host, int interval = 1000) : this(host, null, 0, interval) { }
 
         public string Host { get; }
 
@@ -39,7 +38,7 @@ namespace RPGDataEditor.Core.Connection
         {
             if (disposed)
             {
-                throw new ObjectDisposedException(nameof(FtpConnectionChecker));
+                throw new ObjectDisposedException(nameof(FtpConnectionMonitor));
             }
             try
             {

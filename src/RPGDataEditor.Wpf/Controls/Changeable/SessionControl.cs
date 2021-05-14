@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Connection;
+﻿using Microsoft.Extensions.Configuration;
+using ResourceManager;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
@@ -6,9 +7,9 @@ namespace RPGDataEditor.Wpf.Controls
     public class SessionControl : ChangeableUserControl
     {
         private static readonly TypeSource[] sources = new TypeSource[] {
-            new TypeSource(ConnectionSettings.Connection.FTP, typeof(ConnectionSettings)),
-            new TypeSource(ConnectionSettings.Connection.LOCAL, typeof(ConnectionSettings)),
-            new TypeSource(ConnectionSettings.Connection.SQL, typeof(ConnectionSettings))
+            new TypeSource("Ftp", typeof(IConfiguration)),
+            new TypeSource("Local", typeof(IConfiguration)),
+            new TypeSource("Sql", typeof(IConfiguration))
         };
 
         protected override void OnTemplateApplied()
@@ -26,9 +27,9 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected override TypeSource GetDataContextTypeSource()
         {
-            if (DataContext is IConnectionSettings settings)
+            if (DataContext is IConfiguration configuration)
             {
-                return new TypeSource(settings.Get(nameof(ConnectionSettings.Type)).ToString(), DataContext.GetType());
+                return new TypeSource(configuration.GetDataSourceSection()["Type"], DataContext.GetType());
             }
             return null;
         }

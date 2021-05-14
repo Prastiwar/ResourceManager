@@ -1,8 +1,8 @@
-﻿using RPGDataEditor.Core;
+﻿using ResourceManager.Data;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace RPGDataEditor.Wpf
+namespace ResourceManager
 {
     public class IdentifiableComparer : Comparer<IIdentifiable>
     {

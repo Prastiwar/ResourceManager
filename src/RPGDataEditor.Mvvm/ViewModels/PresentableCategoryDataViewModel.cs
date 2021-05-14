@@ -1,6 +1,6 @@
 ﻿using ResourceManager;
-using RPGDataEditor.Commands;
-using RPGDataEditor.Models;
+using ResourceManager.Commands;
+using ResourceManager.Data;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,7 +60,7 @@ namespace RPGDataEditor.Mvvm
             {
                 return false;
             }
-            RenameCategoryResults results = await Context.Mediator.Send(new RenameCategoryQuery<TResource>(default, oldCategory, newCategory));
+            RenameCategoryResults results = await Context.Mediator.Send(new RenameCategoryQuery(typeof(TResource), default, oldCategory, newCategory));
             if (!results.IsSuccess)
             {
                 return false;
@@ -78,7 +78,7 @@ namespace RPGDataEditor.Mvvm
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                RemoveCategoryResults results = await Context.Mediator.Send(new RemoveCategoryQuery<TResource>(category));
+                RemoveCategoryResults results = await Context.Mediator.Send(new RemoveCategoryQuery(typeof(TResource), category));
                 return results.IsSuccess;
             }
             return removed;

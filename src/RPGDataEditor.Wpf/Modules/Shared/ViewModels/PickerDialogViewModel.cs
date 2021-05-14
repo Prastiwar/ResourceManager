@@ -1,5 +1,7 @@
 ﻿using Prism.Services.Dialogs;
+using ResourceManager;
 using ResourceManager.Commands;
+using ResourceManager.Data;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Wpf.Mvvm;

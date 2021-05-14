@@ -1,13 +1,12 @@
-using RPGDataEditor.Connection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Core.Connection
+namespace ResourceManager.DataSource.Sql
 {
-    public class SqlConnectionChecker : ConnectionChecker, IDisposable
+    public class SqlConnectionMonitor : ConnectionMonitor, IDisposable
     {
-        public SqlConnectionChecker(string connectionString, int interval = 1000) : base(interval)
+        public SqlConnectionMonitor(string connectionString, int interval = 1000) : base(interval)
         {
             ConnectionString = connectionString;
             // Connection = new SqlConnection(ConnectionString);
@@ -23,7 +22,7 @@ namespace RPGDataEditor.Core.Connection
         {
             if (disposed)
             {
-                throw new ObjectDisposedException(nameof(SqlConnectionChecker));
+                throw new ObjectDisposedException(nameof(SqlConnectionMonitor));
             }
             return Task.FromResult(false);
             // try

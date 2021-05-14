@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
-using RPGDataEditor.Connection;
+using Microsoft.Extensions.Configuration;
+using ResourceManager;
 using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Mvvm;
@@ -14,10 +15,10 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
     {
         public ConnectionTabViewModel(ViewModelContext context) : base(context) { }
 
-        private IConnectionSettings connectionSettings;
-        public IConnectionSettings ConnectionSettings {
-            get => connectionSettings;
-            set => SetProperty(ref connectionSettings, value);
+        private IConfiguration configuration;
+        public IConfiguration Configuration {
+            get => configuration;
+            set => SetProperty(ref configuration, value);
         }
 
         public event EventHandler<ValidatedEventArgs> Validated;
@@ -28,18 +29,18 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
-            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery(ConnectionSettings, typeof(IConnectionSettings)));
-            RaiseValidated(ConnectionSettings, result);
+            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery(typeof(IConfigurationSection), Configuration.GetDataSourceSection()));
+            RaiseValidated(Configuration.GetDataSourceSection(), result);
             if (result.IsValid)
             {
-                bool connected = await Context.Connection.Checker.ForceCheckAsync(default);
+                bool connected = await Context.DataSource.Monitor.ForceCheckAsync(default);
                 if (!connected)
                 {
                     return false;
                 }
                 try
                 {
-                    await Context.Persistance.SaveConfigAsync(ConnectionSettings.CreateConfig());
+                    await Context.Persistance.SaveConfigAsync(Configuration.GetDataSourceSection());
                 }
                 catch (Exception ex)
                 {
@@ -51,21 +52,20 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
-            ConnectionSettings = new ConnectionSettings(Context.Connection.Config);
-            Context.Connection.Checker.Stop();
+            Context.DataSource.Monitor.Stop();
             return Task.CompletedTask;
         }
 
         public override Task OnNavigatedFromAsync(INavigationContext navigationContext)
         {
-            Context.Connection.Configure(ConnectionSettings.CreateConfig());
-            Context.Connection.Checker.Start();
-            Context.Connection.Checker.Changed -= ConnectionChecker_Changed;
-            Context.Connection.Checker.Changed += ConnectionChecker_Changed;
+            Context.Configuration.Configure(Configuration.CreateConfig());
+            Context.DataSource.Monitor.Start();
+            Context.DataSource.Monitor.Changed -= ConnectionMonitor_Changed;
+            Context.DataSource.Monitor.Changed += ConnectionMonitor_Changed;
             return Task.CompletedTask;
         }
 
-        private async void ConnectionChecker_Changed(object sender, bool hasConnection)
+        private async void ConnectionMonitor_Changed(object sender, bool hasConnection)
         {
             if (!hasConnection)
             {

@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Connection;
+﻿using Microsoft.Extensions.Configuration;
+using ResourceManager;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Connection.Views
@@ -9,10 +10,9 @@ namespace RPGDataEditor.Wpf.Connection.Views
 
         private void SessionControl_TypeChange(object sender, Controls.ChangeableUserControl.ChangeTypeEventArgs e)
         {
-            if (SessionControl.DataContext is IConnectionSettings settings)
+            if (SessionControl.DataContext is IConfiguration configuration)
             {
-                settings.Reset();
-                settings.Set(nameof(ConnectionSettings.Type), e.TargetType.Name);
+                configuration.SetDataSource(e.TargetType.Name);
             }
         }
     }

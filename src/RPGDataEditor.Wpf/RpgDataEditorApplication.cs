@@ -3,6 +3,7 @@ using DryIoc;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -11,10 +12,8 @@ using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.Services;
-using RPGDataEditor.Connection;
 using RPGDataEditor.Core;
 using RPGDataEditor.Core.Commands;
-using RPGDataEditor.Core.Connection;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
@@ -22,7 +21,6 @@ using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Providers;
 using RPGDataEditor.Services;
-using RPGDataEditor.Wpf.Connection;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
@@ -31,7 +29,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf
@@ -128,8 +125,7 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new TalkDataJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
 
-            settings.Converters.Add(new ConnectionConfigJsonConverter());
-            settings.Converters.Add(new ConnectionSettingsJsonConverter());
+            settings.Converters.Add(new ConfigurationSectionJsonConverter());
             return settings;
         }
 
@@ -139,11 +135,13 @@ namespace RPGDataEditor.Wpf
         {
             containerRegistry.RegisterSingleton<RPGDataEditor.Services.ISerializer, NewtonsoftSerializer>();
             containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
-            containerRegistry.RegisterSingleton<IConnectionConfiguration, ConnectionConfiguration>();
 
-            containerRegistry.RegisterInstance<IFileClient>(new LocalFileClient() { FileSearchPattern = "*.json" });
-            containerRegistry.RegisterInstance<IFtpFileClient>(new FtpFileClient());
-            containerRegistry.RegisterInstance<ISqlClient>(new SqlClient());
+            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(CacheDirectoryPath + "session.json", true, true).Build();
+            containerRegistry.RegisterInstance<IConfiguration>(configurationRoot);
+
+            //containerRegistry.RegisterInstance<IFileClient>(new LocalFileClient() { FileSearchPattern = "*.json" });
+            //containerRegistry.RegisterInstance<IFtpFileClient>(new FtpFileClient());
+            //containerRegistry.RegisterInstance<ISqlClient>(new SqlClient());
         }
 
         protected virtual void RegisterAssemblyScanner(IContainerRegistry containerRegistry)
@@ -276,45 +274,37 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
         {
-            string sessionFilePath = Path.Combine(CacheDirectoryPath, "Connection.json");
-            FileInfo sessionFile = new FileInfo(sessionFilePath);
-            IConnectionSettings settings = null;
-            if (sessionFile.Exists)
-            {
-                string json = File.ReadAllText(sessionFilePath);
-                settings = JsonConvert.DeserializeObject<IConnectionSettings>(json);
-            }
-            IConnectionConfig config = settings != null ? settings.CreateConfig() : new ConnectionSettings() { Type = ConnectionSettings.Connection.LOCAL }.CreateConfig();
-            IConnectionConfiguration configuration = containerRegistry.GetContainer().Resolve<IConnectionConfiguration>();
-            configuration.Configure(config);
-
             if (containerRegistry.GetContainer().Resolve<IAppPersistanceService>() is LocalAppPersistanceService service)
             {
                 service.FolderPath = CacheDirectoryPath;
             }
-
-            configuration.Configured += Configuration_Configured;
+            IConfiguration configuration = containerRegistry.GetContainer().Resolve<IConfiguration>();
+            configuration.GetReloadToken().RegisterChangeCallback((config) => Configuration_Reloaded((IConfiguration)config), configuration);
         }
 
-        private void Configuration_Configured(object sender, IConnectionConfig e)
+        private void Configuration_Reloaded(IConfiguration configuration)
         {
-            string type = (string)e.Get(nameof(ConnectionSettings.Type));
-            if (type == ConnectionSettings.Connection.LOCAL && Container.Resolve<IFileClient>() is LocalFileClient localClient)
-            {
-                localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath), "").ToString();
-            }
-            if (type == ConnectionSettings.Connection.FTP && Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
-            {
-                ftpClient.Host = e.Get(nameof(FtpFileClient.Host), "").ToString();
-                ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath), "").ToString();
-                ftpClient.UserName = e.Get(nameof(FtpFileClient.UserName), "").ToString();
-                ftpClient.Password = e.Get(nameof(FtpFileClient.Password), new SecureString()) as SecureString;
-                ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port), 0);
-            }
-            if (type == ConnectionSettings.Connection.SQL && Container.Resolve<ISqlClient>() is SqlClient sqlClient)
-            {
-                sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString), "").ToString();
-            }
+            // TODO: delegate job to DataSource
+            IConfigurationSection dataSourceSection = configuration.GetDataSourceSection();
+            string type = dataSourceSection["Type"];
+            //string type = (string)e.Get(nameof(ConnectionSettings.Type));
+            //if (type == ConnectionSettings.Connection.LOCAL && Container.Resolve<IFileClient>() is LocalFileClient localClient)
+            //{
+            //    localClient.FolderPath = e.Get(nameof(LocalFileClient.FolderPath), "").ToString();
+            //}
+            //if (type == ConnectionSettings.Connection.FTP && Container.Resolve<IFtpFileClient>() is FtpFileClient ftpClient)
+            //{
+            //    ftpClient.Host = e.Get(nameof(FtpFileClient.Host), "").ToString();
+            //    ftpClient.RelativePath = e.Get(nameof(FtpFileClient.RelativePath), "").ToString();
+            //    ftpClient.UserName = e.Get(nameof(FtpFileClient.UserName), "").ToString();
+            //    ftpClient.Password = e.Get(nameof(FtpFileClient.Password), new SecureString()) as SecureString;
+            //    ftpClient.Port = (int)e.Get(nameof(FtpFileClient.Port), 0);
+            //}
+            //if (type == ConnectionSettings.Connection.SQL && Container.Resolve<ISqlClient>() is SqlClient sqlClient)
+            //{
+            //    sqlClient.ConnectionString = e.Get(nameof(SqlClient.ConnectionString), "").ToString();
+            //}
+
             // TODO: configure registration of command handlers
         }
     }

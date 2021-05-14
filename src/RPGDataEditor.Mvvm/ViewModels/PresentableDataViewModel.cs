@@ -1,7 +1,6 @@
 ﻿using ResourceManager;
 using ResourceManager.Commands;
-using RPGDataEditor.Commands;
-using RPGDataEditor.Models;
+using ResourceManager.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

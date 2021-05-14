@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Models;
+﻿using ResourceManager.Data;
+using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels

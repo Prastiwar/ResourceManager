@@ -1,15 +1,15 @@
-﻿using RPGDataEditor.Connection;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace RPGDataEditor.Wpf.Converters
 {
-    public abstract class ProxyConnectionSettings : IProxyConnectionSettings, IEquatable<IConnectionSettings>
+    public abstract class ProxyConnectionSettings : IProxyConnectionSettings, IEquatable<IConfiguration>
     {
-        public ProxyConnectionSettings(IConnectionSettings settings) => Settings = settings;
+        public ProxyConnectionSettings(IConfiguration settings) => Settings = settings;
 
-        public IConnectionSettings Settings { get; }
+        public IConfiguration Settings { get; }
 
         protected object Get([CallerMemberName] string parameter = null)
         {
@@ -26,6 +26,6 @@ namespace RPGDataEditor.Wpf.Converters
 
         protected void Set(object value, [CallerMemberName] string parameter = null) => Settings.Set(parameter, value);
 
-        public bool Equals([AllowNull] IConnectionSettings other) => other == Settings;
+        public bool Equals([AllowNull] IConfiguration other) => other == Settings;
     }
 }

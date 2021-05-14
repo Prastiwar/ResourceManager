@@ -1,5 +1,6 @@
 ﻿using ResourceManager;
 using ResourceManager.Commands;
+using ResourceManager.Data;
 using RPGDataEditor.Mvvm.Navigation;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace RPGDataEditor.Mvvm
             bool create = await Context.DialogService.ShowModelDialogAsync(newModel);
             if (create)
             {
-                CreateResourceResults results = await Context.Mediator.Send(new CreateResourceQuery<TModel>(newModel));
+                CreateResourceResults results = await Context.Mediator.Send(new CreateResourceQuery(typeof(TModel), newModel));
                 bool created = results.IsSuccess;
                 if (created)
                 {
@@ -64,7 +65,7 @@ namespace RPGDataEditor.Mvvm
             bool removed = Models.Remove(model);
             if (removed)
             {
-                DeleteResourceResults results = await Context.Mediator.Send(new DeleteResourceQuery<TModel>(model));
+                DeleteResourceResults results = await Context.Mediator.Send(new DeleteResourceQuery(typeof(TModel), model));
                 bool deleted = results.IsSuccess;
                 if (!deleted)
                 {
@@ -81,7 +82,7 @@ namespace RPGDataEditor.Mvvm
             bool update = await Context.DialogService.ShowModelDialogAsync(newModel);
             if (update)
             {
-                UpdateResourceResults results = await Context.Mediator.Send(new UpdateResourceQuery<TModel>(model, newModel));
+                UpdateResourceResults results = await Context.Mediator.Send(new UpdateResourceQuery(typeof(TModel), model, newModel));
                 bool updated = results.IsSuccess;
                 if (updated)
                 {

@@ -1,9 +1,9 @@
-﻿using RPGDataEditor.Connection;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace RPGDataEditor.Wpf.Converters
 {
     public interface IProxyConnectionSettings
     {
-        IConnectionSettings Settings { get; }
+        IConfiguration Settings { get; }
     }
 }

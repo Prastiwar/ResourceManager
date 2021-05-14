@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ResourceManager.Commands;
+using ResourceManager.Data;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Mvvm;
 using System;

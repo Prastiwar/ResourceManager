@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RPGDataEditor.Connection
+namespace ResourceManager.DataSource
 {
-    public interface IConnectionChecker
+    public interface IConnectionMonitor
     {
         public event EventHandler<bool> Changed;
 

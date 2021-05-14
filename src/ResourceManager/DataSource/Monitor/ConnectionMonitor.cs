@@ -3,11 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace RPGDataEditor.Connection
+namespace ResourceManager.DataSource
 {
-    public abstract class ConnectionChecker : IConnectionChecker
+    public abstract class ConnectionMonitor : IConnectionMonitor
     {
-        public ConnectionChecker(int interval = 1000) => Interval = interval;
+        public ConnectionMonitor(int interval = 1000) => Interval = interval;
 
         public event EventHandler<bool> Changed;
 
