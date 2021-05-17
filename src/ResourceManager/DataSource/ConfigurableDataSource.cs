@@ -17,8 +17,7 @@ namespace ResourceManager.DataSource
 
         public IConnectionMonitor Monitor => DataSource.Monitor;
 
-
-        public event EventHandler<IConfiguration> Changed;
+        public event EventHandler<ConfigurationChangedEventArgs> Changed;
 
         public void Configure(string name, IConfiguration configuration)
         {
@@ -29,8 +28,9 @@ namespace ResourceManager.DataSource
 
             if (Providers.TryGetValue(name, out IDataSourceProvider provider))
             {
+                IDataSource oldDataSource = DataSource;
                 DataSource = provider.Provide(configuration);
-                Changed?.Invoke(this, configuration);
+                Changed?.Invoke(this, new ConfigurationChangedEventArgs(oldDataSource, configuration));
             }
             else
             {
