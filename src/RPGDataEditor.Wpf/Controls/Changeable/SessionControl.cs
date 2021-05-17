@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ResourceManager;
 using ResourceManager.DataSource;
 using System.Windows;
 
@@ -30,7 +29,7 @@ namespace RPGDataEditor.Wpf.Controls
         {
             if (DataContext is IConfiguration configuration)
             {
-                return new TypeSource(configuration.GetDataSourceSection()[DataSourceExtensions.NameKey], DataContext.GetType());
+                return new TypeSource(configuration[DataSourceExtensions.NameKey], DataContext.GetType());
             }
             return null;
         }

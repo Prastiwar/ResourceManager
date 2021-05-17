@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,32 +10,31 @@ namespace ResourceManager.DataSource.Sql
         public SqlConnectionMonitor(string connectionString, int interval = 1000) : base(interval)
         {
             ConnectionString = connectionString;
-            // Connection = new SqlConnection(ConnectionString);
+            Connection = new SqlConnection(ConnectionString);
         }
 
         public string ConnectionString { get; }
 
-        // protected SqlConnection Connection { get; }
+        protected SqlConnection Connection { get; }
 
         private bool disposed;
 
-        public override Task<bool> ForceCheckAsync(CancellationToken token)
+        public override async Task<bool> ForceCheckAsync(CancellationToken token)
         {
             if (disposed)
             {
                 throw new ObjectDisposedException(nameof(SqlConnectionMonitor));
             }
-            return Task.FromResult(false);
-            // try
-            // {
-            //     connection.Open();
-            //     connection.Close();
-            //     return true;
-            // }
-            // catch (SqlException)
-            // {
-            //     return false;
-            // }
+            try
+            {
+                await Connection.OpenAsync();
+                await Connection.CloseAsync();
+                return true;
+            }
+            catch (SqlException)
+            {
+                return false;
+            }
         }
         protected virtual void Dispose(bool disposing)
         {
@@ -42,8 +42,8 @@ namespace ResourceManager.DataSource.Sql
             {
                 if (disposing)
                 {
-                    // Connection.Close();
-                    // Connection.Dispose();
+                    Connection.Close();
+                    Connection.Dispose();
                 }
                 disposed = true;
             }

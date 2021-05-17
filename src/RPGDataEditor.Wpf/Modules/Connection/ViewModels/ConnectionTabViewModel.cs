@@ -7,7 +7,6 @@ using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Navigation;
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using System.Windows;
 

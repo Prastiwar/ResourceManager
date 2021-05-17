@@ -17,6 +17,9 @@ namespace ResourceManager.DataSource
 
         public IConnectionMonitor Monitor => DataSource.Monitor;
 
+
+        public event EventHandler<IConfiguration> Changed;
+
         public void Configure(string name, IConfiguration configuration)
         {
             if (string.IsNullOrEmpty(name))
@@ -27,7 +30,7 @@ namespace ResourceManager.DataSource
             if (Providers.TryGetValue(name, out IDataSourceProvider provider))
             {
                 DataSource = provider.Provide(configuration);
-                // TODO: HasChanged?.Invoke(this);
+                Changed?.Invoke(this, configuration);
             }
             else
             {

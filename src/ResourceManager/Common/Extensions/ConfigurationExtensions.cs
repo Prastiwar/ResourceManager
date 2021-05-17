@@ -15,6 +15,10 @@ namespace ResourceManager
             return configuration.GetSection(DataSourceKey);
         }
 
-        public static void SetDataSource(this IConfiguration configuration, string name) => configuration.GetSection(DataSourceKey + ":Type").Value = name;
+        public static void SetDataSource(this IConfiguration configuration, string name)
+        {
+            IConfigurationSection section = GetDataSourceSection(configuration);
+            section["Type"] = name;
+        }
     }
 }

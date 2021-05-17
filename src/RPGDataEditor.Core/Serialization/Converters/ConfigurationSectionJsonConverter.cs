@@ -25,14 +25,16 @@ namespace RPGDataEditor.Core.Serialization
                 if (section.Value == null)
                 {
                     JObject sectionObject = GetSectionJObject(section, serializer);
-                    rootObject.Add(sectionObject);
+                    rootObject.Add(sectionObject.ToString());
                 }
                 else
                 {
                     rootObject.Add(section.Key, section.Value);
                 }
             }
-            return rootObject;
+            return new JObject() {
+                { value.Key, rootObject }
+            };
         }
     }
 }

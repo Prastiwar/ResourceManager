@@ -135,13 +135,16 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<RPGDataEditor.Services.ISerializer, NewtonsoftSerializer>();
+            containerRegistry.RegisterSingleton<ISerializer, NewtonsoftSerializer>();
             containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
 
             IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true).Build();
             containerRegistry.RegisterInstance<IConfiguration>(configurationRoot);
 
-            IConfigurableDataSource configurator = new ConfigurableDataSourceBuilder().AddLocalDataSource().Build();
+            IConfigurableDataSource configurator = new ConfigurableDataSourceBuilder().AddLocalDataSource()
+                                                                                      .AddFtpDataSource()
+                                                                                      .AddSqlDataSource()
+                                                                                      .Build();
             containerRegistry.RegisterInstance(configurator);
             containerRegistry.RegisterInstance<IDataSource>(configurator);
         }
