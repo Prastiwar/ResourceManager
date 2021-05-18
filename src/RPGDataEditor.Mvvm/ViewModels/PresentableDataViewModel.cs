@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using Microsoft.Extensions.Logging;
+using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
 using System;
@@ -24,7 +25,7 @@ namespace RPGDataEditor.Mvvm
             }
             catch (Exception ex)
             {
-                Context.Logger.Error("Failed to get resources at " + GetType().Name, ex);
+                Context.Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
         }
@@ -41,7 +42,7 @@ namespace RPGDataEditor.Mvvm
                 resource = CreateResource(model);
                 if (resource is null)
                 {
-                    Context.Logger.Error("Couldn't retrieve model " + typeof(TResource), ex);
+                    Context.Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
                 }
             }
             return resource;

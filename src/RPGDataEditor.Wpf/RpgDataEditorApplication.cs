@@ -3,6 +3,7 @@ using DryIoc;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -11,7 +12,6 @@ using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using RPGDataEditor.Core;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf;
@@ -53,7 +53,7 @@ namespace RPGDataEditor.Wpf
         }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-            => Container.Resolve<ILogger>().Error("Unhandled exception", e.Exception);
+            => Container.Resolve<ILogger>().LogError(e.Exception, "Unhandled exception");
 
         protected virtual void OnExit(object sender, ExitEventArgs e) { }
 
@@ -70,34 +70,25 @@ namespace RPGDataEditor.Wpf
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
-            RegisterLogging(containerRegistry);
-            try
-            {
-                RegisterConfiguration(containerRegistry);
-            }
-            catch (Exception ex)
-            {
-                containerRegistry.GetContainer().Resolve<ILogger>().Error("Couldn't load configuration", ex);
-                throw;
-            }
 
             ServiceCollection services = new ServiceCollection();
             Configure(services);
             ServiceProvider provider = services.BuildServiceProvider();
             containerRegistry.RegisterServices(services, provider);
+
+            RegisterConfiguration(containerRegistry);
             RegisterProviders(containerRegistry);
             RegisterServices(containerRegistry);
             RegisterDialogs(containerRegistry);
-
             InitializeAutoUpdater();
-
             containerRegistry.RegisterSingleton<ViewModelContext>();
-
             OnRegistrationFinished(containerRegistry);
         }
 
         protected virtual void Configure(IServiceCollection services)
         {
+            services.AddLogging(builder => builder.AddFile(() => $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt"));
+
             services.AddFluentAssemblyScanner(null, scanner => {
                 services.AddFluentMediatr(scanner);
                 services.AddScannedServices(scanner, typeof(AbstractValidator<>), ServiceLifetime.Transient);
@@ -147,8 +138,6 @@ namespace RPGDataEditor.Wpf
             settings.Converters.Add(new ConfigurationSectionJsonConverter());
             return settings;
         }
-
-        protected virtual void RegisterLogging(IContainerRegistry containerRegistry) => containerRegistry.RegisterInstance<ILogger>(new LocalFileLogger());
 
         protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
         {

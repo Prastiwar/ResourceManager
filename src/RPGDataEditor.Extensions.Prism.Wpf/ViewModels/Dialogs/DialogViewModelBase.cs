@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Microsoft.Extensions.Logging;
+using Prism.Commands;
 using Prism.Services.Dialogs;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
@@ -61,7 +62,7 @@ namespace RPGDataEditor.Mvvm
             }
             catch (Exception ex)
             {
-                Context.Logger.Error("Couldn't initialize dialog", ex);
+                Context.Logger.LogError(ex, "Couldn't initialize dialog");
                 RaiseRequestClose(new DialogResult(ButtonResult.Abort, new Navigation.DialogParametersBuilder() { Exception = ex }.BuildPrism()));
             }
         }

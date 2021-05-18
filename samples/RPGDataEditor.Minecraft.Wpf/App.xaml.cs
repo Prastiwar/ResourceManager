@@ -1,14 +1,10 @@
-﻿using FluentValidation;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
 using RPGDataEditor.Core.Serialization;
-using RPGDataEditor.Minecraft.Models;
 using RPGDataEditor.Minecraft.Providers;
-using RPGDataEditor.Minecraft.Validation;
 using RPGDataEditor.Minecraft.Wpf.Providers;
-using RPGDataEditor.Models;
 using RPGDataEditor.Providers;
 using RPGDataEditor.Wpf.Providers;
 using System;
@@ -62,7 +58,6 @@ namespace RPGDataEditor.Minecraft.Wpf
             settings.Converters.Add(new TalkLineJsonConverter());
 
             settings.Converters.Add(new ConfigurationSectionJsonConverter());
-            settings.Converters.Add(new ConnectionSettingsJsonConverter());
             return settings;
         }
 
@@ -75,14 +70,14 @@ namespace RPGDataEditor.Minecraft.Wpf
             containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
         }
 
-        protected override void RegisterValidators(IContainerRegistry containerRegistry)
-        {
-            base.RegisterValidators(containerRegistry);
-            containerRegistry.Register<IValidator<RPGDataEditor.Models.Npc>, NpcValidator>();
-            containerRegistry.Register<IValidator<Quest>, QuestValidator>();
-            containerRegistry.Register<IValidator<RPGDataEditor.Models.Dialogue>, DialogueValidator>();
-            containerRegistry.Register<IValidator<Equipment>, EquipmentValidator>();
-        }
+        //protected override void RegisterValidators(IContainerRegistry containerRegistry)
+        //{
+        //    base.RegisterValidators(containerRegistry);
+        //    containerRegistry.Register<IValidator<RPGDataEditor.Models.Npc>, NpcValidator>();
+        //    containerRegistry.Register<IValidator<Quest>, QuestValidator>();
+        //    containerRegistry.Register<IValidator<RPGDataEditor.Models.Dialogue>, DialogueValidator>();
+        //    containerRegistry.Register<IValidator<Equipment>, EquipmentValidator>();
+        //}
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
     }

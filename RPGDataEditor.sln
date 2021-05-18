@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager.DataSource.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager.DataSource.Sql", "src\ResourceManager.DataSource.Sql\ResourceManager.DataSource.Sql.csproj", "{2A7B7532-1D5D-49E1-B1E9-109D4EB45D74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Logging.File", "src\Extensions.Logging.File\Extensions.Logging.File.csproj", "{3CA10572-052E-487E-8F87-97CD8623410F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{2A7B7532-1D5D-49E1-B1E9-109D4EB45D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A7B7532-1D5D-49E1-B1E9-109D4EB45D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A7B7532-1D5D-49E1-B1E9-109D4EB45D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CA10572-052E-487E-8F87-97CD8623410F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CA10572-052E-487E-8F87-97CD8623410F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CA10572-052E-487E-8F87-97CD8623410F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CA10572-052E-487E-8F87-97CD8623410F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

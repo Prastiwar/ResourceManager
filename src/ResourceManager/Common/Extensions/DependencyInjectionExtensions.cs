@@ -27,52 +27,62 @@ namespace ResourceManager
             services.AddScannedServices(scanner, typeof(IPipelineBehavior<,>), ServiceLifetime.Transient);
         }
 
-        public static void AddScannedServices<T>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime) => services.AddScannedServices(scanner, typeof(T), lifetime);
-        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ServiceLifetime lifetime)
+        public class ScanServiceOptions
         {
-            TypeScan results = scanner.Scan().Select(serviceType).Get().Scans.First();
-            foreach (Type result in results.ResultTypes)
+            public Type RegisterAsType { get; set; }
+            public bool RegisterSingleType { get; set; }
+            public bool RegisterAllInterfaces { get; set; }
+            public ServiceLifetime Lifetime { get; set; }
+        }
+
+        public static void AddScannedServices<TFrom, Tto>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime)
+            => services.AddScannedServices(scanner, typeof(TFrom), lifetime, new ScanServiceOptions() { RegisterAsType = typeof(Tto) });
+
+        public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime)
+            => services.AddScannedServices(scanner, typeof(TFrom), lifetime);
+
+        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ScanServiceOptions options)
+        {
+            if (options == null)
             {
-                if (serviceType.IsInterface)
+                options = new ScanServiceOptions();
+            }
+            TypeScan results = scanner.Scan().Select(serviceType).Get().Scans.First();
+            foreach (Type implementationType in results.ResultTypes)
+            {
+                if (serviceType.IsGenericTypeDefinition)
                 {
-                    if (serviceType.IsGenericTypeDefinition)
+                    IEnumerable<Type> toRegister = (serviceType.IsInterface ? implementationType.GetInterfaces() : implementationType.GetBaseTypes())
+                                                                      .Where(i => i.IsGenericType && serviceType.IsAssignableFrom(i.GetGenericTypeDefinition()));
+                    foreach (Type genericType in toRegister)
                     {
-                        IEnumerable<Type> genericInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && serviceType.IsAssignableFrom(i.GetGenericTypeDefinition()));
-                        foreach (Type genericInterface in genericInterfaces)
+                        Type registerType = genericType;
+                        if (genericType.FullName == null)
                         {
-                            Type registerType = genericInterface;
-                            if (genericInterface.FullName == null)
-                            {
-                                registerType = genericInterface.GetGenericTypeDefinition();
-                            }
-                            services.Add(new ServiceDescriptor(registerType, result, lifetime));
+                            registerType = genericType.GetGenericTypeDefinition();
                         }
-                    }
-                    else
-                    {
-                        services.Add(new ServiceDescriptor(serviceType, result, lifetime));
+                        RegisterWithOptions(services, registerType, implementationType, options);
                     }
                 }
                 else
                 {
-                    if (serviceType.IsGenericTypeDefinition)
-                    {
-                        IEnumerable<Type> genericInterfaces = result.GetBaseTypes().Where(i => i.IsGenericType && serviceType.IsAssignableFrom(i.GetGenericTypeDefinition()));
-                        foreach (Type genericInterface in genericInterfaces)
-                        {
-                            Type registerType = genericInterface;
-                            if (genericInterface.FullName == null)
-                            {
-                                registerType = genericInterface.GetGenericTypeDefinition();
-                            }
-                            services.Add(new ServiceDescriptor(registerType, result, lifetime));
-                        }
-                    }
-                    else
-                    {
-                        services.Add(new ServiceDescriptor(serviceType, result, lifetime));
-                    }
+                    RegisterWithOptions(services, serviceType, implementationType, options);
                 }
+            }
+        }
+        private static void RegisterWithOptions(IServiceCollection services, Type registerType, Type implementationType, ScanServiceOptions options)
+        {
+            if (options.RegisterAllInterfaces)
+            {
+
+            }
+            else
+            {
+                if (options.)
+                {
+
+                }
+                services.Add(new ServiceDescriptor(options.RegisterAsType ?? registerType, implementationType, options.Lifetime));
             }
         }
 

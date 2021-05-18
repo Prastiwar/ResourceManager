@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Models;
+﻿using ResourceManager.Data;
 using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Minecraft.Wpf.Npc.ViewModels

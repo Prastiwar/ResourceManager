@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using ResourceManager.DataSource;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Services;
@@ -13,7 +14,7 @@ namespace RPGDataEditor.Mvvm
                                 IConfiguration configuration,
                                 IDataSource dataSource,
                                 IDialogService dialogService,
-                                ILogger logger)
+                                ILogger<ViewModelContext> logger)
         {
             Mediator = mediator;
             Persistance = persistance;

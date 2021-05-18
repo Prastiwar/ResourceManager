@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using Microsoft.Extensions.Logging;
+using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
 using RPGDataEditor.Mvvm.Navigation;
@@ -33,7 +34,7 @@ namespace RPGDataEditor.Mvvm
             }
             catch (Exception ex)
             {
-                Context.Logger.Error("Failed to get resources at " + GetType().Name, ex);
+                Context.Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
         }

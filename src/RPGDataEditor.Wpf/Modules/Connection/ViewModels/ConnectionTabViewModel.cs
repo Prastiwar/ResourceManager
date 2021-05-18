@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.DataSource;
 using RPGDataEditor.Core.Commands;
@@ -49,7 +50,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Context.Logger.Error("Couldn't save session", ex);
+                    Context.Logger.LogError(ex, "Couldn't save session");
                 }
             }
             return result.IsValid;

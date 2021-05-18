@@ -24,9 +24,50 @@ namespace RPGDataEditor.Extensions.Prism.Wpf
 
         public static void RegisterServices(this IContainerRegistry containerRegistry, IServiceCollection services, IServiceProvider provider)
         {
-            foreach (ServiceDescriptor item in services)
+            foreach (ServiceDescriptor service in services)
             {
-                containerRegistry.Register(item.ServiceType, (c) => provider.GetService(item.ServiceType));
+                switch (service.Lifetime)
+                {
+                    case ServiceLifetime.Singleton:
+                        if (service.ImplementationInstance != null)
+                        {
+                            containerRegistry.RegisterInstance(service.ServiceType, service.ImplementationInstance);
+                        }
+                        else
+                        {
+                            if (service.ImplementationFactory != null)
+                            {
+                                containerRegistry.RegisterSingleton(service.ServiceType, c => service.ImplementationFactory.Invoke(provider));
+                            }
+                            else
+                            {
+                                containerRegistry.RegisterSingleton(service.ServiceType, service.ImplementationType);
+                            }
+                        }
+                        break;
+                    case ServiceLifetime.Scoped:
+                        if (service.ImplementationFactory != null)
+                        {
+                            containerRegistry.RegisterScoped(service.ServiceType, c => service.ImplementationFactory.Invoke(provider));
+                        }
+                        else
+                        {
+                            containerRegistry.RegisterScoped(service.ServiceType, service.ImplementationType);
+                        }
+                        break;
+                    case ServiceLifetime.Transient:
+                        if (service.ImplementationFactory != null)
+                        {
+                            containerRegistry.Register(service.ServiceType, c => service.ImplementationFactory.Invoke(provider));
+                        }
+                        else
+                        {
+                            containerRegistry.Register(service.ServiceType, service.ImplementationType);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

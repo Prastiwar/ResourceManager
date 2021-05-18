@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.6.4" />
+    <PackageReference Include="Bleess.Extensions.Logging.File" Version="1.0.0" />
     <PackageReference Include="FluentValidation" Version="9.5.2" />
     <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
@@ -17,6 +18,7 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Extensions.Logging.File\Extensions.Logging.File.csproj" />
     <ProjectReference Include="..\ResourceManager.DataSource.Ftp\ResourceManager.DataSource.Ftp.csproj" />
     <ProjectReference Include="..\ResourceManager.DataSource.Local\ResourceManager.DataSource.Local.csproj" />
     <ProjectReference Include="..\ResourceManager.DataSource.Sql\ResourceManager.DataSource.Sql.csproj" />
