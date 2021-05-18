@@ -37,6 +37,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             RaiseValidated(Configuration, result);
             if (result.IsValid)
             {
+                DataSourceConfigurator.Configure(Configuration);
                 bool connected = await Context.DataSource.Monitor.ForceCheckAsync(default);
                 if (!connected)
                 {

@@ -1,9 +1,8 @@
 ﻿using AutoUpdaterDotNET;
 using DryIoc;
 using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Prism.DryIoc;
 using Prism.Ioc;
@@ -12,11 +11,10 @@ using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.Services;
 using RPGDataEditor.Core;
-using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
@@ -27,10 +25,7 @@ using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf
@@ -86,19 +81,41 @@ namespace RPGDataEditor.Wpf
                 throw;
             }
 
-            RegisterAssemblyScanner(containerRegistry);
-            RegisterValidators(containerRegistry);
+            ServiceCollection services = new ServiceCollection();
+            Configure(services);
+            ServiceProvider provider = services.BuildServiceProvider();
+            containerRegistry.RegisterServices(services, provider);
             RegisterProviders(containerRegistry);
             RegisterServices(containerRegistry);
             RegisterDialogs(containerRegistry);
-            RegisterDescriptors(containerRegistry);
-            RegisterMediator(containerRegistry);
 
             InitializeAutoUpdater();
 
             containerRegistry.RegisterSingleton<ViewModelContext>();
 
             OnRegistrationFinished(containerRegistry);
+        }
+
+        protected virtual void Configure(IServiceCollection services)
+        {
+            services.AddFluentAssemblyScanner(null, scanner => {
+                services.AddFluentMediatr(scanner);
+                services.AddScannedServices(scanner, typeof(AbstractValidator<>), ServiceLifetime.Transient);
+            });
+
+            services.AddResourceDescriptor(service => {
+                IResourceDescriptor fileQuestDescriptor = new FileQuestPathResourceDescriptor();
+                IResourceDescriptor sqlQuestDescriptor = new SqlQuestPathResourceDescriptor();
+                service.Register<Models.Quest>(fileQuestDescriptor, sqlQuestDescriptor);
+
+                IResourceDescriptor fileDialogueDescriptor = new FileDialoguePathResourceDescriptor();
+                IResourceDescriptor sqlDialogueDescriptor = new SqlDialoguePathResourceDescriptor();
+                service.Register<Models.Dialogue>(fileDialogueDescriptor, sqlDialogueDescriptor);
+
+                IResourceDescriptor fileNpcDescriptor = new FileNpcPathResourceDescriptor();
+                IResourceDescriptor sqlNpcDescriptor = new SqlNpcPathResourceDescriptor();
+                service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
+            });
         }
 
         protected virtual JsonSerializerSettings CreateJsonSettings()
@@ -138,7 +155,8 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterSingleton<ISerializer, NewtonsoftSerializer>();
             containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
 
-            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true).Build();
+            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true)
+                                                                             .Build();
             containerRegistry.RegisterInstance<IConfiguration>(configurationRoot);
 
             IConfigurableDataSource configurator = new ConfigurableDataSourceBuilder().AddLocalDataSource()
@@ -147,29 +165,6 @@ namespace RPGDataEditor.Wpf
                                                                                       .Build();
             containerRegistry.RegisterInstance(configurator);
             containerRegistry.RegisterInstance<IDataSource>(configurator);
-        }
-
-        protected virtual void RegisterAssemblyScanner(IContainerRegistry containerRegistry)
-        {
-            AssemblyName[] referencedAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies();
-            Assembly[] assembliesToScan = new Assembly[referencedAssemblies.Length + 1];
-            assembliesToScan[0] = Assembly.GetEntryAssembly();
-            for (int i = 1; i < assembliesToScan.Length; i++)
-            {
-                assembliesToScan[i] = Assembly.Load(referencedAssemblies[i - 1]);
-            }
-            containerRegistry.RegisterInstance<IFluentAssemblyScanner>(new FluentAssemblyScanner(assembliesToScan));
-        }
-
-        protected virtual void RegisterValidators(IContainerRegistry containerRegistry)
-        {
-            IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
-            TypeScanResult results = scanner.Scan().ScanTypes(t => !t.IsGenericType).Select(typeof(AbstractValidator<>)).Get();
-            foreach (Type validatorType in results.Scans.First().ResultTypes)
-            {
-                Type interfaceType = validatorType.GetInterfaces().First(i => typeof(IValidator<>).IsAssignableFrom(i.GetGenericTypeDefinition()));
-                containerRegistry.Register(interfaceType, validatorType);
-            }
         }
 
         protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
@@ -193,24 +188,6 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterDialog<ConnectionDialog>(typeof(ConnectionDialog).Name);
         }
 
-        protected virtual void RegisterDescriptors(IContainerRegistry containerRegistry)
-        {
-            ResourceDescriptorService service = new ResourceDescriptorService();
-            IResourceDescriptor fileQuestDescriptor = new FileQuestPathResourceDescriptor();
-            IResourceDescriptor sqlQuestDescriptor = new SqlQuestPathResourceDescriptor();
-            service.Register<Models.Quest>(fileQuestDescriptor, sqlQuestDescriptor);
-
-            IResourceDescriptor fileDialogueDescriptor = new FileDialoguePathResourceDescriptor();
-            IResourceDescriptor sqlDialogueDescriptor = new SqlDialoguePathResourceDescriptor();
-            service.Register<Models.Dialogue>(fileDialogueDescriptor, sqlDialogueDescriptor);
-
-            IResourceDescriptor fileNpcDescriptor = new FileNpcPathResourceDescriptor();
-            IResourceDescriptor sqlNpcDescriptor = new SqlNpcPathResourceDescriptor();
-            service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
-
-            containerRegistry.RegisterInstance<IResourceDescriptorService>(service);
-        }
-
         protected virtual void InitializeAutoUpdater()
         {
             AutoUpdater.AppCastURL = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json";
@@ -228,53 +205,6 @@ namespace RPGDataEditor.Wpf
                 Mandatory = updateInfo.Mandatory,
                 CheckSum = updateInfo.CheckSum
             };
-        }
-
-        protected virtual void RegisterMediator(IContainerRegistry containerRegistry)
-        {
-            IFluentAssemblyScanner scanner = containerRegistry.GetContainer().Resolve<IFluentAssemblyScanner>();
-
-            Type genericNotificationHandlerType = typeof(INotificationHandler<>);
-            TypeScan scan = scanner.Scan().Select(genericNotificationHandlerType).Get().Scans.First();
-            foreach (Type result in scan.ResultTypes)
-            {
-                IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericNotificationHandlerType);
-                foreach (Type handlerInterface in handlerInterfaces)
-                {
-                    containerRegistry.RegisterSingleton(handlerInterface, result);
-                }
-            }
-
-            Type genericHandlerType = typeof(IRequestHandler<,>);
-            scan = scanner.Scan().Select(genericHandlerType).Get().Scans.First();
-            foreach (Type result in scan.ResultTypes)
-            {
-                IEnumerable<Type> handlerInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericHandlerType);
-                foreach (Type handlerInterface in handlerInterfaces)
-                {
-                    containerRegistry.RegisterSingleton(handlerInterface, result);
-                }
-            }
-
-            Type genericPipelineType = typeof(IPipelineBehavior<,>);
-            scan = scanner.Scan().Select(genericPipelineType).Get().Scans.First();
-            foreach (Type result in scan.ResultTypes)
-            {
-                if (result.IsGenericType)
-                {
-                    continue;
-                }
-                IEnumerable<Type> pipelineInterfaces = result.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericPipelineType);
-                foreach (Type pipelineInterface in pipelineInterfaces)
-                {
-                    containerRegistry.RegisterSingleton(pipelineInterface, result);
-                }
-            }
-
-            containerRegistry.RegisterSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            containerRegistry.RegisterSingleton(typeof(IRequestHandler<ValidateResourceQuery, ValidationResult>), typeof(ValidateResourceHandler));
-            containerRegistry.RegisterInstance(typeof(ServiceFactory), (ServiceFactory)Container.Resolve);
-            containerRegistry.RegisterSingleton<IMediator, Mediator>();
         }
 
         protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)

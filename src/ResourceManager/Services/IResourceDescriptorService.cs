@@ -7,5 +7,7 @@ namespace ResourceManager.Services
     public interface IResourceDescriptorService
     {
         IEnumerable<IResourceDescriptor> Describe(Type type);
+
+        void Register(Type type, RegisterOptions options, params IResourceDescriptor[] descriptors);
     }
 }

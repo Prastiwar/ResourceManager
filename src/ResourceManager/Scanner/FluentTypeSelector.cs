@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Reflection;
 
 namespace ResourceManager
@@ -20,6 +18,7 @@ namespace ResourceManager
         private bool selectInterface;
 
         private Predicate<Type> customPredicate;
+        private ModifyGenericHandler genericHandler;
 
         public IFluentTypeSelector Ignore(HashSet<Type> types)
         {
@@ -30,6 +29,12 @@ namespace ResourceManager
         public IFluentTypeSelector Ignore(params Type[] types)
         {
             IgnoredTypes = new HashSet<Type>(types);
+            return this;
+        }
+
+        public IFluentTypeSelector ModifyGeneric(ModifyGenericHandler handler)
+        {
+            genericHandler = handler;
             return this;
         }
 
@@ -91,6 +96,10 @@ namespace ResourceManager
             {
                 foreach (Type assemblyType in assembly.GetExportedTypes())
                 {
+                    if (assemblyType.IsInterface && !selectInterface)
+                    {
+                        continue;
+                    }
                     bool acceptByAbstract = selectAbstract ? assemblyType.IsAbstract : !assemblyType.IsAbstract;
                     if (acceptByAbstract && (customPredicate == null || customPredicate.Invoke(assemblyType)))
                     {
@@ -100,7 +109,14 @@ namespace ResourceManager
                         }
                         else if (HasGenericRelationship(scanType, assemblyType, out Type genericAssemblyType))
                         {
-                            yield return genericAssemblyType ?? assemblyType;
+                            if (genericHandler != null && genericAssemblyType != null)
+                            {
+                                yield return genericHandler(scanType, assemblyType, genericAssemblyType);
+                            }
+                            else
+                            {
+                                yield return genericAssemblyType ?? assemblyType;
+                            }
                         }
                     }
                 }
@@ -144,17 +160,21 @@ namespace ResourceManager
                 bool isEqualToGenericScan = checkType.GetGenericTypeDefinition() == scanType.GetGenericTypeDefinition();
                 if (isEqualToGenericScan)
                 {
-                    if (assemblyType.GetGenericArguments().Length == scanType.GetGenericArguments().Length)
+                    try
                     {
-                        try
+                        if (scanType.IsGenericTypeDefinition && assemblyType.IsGenericType)
+                        {
+                            genericType = assemblyType.IsGenericTypeDefinition ? assemblyType : assemblyType.GetGenericTypeDefinition();
+                        }
+                        else if (assemblyType.GetGenericArguments().Length == scanType.GetGenericArguments().Length)
                         {
                             genericType = assemblyType.MakeGenericType(scanType.GetGenericArguments());
                         }
-                        catch (ArgumentException)
-                        {
-                            // violates contrains, so it can be made into this generic
-                            return false;
-                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        // violates contrains, so it cant be made into this generic
+                        return false;
                     }
                 }
                 if (isEqualToScan || isGenericEqualToScan || isEqualToGenericScan)

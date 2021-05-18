@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Core.Commands
 {
-    public class ValidationBehavior<TRequest, TResponse> : ValidatorRequestDecorator, IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public class ValidationBehavior<TRequest, TResponse> : ValidatorRequestDecorator, IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
     {
         public ValidationBehavior(IServiceProvider provider) : base(provider) { }
 
