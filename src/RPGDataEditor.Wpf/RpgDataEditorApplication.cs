@@ -91,7 +91,7 @@ namespace RPGDataEditor.Wpf
 
             services.AddFluentAssemblyScanner(null, scanner => {
                 services.AddFluentMediatr(scanner);
-                services.AddScannedServices(scanner, typeof(AbstractValidator<>), ServiceLifetime.Transient);
+                services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient);
             });
 
             services.AddResourceDescriptor(service => {

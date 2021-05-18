@@ -27,62 +27,33 @@ namespace ResourceManager
             services.AddScannedServices(scanner, typeof(IPipelineBehavior<,>), ServiceLifetime.Transient);
         }
 
-        public class ScanServiceOptions
-        {
-            public Type RegisterAsType { get; set; }
-            public bool RegisterSingleType { get; set; }
-            public bool RegisterAllInterfaces { get; set; }
-            public ServiceLifetime Lifetime { get; set; }
-        }
-
-        public static void AddScannedServices<TFrom, Tto>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime)
-            => services.AddScannedServices(scanner, typeof(TFrom), lifetime, new ScanServiceOptions() { RegisterAsType = typeof(Tto) });
-
         public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime)
             => services.AddScannedServices(scanner, typeof(TFrom), lifetime);
 
-        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ScanServiceOptions options)
+        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ServiceLifetime lifetime)
         {
-            if (options == null)
-            {
-                options = new ScanServiceOptions();
-            }
             TypeScan results = scanner.Scan().Select(serviceType).Get().Scans.First();
             foreach (Type implementationType in results.ResultTypes)
             {
                 if (serviceType.IsGenericTypeDefinition)
                 {
-                    IEnumerable<Type> toRegister = (serviceType.IsInterface ? implementationType.GetInterfaces() : implementationType.GetBaseTypes())
+                    IEnumerable<Type> conreteServiceTypes = (serviceType.IsInterface ? implementationType.GetInterfaces() : implementationType.GetBaseTypes())
                                                                       .Where(i => i.IsGenericType && serviceType.IsAssignableFrom(i.GetGenericTypeDefinition()));
-                    foreach (Type genericType in toRegister)
+                    foreach (Type concreteServiceType in conreteServiceTypes)
                     {
-                        Type registerType = genericType;
-                        if (genericType.FullName == null)
+                        Type registerType = concreteServiceType;
+                        if (concreteServiceType.FullName == null)
                         {
-                            registerType = genericType.GetGenericTypeDefinition();
+                            registerType = concreteServiceType.GetGenericTypeDefinition();
+                            // TODO: Check if implementationType matches registerType generics
                         }
-                        RegisterWithOptions(services, registerType, implementationType, options);
+                        services.Add(new ServiceDescriptor(registerType, implementationType, lifetime));
                     }
                 }
                 else
                 {
-                    RegisterWithOptions(services, serviceType, implementationType, options);
+                    services.Add(new ServiceDescriptor(serviceType, implementationType, lifetime));
                 }
-            }
-        }
-        private static void RegisterWithOptions(IServiceCollection services, Type registerType, Type implementationType, ScanServiceOptions options)
-        {
-            if (options.RegisterAllInterfaces)
-            {
-
-            }
-            else
-            {
-                if (options.)
-                {
-
-                }
-                services.Add(new ServiceDescriptor(options.RegisterAsType ?? registerType, implementationType, options.Lifetime));
             }
         }
 

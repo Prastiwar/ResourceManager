@@ -26,6 +26,8 @@ namespace Extensions.Logging.File
             string message = formatter.Invoke(state, exception);
             string level = logLevel.ToString();
             string fileFullPath = Options.FilePathFunc.Invoke();
+            // TODO: Format message
+            // TODO: Roll files
             lock (locker)
             {
                 System.IO.File.AppendAllText(fileFullPath, message + "\n");
