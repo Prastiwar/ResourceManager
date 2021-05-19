@@ -107,7 +107,7 @@ namespace RPGDataEditor.Wpf
                 service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
             });
 
-            services.AddSingleton<ISerializer, NewtonsoftSerializer>();
+            services.AddSingleton<ITextSerializer, NewtonsoftSerializer>();
             services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>();
 
             services.AddSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));

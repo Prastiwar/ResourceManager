@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using ResourceManager.DataSource.File;
 using ResourceManager.DataSource.Local.Configuration;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,6 @@ namespace ResourceManager.DataSource.Local.Data
 
         public Task<IEnumerable<string>> ListFilesAsync(string path) => Task.FromResult(Directory.EnumerateFiles(path, Options.Value.FileSearchPattern, SearchOption.AllDirectories).Select(file => file.Replace("\\", "/")));
 
-        public Task<string> ReadFileAsync(string file) => File.ReadAllTextAsync(file);
+        public Task<string> ReadFileAsync(string file) => System.IO.File.ReadAllTextAsync(file);
     }
 }

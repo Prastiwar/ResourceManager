@@ -1,20 +1,18 @@
 ﻿using MediatR;
 using ResourceManager.Commands;
 using ResourceManager.Data;
-using ResourceManager.DataSource.Local.Data;
-using ResourceManager.DataSource.Local.Services;
 using ResourceManager.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.DataSource.Local.Commands
+namespace ResourceManager.DataSource.File.Commands
 {
     public class GetPresentableByIdFileHandler : GetPresentableByPathFileHandler, IRequestHandler<GetPresentableByIdQuery, PresentableData>,
                                                                                   IRequestHandler<GetPresentablesByIdQuery, IEnumerable<PresentableData>>
     {
-        public GetPresentableByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
+        public GetPresentableByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ITextSerializer serializer)
             : base(descriptorService, client) { }
 
         public async Task<PresentableData> Handle(GetPresentableByIdQuery request, CancellationToken cancellationToken)

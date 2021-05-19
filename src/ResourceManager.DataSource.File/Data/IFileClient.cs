@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ResourceManager.DataSource.Local.Data
+namespace ResourceManager.DataSource.File
 {
     public interface IFileClient
     {

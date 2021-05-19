@@ -62,7 +62,7 @@ namespace RPGDataEditor.Mvvm
             {
                 return false;
             }
-            RenameCategoryResults results = await Mediator.Send(new RenameCategoryQuery(typeof(TResource), default, oldCategory, newCategory));
+            RenameCategoryResults results = await Mediator.Send(new RenameCategoryRequest(typeof(TResource), default, oldCategory, newCategory));
             if (!results.IsSuccess)
             {
                 return false;
@@ -80,7 +80,7 @@ namespace RPGDataEditor.Mvvm
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                RemoveCategoryResults results = await Mediator.Send(new RemoveCategoryQuery(typeof(TResource), category));
+                RemoveCategoryResults results = await Mediator.Send(new RemoveCategoryRequest(typeof(TResource), category));
                 return results.IsSuccess;
             }
             return removed;

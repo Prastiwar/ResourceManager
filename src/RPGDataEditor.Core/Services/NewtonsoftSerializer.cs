@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using RPGDataEditor.Services;
+using ResourceManager.Data;
 using System;
 
 namespace RPGDataEditor.Core.Services
 {
-    public class NewtonsoftSerializer : ISerializer
+    public class NewtonsoftSerializer : ITextSerializer
     {
         public object Deserialize(string value, Type type = null) => JsonConvert.DeserializeObject(value, type);
 

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.Commands
 {
-    public abstract class RemoveCategoryHandler : IRequestHandler<RemoveCategoryQuery, RemoveCategoryResults>
+    public abstract class RemoveCategoryHandler : IRequestHandler<RemoveCategoryRequest, RemoveCategoryResults>
     {
-        public async Task<RemoveCategoryResults> Handle(RemoveCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<RemoveCategoryResults> Handle(RemoveCategoryRequest request, CancellationToken cancellationToken)
         {
             try
             {

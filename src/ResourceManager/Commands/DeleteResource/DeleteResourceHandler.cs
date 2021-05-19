@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.Commands
 {
-    public abstract class DeleteResourceHandler : IRequestHandler<DeleteResourceQuery, DeleteResourceResults>
+    public abstract class DeleteResourceHandler : IRequestHandler<DeleteResourceRequest, DeleteResourceResults>
     {
-        public abstract Task<DeleteResourceResults> Handle(DeleteResourceQuery request, CancellationToken cancellationToken);
+        public abstract Task<DeleteResourceResults> Handle(DeleteResourceRequest request, CancellationToken cancellationToken);
     }
 }

@@ -3,9 +3,9 @@ using System;
 
 namespace ResourceManager.Commands
 {
-    public class RemoveCategoryQuery : IRequest<RemoveCategoryResults>
+    public class RemoveCategoryRequest : IRequest<RemoveCategoryResults>
     {
-        public RemoveCategoryQuery(Type resourceType, string category)
+        public RemoveCategoryRequest(Type resourceType, string category)
         {
             ResourceType = resourceType;
             Category = category;

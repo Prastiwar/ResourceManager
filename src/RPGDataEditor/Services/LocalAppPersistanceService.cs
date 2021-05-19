@@ -1,15 +1,16 @@
-﻿using System.IO;
+﻿using ResourceManager.Data;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Services
 {
     public class LocalAppPersistanceService : IAppPersistanceService
     {
-        public LocalAppPersistanceService(ISerializer serializer) => Serializer = serializer;
+        public LocalAppPersistanceService(ITextSerializer serializer) => Serializer = serializer;
 
         public string FolderPath { get; set; }
 
-        protected ISerializer Serializer { get; }
+        protected ITextSerializer Serializer { get; }
 
         public void Save(string name, object obj)
         {

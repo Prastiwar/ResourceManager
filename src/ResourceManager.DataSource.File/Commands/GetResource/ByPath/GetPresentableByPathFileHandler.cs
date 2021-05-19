@@ -1,13 +1,12 @@
 ﻿using ResourceManager.Commands;
 using ResourceManager.Data;
-using ResourceManager.DataSource.Local.Data;
 using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.DataSource.Local.Commands
+namespace ResourceManager.DataSource.File.Commands
 {
     public class GetPresentableByPathFileHandler : GetPresentableHandler<GetPresentableByPathQuery, GetPresentablesByPathQuery>
     {

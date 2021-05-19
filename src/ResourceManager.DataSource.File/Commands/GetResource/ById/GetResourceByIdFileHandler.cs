@@ -1,20 +1,18 @@
 ﻿using MediatR;
 using ResourceManager.Commands;
 using ResourceManager.Data;
-using ResourceManager.DataSource.Local.Data;
-using ResourceManager.DataSource.Local.Services;
 using ResourceManager.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.DataSource.Local.Commands
+namespace ResourceManager.DataSource.File.Commands
 {
     public class GetResourceByIdFileHandler : GetResourceByPathFileHandler, IRequestHandler<GetResourceByIdQuery, object>,
                                                                              IRequestHandler<GetResourcesByIdQuery, IEnumerable<object>>
     {
-        public GetResourceByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
+        public GetResourceByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ITextSerializer serializer)
             : base(descriptorService, client, serializer) { }
 
         public async Task<object> Handle(GetResourceByIdQuery request, CancellationToken cancellationToken)

@@ -2,9 +2,9 @@
 
 namespace ResourceManager.Commands
 {
-    public class RenameCategoryQuery : ResourceRequest<RenameCategoryResults>
+    public class RenameCategoryRequest : ResourceRequest<RenameCategoryResults>
     {
-        public RenameCategoryQuery(Type resourceType, object resource, string oldCategory, string newCategory) : base(resourceType, resource)
+        public RenameCategoryRequest(Type resourceType, object resource, string oldCategory, string newCategory) : base(resourceType, resource)
         {
             OldCategory = oldCategory;
             NewCategory = newCategory;

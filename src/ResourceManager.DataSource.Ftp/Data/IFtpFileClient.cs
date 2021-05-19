@@ -1,4 +1,4 @@
-﻿using ResourceManager.DataSource.Local.Data;
+﻿using ResourceManager.DataSource.File;
 
 namespace ResourceManager.DataSource.Ftp.Data
 {

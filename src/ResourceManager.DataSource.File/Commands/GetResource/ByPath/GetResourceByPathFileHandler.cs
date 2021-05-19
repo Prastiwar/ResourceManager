@@ -1,18 +1,16 @@
 ﻿using ResourceManager.Commands;
 using ResourceManager.Data;
-using ResourceManager.DataSource.Local.Data;
-using ResourceManager.DataSource.Local.Services;
 using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.DataSource.Local.Commands
+namespace ResourceManager.DataSource.File.Commands
 {
     public class GetResourceByPathFileHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {
-        public GetResourceByPathFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ISerializer serializer)
+        public GetResourceByPathFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ITextSerializer serializer)
         {
             DescriptorService = descriptorService;
             Client = client;
@@ -21,7 +19,7 @@ namespace ResourceManager.DataSource.Local.Commands
 
         protected IFileClient Client { get; }
 
-        protected ISerializer Serializer { get; }
+        protected ITextSerializer Serializer { get; }
 
         protected IResourceDescriptorService DescriptorService { get; }
 

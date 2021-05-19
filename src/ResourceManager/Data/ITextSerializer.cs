@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace RPGDataEditor.Services
+namespace ResourceManager.Data
 {
-    public interface ISerializer
+    public interface ITextSerializer
     {
         string Serialize(object obj, Type type = null);
 

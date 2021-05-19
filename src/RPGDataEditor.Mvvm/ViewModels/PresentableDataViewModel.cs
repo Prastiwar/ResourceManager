@@ -84,7 +84,7 @@ namespace RPGDataEditor.Mvvm
             Navigation.IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newResource));
             if (result.IsSuccess)
             {
-                CreateResourceResults createResults = await Mediator.Send(new CreateResourceQuery(typeof(TResource), newResource));
+                CreateResourceResults createResults = await Mediator.Send(new CreateResourceRequest(typeof(TResource), newResource));
                 if (createResults.IsSuccess)
                 {
                     Models.Add(newPresentable);

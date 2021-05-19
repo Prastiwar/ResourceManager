@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ResourceManager.DataSource.Ftp.Commands
+namespace ResourceManager.DataSource.File.Commands
 {
-    public class FtpUpdateResourceHandler : UpdateResourceHandler
+    public class FileUpdateResourceHandler : UpdateResourceHandler
     {
         public override Task<UpdateResourceResults> Handle(UpdateResourceQuery request, CancellationToken cancellationToken) => throw new System.NotImplementedException();
     }

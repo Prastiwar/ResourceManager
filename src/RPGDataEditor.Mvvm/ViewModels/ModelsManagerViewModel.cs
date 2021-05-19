@@ -60,7 +60,7 @@ namespace RPGDataEditor.Mvvm
             IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newModel));
             if (result.IsSuccess)
             {
-                CreateResourceResults results = await Mediator.Send(new CreateResourceQuery(typeof(TModel), newModel));
+                CreateResourceResults results = await Mediator.Send(new CreateResourceRequest(typeof(TModel), newModel));
                 bool created = results.IsSuccess;
                 if (created)
                 {
@@ -75,7 +75,7 @@ namespace RPGDataEditor.Mvvm
             bool removed = Models.Remove(model);
             if (removed)
             {
-                DeleteResourceResults results = await Mediator.Send(new DeleteResourceQuery(typeof(TModel), model));
+                DeleteResourceResults results = await Mediator.Send(new DeleteResourceRequest(typeof(TModel), model));
                 bool deleted = results.IsSuccess;
                 if (!deleted)
                 {

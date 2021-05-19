@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.Commands
 {
-    public abstract class RenameCategoryHandler : IRequestHandler<RenameCategoryQuery, RenameCategoryResults>
+    public abstract class RenameCategoryHandler : IRequestHandler<RenameCategoryRequest, RenameCategoryResults>
     {
-        public async Task<RenameCategoryResults> Handle(RenameCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<RenameCategoryResults> Handle(RenameCategoryRequest request, CancellationToken cancellationToken)
         {
             try
             {
