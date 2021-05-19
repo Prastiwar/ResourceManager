@@ -8,9 +8,9 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class DialogViewModelBase : ViewModelBase, IDialogAware
+    public abstract class DialogViewModelBase : BindableClass, IDialogAware
     {
-        public DialogViewModelBase(ViewModelContext context) : base(context) { }
+        public DialogViewModelBase(ILogger<DialogViewModelBase> logger) => Logger = logger;
 
         public virtual string Title => "Dialog";
 
@@ -18,6 +18,8 @@ namespace RPGDataEditor.Mvvm
 
         private ICommand closeDialogCommand;
         public ICommand CloseDialogCommand => closeDialogCommand ??= new DelegateCommand<object>(CloseDialog);
+
+        protected ILogger<DialogViewModelBase> Logger { get; }
 
         protected virtual void CloseDialog(object parameter)
         {
@@ -62,7 +64,7 @@ namespace RPGDataEditor.Mvvm
             }
             catch (Exception ex)
             {
-                Context.Logger.LogError(ex, "Couldn't initialize dialog");
+                Logger.LogError(ex, "Couldn't initialize dialog");
                 RaiseRequestClose(new DialogResult(ButtonResult.Abort, new Navigation.DialogParametersBuilder() { Exception = ex }.BuildPrism()));
             }
         }

@@ -1,10 +1,12 @@
-﻿using RPGDataEditor.Mvvm;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using RPGDataEditor.Mvvm;
 
 namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
     public class QuestEditorViewModel : ModelDialogViewModel<Models.Quest>
     {
-        public QuestEditorViewModel(ViewModelContext context) : base(context) { }
+        public QuestEditorViewModel(IMediator mediator, ILogger<QuestEditorViewModel> logger) : base(mediator, logger) { }
 
         public override string Title => "Quest Editor";
     }

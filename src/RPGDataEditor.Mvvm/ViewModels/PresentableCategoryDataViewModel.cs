@@ -1,4 +1,6 @@
-﻿using ResourceManager;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
 using System.Collections.ObjectModel;
@@ -9,7 +11,7 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class PresentableCategoryDataViewModel<TResource> : PresentableDataViewModel<TResource> where TResource : IIdentifiable
     {
-        public PresentableCategoryDataViewModel(ViewModelContext context) : base(context) { }
+        public PresentableCategoryDataViewModel(IMediator mediator, ILogger<PresentableCategoryDataViewModel<TResource>> logger) : base(mediator, logger) { }
 
         private ObservableCollection<string> categories;
         public ObservableCollection<string> Categories {
@@ -60,7 +62,7 @@ namespace RPGDataEditor.Mvvm
             {
                 return false;
             }
-            RenameCategoryResults results = await Context.Mediator.Send(new RenameCategoryQuery(typeof(TResource), default, oldCategory, newCategory));
+            RenameCategoryResults results = await Mediator.Send(new RenameCategoryQuery(typeof(TResource), default, oldCategory, newCategory));
             if (!results.IsSuccess)
             {
                 return false;
@@ -78,7 +80,7 @@ namespace RPGDataEditor.Mvvm
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                RemoveCategoryResults results = await Context.Mediator.Send(new RemoveCategoryQuery(typeof(TResource), category));
+                RemoveCategoryResults results = await Mediator.Send(new RemoveCategoryQuery(typeof(TResource), category));
                 return results.IsSuccess;
             }
             return removed;

@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Mvvm
 {
-    public class ScreenViewModel : ViewModelBase, INavigationAware
+    public class ScreenViewModel : BindableClass, INavigationAware
     {
-        public ScreenViewModel(ViewModelContext context) : base(context) { }
-
         private bool isLoading;
         public bool IsLoading {
             get => isLoading;

@@ -16,7 +16,6 @@ using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
-using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Providers;
 using RPGDataEditor.Services;
@@ -67,7 +66,7 @@ namespace RPGDataEditor.Wpf
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        protected sealed override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
 
@@ -75,18 +74,18 @@ namespace RPGDataEditor.Wpf
             Configure(services);
             ServiceProvider provider = services.BuildServiceProvider();
             containerRegistry.RegisterServices(services, provider);
+            Configure(containerRegistry);
 
-            RegisterConfiguration(containerRegistry);
-            RegisterProviders(containerRegistry);
-            RegisterServices(containerRegistry);
-            RegisterDialogs(containerRegistry);
             InitializeAutoUpdater();
-            containerRegistry.RegisterSingleton<ViewModelContext>();
-            OnRegistrationFinished(containerRegistry);
+            OnConfigured(containerRegistry);
         }
 
         protected virtual void Configure(IServiceCollection services)
         {
+            services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
+
+            services.AddDataSourceConfiguration(builder => builder.AddLocalDataSource().AddFtpDataSource().AddSqlDataSource());
+
             services.AddLogging(builder => builder.AddFile(() => $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt"));
 
             services.AddFluentAssemblyScanner(null, scanner => {
@@ -107,6 +106,25 @@ namespace RPGDataEditor.Wpf
                 IResourceDescriptor sqlNpcDescriptor = new SqlNpcPathResourceDescriptor();
                 service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
             });
+
+            services.AddSingleton<ISerializer, NewtonsoftSerializer>();
+            services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>();
+
+            services.AddSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
+            services.AddSingleton<IServiceProvider, PrismServiceProvider>();
+
+            services.AddSingleton<ISnackbarService, SnackbarService>();
+            services.AddSingleton<IDialogService, PrismDialogService>();
+        }
+
+        protected virtual void Configure(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterDialog<UpdateDialog>(typeof(UpdateDialog).Name);
+            containerRegistry.RegisterDialog<ConnectionDialog>(typeof(ConnectionDialog).Name);
+
+            AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
+            controlProvider.RegisterDefaults(containerRegistry);
+            containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
         }
 
         protected virtual JsonSerializerSettings CreateJsonSettings()
@@ -139,44 +157,6 @@ namespace RPGDataEditor.Wpf
             return settings;
         }
 
-        protected virtual void RegisterConfiguration(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<ISerializer, NewtonsoftSerializer>();
-            containerRegistry.RegisterSingleton<IAppPersistanceService, LocalAppPersistanceService>();
-
-            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true)
-                                                                             .Build();
-            containerRegistry.RegisterInstance<IConfiguration>(configurationRoot);
-
-            IConfigurableDataSource configurator = new ConfigurableDataSourceBuilder().AddLocalDataSource()
-                                                                                      .AddFtpDataSource()
-                                                                                      .AddSqlDataSource()
-                                                                                      .Build();
-            containerRegistry.RegisterInstance(configurator);
-            containerRegistry.RegisterInstance<IDataSource>(configurator);
-        }
-
-        protected virtual void RegisterProviders(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
-            AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
-            controlProvider.RegisterDefaults(containerRegistry);
-            containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
-            containerRegistry.RegisterSingleton<IServiceProvider, PrismServiceProvider>();
-        }
-
-        protected virtual void RegisterServices(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
-            containerRegistry.RegisterSingleton<IDialogService, PrismDialogService>();
-        }
-
-        protected virtual void RegisterDialogs(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterDialog<UpdateDialog>(typeof(UpdateDialog).Name);
-            containerRegistry.RegisterDialog<ConnectionDialog>(typeof(ConnectionDialog).Name);
-        }
-
         protected virtual void InitializeAutoUpdater()
         {
             AutoUpdater.AppCastURL = "https://raw.githubusercontent.com/Prastiwar/RPGDataEditor/main/version.json";
@@ -196,7 +176,7 @@ namespace RPGDataEditor.Wpf
             };
         }
 
-        protected virtual void OnRegistrationFinished(IContainerRegistry containerRegistry)
+        protected virtual void OnConfigured(IContainerRegistry containerRegistry)
         {
             IConfiguration configuration = containerRegistry.GetContainer().Resolve<IConfiguration>();
             if (containerRegistry.GetContainer().Resolve<IAppPersistanceService>() is LocalAppPersistanceService service)

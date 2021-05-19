@@ -1,4 +1,6 @@
-﻿using RPGDataEditor.Models;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
 using System.Linq;
 
@@ -6,7 +8,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
     public class NpcEditorViewModel : ModelDialogViewModel<Models.Npc>
     {
-        public NpcEditorViewModel(ViewModelContext context) : base(context) { }
+        public NpcEditorViewModel(IMediator mediator, ILogger<NpcEditorViewModel> logger) : base(mediator, logger) { }
 
         public override string Title => "Npc Editor";
 

@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
+using RPGDataEditor.Mvvm.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +14,7 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class PresentableDataViewModel<TResource> : ModelsManagerViewModel<PresentableData> where TResource : IIdentifiable
     {
-        public PresentableDataViewModel(ViewModelContext context) : base(context) { }
+        public PresentableDataViewModel(IMediator mediator, ILogger<PresentableDataViewModel<TResource>> logger) : base(mediator, logger) { }
 
         public override async Task Refresh()
         {
@@ -20,12 +22,12 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<PresentableData>();
             try
             {
-                IEnumerable<PresentableData> models = await Context.Mediator.Send(new GetPresentablesByIdQuery(typeof(TResource), null));
+                IEnumerable<PresentableData> models = await Mediator.Send(new GetPresentablesByIdQuery(typeof(TResource), null));
                 Models.AddRange(models);
             }
             catch (Exception ex)
             {
-                Context.Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
+                Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
         }
@@ -35,14 +37,14 @@ namespace RPGDataEditor.Mvvm
             TResource resource;
             try
             {
-                resource = (TResource)await Context.Mediator.Send(new GetResourceByIdQuery(typeof(TResource), model.Id));
+                resource = (TResource)await Mediator.Send(new GetResourceByIdQuery(typeof(TResource), model.Id));
             }
             catch (Exception ex)
             {
                 resource = CreateResource(model);
                 if (resource is null)
                 {
-                    Context.Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
+                    Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
                 }
             }
             return resource;
@@ -58,11 +60,11 @@ namespace RPGDataEditor.Mvvm
                 return new EditorResults(null, false);
             }
             TResource newResource = (TResource)oldResource.DeepClone();
-            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newResource);
-            EditorResults results = new EditorResults(newResource, saveRequested);
+            Navigation.IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newResource));
+            EditorResults results = new EditorResults(newResource, result.IsSuccess);
             if (results.Success)
             {
-                UpdateResourceResults updateResults = await Context.Mediator.Send(new UpdateResourceQuery(typeof(TResource), oldResource, newResource));
+                UpdateResourceResults updateResults = await Mediator.Send(new UpdateResourceQuery(typeof(TResource), oldResource, newResource));
                 results.Success = updateResults.IsSuccess;
                 if (results.Success)
                 {
@@ -79,10 +81,10 @@ namespace RPGDataEditor.Mvvm
             PresentableData newPresentable = CreateModelInstance();
             newPresentable.Id = GetNextId();
             TResource newResource = CreateResource(newPresentable);
-            bool saveRequested = await Context.DialogService.ShowModelDialogAsync(newResource);
-            if (saveRequested)
+            Navigation.IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newResource));
+            if (result.IsSuccess)
             {
-                CreateResourceResults createResults = await Context.Mediator.Send(new CreateResourceQuery(typeof(TResource), newResource));
+                CreateResourceResults createResults = await Mediator.Send(new CreateResourceQuery(typeof(TResource), newResource));
                 if (createResults.IsSuccess)
                 {
                     Models.Add(newPresentable);

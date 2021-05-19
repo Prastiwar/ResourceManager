@@ -1,9 +1,11 @@
-﻿using RPGDataEditor.Mvvm;
+﻿using RPGDataEditor.Services;
 
 namespace RPGDataEditor.Wpf.ViewModels
 {
     public class MainWindowViewModel : AppWindowViewModel
     {
-        public MainWindowViewModel(ViewModelContext context) : base(context) { }
+        public MainWindowViewModel(ISnackbarService snackbarService) => SnackbarService = snackbarService;
+
+        public ISnackbarService SnackbarService { get; }
     }
 }

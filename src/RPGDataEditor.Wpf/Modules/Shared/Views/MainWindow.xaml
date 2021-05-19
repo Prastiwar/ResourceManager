@@ -46,8 +46,8 @@
                                          HorizontalAlignment="Stretch"
                                          Background="DimGray"
                                          Foreground="WhiteSmoke"
-                                         DataContext="{Binding Context}"
-                                         MessageQueue="{Binding SnackbarService.MessageQueue}"
+                                         DataContext="{Binding SnackbarService}"
+                                         MessageQueue="{Binding MessageQueue}"
                                          ActionButtonStyle="{DynamicResource MaterialDesignSnackbarActionCustomButton}" />
             </Grid>
         </materialDesign:Card>

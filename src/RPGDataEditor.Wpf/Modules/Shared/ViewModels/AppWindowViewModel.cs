@@ -6,10 +6,8 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.ViewModels
 {
-    public class AppWindowViewModel : ViewModelBase
+    public class AppWindowViewModel : BindableClass
     {
-        public AppWindowViewModel(ViewModelContext context) : base(context) { }
-
         private string title = "RPG Data Editor";
         public string Title {
             get => title;

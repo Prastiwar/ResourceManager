@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Microsoft.Extensions.Logging;
+using Prism.Commands;
 using RPGDataEditor.Mvvm;
 using System;
 using System.Windows.Input;
@@ -7,10 +8,12 @@ namespace RPGDataEditor.Wpf.Settings.ViewModels
 {
     public class SettingsTabViewModel : ScreenViewModel
     {
-        public SettingsTabViewModel(ViewModelContext context) : base(context) { }
+        public SettingsTabViewModel(ILogger<SettingsTabViewModel> logger) => Logger = logger;
 
         private ICommand ceateBackupCommand;
         public ICommand CreateBackupCommand => ceateBackupCommand ??= new DelegateCommand<Type>((type) => CreateBackup(type));
+
+        protected ILogger<SettingsTabViewModel> Logger { get; }
 
         //public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         //{

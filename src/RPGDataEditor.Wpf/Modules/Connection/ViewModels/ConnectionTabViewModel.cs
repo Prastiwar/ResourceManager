@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ResourceManager;
@@ -6,7 +7,9 @@ using ResourceManager.DataSource;
 using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Mvvm;
+using RPGDataEditor.Mvvm.Commands;
 using RPGDataEditor.Mvvm.Navigation;
+using RPGDataEditor.Services;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,8 +18,13 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
-        public ConnectionTabViewModel(ViewModelContext context, IConfigurableDataSource dataSourceConfigurator)
-            : base(context) => DataSourceConfigurator = dataSourceConfigurator;
+        public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource dataSourceConfigurator, IAppPersistanceService persistance, ILogger<ConnectionTabViewModel> logger)
+        {
+            Mediator = mediator;
+            DataSourceConfigurator = dataSourceConfigurator;
+            Persistance = persistance;
+            Logger = logger;
+        }
 
         private IConfiguration configuration;
         public IConfiguration Configuration {
@@ -24,7 +32,13 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             set => SetProperty(ref configuration, value);
         }
 
+        protected IMediator Mediator { get; }
+
         protected IConfigurableDataSource DataSourceConfigurator { get; }
+
+        protected IAppPersistanceService Persistance { get; }
+
+        protected ILogger<ConnectionTabViewModel> Logger { get; }
 
         public event EventHandler<ValidatedEventArgs> Validated;
 
@@ -34,23 +48,23 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
-            ValidationResult result = await Context.Mediator.Send(new ValidateResourceQuery(typeof(IConfigurationSection), Configuration));
+            ValidationResult result = await Mediator.Send(new ValidateResourceQuery(typeof(IConfigurationSection), Configuration));
             RaiseValidated(Configuration, result);
             if (result.IsValid)
             {
                 DataSourceConfigurator.Configure(Configuration);
-                bool connected = await Context.DataSource.Monitor.ForceCheckAsync(default);
+                bool connected = await DataSourceConfigurator.Monitor.ForceCheckAsync(default);
                 if (!connected)
                 {
                     return false;
                 }
                 try
                 {
-                    await Context.Persistance.SaveConfigAsync((IConfigurationSection)Configuration);
+                    await Persistance.SaveConfigAsync((IConfigurationSection)Configuration);
                 }
                 catch (Exception ex)
                 {
-                    Context.Logger.LogError(ex, "Couldn't save session");
+                    Logger.LogError(ex, "Couldn't save session");
                 }
             }
             return result.IsValid;
@@ -58,17 +72,17 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
-            Configuration = Context.Configuration.GetDataSourceSection();
-            Context.DataSource.Monitor.Stop();
+            Configuration = Configuration.GetDataSourceSection();
+            DataSourceConfigurator.Monitor.Stop();
             return Task.CompletedTask;
         }
 
         public override Task OnNavigatedFromAsync(INavigationContext navigationContext)
         {
             DataSourceConfigurator.Configure(Configuration);
-            Context.DataSource.Monitor.Start();
-            Context.DataSource.Monitor.Changed -= ConnectionMonitor_Changed;
-            Context.DataSource.Monitor.Changed += ConnectionMonitor_Changed;
+            DataSourceConfigurator.Monitor.Start();
+            DataSourceConfigurator.Monitor.Changed -= ConnectionMonitor_Changed;
+            DataSourceConfigurator.Monitor.Changed += ConnectionMonitor_Changed;
             return Task.CompletedTask;
         }
 
@@ -76,7 +90,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
         {
             if (!hasConnection)
             {
-                await Application.Current.Dispatcher.Invoke(async () => await Context.DialogService.ShowDialogAsync(DialogNames.ConnectionDialog));
+                await Application.Current.Dispatcher.Invoke(async () => await Mediator.Send(new ShowDialogQuery(DialogNames.ConnectionDialog, null)));
             }
         }
     }

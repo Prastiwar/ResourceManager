@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using MediatR.Pipeline;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ResourceManager.DataSource;
 using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
@@ -91,6 +93,26 @@ namespace ResourceManager
             FluentAssemblyScanner instance = new FluentAssemblyScanner(assemblies.ToArray());
             scanner?.Invoke(instance);
             services.AddSingleton<IFluentAssemblyScanner>(instance);
+        }
+
+        public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> configure)
+        {
+            ConfigurableDataSourceBuilder builder = new ConfigurableDataSourceBuilder();
+            configure.Invoke(builder);
+            IConfigurableDataSource configurator = builder.Build();
+
+            services.AddSingleton(configurator);
+            services.AddSingleton<IDataSource>(configurator);
+        }
+
+        public static void AddConfiguration(this IServiceCollection services, Action<IConfigurationBuilder> configure)
+        {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            configure.Invoke(builder);
+            IConfigurationRoot configurationRoot = builder.Build();
+
+            services.AddSingleton(configurationRoot);
+            services.AddSingleton<IConfiguration>(configurationRoot);
         }
     }
 }

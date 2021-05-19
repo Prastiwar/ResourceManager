@@ -1,4 +1,6 @@
-﻿using ResourceManager.Data;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using ResourceManager.Data;
 using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
 
@@ -6,7 +8,7 @@ namespace RPGDataEditor.Wpf.Quest.ViewModels
 {
     public class QuestTabViewModel : PresentableCategoryDataViewModel<Models.Quest>
     {
-        public QuestTabViewModel(ViewModelContext context) : base(context) { }
+        public QuestTabViewModel(IMediator mediator, ILogger<QuestTabViewModel> logger) : base(mediator, logger) { }
 
         protected override PresentableData CreateModelInstance() => new PresentableQuest() { Category = CurrentCategory };
 

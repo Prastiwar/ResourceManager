@@ -61,9 +61,9 @@ namespace RPGDataEditor.Minecraft.Wpf
             return settings;
         }
 
-        protected override void RegisterProviders(IContainerRegistry containerRegistry)
+        protected override void Configure(IContainerRegistry containerRegistry)
         {
-            base.RegisterProviders(containerRegistry);
+            base.Configure(containerRegistry);
             containerRegistry.RegisterSingleton(typeof(IImplementationProvider<>), typeof(McImplementationProvider<>));
             AutoTemplateProvider controlProvider = new MinecraftAutoTemplateProvider(Container);
             controlProvider.RegisterDefaults(containerRegistry);

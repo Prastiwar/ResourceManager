@@ -1,4 +1,6 @@
-﻿using ResourceManager.Data;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using ResourceManager.Data;
 using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
 
@@ -6,7 +8,7 @@ namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
     public class DialogueTabViewModel : PresentableCategoryDataViewModel<Models.Dialogue>
     {
-        public DialogueTabViewModel(ViewModelContext context) : base(context) { }
+        public DialogueTabViewModel(IMediator mediator, ILogger<DialogueTabViewModel> logger) : base(mediator, logger) { }
 
         protected override PresentableData CreateModelInstance() => new PresentableDialogue() { Category = CurrentCategory };
 

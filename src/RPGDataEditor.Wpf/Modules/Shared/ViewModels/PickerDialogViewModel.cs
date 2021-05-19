@@ -1,4 +1,6 @@
-﻿using Prism.Services.Dialogs;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using Prism.Services.Dialogs;
 using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
@@ -14,7 +16,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class PickerDialogViewModel : DialogViewModelBase
     {
-        public PickerDialogViewModel(ViewModelContext context) : base(context) { }
+        public PickerDialogViewModel(IMediator mediator, ILogger<PickerDialogViewModel> logger) : base(logger) => Mediator = mediator;
 
         public override string Title => "Resource Picker";
 
@@ -35,6 +37,8 @@ namespace RPGDataEditor.Wpf.ViewModels
             get => models;
             set => SetProperty(ref models, value);
         }
+
+        protected IMediator Mediator { get; }
 
         protected sealed override void CloseDialog(object result) => Close(result is bool b && b);
 
@@ -76,7 +80,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
         {
-            IEnumerable<object> resources = await Context.Mediator.Send(new GetResourcesByIdQuery(resourceType, null));
+            IEnumerable<object> resources = await Mediator.Send(new GetResourcesByIdQuery(resourceType, null));
             List<IIdentifiable> list = new List<IIdentifiable>() {
                 new NullResource()
             };

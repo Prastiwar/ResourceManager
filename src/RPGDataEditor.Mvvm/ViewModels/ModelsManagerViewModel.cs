@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
+using RPGDataEditor.Mvvm.Commands;
 using RPGDataEditor.Mvvm.Navigation;
 using System;
 using System.Collections.Generic;
@@ -13,13 +15,20 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class ModelsManagerViewModel<TModel> : ScreenViewModel where TModel : IIdentifiable
     {
-        public ModelsManagerViewModel(ViewModelContext context) : base(context) { }
+        public ModelsManagerViewModel(IMediator mediator, ILogger<ModelsManagerViewModel<TModel>> logger) : base()
+        {
+            Mediator = mediator;
+            Logger = logger;
+        }
 
         private ObservableCollection<TModel> models;
         public ObservableCollection<TModel> Models {
             get => models;
             protected set => SetProperty(ref models, value);
         }
+
+        protected IMediator Mediator { get; }
+        protected ILogger<ModelsManagerViewModel<TModel>> Logger { get; }
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext) => Refresh();
 
@@ -29,12 +38,12 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<TModel>();
             try
             {
-                IEnumerable<TModel> models = (await Context.Mediator.Send(new GetResourcesByIdQuery(typeof(TModel), null))).Cast<TModel>();
+                IEnumerable<TModel> models = (await Mediator.Send(new GetResourcesByIdQuery(typeof(TModel), null))).Cast<TModel>();
                 Models.AddRange(models);
             }
             catch (Exception ex)
             {
-                Context.Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
+                Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
         }
@@ -48,10 +57,10 @@ namespace RPGDataEditor.Mvvm
             int nextId = Models.Count > 0 ? Models.Max(x => (int)x.Id) + 1 : 0;
             newModel.Id = nextId;
 
-            bool create = await Context.DialogService.ShowModelDialogAsync(newModel);
-            if (create)
+            IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newModel));
+            if (result.IsSuccess)
             {
-                CreateResourceResults results = await Context.Mediator.Send(new CreateResourceQuery(typeof(TModel), newModel));
+                CreateResourceResults results = await Mediator.Send(new CreateResourceQuery(typeof(TModel), newModel));
                 bool created = results.IsSuccess;
                 if (created)
                 {
@@ -66,7 +75,7 @@ namespace RPGDataEditor.Mvvm
             bool removed = Models.Remove(model);
             if (removed)
             {
-                DeleteResourceResults results = await Context.Mediator.Send(new DeleteResourceQuery(typeof(TModel), model));
+                DeleteResourceResults results = await Mediator.Send(new DeleteResourceQuery(typeof(TModel), model));
                 bool deleted = results.IsSuccess;
                 if (!deleted)
                 {
@@ -80,17 +89,17 @@ namespace RPGDataEditor.Mvvm
         protected virtual async Task<EditorResults> OpenEditorAsync(TModel model)
         {
             TModel newModel = (TModel)model.DeepClone();
-            bool update = await Context.DialogService.ShowModelDialogAsync(newModel);
-            if (update)
+            IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newModel));
+            if (result.IsSuccess)
             {
-                UpdateResourceResults results = await Context.Mediator.Send(new UpdateResourceQuery(typeof(TModel), model, newModel));
+                UpdateResourceResults results = await Mediator.Send(new UpdateResourceQuery(typeof(TModel), model, newModel));
                 bool updated = results.IsSuccess;
                 if (updated)
                 {
                     model.CopyProperties(newModel);
                 }
             }
-            return new EditorResults(newModel, update);
+            return new EditorResults(newModel, result.IsSuccess);
         }
     }
 }

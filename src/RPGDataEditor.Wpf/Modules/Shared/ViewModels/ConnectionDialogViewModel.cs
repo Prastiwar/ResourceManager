@@ -1,4 +1,5 @@
-﻿using Prism.Services.Dialogs;
+﻿using Microsoft.Extensions.Logging;
+using Prism.Services.Dialogs;
 using ResourceManager.DataSource;
 using RPGDataEditor.Core;
 using RPGDataEditor.Extensions.Prism.Wpf;
@@ -11,8 +12,8 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class ConnectionDialogViewModel : DialogViewModelBase
     {
-        public ConnectionDialogViewModel(ViewModelContext context, IConnectionMonitor connectionMonitor)
-            : base(context) => ConnectionMonitor = connectionMonitor;
+        public ConnectionDialogViewModel(IConnectionMonitor connectionMonitor, ILogger<ConnectionDialogViewModel> logger)
+            : base(logger) => ConnectionMonitor = connectionMonitor;
 
         public override string Title => "Connection problem";
 
