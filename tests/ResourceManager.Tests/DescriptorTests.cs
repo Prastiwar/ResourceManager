@@ -1,4 +1,5 @@
 ﻿using ResourceManager.Data;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -31,9 +32,26 @@ namespace ResourceManager.Tests
         }
 
         [Fact]
+        public void ParseFilePathDescriptor2()
+        {
+            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "", "{category}/{id}_{name}");
+            string path = "SomeCategory/1_Foo";
+            KeyValuePair<string, object>[] parameters = descriptor.ParseParameters(path);
+            Assert.Equal(3, parameters.Length);
+
+            Assert.Equal("category", parameters[0].Key);
+            Assert.Equal("id", parameters[1].Key);
+            Assert.Equal("name", parameters[2].Key);
+
+            Assert.Equal("SomeCategory", parameters[0].Value);
+            Assert.Equal("1", parameters[1].Value);
+            Assert.Equal("Foo", parameters[2].Value);
+        }
+
+        [Fact]
         public void ParseSqlPathDescriptor()
         {
-            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "dummies", ".{id}");
+            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "[dummies]", ".{id}");
             string path = "[dummies].1";
             KeyValuePair<string, object>[] parameters = descriptor.ParseParameters(path);
             Assert.Single(parameters);
@@ -41,6 +59,14 @@ namespace ResourceManager.Tests
             Assert.Equal("id", parameters[0].Key);
 
             Assert.Equal("1", parameters[0].Value);
+        }
+
+        [Fact]
+        public void ParseSqlPathDescriptor2()
+        {
+            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "dummies", ".{id}");
+            string path = "[dummies].1";
+            Assert.Throws<ArgumentException>(() => descriptor.ParseParameters(path));
         }
     }
 }

@@ -47,7 +47,13 @@ namespace ResourceManager
                         if (concreteServiceType.FullName == null)
                         {
                             registerType = concreteServiceType.GetGenericTypeDefinition();
-                            // TODO: Check if implementationType matches registerType generics
+                            if (implementationType.IsGenericTypeDefinition)
+                            {
+                                if (implementationType.GetGenericArguments().Length != registerType.GetGenericArguments().Length)
+                                {
+                                    continue;
+                                }
+                            }
                         }
                         services.Add(new ServiceDescriptor(registerType, implementationType, lifetime));
                     }

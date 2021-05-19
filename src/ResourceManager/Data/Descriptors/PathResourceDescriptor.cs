@@ -77,16 +77,18 @@ namespace ResourceManager.Data
 
         public virtual KeyValuePair<string, object>[] ParseParameters(string path)
         {
+            string format = RelativeFullPathStringFormat;
             string[] splitFormat = RelativeFullPathFormat.Split(bracketsArray, StringSplitOptions.RemoveEmptyEntries);
-            string[] argumentNames = new string[splitFormat.Length / 2];
-            int oddSplitFormatIndex = 1;
+            double halfLength = splitFormat.Length / 2.0;
+            int argumentNamesLength = (int)(format[0] == '{' ? Math.Ceiling(halfLength) : Math.Floor(halfLength));
+            string[] argumentNames = new string[argumentNamesLength];
+            int splitArgumentFormatIndex = format[0] == '{' ? 0 : 1;
             for (int i = 0; i < argumentNames.Length; i++)
             {
-                argumentNames[i] = splitFormat[oddSplitFormatIndex];
-                oddSplitFormatIndex += 2;
+                argumentNames[i] = splitFormat[splitArgumentFormatIndex];
+                splitArgumentFormatIndex += 2;
             }
             KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[argumentNames.Length];
-            string format = RelativeFullPathStringFormat;
             string[] argumentValues = new string[format.Count(c => c == '{')];
 
             if (argumentNames.Length != argumentValues.Length)
@@ -99,6 +101,13 @@ namespace ResourceManager.Data
                 int braceIndex = format.IndexOf('{');
                 int endBraceIndex = format.IndexOf('}');
                 int endDataIndex = 0;
+                if (braceIndex > 0)
+                {
+                    if (format[braceIndex - 1] != path[braceIndex - 1])
+                    {
+                        throw new ArgumentException("Path is not compatible with format: " + format, nameof(path));
+                    }
+                }
                 if (format.Length > endBraceIndex + 1)
                 {
                     char matchingNextChar = format[endBraceIndex + 1];

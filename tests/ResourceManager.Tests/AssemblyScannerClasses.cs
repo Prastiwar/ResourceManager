@@ -31,4 +31,9 @@
     public class DuplicateInheritance : IDuplicateInheritance { }
 
     public class DuplicateInheritance1 : DuplicateInheritance, IDuplicateInheritance { }
+
+    public interface ITestService<T> { }
+
+    public class TestService<T, U> : ITestService<T> { }
+
 }
