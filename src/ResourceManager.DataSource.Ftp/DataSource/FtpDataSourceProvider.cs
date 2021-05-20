@@ -14,13 +14,13 @@ namespace ResourceManager.DataSource.Ftp
         {
             string host = configuration["host"];
             string userName = configuration["username"];
-            string password = configuration["password"];
+            System.Security.SecureString password = SecretString.DecryptString(configuration["password"]);
             int port = int.TryParse(configuration["port"], out int parsedPort) ? parsedPort : 0;
             FtpConnectionMonitor monitor = new FtpConnectionMonitor(host, new System.Net.NetworkCredential(userName, password), port);
             IOptions<FtpDataSourceOptions> options = Options.Create(new FtpDataSourceOptions() {
                 Host = host,
                 UserName = userName,
-                Password = password.ToSecure(),
+                Password = password,
                 Port = port,
                 RelativePath = configuration["relativepath"]
             });

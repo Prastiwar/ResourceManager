@@ -18,11 +18,12 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
-        public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource dataSourceConfigurator, IAppPersistanceService persistance, ILogger<ConnectionTabViewModel> logger)
+        public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource dataSourceConfigurator, IAppPersistanceService persistance, IConfiguration configuration, ILogger<ConnectionTabViewModel> logger)
         {
             Mediator = mediator;
             DataSourceConfigurator = dataSourceConfigurator;
             Persistance = persistance;
+            ConfigurationRoot = configuration;
             Logger = logger;
         }
 
@@ -37,6 +38,8 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
         protected IConfigurableDataSource DataSourceConfigurator { get; }
 
         protected IAppPersistanceService Persistance { get; }
+
+        protected IConfiguration ConfigurationRoot { get; }
 
         protected ILogger<ConnectionTabViewModel> Logger { get; }
 
@@ -72,7 +75,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
-            Configuration = Configuration.GetDataSourceSection();
+            Configuration = ConfigurationRoot.GetDataSourceSection();
             DataSourceConfigurator.Monitor.Stop();
             return Task.CompletedTask;
         }

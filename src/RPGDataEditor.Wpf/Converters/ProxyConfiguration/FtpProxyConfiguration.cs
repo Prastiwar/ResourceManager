@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ResourceManager;
 using System;
+using System.Security;
 
 namespace RPGDataEditor.Wpf.Converters
 {
@@ -22,9 +24,9 @@ namespace RPGDataEditor.Wpf.Converters
             set => Set(value);
         }
 
-        public string Password {
-            get => Get();
-            set => Set(value);
+        public SecureString Password {
+            get => SecretString.DecryptString(Get());
+            set => Set(SecretString.EncryptString(value));
         }
 
         public int Port {

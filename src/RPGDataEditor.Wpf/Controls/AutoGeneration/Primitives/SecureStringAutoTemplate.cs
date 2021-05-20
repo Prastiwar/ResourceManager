@@ -21,7 +21,7 @@ namespace RPGDataEditor.Wpf.Controls
             HintAssist.SetHint(box, info.Name.MakeFriendlyName());
             box.SetResourceReference(FrameworkElement.StyleProperty, "MaterialDesignFloatingHintPasswordBox");
             BehaviorCollection behaviours = Interaction.GetBehaviors(box);
-            behaviours.Add(new ValidationListenerBehavior());
+            behaviours.Add(new ValidationListenerBehaviorView());
             return box;
         }
     }
