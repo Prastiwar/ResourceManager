@@ -16,11 +16,16 @@ namespace Microsoft.Extensions.Logging
             FileLoggerOptions options = new FileLoggerOptions() {
                 FilePathFunc = () => "log.txt",
                 MaxFileSize = 2000000,
-                MaxFilesCount = 1
+                MaxFilesCount = 1,
+                LogMessageBuilder = BuildLogMessage
             };
             configure.Invoke(options);
             builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider>(new FileLoggerProvider(options)));
             return builder;
         }
+
+        private static string BuildLogMessage(string message, string categoryName, LogLevel logLevel, EventId eventId, Exception exception) => exception != null
+                ? $"[{logLevel}] [{eventId}] [{categoryName}]: {message}{Environment.NewLine} Error Message: {exception.Message}{Environment.NewLine} {exception.StackTrace}"
+                : $"[{logLevel}] [{eventId}] [{categoryName}]: {message}";
     }
 }

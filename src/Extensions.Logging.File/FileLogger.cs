@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace Extensions.Logging.File
 {
@@ -25,12 +26,44 @@ namespace Extensions.Logging.File
         {
             string message = formatter.Invoke(state, exception);
             string level = logLevel.ToString();
-            string fileFullPath = Options.FilePathFunc.Invoke();
-            // TODO: Format message
-            // TODO: Roll files
-            lock (locker)
+            string originalFileFullPath = Options.FilePathFunc.Invoke();
+            string fileFullPath = originalFileFullPath;
+            FileInfo logFile = new FileInfo(fileFullPath);
+            int counter = 1;
+            while (logFile.Exists && counter <= Options.MaxFilesCount)
             {
-                System.IO.File.AppendAllText(fileFullPath, message + "\n");
+                bool exceedsMaxSize = logFile.Length >= Options.MaxFileSize;
+                if (exceedsMaxSize)
+                {
+                    fileFullPath = $"{Path.GetFileNameWithoutExtension(logFile.Name)}({counter}){logFile.Extension}";
+                    logFile = new FileInfo(fileFullPath);
+                }
+                else
+                {
+                    break;
+                }
+                counter++;
+            }
+            BuildLogMessageHandler messageBuilder = Options.LogMessageBuilder;
+            if (Options.LogMessageBuilder == null)
+            {
+                messageBuilder = (m, c, l, e, ex) => m;
+            }
+            string formattedMessage = messageBuilder.Invoke(message, CategoryName, logLevel, eventId, exception) + Environment.NewLine;
+            bool canAppend = logFile.Length >= Options.MaxFileSize;
+            if (canAppend)
+            {
+                lock (locker)
+                {
+                    System.IO.File.AppendAllText(fileFullPath, formattedMessage);
+                }
+            }
+            else
+            {
+                lock (locker)
+                {
+                    System.IO.File.WriteAllText(originalFileFullPath, formattedMessage);
+                }
             }
         }
     }
