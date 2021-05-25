@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="FluentFTP" Version="34.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

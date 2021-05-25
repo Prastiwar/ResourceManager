@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using ResourceManager.DataSource.Sql.Configuration;
+﻿using ResourceManager.DataSource.Sql.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,9 @@ namespace ResourceManager.DataSource.Sql.Data
 {
     public class SqlClient : ISqlClient
     {
-        public SqlClient(IOptions<SqlDataSourceOptions> options) => Options = options;
+        public SqlClient(SqlDataSourceOptions options) => Options = options;
 
-        public IOptions<SqlDataSourceOptions> Options { get; }
+        public SqlDataSourceOptions Options { get; }
 
         public string GetTableName(Type type) => throw new NotImplementedException();
         public IQueryable<object> Query(string table, Type type) => throw new NotImplementedException();

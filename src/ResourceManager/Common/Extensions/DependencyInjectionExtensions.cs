@@ -11,30 +11,34 @@ using System.Reflection;
 
 namespace ResourceManager
 {
-    public static partial class DependencyInjectionExtensions
+    public static class DependencyInjectionExtensions
     {
-        public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner)
+        public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
         {
-            services.AddTransient<ServiceFactory>(p => p.GetService);
+            services.AddSingleton(p => new MutableServiceFactory(p.GetService));
+            services.AddTransient(p => p.GetRequiredService<MutableServiceFactory>().Factory);
             services.AddTransient<IMediator, Mediator>();
-            services.AddScannedServices(scanner, typeof(IRequestHandler<>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestHandler<,>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(INotificationHandler<>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestPreProcessor<>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestPostProcessor<,>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionHandler<,>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionHandler<,,>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionAction<>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionAction<,>), ServiceLifetime.Transient);
-            services.AddScannedServices(scanner, typeof(IPipelineBehavior<,>), ServiceLifetime.Transient);
+            services.AddScannedServices(scanner, typeof(IRequestHandler<>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestHandler<,>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(INotificationHandler<>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestPreProcessor<>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestPostProcessor<,>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestExceptionHandler<,>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestExceptionHandler<,,>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestExceptionAction<>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IRequestExceptionAction<,>), ServiceLifetime.Transient, targetAssemblies);
+            services.AddScannedServices(scanner, typeof(IPipelineBehavior<,>), ServiceLifetime.Transient, targetAssemblies);
         }
 
-        public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime)
-            => services.AddScannedServices(scanner, typeof(TFrom), lifetime);
+        public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime, Assembly[] targetAssemblies = null)
+            => services.AddScannedServices(scanner, typeof(TFrom), lifetime, targetAssemblies);
 
-        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ServiceLifetime lifetime)
+        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ServiceLifetime lifetime, Assembly[] targetAssemblies = null)
         {
-            TypeScan results = scanner.Scan().Select(serviceType).Get().Scans.First();
+            IFluentTypeSelector selector = targetAssemblies != null && targetAssemblies.Length > 0
+                                            ? scanner.Scan(targetAssemblies)
+                                            : scanner.Scan();
+            TypeScan results = selector.Select(serviceType).Get().Scans.First();
             foreach (Type implementationType in results.ResultTypes)
             {
                 if (serviceType.IsGenericTypeDefinition)
@@ -102,8 +106,19 @@ namespace ResourceManager
         }
 
         public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> configure)
+            => AddDataSourceConfiguration(services, new DataSourceWrapperConfigurator(services), configure);
+
+        public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> build, Action<IServiceCollection, IDataSource> configure)
+            => AddDataSourceConfiguration(services, new DataSourceWrapperConfigurator(services), build);
+
+        public static void AddDataSourceConfiguration(this IServiceCollection services, IDataSourceServicesConfigurator servicesConfigurator, Action<IConfigurableDataSourceBuilder> configure)
         {
-            ConfigurableDataSourceBuilder builder = new ConfigurableDataSourceBuilder();
+            if (servicesConfigurator is null)
+            {
+                throw new ArgumentNullException(nameof(servicesConfigurator));
+            }
+
+            ConfigurableDataSourceBuilder builder = new ConfigurableDataSourceBuilder(servicesConfigurator, services);
             configure.Invoke(builder);
             IConfigurableDataSource configurator = builder.Build();
 

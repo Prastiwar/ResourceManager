@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using ResourceManager.DataSource.File;
 using ResourceManager.DataSource.Local.Configuration;
+using ResourceManager.DataSource.Local.Data;
 
 namespace ResourceManager.DataSource.Local
 {
@@ -10,14 +12,17 @@ namespace ResourceManager.DataSource.Local
 
         protected LocalDataSourceBuilderOptions BuilderOptions { get; }
 
-        public IDataSource Provide(IConfiguration configuration)
+        public IDataSource Provide(IServiceCollection services, IConfiguration configuration)
         {
             LocalConnectionMonitor monitor = new LocalConnectionMonitor();
-            IOptions<LocalDataSourceOptions> options = Options.Create(new LocalDataSourceOptions() {
+            LocalDataSourceOptions options = new LocalDataSourceOptions() {
                 FileSearchPattern = configuration[nameof(BuilderOptions.FileSearchPattern)] ?? BuilderOptions.FileSearchPattern,
                 FolderPath = configuration[nameof(BuilderOptions.FolderPath)] ?? BuilderOptions.FolderPath,
-            });
-            return new LocalDataSource(configuration, monitor, options);
+            };
+            services.AddSingleton<IFileClient>(new LocalFileClient(options));
+            LocalDataSource dataSource = new LocalDataSource(configuration, monitor, options);
+            services.AddSingleton(dataSource);
+            return dataSource;
         }
     }
 }

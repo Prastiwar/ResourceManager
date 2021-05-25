@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using ResourceManager.DataSource.Ftp.Configuration;
 
 namespace ResourceManager.DataSource.Ftp
 {
     public class FtpDataSource : IDataSource
     {
-        public FtpDataSource(IConfiguration configuration, IConnectionMonitor monitor, IOptions<FtpDataSourceOptions> options)
+        public FtpDataSource(IConfiguration configuration, IConnectionMonitor monitor, FtpDataSourceOptions options)
         {
             Configuration = configuration;
             Monitor = monitor;
@@ -17,6 +16,6 @@ namespace ResourceManager.DataSource.Ftp
 
         public IConnectionMonitor Monitor { get; }
 
-        public IOptions<FtpDataSourceOptions> Options { get; }
+        public FtpDataSourceOptions Options { get; }
     }
 }

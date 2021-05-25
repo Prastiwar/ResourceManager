@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.DataSource;
@@ -18,10 +19,10 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
-        public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource dataSourceConfigurator, IAppPersistanceService persistance, IConfiguration configuration, ILogger<ConnectionTabViewModel> logger)
+        public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource configurator, IAppPersistanceService persistance, IConfiguration configuration, ILogger<ConnectionTabViewModel> logger)
         {
             Mediator = mediator;
-            DataSourceConfigurator = dataSourceConfigurator;
+            Configurator = configurator;
             Persistance = persistance;
             ConfigurationRoot = configuration;
             Logger = logger;
@@ -35,7 +36,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         protected IMediator Mediator { get; }
 
-        protected IConfigurableDataSource DataSourceConfigurator { get; }
+        protected IConfigurableDataSource Configurator { get; }
 
         protected IAppPersistanceService Persistance { get; }
 
@@ -55,8 +56,8 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             RaiseValidated(Configuration, result);
             if (result.IsValid)
             {
-                DataSourceConfigurator.Configure(Configuration);
-                bool connected = await DataSourceConfigurator.Monitor.ForceCheckAsync(default);
+                Configurator.Configure(Configuration);
+                bool connected = await Configurator.CurrentSource.Monitor.ForceCheckAsync(default);
                 if (!connected)
                 {
                     return false;
@@ -76,16 +77,16 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
         public override Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
             Configuration = ConfigurationRoot.GetDataSourceSection();
-            DataSourceConfigurator.Monitor.Stop();
+            Configurator.CurrentSource.Monitor.Stop();
             return Task.CompletedTask;
         }
 
         public override Task OnNavigatedFromAsync(INavigationContext navigationContext)
         {
-            DataSourceConfigurator.Configure(Configuration);
-            DataSourceConfigurator.Monitor.Start();
-            DataSourceConfigurator.Monitor.Changed -= ConnectionMonitor_Changed;
-            DataSourceConfigurator.Monitor.Changed += ConnectionMonitor_Changed;
+            Configurator.Configure(Configuration);
+            Configurator.CurrentSource.Monitor.Start();
+            Configurator.CurrentSource.Monitor.Changed -= ConnectionMonitor_Changed;
+            Configurator.CurrentSource.Monitor.Changed += ConnectionMonitor_Changed;
             return Task.CompletedTask;
         }
 

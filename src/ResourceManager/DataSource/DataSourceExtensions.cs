@@ -6,6 +6,7 @@ namespace ResourceManager.DataSource
     {
         public const string NameKey = "Type";
 
-        public static void Configure(this IConfigurableDataSource configurator, IConfiguration configuration) => configurator.Configure(configuration[NameKey], configuration);
+        public static void Configure(this IConfigurableDataSource configurator, IConfiguration configuration)
+            => configurator.Configure(configuration[NameKey], configuration);
     }
 }

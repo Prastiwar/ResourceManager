@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 
@@ -6,18 +7,21 @@ namespace ResourceManager.DataSource
 {
     public class ConfigurableDataSource : IConfigurableDataSource
     {
-        public ConfigurableDataSource(IEnumerable<KeyValuePair<string, IDataSourceProvider>> providers)
-            => Providers = new Dictionary<string, IDataSourceProvider>(providers, StringComparer.OrdinalIgnoreCase);
+        public ConfigurableDataSource(IDataSourceServicesConfigurator servicesConfigurator, IEnumerable<KeyValuePair<string, IDataSourceProvider>> providers)
+        {
+            ServicesBuilder = servicesConfigurator ?? throw new ArgumentNullException(nameof(servicesConfigurator));
+            Providers = new Dictionary<string, IDataSourceProvider>(providers, StringComparer.OrdinalIgnoreCase);
+        }
 
         protected IDictionary<string, IDataSourceProvider> Providers { get; }
 
-        public IDataSource DataSource { get; protected set; }
+        protected IDataSourceServicesConfigurator ServicesBuilder { get; }
 
-        public IConfiguration Configuration => DataSource.Configuration;
+        public IDataSource CurrentSource { get; protected set; }
 
-        public IConnectionMonitor Monitor => DataSource.Monitor;
+        public IConfiguration Configuration => CurrentSource.Configuration;
 
-        public event EventHandler<ConfigurationChangedEventArgs> Changed;
+        public IConnectionMonitor Monitor => CurrentSource.Monitor;
 
         public void Configure(string name, IConfiguration configuration)
         {
@@ -28,9 +32,9 @@ namespace ResourceManager.DataSource
 
             if (Providers.TryGetValue(name, out IDataSourceProvider provider))
             {
-                IDataSource oldDataSource = DataSource;
-                DataSource = provider.Provide(configuration);
-                Changed?.Invoke(this, new ConfigurationChangedEventArgs(oldDataSource, configuration));
+                IServiceCollection services = ServicesBuilder.Create();
+                CurrentSource = provider.Provide(services, configuration);
+                ServicesBuilder.Configure(services, CurrentSource);
             }
             else
             {

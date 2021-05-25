@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using ResourceManager.DataSource.Sql.Configuration;
+using ResourceManager.DataSource.Sql.Data;
 
 namespace ResourceManager.DataSource.Sql
 {
@@ -10,14 +11,17 @@ namespace ResourceManager.DataSource.Sql
 
         protected SqlDataSourceBuilderOptions BuilderOptions { get; }
 
-        public IDataSource Provide(IConfiguration configuration)
+        public IDataSource Provide(IServiceCollection services, IConfiguration configuration)
         {
             string connectionString = string.IsNullOrEmpty(BuilderOptions.ConnectionString) ? BuilderOptions.ConnectionString : configuration["connectionstring"];
             SqlConnectionMonitor monitor = new SqlConnectionMonitor(connectionString);
-            IOptions<SqlDataSourceOptions> options = Options.Create(new SqlDataSourceOptions() {
+            SqlDataSourceOptions options = new SqlDataSourceOptions() {
                 ConnectionString = connectionString
-            });
-            return new SqlDataSource(configuration, monitor, options);
+            };
+            services.AddSingleton<ISqlClient>(new SqlClient(options));
+            SqlDataSource dataSource = new SqlDataSource(configuration, monitor, options);
+            services.AddSingleton(dataSource);
+            return dataSource;
         }
     }
 }

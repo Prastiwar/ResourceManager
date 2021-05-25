@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using ResourceManager.DataSource.File;
 using ResourceManager.DataSource.Ftp.Configuration;
+using ResourceManager.DataSource.Ftp.Data;
 
 namespace ResourceManager.DataSource.Ftp
 {
@@ -10,21 +12,26 @@ namespace ResourceManager.DataSource.Ftp
 
         protected FtpDataSourceBuilderOptions BuilderOptions { get; }
 
-        public IDataSource Provide(IConfiguration configuration)
+        public IDataSource Provide(IServiceCollection services, IConfiguration configuration)
         {
             string host = configuration["host"];
             string userName = configuration["username"];
             System.Security.SecureString password = SecretString.DecryptString(configuration["password"]);
             int port = int.TryParse(configuration["port"], out int parsedPort) ? parsedPort : 0;
             FtpConnectionMonitor monitor = new FtpConnectionMonitor(host, new System.Net.NetworkCredential(userName, password), port);
-            IOptions<FtpDataSourceOptions> options = Options.Create(new FtpDataSourceOptions() {
+            FtpDataSourceOptions options = new FtpDataSourceOptions() {
                 Host = host,
                 UserName = userName,
                 Password = password,
                 Port = port,
                 RelativePath = configuration["relativepath"]
-            });
-            return new FtpDataSource(configuration, monitor, options);
+            };
+            FtpDataSource dataSource = new FtpDataSource(configuration, monitor, options);
+            FtpFileClient client = new FtpFileClient(options);
+            services.AddSingleton<IFtpFileClient>(client);
+            services.AddSingleton<IFileClient>(client);
+            services.AddSingleton(dataSource);
+            return dataSource;
         }
     }
 }
