@@ -23,6 +23,8 @@ namespace ResourceManager.DataSource
 
         public IConnectionMonitor Monitor => CurrentSource.Monitor;
 
+        protected IServiceCollection ActualServices { get; private set; }
+
         public void Configure(string name, IConfiguration configuration)
         {
             if (string.IsNullOrEmpty(name))
@@ -32,9 +34,13 @@ namespace ResourceManager.DataSource
 
             if (Providers.TryGetValue(name, out IDataSourceProvider provider))
             {
-                IServiceCollection services = ServicesBuilder.Create();
-                CurrentSource = provider.Provide(services, configuration);
-                ServicesBuilder.Configure(services, CurrentSource);
+                if (ActualServices != null)
+                {
+                    ServicesBuilder.Unregister(ActualServices, CurrentSource);
+                }
+                ActualServices = ServicesBuilder.Create();
+                CurrentSource = provider.Provide(ActualServices, configuration);
+                ServicesBuilder.Configure(ActualServices, CurrentSource);
             }
             else
             {

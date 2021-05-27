@@ -7,5 +7,7 @@ namespace ResourceManager.DataSource
         IServiceCollection Create();
 
         void Configure(IServiceCollection services, IDataSource currentSource);
+
+        void Unregister(IServiceCollection services, IDataSource previousSource);
     }
 }

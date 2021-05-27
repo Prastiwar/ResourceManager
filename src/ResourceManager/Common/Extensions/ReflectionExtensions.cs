@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace ResourceManager
 {
@@ -33,6 +34,21 @@ namespace ResourceManager
                 return typeof(object);
             }
             return elementType;
+        }
+
+        public static Assembly[] GetReferencedAssemblies(this Assembly assembly, bool includeRoot)
+        {
+            AssemblyName[] referencedAssemblies = assembly.GetReferencedAssemblies();
+            IList<Assembly> assemblies = new List<Assembly>(includeRoot ? referencedAssemblies.Length : referencedAssemblies.Length + 1);
+            if (includeRoot)
+            {
+                assemblies.Add(assembly);
+            }
+            for (int i = includeRoot ? 1 : 0; i < referencedAssemblies.Length; i++)
+            {
+                assemblies.Add(Assembly.Load(referencedAssemblies[i]));
+            }
+            return assemblies.ToArray();
         }
     }
 }

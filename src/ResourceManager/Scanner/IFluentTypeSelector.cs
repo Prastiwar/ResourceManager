@@ -13,6 +13,7 @@ namespace ResourceManager
         IFluentTypeSelector ModifyGeneric(ModifyGenericHandler genericHandler);
         IFluentTypeSelector ScanTypes(Predicate<Type> predicate);
         IFluentTypeSelector ScanTypes(IFluentTypeSelector selector);
+        IFluentTypeSelector Reset();
         TypeScanResult Get();
     }
 }

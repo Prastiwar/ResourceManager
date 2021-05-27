@@ -12,7 +12,6 @@ using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.Services;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf;
@@ -26,6 +25,8 @@ using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf
@@ -83,14 +84,19 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void Configure(IServiceCollection services)
         {
-            services.AddLogging(builder => builder.AddFile(() => $"./logs_{DateTime.Now.ToString("dd_MM_yyyy")}.txt"));
+            services.AddLogging(builder => builder.AddFile(() => $"./logs/log_{DateTime.Now.ToString("dd_MM_yyyy")}.txt"));
 
             services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
 
-            services.AddDataSourceConfiguration(builder => builder.AddLocalDataSource().AddFtpDataSource().AddSqlDataSource(), ConfigureDataSource);
+            services.AddDataSourceConfiguration(builder => builder.AddLocalDataSource().AddFtpDataSource().AddSqlDataSource(), ConfigureDataSource, ClearPreviousDataSource);
 
             services.AddFluentAssemblyScanner(null, scanner => {
-                services.AddFluentMediatr(scanner);
+                Assembly[] dataSourceAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies(false)
+                                                                             .SelectMany(assembly => assembly.GetReferencedAssemblies(true).Where(assembly => assembly.GetName().Name.Contains("ResourceManager.DataSource.")))
+                                                                             .Distinct()
+                                                                             .ToArray();
+                services.AddFluentMediatr(scanner.IncludeIgnore(dataSourceAssemblies));
+                scanner.Reset();
                 services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient);
             });
 
@@ -118,26 +124,25 @@ namespace RPGDataEditor.Wpf
             services.AddSingleton<IDialogService, PrismDialogService>();
         }
 
+        protected virtual void ClearPreviousDataSource(IServiceCollection services, IDataSource previousSource)
+        {
+            foreach (ServiceDescriptor service in services)
+            {
+                Container.GetContainer().Unregister(service.ServiceType);
+            }
+        }
+
         protected virtual void ConfigureDataSource(IServiceCollection services, IDataSource currentSource)
         {
-            // TODO: Add services from Container
+            Assembly dataSourceAssembly = currentSource.GetType().Assembly;
+            Assembly[] dataSourceAssemblies = dataSourceAssembly.GetReferencedAssemblies(true)
+                                                                .Where(x => x.GetName().Name.Contains("ResourceManager.DataSource."))
+                                                                .ToArray();
+            IFluentAssemblyScanner scanner = Container.Resolve<IFluentAssemblyScanner>();
+            services.RegisterMediatRDependencies(scanner, dataSourceAssemblies);
 
-            services.AddFluentAssemblyScanner(options => {
-                options.ScanReferencedAssemblies = false;
-                options.ScanAssemblies = new System.Reflection.Assembly[] {
-                    currentSource.GetType().Assembly,
-                    typeof(MediatR.Mediator).Assembly,
-                    typeof(ResourceManager.Services.MutableServiceFactory).Assembly,
-                    typeof(RPGDataEditor.Wpf.RpgDataEditorApplication).Assembly,
-                    typeof(RPGDataEditor.Mvvm.BindableClass).Assembly,
-                    typeof(RPGDataEditor.Extensions.Prism.Wpf.DialogExtensions).Assembly,
-                    typeof(RPGDataEditor.Models.AttributeData).Assembly,
-                    typeof(RPGDataEditor.Core.Commands.ValidateResourceHandler).Assembly
-                };
-            },
-            scanner => services.AddFluentMediatr(scanner));
-            MutableServiceFactory factory = Container.Resolve<MutableServiceFactory>();
-            factory.Factory = services.BuildServiceProvider().GetService;
+            IContainerRegistry registry = (IContainerRegistry)Container;
+            registry.RegisterServices(services, services.BuildServiceProvider());
         }
 
         protected virtual void Configure(IContainerRegistry containerRegistry)

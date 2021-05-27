@@ -77,6 +77,17 @@ namespace ResourceManager
             return this;
         }
 
+        public IFluentTypeSelector Reset()
+        {
+            selectAbstract = false;
+            selectInterface = false;
+            genericHandler = null;
+            customPredicate = null;
+            TypesToScan.Clear();
+            IgnoredTypes.Clear();
+            return this;
+        }
+
         public TypeScanResult Get()
         {
             IEnumerable<TypeScan> QueryAssemblies()
@@ -96,6 +107,10 @@ namespace ResourceManager
             {
                 foreach (Type assemblyType in assembly.GetExportedTypes())
                 {
+                    if (IgnoredTypes != null && IgnoredTypes.Contains(assemblyType))
+                    {
+                        continue;
+                    }
                     if (assemblyType.IsInterface && !selectInterface)
                     {
                         continue;

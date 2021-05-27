@@ -15,9 +15,13 @@ namespace ResourceManager
     {
         public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
         {
-            services.AddSingleton(p => new MutableServiceFactory(p.GetService));
-            services.AddTransient(p => p.GetRequiredService<MutableServiceFactory>().Factory);
+            services.AddTransient(p => (ServiceFactory)p.GetService);
             services.AddTransient<IMediator, Mediator>();
+            services.RegisterMediatRDependencies(scanner, targetAssemblies);
+        }
+
+        public static void RegisterMediatRDependencies(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
+        {
             services.AddScannedServices(scanner, typeof(IRequestHandler<>), ServiceLifetime.Transient, targetAssemblies);
             services.AddScannedServices(scanner, typeof(IRequestHandler<,>), ServiceLifetime.Transient, targetAssemblies);
             services.AddScannedServices(scanner, typeof(INotificationHandler<>), ServiceLifetime.Transient, targetAssemblies);
@@ -86,30 +90,26 @@ namespace ResourceManager
             if (builderOptions.ScanReferencedAssemblies)
             {
                 Assembly entryAssembly = Assembly.GetEntryAssembly();
-                AssemblyName[] referencedAssemblies = entryAssembly.GetReferencedAssemblies();
-                assemblies.Add(entryAssembly);
-                for (int i = 1; i < referencedAssemblies.Length; i++)
-                {
-                    assemblies.Add(Assembly.Load(referencedAssemblies[i]));
-                }
+                Assembly[] referencedAssemblies = entryAssembly.GetReferencedAssemblies(true);
+                assemblies.AddRange(referencedAssemblies);
             }
             if (builderOptions.ScanAssemblies != null)
             {
-                foreach (Assembly assembly in builderOptions.ScanAssemblies)
-                {
-                    assemblies.Add(assembly);
-                }
+                assemblies.AddRange(builderOptions.ScanAssemblies);
             }
-            FluentAssemblyScanner instance = new FluentAssemblyScanner(assemblies.ToArray());
+            FluentAssemblyScanner instance = new FluentAssemblyScanner(new HashSet<Assembly>(assemblies).ToArray());
             scanner?.Invoke(instance);
             services.AddSingleton<IFluentAssemblyScanner>(instance);
         }
 
-        public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> configure)
-            => AddDataSourceConfiguration(services, new DataSourceWrapperConfigurator(services), configure);
+        public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> build)
+            => AddDataSourceConfiguration(services, new DataSourceWrapperConfigurator(services), build);
 
         public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> build, Action<IServiceCollection, IDataSource> configure)
-            => AddDataSourceConfiguration(services, new DataSourceWrapperConfigurator(services), build);
+            => AddDataSourceConfiguration(services, new DataSourceDelegateConfigurator(configure, null), build);
+
+        public static void AddDataSourceConfiguration(this IServiceCollection services, Action<IConfigurableDataSourceBuilder> build, Action<IServiceCollection, IDataSource> configure, Action<IServiceCollection, IDataSource> unregister)
+            => AddDataSourceConfiguration(services, new DataSourceDelegateConfigurator(configure, unregister), build);
 
         public static void AddDataSourceConfiguration(this IServiceCollection services, IDataSourceServicesConfigurator servicesConfigurator, Action<IConfigurableDataSourceBuilder> configure)
         {

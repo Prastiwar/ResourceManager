@@ -11,5 +11,7 @@ namespace ResourceManager.DataSource
         public IServiceCollection Create() => Collection;
 
         public virtual void Configure(IServiceCollection services, IDataSource currentSource) { }
+
+        public virtual void Unregister(IServiceCollection services, IDataSource previousSource) { }
     }
 }
