@@ -30,7 +30,7 @@ namespace ResourceManager.Commands
             }
             KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
             PresentableData data = null;
-            KeyValuePair<string, object> categoryParameter = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableCategoryData.Category)) == 0);
+            KeyValuePair<string, object> categoryParameter = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableCategoryData.Category), true) == 0);
             if (categoryParameter.Key != null)
             {
                 data = new PresentableCategoryData(resourceType) {
@@ -42,8 +42,8 @@ namespace ResourceManager.Commands
                 data = new PresentableData(resourceType);
             }
 
-            data.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id)) == 0).Value;
-            data.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id)) == 0).Value?.ToString();
+            data.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value;
+            data.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
             return Task.FromResult(data);
         }
 

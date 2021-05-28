@@ -25,7 +25,7 @@
                                         Command="{Binding DataContext.RemoveModelCommand, Source={x:Reference NpcsList}}"
                                         CommandParameter="{Binding .}" />
                                 <TextBlock x:Name="ModelLabel"
-                                           Text="{Binding RepresentableString}"
+                                           Text="{Binding .}"
                                            Margin="2"
                                            VerticalAlignment="Center"
                                            Style="{DynamicResource MaterialDesignBody1TextBlock}"
