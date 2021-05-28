@@ -13,6 +13,87 @@ namespace ResourceManager
 {
     public static class DependencyInjectionExtensions
     {
+        private class QueryTypeDuplicationInfo
+        {
+            protected QueryTypeDuplicationInfo() => Types = new List<Type>();
+
+            public QueryTypeDuplicationInfo(Type queryType) : this() => QueryType = queryType;
+
+            public QueryTypeDuplicationInfo(Type queryType, Type handlerType) : this(queryType) => Types.Add(handlerType);
+
+            public QueryTypeDuplicationInfo(Type queryType, IEnumerable<Type> types)
+            {
+                QueryType = queryType;
+                Types = new List<Type>(types);
+            }
+
+            public Type QueryType { get; }
+
+            public IList<Type> Types { get; }
+
+            public int Count => Types.Count;
+
+            public void Add(Type type) => Types.Add(type);
+        }
+
+        public static void ValidateFluentMediatr(this IServiceCollection services)
+        {
+            services.AssertNoQueryDuplication(typeof(IRequestHandler<>));
+            services.AssertNoQueryDuplication(typeof(IRequestHandler<,>));
+            services.AssertNoQueryDuplication(typeof(INotificationHandler<>));
+            services.AssertNoQueryDuplication(typeof(IRequestPreProcessor<>));
+            services.AssertNoQueryDuplication(typeof(IRequestPostProcessor<,>));
+            services.AssertNoQueryDuplication(typeof(IRequestExceptionHandler<,>));
+            services.AssertNoQueryDuplication(typeof(IRequestExceptionHandler<,,>));
+            services.AssertNoQueryDuplication(typeof(IRequestExceptionAction<>));
+            services.AssertNoQueryDuplication(typeof(IRequestExceptionAction<,>));
+            services.AssertNoQueryDuplication(typeof(IPipelineBehavior<,>));
+        }
+
+        public static void AssertNoQueryDuplication(this IServiceCollection services, Type serviceType)
+        {
+            if (!serviceType.IsGenericType || !serviceType.IsGenericTypeDefinition)
+            {
+                return;
+            }
+            Dictionary<Type, QueryTypeDuplicationInfo> queryCounter = new Dictionary<Type, QueryTypeDuplicationInfo>();
+            foreach (ServiceDescriptor service in services.Where(s => s.ServiceType.IsGenericType && s.ServiceType.GetGenericTypeDefinition().IsAssignableFrom(serviceType)))
+            {
+                Type serviceTypeDefinition = null;
+                IEnumerable<Type> typesToScan = serviceType.IsInterface ? service.ImplementationType.GetInterfaces() : service.ImplementationType.GetBaseTypes();
+                foreach (Type interfaceType in typesToScan)
+                {
+                    bool isTargetType = interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition().IsAssignableFrom(serviceType) && interfaceType.GetGenericArguments().Length > 0;
+                    if (isTargetType)
+                    {
+                        serviceTypeDefinition = interfaceType;
+                        break;
+                    }
+                }
+                if (serviceTypeDefinition == null)
+                {
+                    continue;
+                }
+                Type queryType = serviceTypeDefinition.GetGenericArguments()[0];
+                if (queryCounter.TryGetValue(queryType, out QueryTypeDuplicationInfo info))
+                {
+                    info.Add(service.ImplementationType);
+                }
+                else
+                {
+                    QueryTypeDuplicationInfo newInfo = new QueryTypeDuplicationInfo(service.ImplementationType);
+                    queryCounter[queryType] = newInfo;
+                }
+            }
+            foreach (KeyValuePair<Type, QueryTypeDuplicationInfo> queryEntries in queryCounter)
+            {
+                if (queryEntries.Value.Count > 1)
+                {
+                    throw new Exception($"There is duplication of handler for query of type: {queryEntries.Key.Name}, Handlers: {string.Join(", ", queryEntries.Value.Types)}");
+                }
+            }
+        }
+
         public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
         {
             services.AddTransient(p => (ServiceFactory)p.GetService);
@@ -32,6 +113,7 @@ namespace ResourceManager
             services.AddScannedServices(scanner, typeof(IRequestExceptionAction<>), ServiceLifetime.Transient, targetAssemblies);
             services.AddScannedServices(scanner, typeof(IRequestExceptionAction<,>), ServiceLifetime.Transient, targetAssemblies);
             services.AddScannedServices(scanner, typeof(IPipelineBehavior<,>), ServiceLifetime.Transient, targetAssemblies);
+            services.ValidateFluentMediatr();
         }
 
         public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime, Assembly[] targetAssemblies = null)
