@@ -12,6 +12,7 @@ using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
+using ResourceManager.DataSource.Sql.Data;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf;
@@ -101,16 +102,16 @@ namespace RPGDataEditor.Wpf
             });
 
             services.AddResourceDescriptor(service => {
-                IResourceDescriptor fileQuestDescriptor = new FileQuestPathResourceDescriptor();
-                IResourceDescriptor sqlQuestDescriptor = new SqlQuestPathResourceDescriptor();
+                IResourceDescriptor fileQuestDescriptor = new PathResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{name}.json");
+                IResourceDescriptor sqlQuestDescriptor = new SqlPathResourceDescriptor(typeof(Models.Quest), "quests", ".{id}");
                 service.Register<Models.Quest>(fileQuestDescriptor, sqlQuestDescriptor);
 
-                IResourceDescriptor fileDialogueDescriptor = new FileDialoguePathResourceDescriptor();
-                IResourceDescriptor sqlDialogueDescriptor = new SqlDialoguePathResourceDescriptor();
+                IResourceDescriptor fileDialogueDescriptor = new PathResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{name}.json");
+                IResourceDescriptor sqlDialogueDescriptor = new SqlPathResourceDescriptor(typeof(Models.Dialogue), "dialogues", ".{id}");
                 service.Register<Models.Dialogue>(fileDialogueDescriptor, sqlDialogueDescriptor);
 
-                IResourceDescriptor fileNpcDescriptor = new FileNpcPathResourceDescriptor();
-                IResourceDescriptor sqlNpcDescriptor = new SqlNpcPathResourceDescriptor();
+                IResourceDescriptor fileNpcDescriptor = new PathResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
+                IResourceDescriptor sqlNpcDescriptor = new SqlPathResourceDescriptor(typeof(Models.Npc), "npcs", ".{id}");
                 service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
             });
 

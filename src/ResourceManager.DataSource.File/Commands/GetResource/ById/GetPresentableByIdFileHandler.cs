@@ -35,17 +35,18 @@ namespace ResourceManager.DataSource.File.Commands
         {
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
-            IList<string> paths = new List<string>();
-            if (request.Ids == null || request.Ids.Length > 0)
+            if (request.Ids == null || request.Ids.Length == 0)
             {
-                foreach (string file in files)
+                return await GetPresentableByPaths(request.ResourceType, files);
+            }
+            IList<string> paths = new List<string>();
+            foreach (string file in files)
+            {
+                KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
+                KeyValuePair<string, object> idParameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
+                if (idParameter.Key != null && request.Ids.Any(id => id == idParameter.Value))
                 {
-                    KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
-                    KeyValuePair<string, object> idParameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
-                    if (idParameter.Key != null && request.Ids.Any(id => id == idParameter.Value))
-                    {
-                        paths.Add(file);
-                    }
+                    paths.Add(file);
                 }
             }
             return await GetPresentableByPaths(request.ResourceType, paths);

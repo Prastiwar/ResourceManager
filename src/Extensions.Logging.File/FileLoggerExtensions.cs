@@ -25,7 +25,7 @@ namespace Microsoft.Extensions.Logging
         }
 
         private static string BuildLogMessage(string message, string categoryName, LogLevel logLevel, EventId eventId, Exception exception) => exception != null
-                ? $"[{logLevel}] [{eventId}] [{categoryName}]: {message}{Environment.NewLine} Error Message: {exception.Message}{Environment.NewLine} {exception.StackTrace}"
-                : $"[{logLevel}] [{eventId}] [{categoryName}]: {message}";
+                ? $"[{DateTime.Now.ToString("HH:mm:ss")}] [{logLevel}] [{eventId}] [{categoryName}]: {message}{Environment.NewLine} Error Message: {exception.Message}{Environment.NewLine} {exception.StackTrace}"
+                : $"[{DateTime.Now.ToString("HH:mm:ss")}] [{logLevel}] [{eventId}] [{categoryName}]: {message}";
     }
 }

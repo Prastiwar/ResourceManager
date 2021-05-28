@@ -50,7 +50,7 @@ namespace Extensions.Logging.File
                 messageBuilder = (m, c, l, e, ex) => m;
             }
             string formattedMessage = messageBuilder.Invoke(message, CategoryName, logLevel, eventId, exception) + Environment.NewLine;
-            bool canAppend = logFile.Exists && logFile.Length >= Options.MaxFileSize;
+            bool canAppend = logFile.Exists && logFile.Length < Options.MaxFileSize;
             if (canAppend)
             {
                 lock (locker)

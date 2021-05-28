@@ -33,6 +33,7 @@ namespace ResourceManager.DataSource.Ftp.Data
         public async Task<IEnumerable<string>> ListFilesAsync(string path)
         {
             string targetPath = GetRelativeFilePath(path);
+            await EnsureConnectedAsync();
             FtpListItem[] items = await Client.GetListingAsync(targetPath, FtpListOption.Recursive);
             return items.Where(item => item.Type == FtpFileSystemObjectType.File)
                         .Select(item => item.FullName).ToArray();
@@ -41,6 +42,7 @@ namespace ResourceManager.DataSource.Ftp.Data
         public async Task<string> ReadFileAsync(string file)
         {
             string targetPath = GetRelativeFilePath(file);
+            await EnsureConnectedAsync();
             byte[] bytes = await Client.DownloadAsync(targetPath, default);
             if (bytes == null)
             {
@@ -49,6 +51,8 @@ namespace ResourceManager.DataSource.Ftp.Data
             string content = Encoding.UTF8.GetString(bytes);
             return content;
         }
+
+        private Task EnsureConnectedAsync() => !Client.IsConnected ? Client.ConnectAsync() : Task.CompletedTask;
 
         protected string GetRelativeFilePath(string path) => string.IsNullOrEmpty(Options.RelativePath) ? path : Path.Combine(Options.RelativePath, path);
     }
