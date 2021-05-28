@@ -46,5 +46,24 @@ namespace ResourceManager.Commands
             data.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id)) == 0).Value?.ToString();
             return Task.FromResult(data);
         }
+
+        protected async Task<IEnumerable<PresentableData>> GetPresentableByPaths(Type resourceType, IEnumerable<string> paths, PathResourceDescriptor pathDescriptor = null)
+        {
+            if (paths == null)
+            {
+                return Array.Empty<PresentableData>();
+            }
+            if (pathDescriptor == null)
+            {
+                pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+            }
+            IList<PresentableData> presentables = new List<PresentableData>();
+            foreach (string path in paths)
+            {
+                PresentableData data = await GetPresentableByPath(resourceType, path, pathDescriptor);
+                presentables.Add(data);
+            }
+            return presentables;
+        }
     }
 }

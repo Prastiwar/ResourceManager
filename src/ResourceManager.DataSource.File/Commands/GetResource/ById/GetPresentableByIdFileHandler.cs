@@ -1,5 +1,4 @@
-﻿using MediatR;
-using ResourceManager.Commands;
+﻿using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.Services;
 using System.Collections.Generic;
@@ -9,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.DataSource.File.Commands
 {
-    public class GetPresentableByIdFileHandler : GetPresentableByPathFileHandler, IRequestHandler<GetPresentableByIdQuery, PresentableData>,
-                                                                                  IRequestHandler<GetPresentablesByIdQuery, IEnumerable<PresentableData>>
+    public class GetPresentableByIdFileHandler : GetPresentableHandler<GetPresentableByIdQuery, GetPresentablesByIdQuery>
     {
-        public GetPresentableByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ITextSerializer serializer)
-            : base(descriptorService, client) { }
+        public GetPresentableByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client)
+            : base(descriptorService) => Client = client;
 
-        public async Task<PresentableData> Handle(GetPresentableByIdQuery request, CancellationToken cancellationToken)
+        protected IFileClient Client { get; }
+
+        public override async Task<PresentableData> Handle(GetPresentableByIdQuery request, CancellationToken cancellationToken)
         {
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
@@ -31,7 +31,7 @@ namespace ResourceManager.DataSource.File.Commands
             return default;
         }
 
-        public async Task<IEnumerable<PresentableData>> Handle(GetPresentablesByIdQuery request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<PresentableData>> Handle(GetPresentablesByIdQuery request, CancellationToken cancellationToken)
         {
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
@@ -48,7 +48,7 @@ namespace ResourceManager.DataSource.File.Commands
                     }
                 }
             }
-            return await GetPresentablesByPath(request.ResourceType, paths.ToArray());
+            return await GetPresentableByPaths(request.ResourceType, paths);
         }
     }
 }

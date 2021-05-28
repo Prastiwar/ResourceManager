@@ -89,7 +89,7 @@ namespace ResourceManager
             {
                 if (queryEntries.Value.Count > 1)
                 {
-                    throw new Exception($"There is duplication of handler for query of type: {queryEntries.Key.Name}, Handlers: {string.Join(", ", queryEntries.Value.Types)}");
+                    throw new DuplicationException($"There is duplication of handler for query of type: {queryEntries.Key.Name}, Handlers: {string.Join(", ", queryEntries.Value.Types)}");
                 }
             }
         }

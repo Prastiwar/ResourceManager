@@ -53,7 +53,7 @@ namespace ResourceManager.Services
                 bool added = descriptorsHashset.Add(item);
                 if (!added)
                 {
-                    throw new DuplicateDescriptorException($"Descriptor of type {item.GetType()} is duplicated.");
+                    throw new DuplicationException($"Descriptor of type {item.GetType()} is duplicated.");
                 }
             }
         }

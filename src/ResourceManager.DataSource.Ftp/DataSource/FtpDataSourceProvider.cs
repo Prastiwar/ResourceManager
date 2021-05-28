@@ -28,7 +28,6 @@ namespace ResourceManager.DataSource.Ftp
             };
             FtpDataSource dataSource = new FtpDataSource(configuration, monitor, options);
             FtpFileClient client = new FtpFileClient(options);
-            services.AddSingleton<IFtpFileClient>(client);
             services.AddSingleton<IFileClient>(client);
             services.AddSingleton(dataSource);
             return dataSource;

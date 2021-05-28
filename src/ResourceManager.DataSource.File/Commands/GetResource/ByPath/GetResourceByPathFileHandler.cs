@@ -1,79 +1,32 @@
 ﻿using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.Services;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ResourceManager.DataSource.File.Commands
 {
-    public class GetResourceByPathFileHandler : ResourceRequestHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
+    public class GetResourceByPathFileHandler : GetResourceFileHandler<GetResourceByPathQuery, GetResourcesByPathQuery>
     {
         public GetResourceByPathFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ITextSerializer serializer)
-        {
-            DescriptorService = descriptorService;
-            Client = client;
-            Serializer = serializer;
-        }
-
-        protected IFileClient Client { get; }
-
-        protected ITextSerializer Serializer { get; }
-
-        protected IResourceDescriptorService DescriptorService { get; }
+            : base(descriptorService, client, serializer) { }
 
         public override Task<object> Handle(GetResourceByPathQuery request, CancellationToken cancellationToken)
             => GetResourceByPath(request.ResourceType, request.Path);
 
-        public override Task<IEnumerable<object>> Handle(GetResourcesByPathQuery request, CancellationToken cancellationToken)
-            => GetResourcesByPath(request.ResourceType, request.Paths);
-
-        protected async Task<IEnumerable<object>> GetResourcesByPath(Type resourceType, string[] paths)
+        public override async Task<IEnumerable<object>> Handle(GetResourcesByPathQuery request, CancellationToken cancellationToken)
         {
-            IList<object> resources = new List<object>();
-            List<Exception> exceptions = new List<Exception>();
-            if (paths == null || paths.Length == 0)
+            if (request.Paths == null || request.Paths.Length == 0)
             {
-                PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+                PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
                 IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
-                await AddResourcesByPaths(resourceType, files, resources, exceptions);
+                return await GetResourceByPaths(request.ResourceType, files);
             }
             else
             {
-                await AddResourcesByPaths(resourceType, paths, resources, exceptions);
+                return await GetResourceByPaths(request.ResourceType, request.Paths);
             }
-            if (exceptions.Count > 0)
-            {
-                throw new AggregateException("One or more resources threw error while retrieving them", exceptions);
-            }
-            return resources;
-        }
-
-        private async Task AddResourcesByPaths(Type resourceType, IEnumerable<string> paths, IList<object> resources, List<Exception> exceptions)
-        {
-            foreach (string path in paths)
-            {
-                try
-                {
-                    object resource = await GetResourceByPath(resourceType, path);
-                    if (!(resource is null))
-                    {
-                        resources.Add(resource);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
-            }
-        }
-
-        protected async Task<object> GetResourceByPath(Type resourceType, string path)
-        {
-            string content = await Client.ReadFileAsync(path);
-            object resource = Serializer.Deserialize(content, resourceType);
-            return resource;
         }
     }
 }

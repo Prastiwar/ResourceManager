@@ -1,5 +1,4 @@
-﻿using MediatR;
-using ResourceManager.Commands;
+﻿using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.Services;
 using System.Collections.Generic;
@@ -9,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.DataSource.File.Commands
 {
-    public class GetResourceByIdFileHandler : GetResourceByPathFileHandler, IRequestHandler<GetResourceByIdQuery, object>,
-                                                                             IRequestHandler<GetResourcesByIdQuery, IEnumerable<object>>
+    public class GetResourceByIdFileHandler : GetResourceFileHandler<GetResourceByIdQuery, GetResourcesByIdQuery>
     {
         public GetResourceByIdFileHandler(IResourceDescriptorService descriptorService, IFileClient client, ITextSerializer serializer)
             : base(descriptorService, client, serializer) { }
 
-        public async Task<object> Handle(GetResourceByIdQuery request, CancellationToken cancellationToken)
+        public override async Task<object> Handle(GetResourceByIdQuery request, CancellationToken cancellationToken)
         {
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
@@ -31,7 +29,7 @@ namespace ResourceManager.DataSource.File.Commands
             return default;
         }
 
-        public async Task<IEnumerable<object>> Handle(GetResourcesByIdQuery request, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<object>> Handle(GetResourcesByIdQuery request, CancellationToken cancellationToken)
         {
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
@@ -48,7 +46,7 @@ namespace ResourceManager.DataSource.File.Commands
                     }
                 }
             }
-            return await GetResourcesByPath(request.ResourceType, paths.ToArray());
+            return await GetResourceByPaths(request.ResourceType, paths);
         }
     }
 }

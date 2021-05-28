@@ -1,4 +1,5 @@
 ﻿using FluentFTP;
+using ResourceManager.DataSource.File;
 using ResourceManager.DataSource.Ftp.Configuration;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ResourceManager.DataSource.Ftp.Data
 {
-    public class FtpFileClient : IFtpFileClient
+    public class FtpFileClient : IFileClient
     {
         public FtpFileClient(FtpDataSourceOptions options) => Options = options;
 
