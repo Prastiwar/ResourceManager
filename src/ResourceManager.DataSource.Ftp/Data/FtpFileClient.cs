@@ -32,7 +32,7 @@ namespace ResourceManager.DataSource.Ftp.Data
 
         public async Task<IEnumerable<string>> ListFilesAsync(string path)
         {
-            string targetPath = Path.Combine(Options.RelativePath, path);
+            string targetPath = GetRelativeFilePath(path);
             FtpListItem[] items = await Client.GetListingAsync(targetPath, FtpListOption.Recursive);
             return items.Where(item => item.Type == FtpFileSystemObjectType.File)
                         .Select(item => item.FullName).ToArray();
@@ -40,7 +40,7 @@ namespace ResourceManager.DataSource.Ftp.Data
 
         public async Task<string> ReadFileAsync(string file)
         {
-            string targetPath = Path.Combine(Options.RelativePath, file);
+            string targetPath = GetRelativeFilePath(file);
             byte[] bytes = await Client.DownloadAsync(targetPath, default);
             if (bytes == null)
             {
@@ -49,5 +49,7 @@ namespace ResourceManager.DataSource.Ftp.Data
             string content = Encoding.UTF8.GetString(bytes);
             return content;
         }
+
+        protected string GetRelativeFilePath(string path) => string.IsNullOrEmpty(Options.RelativePath) ? path : Path.Combine(Options.RelativePath, path);
     }
 }

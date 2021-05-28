@@ -36,7 +36,7 @@ namespace ResourceManager.DataSource.File.Commands
             PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
             IList<string> paths = new List<string>();
-            if (request.Ids != null || request.Ids.Length > 0)
+            if (request.Ids == null || request.Ids.Length > 0)
             {
                 foreach (string file in files)
                 {

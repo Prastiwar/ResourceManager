@@ -93,7 +93,7 @@ namespace ResourceManager.Data
 
             if (argumentNames.Length != argumentValues.Length)
             {
-                throw new ArgumentException("Path is not compatible with format: " + format, nameof(path));
+                throw new ArgumentException($"Path {path} is not compatible with format: " + format, nameof(path));
             }
 
             for (int i = 0; i < argumentValues.Length; i++)
@@ -105,7 +105,7 @@ namespace ResourceManager.Data
                 {
                     if (format[braceIndex - 1] != path[braceIndex - 1])
                     {
-                        throw new ArgumentException("Path is not compatible with format: " + format, nameof(path));
+                        throw new ArgumentException($"Path {path} is not compatible with format: " + format, nameof(path));
                     }
                 }
                 if (format.Length > endBraceIndex + 1)
