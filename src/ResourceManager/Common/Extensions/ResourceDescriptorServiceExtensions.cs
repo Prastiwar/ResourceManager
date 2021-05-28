@@ -17,12 +17,17 @@ namespace ResourceManager
             where TDescriptor : IResourceDescriptor
         {
             IEnumerable<IResourceDescriptor> descriptors = service.Describe(type);
-            TDescriptor descriptor = descriptors.Where(x => x.GetType() == typeof(TDescriptor)).Cast<TDescriptor>().FirstOrDefault();
-            if (descriptor == null)
+            IEnumerable<IResourceDescriptor> matchDescriptors = descriptors.Where(x => typeof(TDescriptor).IsAssignableFrom(x.GetType()));
+            if (!matchDescriptors.Any())
             {
                 throw new MissingDescriptorException($"Descriptor of type {typeof(TDescriptor)} was not found for resource: {type}");
             }
-            return descriptor;
+            TDescriptor exactDescriptor = (TDescriptor)matchDescriptors.FirstOrDefault(x => x.GetType() == typeof(TDescriptor));
+            if (exactDescriptor == null)
+            {
+                return (TDescriptor)matchDescriptors.First();
+            }
+            return exactDescriptor;
         }
     }
 }

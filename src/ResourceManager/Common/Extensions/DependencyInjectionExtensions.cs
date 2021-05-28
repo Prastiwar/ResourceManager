@@ -95,8 +95,11 @@ namespace ResourceManager
         }
 
         public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
+            => services.AddFluentMediatr(scanner, p => p.GetService, targetAssemblies);
+
+        public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Func<IServiceProvider, ServiceFactory> factory, Assembly[] targetAssemblies = null)
         {
-            services.AddTransient(p => (ServiceFactory)p.GetService);
+            services.AddTransient(factory);
             services.AddTransient<IMediator, Mediator>();
             services.RegisterMediatRDependencies(scanner, targetAssemblies);
         }

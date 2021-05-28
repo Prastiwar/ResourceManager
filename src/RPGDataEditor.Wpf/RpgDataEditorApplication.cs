@@ -95,7 +95,7 @@ namespace RPGDataEditor.Wpf
                                                                              .SelectMany(assembly => assembly.GetReferencedAssemblies(true).Where(assembly => assembly.GetName().Name.Contains("ResourceManager.DataSource.")))
                                                                              .Distinct()
                                                                              .ToArray();
-                services.AddFluentMediatr(scanner.IncludeIgnore(dataSourceAssemblies));
+                services.AddFluentMediatr(scanner.IncludeIgnore(dataSourceAssemblies), p => Container.Resolve);
                 scanner.Reset();
                 services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient);
             });
