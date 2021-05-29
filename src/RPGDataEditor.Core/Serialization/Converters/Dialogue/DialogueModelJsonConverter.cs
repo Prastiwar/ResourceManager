@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ResourceManager;
 using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RPGDataEditor.Core.Serialization
 {
@@ -23,10 +23,10 @@ namespace RPGDataEditor.Core.Serialization
                 Title = title,
                 Message = message,
                 Category = category,
-                StartQuestId = startQuest
+                StartQuestId = startQuest,
+                Requirements = new ObservableCollection<Requirement>(requirements),
+                Options = new ObservableCollection<DialogueOption>(options),
             };
-            model.Requirements.AddRange(requirements);
-            model.Options.AddRange(options);
             return model;
         }
 

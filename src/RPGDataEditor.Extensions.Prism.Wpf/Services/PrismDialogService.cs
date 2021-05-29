@@ -15,7 +15,7 @@ namespace RPGDataEditor.Extensions.Prism.Wpf.Services
             TaskCompletionSource<Mvvm.Navigation.IDialogResult> tcs = new TaskCompletionSource<Mvvm.Navigation.IDialogResult>();
             try
             {
-                prismService.ShowDialog(key.ToString(), parameters.ToPrism(), (result) => tcs.TrySetResult(result.ToDomain()));
+                prismService.ShowDialog(key.ToString(), parameters?.ToPrism(), (result) => tcs.TrySetResult(result.ToDomain()));
             }
             catch (Exception ex)
             {

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ResourceManager;
 using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
@@ -24,10 +23,10 @@ namespace RPGDataEditor.Core.Serialization
                 Title = title,
                 Message = message,
                 Category = category,
-                CompletionTask = completionTask
+                CompletionTask = completionTask,
+                Tasks = tasks,
+                Requirements = requirements
             };
-            model.Requirements.AddRange(requirements);
-            model.Tasks.AddRange(tasks);
             return model;
         }
 

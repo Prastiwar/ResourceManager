@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ResourceManager;
 using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
@@ -15,9 +14,9 @@ namespace RPGDataEditor.Core.Serialization
             int talkRange = obj.GetValue<int>(nameof(TalkData.TalkRange), 0);
             IList<int> initationDialogues = obj.GetValue<ObservableCollection<int>>(nameof(TalkData.InitationDialogues));
             TalkData model = new TalkData() {
-                TalkRange = talkRange
+                TalkRange = talkRange,
+                InitationDialogues = initationDialogues
             };
-            model.InitationDialogues.AddRange(initationDialogues);
             return model;
         }
 

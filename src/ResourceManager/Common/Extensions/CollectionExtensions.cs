@@ -12,6 +12,7 @@ namespace ResourceManager
                 list.Add(item);
             }
         }
+
         public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
         {
             foreach (T item in items)

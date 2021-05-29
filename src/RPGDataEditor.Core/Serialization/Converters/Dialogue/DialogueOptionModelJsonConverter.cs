@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ResourceManager;
 using RPGDataEditor.Models;
 using System;
 using System.Collections.Generic;
@@ -16,9 +15,9 @@ namespace RPGDataEditor.Core.Serialization
             IList<Requirement> requirements = obj.GetValue<List<Requirement>>(nameof(DialogueOption.Requirements));
             DialogueOption model = new DialogueOption() {
                 NextDialogId = nextDialogId,
-                Message = message
+                Message = message,
+                Requirements = requirements
             };
-            model.Requirements.AddRange(requirements);
             return model;
         }
 

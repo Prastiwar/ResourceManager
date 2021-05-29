@@ -8,6 +8,6 @@ namespace RPGDataEditor.Models
 
         public object NextDialogId { get; set; }
 
-        public IList<Requirement> Requirements { get; private set; }
+        public IList<Requirement> Requirements { get; set; }
     }
 }

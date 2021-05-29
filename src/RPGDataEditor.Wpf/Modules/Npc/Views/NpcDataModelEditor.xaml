@@ -64,7 +64,7 @@
                 <controls:AutoControl DataContext="{Binding TalkData}"
                                       PropertyName="TalkRange" />
                 <controls:ListDataCard DataContext="{Binding TalkData}"
-                                       ItemsSource="{Binding InitationDialogues}"
+                                       ItemsSource="{Binding InitationDialogues, Mode=OneWay}"
                                        HeaderText="{Binding InitationDialogues.Count, StringFormat='({0}) Initation Dialogues'}">
                     <DataTemplate>
                         <controls:ResourcePicker VerticalAlignment="Center"

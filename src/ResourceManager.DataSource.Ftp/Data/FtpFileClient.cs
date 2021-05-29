@@ -52,6 +52,10 @@ namespace ResourceManager.DataSource.Ftp.Data
             return content;
         }
 
+        public Task ConnectAsync() => Client.ConnectAsync();
+
+        public Task DisconnectAsync() => Client.DisconnectAsync();
+
         private Task EnsureConnectedAsync() => !Client.IsConnected ? Client.ConnectAsync() : Task.CompletedTask;
 
         protected string GetRelativeFilePath(string path) => string.IsNullOrEmpty(Options.RelativePath) ? path : Path.Combine(Options.RelativePath, path);

@@ -21,7 +21,7 @@ namespace ResourceManager.DataSource.File.Commands
             {
                 KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
                 KeyValuePair<string, object> parameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
-                if (parameter.Key != null && parameter.Value == request.Id)
+                if (parameter.Key != null && EqualityComparer<object>.Default.Equals(parameter.Value, request.Id))
                 {
                     return await GetResourceByPath(request.ResourceType, file);
                 }
@@ -40,7 +40,7 @@ namespace ResourceManager.DataSource.File.Commands
                 {
                     KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
                     KeyValuePair<string, object> parameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
-                    if (parameter.Key != null && request.Ids.Any(id => id == parameter.Value))
+                    if (parameter.Key != null && request.Ids.Any(id => EqualityComparer<object>.Default.Equals(id, parameter.Value)))
                     {
                         paths.Add(file);
                     }

@@ -15,8 +15,8 @@ namespace RPGDataEditor.Models
 
         public object StartQuestId { get; set; }
 
-        public IList<Requirement> Requirements { get; private set; }
+        public IList<Requirement> Requirements { get; set; }
 
-        public IList<DialogueOption> Options { get; private set; }
+        public IList<DialogueOption> Options { get; set; }
     }
 }

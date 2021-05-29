@@ -15,8 +15,8 @@ namespace RPGDataEditor.Models
 
         public IQuestTask CompletionTask { get; set; }
 
-        public IList<IQuestTask> Tasks { get; private set; }
+        public IList<IQuestTask> Tasks { get; set; }
 
-        public IList<Requirement> Requirements { get; private set; }
+        public IList<Requirement> Requirements { get; set; }
     }
 }

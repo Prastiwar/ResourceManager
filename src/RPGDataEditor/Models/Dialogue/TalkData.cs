@@ -6,6 +6,6 @@ namespace RPGDataEditor.Models
     {
         public int TalkRange { get; set; }
 
-        public IList<int> InitationDialogues { get; private set; }
+        public IList<int> InitationDialogues { get; set; }
     }
 }

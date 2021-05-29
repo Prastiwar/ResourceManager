@@ -1,5 +1,6 @@
-﻿using RPGDataEditor.Models;
-using RPGDataEditor.Minecraft.Models;
+﻿using RPGDataEditor.Minecraft.Models;
+using RPGDataEditor.Models;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
@@ -26,7 +27,9 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.Views
                         }
                         else if (isTrader)
                         {
-                            model.Job = new TraderNpcJob();
+                            model.Job = new TraderNpcJob() {
+                                Items = new ObservableCollection<RPGDataEditor.Models.TradeItem>()
+                            };
                         }
                         else
                         {

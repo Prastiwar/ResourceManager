@@ -1,4 +1,5 @@
 ﻿using RPGDataEditor.Models;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace RPGDataEditor.Wpf.Npc.Views
@@ -20,7 +21,9 @@ namespace RPGDataEditor.Wpf.Npc.Views
                     {
                         if (isTrader)
                         {
-                            model.Job = new TraderNpcJob();
+                            model.Job = new TraderNpcJob() {
+                                Items = new ObservableCollection<TradeItem>()
+                            };
                         }
                         else
                         {

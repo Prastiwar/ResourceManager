@@ -3,6 +3,7 @@ using ResourceManager.Data;
 using ResourceManager.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +45,7 @@ namespace ResourceManager.DataSource.File.Commands
             {
                 KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(file);
                 KeyValuePair<string, object> idParameter = parameters.FirstOrDefault(x => string.Compare(x.Key, "id", true) == 0);
-                if (idParameter.Key != null && request.Ids.Any(id => id == idParameter.Value))
+                if (idParameter.Key != null && request.Ids.Any(id => EqualityComparer<object>.Default.Equals(id, idParameter.Value)))
                 {
                     paths.Add(file);
                 }

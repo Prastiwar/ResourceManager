@@ -99,7 +99,7 @@ namespace RPGDataEditor.Wpf.Controls
             elementType = ItemsSource.GetType().GetArrayElementType();
             if (elementType.IsAbstract)
             {
-                elementType = elementType.EnumarateDerivedTypes().First();
+                elementType = elementType.EnumarateDerivedTypes().First(); 
             }
         }
 

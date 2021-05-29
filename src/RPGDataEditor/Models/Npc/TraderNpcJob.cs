@@ -4,6 +4,6 @@ namespace RPGDataEditor.Models
 {
     public class TraderNpcJob : NpcJob
     {
-        public IList<TradeItem> Items { get; private set; }
+        public IList<TradeItem> Items { get; set; }
     }
 }

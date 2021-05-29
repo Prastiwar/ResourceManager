@@ -12,17 +12,17 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class ConnectionDialogViewModel : DialogViewModelBase
     {
-        public ConnectionDialogViewModel(IConnectionMonitor connectionMonitor, ILogger<ConnectionDialogViewModel> logger)
-            : base(logger) => ConnectionMonitor = connectionMonitor;
+        public ConnectionDialogViewModel(IDataSource dataSource, ILogger<ConnectionDialogViewModel> logger)
+            : base(logger) => DataSource = dataSource;
 
         public override string Title => "Connection problem";
 
-        protected IConnectionMonitor ConnectionMonitor { get; }
+        protected IDataSource DataSource { get; }
 
         protected override Task InitializeAsync(IDialogParameters parameters)
         {
-            ConnectionMonitor.Changed -= OnConnectionChanged;
-            ConnectionMonitor.Changed += OnConnectionChanged;
+            DataSource.Monitor.Changed -= OnConnectionChanged;
+            DataSource.Monitor.Changed += OnConnectionChanged;
             Window window = Application.Current.FindWindow(win => win.DataContext == this);
             if (window != null)
             {
@@ -35,7 +35,7 @@ namespace RPGDataEditor.Wpf.ViewModels
         {
             if (hasConnection)
             {
-                ConnectionMonitor.Changed -= OnConnectionChanged;
+                DataSource.Monitor.Changed -= OnConnectionChanged;
                 Application.Current.Dispatcher.Invoke(() => Close(new RPGDataEditor.Mvvm.Navigation.DialogParametersBuilder().WithResult(true).BuildPrism()));
             }
         }
@@ -44,6 +44,7 @@ namespace RPGDataEditor.Wpf.ViewModels
         {
             if (e.Key == Key.System && e.SystemKey == Key.F4)
             {
+                Application.Current.Shutdown();
                 e.Handled = true;
             }
         }

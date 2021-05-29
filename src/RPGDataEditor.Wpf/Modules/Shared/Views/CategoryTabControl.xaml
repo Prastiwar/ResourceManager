@@ -53,7 +53,7 @@
                                         Command="{Binding DataContext.RemoveModelCommand, Source={x:Reference CategoryModelList}}"
                                         CommandParameter="{Binding .}" />
                                 <TextBlock x:Name="ModelLabel"
-                                           Text="{Binding RepresentableString, Mode=OneWay}"
+                                           Text="{Binding ., Mode=OneWay}"
                                            Margin="2"
                                            VerticalAlignment="Center"
                                            Style="{DynamicResource MaterialDesignBody1TextBlock}"

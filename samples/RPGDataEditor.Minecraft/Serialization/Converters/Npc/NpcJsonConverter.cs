@@ -41,9 +41,9 @@ namespace RPGDataEditor.Minecraft.Serialization
                 TalkData = coreModel.TalkData,
                 AmbientSoundLocation = ambientSoundLocation,
                 DeathSoundLocation = deathSoundLocation,
-                HurtSoundLocation = hurtSoundLocation
+                HurtSoundLocation = hurtSoundLocation,
+                Attributes = new ObservableCollection<RPGDataEditor.Models.AttributeData>(coreModel.Attributes)
             };
-            model.Attributes.AddRange(coreModel.Attributes);
             return model;
         }
 

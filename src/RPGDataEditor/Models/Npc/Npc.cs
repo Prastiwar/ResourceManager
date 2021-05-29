@@ -15,6 +15,6 @@ namespace RPGDataEditor.Models
 
         public NpcJob Job { get; set; }
 
-        public IList<AttributeData> Attributes { get; } = new List<AttributeData>();
+        public IList<AttributeData> Attributes { get; set; }
     }
 }
