@@ -51,8 +51,9 @@
                 <StackPanel x:Name="JobStackPanel"
                             Visibility="Collapsed">
                     <StackPanel x:Name="TraderStackPanel"
+                                DataContext="{Binding Model}"
                                 Visibility="Collapsed">
-                        <controls:AutoControl DataContext="{Binding Model.Job}"
+                        <controls:AutoControl DataContext="{Binding Job}"
                                               PropertyName="Items" />
                     </StackPanel>
                 </StackPanel>

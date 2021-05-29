@@ -23,7 +23,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual TypeSource[] GetSources() => sources;
 
-        protected override object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "Content");
+        protected override object GetActualContentResource(TypeSource type) => Application.Current.TryFindResource(type.Name + "QuestTaskContent");
 
         protected override TypeSource GetDataContextTypeSource()
         {

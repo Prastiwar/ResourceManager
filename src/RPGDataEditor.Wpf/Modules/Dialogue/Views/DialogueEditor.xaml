@@ -18,7 +18,7 @@
                              Padding="5">
             <controls:ResourcePicker EmptyText="Select Start Quest"
                                      DataContext="{Binding Model}"
-                                     PickedId="{Binding StartQuest, Mode=TwoWay}"
+                                     PickedId="{Binding StartQuestId, Mode=TwoWay}"
                                      ResourceType="{x:Type models:Quest}" />
         </materialDesign:Card>
         <controls:AutoControl DataContext="{Binding Model}"

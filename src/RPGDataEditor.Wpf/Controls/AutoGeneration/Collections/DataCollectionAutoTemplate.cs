@@ -1,5 +1,4 @@
-﻿using RPGDataEditor.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Data;

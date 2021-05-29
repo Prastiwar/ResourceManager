@@ -11,7 +11,7 @@
     </DataTemplate>
     <DataTemplate x:Key="KillQuestTaskContent">
         <StackPanel>
-            <controls:AutoControl PropertyName="Kill" />
+            <controls:AutoControl PropertyName="TargetId" />
             <controls:AutoControl PropertyName="Amount" />
         </StackPanel>
     </DataTemplate>
@@ -19,21 +19,6 @@
         <StackPanel>
             <controls:AutoControl PropertyName="Pos" />
             <controls:AutoControl PropertyName="Distance" />
-        </StackPanel>
-    </DataTemplate>
-    <DataTemplate x:Key="LeftBlockInteractQuestTaskContent">
-        <StackPanel>
-            <controls:AutoControl PropertyName="Pos" />
-        </StackPanel>
-    </DataTemplate>
-    <DataTemplate x:Key="RightBlockInteractQuestTaskContent">
-        <StackPanel>
-            <controls:AutoControl PropertyName="Pos" />
-        </StackPanel>
-    </DataTemplate>
-    <DataTemplate x:Key="RightItemInteractQuestTaskContent">
-        <StackPanel>
-            <controls:AutoControl PropertyName="Item" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="DialogueQuestTaskContent">
