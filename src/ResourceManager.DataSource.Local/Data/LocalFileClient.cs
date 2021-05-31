@@ -17,5 +17,11 @@ namespace ResourceManager.DataSource.Local.Data
             => Task.FromResult(Directory.EnumerateFiles(path, Options.FileSearchPattern, SearchOption.AllDirectories).Select(file => file.Replace("\\", "/")));
 
         public Task<string> ReadFileAsync(string file) => System.IO.File.ReadAllTextAsync(file);
+
+        public Task RemoveFileAsync(string path)
+        {
+            System.IO.File.Delete(path);
+            return Task.CompletedTask;
+        }
     }
 }

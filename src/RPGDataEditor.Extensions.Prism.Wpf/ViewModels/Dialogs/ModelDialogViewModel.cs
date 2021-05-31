@@ -13,10 +13,11 @@ namespace RPGDataEditor.Mvvm
         public ModelDialogViewModel(IMediator mediator, ILogger<ModelDialogViewModel<TModel>> logger) : base(logger) => Mediator = mediator;
 
         private TModel model;
-        public TModel Model {
+        protected TModel Model {
             get => model;
             set => SetProperty(ref model, value);
         }
+
         protected IMediator Mediator { get; }
 
         protected sealed override void CloseDialog(object result) => Close(result is bool b && b);

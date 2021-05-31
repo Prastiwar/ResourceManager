@@ -1,4 +1,5 @@
-﻿using RPGDataEditor.Extensions.Prism.Wpf;
+﻿using ResourceManager;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Providers;
 using System;
 using System.Reflection;
@@ -101,6 +102,19 @@ namespace RPGDataEditor.Wpf.Controls
             AutoTemplate template = provider.Resolve(type);
             while (template == null)
             {
+                foreach (Type interfaceType in type.GetInterfaces())
+                {
+                    template = provider.Resolve(interfaceType);
+                    if (template != null)
+                    {
+                        type = interfaceType;
+                        break;
+                    }
+                }
+                if (template != null)
+                {
+                    break;
+                }
                 type = type.BaseType;
                 if (type == null)
                 {

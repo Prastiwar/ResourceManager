@@ -35,6 +35,7 @@ namespace RPGDataEditor.Wpf.Providers
             RegisterAutoTemplate<bool>(containerRegistry, new BoolAutoTemplate());
 
             RegisterAutoTemplate<string>(containerRegistry, new StringAutoTemplate());
+            RegisterAutoTemplate<object>(containerRegistry, new ObjectAutoTemplate());
             RegisterAutoTemplate<Position>(containerRegistry, new PositionAutoTemplate());
             RegisterAutoTemplate<Color>(containerRegistry, new ColorAutoTemplate());
             RegisterAutoTemplate<SecureString>(containerRegistry, new SecureStringAutoTemplate());

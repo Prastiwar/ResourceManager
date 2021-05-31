@@ -1,4 +1,6 @@
 ﻿using ResourceManager.Commands;
+using ResourceManager.Data;
+using ResourceManager.Services;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,6 +8,33 @@ namespace ResourceManager.DataSource.File.Commands
 {
     public class FileDeleteResourceHandler : DeleteResourceHandler
     {
-        public override Task<DeleteResourceResults> Handle(DeleteResourceRequest request, CancellationToken cancellationToken) => throw new System.NotImplementedException();
+        public FileDeleteResourceHandler(IFileClient client, IResourceDescriptorService descriptorService)
+        {
+            Client = client;
+            DescriptorService = descriptorService;
+        }
+
+        protected IFileClient Client { get; }
+
+        protected IResourceDescriptorService DescriptorService { get; }
+
+        public override async Task<DeleteResourceResults> Handle(DeleteResourceRequest request, CancellationToken cancellationToken)
+        {
+            if (request.Resource == null)
+            {
+                return new DeleteResourceResults(false);
+            }
+            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
+            try
+            {
+                string path = pathDescriptor.GetRelativeFullPath(request.Resource);
+                await Client.RemoveFileAsync(path);
+            }
+            catch (System.Exception ex)
+            {
+                return new DeleteResourceResults(false);
+            }
+            return new DeleteResourceResults(true);
+        }
     }
 }

@@ -52,6 +52,8 @@ namespace ResourceManager.DataSource.Ftp.Data
             return content;
         }
 
+        public Task RemoveFileAsync(string path) => Client.DeleteFileAsync(path);
+
         public Task ConnectAsync() => Client.ConnectAsync();
 
         public Task DisconnectAsync() => Client.DisconnectAsync();

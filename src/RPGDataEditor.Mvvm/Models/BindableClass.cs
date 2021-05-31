@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -28,6 +29,17 @@ namespace RPGDataEditor.Mvvm
                 return true;
             }
             return isSet;
+        }
+
+        protected virtual bool SetProperty<T>(T property, T value, Action set, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(property, value))
+            {
+                return false;
+            }
+            set?.Invoke();
+            OnPropertyChanged(propertyName);
+            return true;
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));

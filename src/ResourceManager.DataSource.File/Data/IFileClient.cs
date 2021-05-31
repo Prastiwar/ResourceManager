@@ -8,5 +8,7 @@ namespace ResourceManager.DataSource.File
         Task<IEnumerable<string>> ListFilesAsync(string path);
 
         Task<string> ReadFileAsync(string file);
+
+        Task RemoveFileAsync(string path);
     }
 }

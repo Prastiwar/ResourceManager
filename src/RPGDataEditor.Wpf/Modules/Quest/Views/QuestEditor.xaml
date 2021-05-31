@@ -10,12 +10,9 @@
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              Style="{DynamicResource DefaultEditorControl}">
     <StackPanel Margin="10">
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="Title" />
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="Message" />
+        <controls:AutoControl PropertyName="QuestTitle" />
+        <controls:AutoControl PropertyName="Message" />
         <materialDesign:Card HorizontalContentAlignment="Center"
-                             DataContext="{Binding Model}"
                              Margin="5"
                              Padding="5">
             <StackPanel>
@@ -28,9 +25,7 @@
                 </controls:AutoControl>
             </StackPanel>
         </materialDesign:Card>
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="Tasks" />
-        <controls:AutoControl DataContext="{Binding Model}"
-                              PropertyName="Requirements" />
+        <controls:AutoControl PropertyName="Tasks" />
+        <controls:AutoControl PropertyName="Requirements" />
     </StackPanel>
 </UserControl>
