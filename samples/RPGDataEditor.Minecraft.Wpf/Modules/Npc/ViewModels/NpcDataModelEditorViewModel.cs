@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Prism.Services.Dialogs;
+using ResourceManager.Data;
 using RPGDataEditor.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Minecraft.Wpf.Npc.ViewModels
@@ -85,16 +87,17 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.ViewModels
         {
             if (result)
             {
-                Model.Attributes.Clear();
-                Model.Attributes.Add(new AttributeData("minecraft:generic.max_health", MaxHealth));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.knockback_resistance", KnockbackResistance));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.movement_speed", MovementSpeed));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.attack_damage", AttackDamage));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.attack_knockback", AttackKnockback));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.attack_speed", AttackSpeed));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.armor", Armor));
-                Model.Attributes.Add(new AttributeData("minecraft:generic.armor_toughness", ArmorToughness));
-                Model.Attributes.Add(new AttributeData("craftpolis:npc.respawn_time", RespawnTime));
+                IList<AttributeData> attributes = Model.Attributes;
+                attributes.Clear();
+                attributes.Add(new AttributeData("minecraft:generic.max_health", MaxHealth));
+                attributes.Add(new AttributeData("minecraft:generic.knockback_resistance", KnockbackResistance));
+                attributes.Add(new AttributeData("minecraft:generic.movement_speed", MovementSpeed));
+                attributes.Add(new AttributeData("minecraft:generic.attack_damage", AttackDamage));
+                attributes.Add(new AttributeData("minecraft:generic.attack_knockback", AttackKnockback));
+                attributes.Add(new AttributeData("minecraft:generic.attack_speed", AttackSpeed));
+                attributes.Add(new AttributeData("minecraft:generic.armor", Armor));
+                attributes.Add(new AttributeData("minecraft:generic.armor_toughness", ArmorToughness));
+                attributes.Add(new AttributeData("craftpolis:npc.respawn_time", RespawnTime));
             }
             return Task.CompletedTask;
         }

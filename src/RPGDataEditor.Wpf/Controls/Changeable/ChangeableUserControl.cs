@@ -130,6 +130,7 @@ namespace RPGDataEditor.Wpf.Controls
                 };
                 RaiseEvent(changeTypeArgs);
             }
+            GetBindingExpression(DataContextProperty).UpdateTarget();
         }
 
         protected virtual void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => OnTemplateApplied();

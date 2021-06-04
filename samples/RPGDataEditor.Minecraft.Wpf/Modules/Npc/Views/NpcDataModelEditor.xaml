@@ -58,7 +58,7 @@
                 </DataTemplate>
             </controls:ListDataCard.HeaderTemplate>
             <DataTemplate>
-                <controls:BlockPosField Position="{Binding .}" />
+                <controls:PositionBox Position="{Binding .}" />
             </DataTemplate>
         </controls:ListDataCard>
         <materialDesign:Card x:Name="ExpandableJobSection"

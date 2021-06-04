@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
-    <ControlTemplate TargetType="{x:Type controls:BlockPosField}"
-                     x:Key="BlockPosFieldTemplate">
+    <ControlTemplate TargetType="{x:Type controls:PositionBox}"
+                     x:Key="PositionBoxTemplate">
         <StackPanel x:Name="FieldPanel"
                     Orientation="{TemplateBinding Orientation}">
             <controls:AutoControl DataContext="{TemplateBinding Position}"
@@ -26,8 +26,8 @@
             </controls:AutoControl>
         </StackPanel>
     </ControlTemplate>
-    <Style TargetType="{x:Type controls:BlockPosField}">
+    <Style TargetType="{x:Type controls:PositionBox}">
         <Setter Property="Template"
-                Value="{StaticResource BlockPosFieldTemplate}" />
+                Value="{StaticResource PositionBoxTemplate}" />
     </Style>
 </ResourceDictionary>

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Prism.Services.Dialogs;
+using ResourceManager.Data;
 using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
@@ -13,12 +14,14 @@ namespace RPGDataEditor.Mvvm
         public ModelDialogViewModel(IMediator mediator, ILogger<ModelDialogViewModel<TModel>> logger) : base(logger) => Mediator = mediator;
 
         private TModel model;
-        protected TModel Model {
+        public TModel Model {
             get => model;
             set => SetProperty(ref model, value);
         }
 
         protected IMediator Mediator { get; }
+
+        public override string Title => typeof(TModel).Name + " Editor";
 
         protected sealed override void CloseDialog(object result) => Close(result is bool b && b);
 
@@ -28,7 +31,7 @@ namespace RPGDataEditor.Mvvm
             if (!isCancelled)
             {
                 await OnDialogClosing(result).ConfigureAwait(true);
-                Close(new Navigation.ModelDialogParameters<TModel>(Model) { IsSuccess = result }.BuildPrism());
+                Close(new Navigation.ModelDialogParameters<TModel>((Model as Resource).ToModel<TModel>()) { IsSuccess = result }.BuildPrism());
             }
         }
 

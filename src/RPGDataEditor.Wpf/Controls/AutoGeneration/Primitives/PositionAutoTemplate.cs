@@ -1,5 +1,4 @@
 ﻿using RPGDataEditor.Models;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,13 +7,16 @@ namespace RPGDataEditor.Wpf.Controls
 {
     public class PositionAutoTemplate : AutoTemplate<Position>
     {
-        public override DependencyObject LoadContent(PropertyInfo info)
+        public override DependencyObject LoadContent(object context, TemplateOptions options)
         {
-            BlockPosField field = new BlockPosField {
+            PositionBox field = new PositionBox {
                 Margin = new Thickness(5),
                 Orientation = Orientation.Horizontal
             };
-            field.SetBinding(BlockPosField.PositionProperty, new Binding(info.Name) { Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+            field.SetBinding(PositionBox.PositionProperty, new Binding(options.BindingName) {
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
             return field;
         }
     }

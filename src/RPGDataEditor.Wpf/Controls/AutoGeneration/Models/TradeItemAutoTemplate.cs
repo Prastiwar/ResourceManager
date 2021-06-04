@@ -1,6 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
 using RPGDataEditor.Models;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,18 +7,18 @@ namespace RPGDataEditor.Wpf.Controls
 {
     public class TradeItemAutoTemplate : AutoTemplate<TradeItem>
     {
-        public override DependencyObject LoadContent(PropertyInfo info)
+        public override DependencyObject LoadContent(object context, TemplateOptions options)
         {
             Card card = new Card() {
                 Margin = new Thickness(5),
                 Padding = new Thickness(5)
             };
-            card.Content = BuildPanel(info);
+            card.Content = BuildPanel(context);
             AutoControl.SetPreserveDataContext(card, false);
             return card;
         }
 
-        protected virtual StackPanel BuildPanel(PropertyInfo info)
+        protected virtual StackPanel BuildPanel(object context)
         {
             StackPanel panel = new StackPanel();
             panel.Children.Add(new AutoControl() { PropertyName = nameof(TradeItem.ItemId) });

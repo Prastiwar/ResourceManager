@@ -1,7 +1,8 @@
-﻿using RPGDataEditor.Core;
+﻿using RPGDataEditor.Extensions.Prism.Wpf;
+using RPGDataEditor.Providers;
 using System;
 using System.Collections;
-using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -94,14 +95,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         private Type elementType;
 
-        protected virtual void OnItemsSourceChanged()
-        {
-            elementType = ItemsSource.GetType().GetArrayElementType();
-            if (elementType.IsAbstract)
-            {
-                elementType = elementType.EnumarateDerivedTypes().First(); 
-            }
-        }
+        protected virtual void OnItemsSourceChanged() => elementType = ItemsSource.GetType().GetArrayElementType();
 
         public override void OnApplyTemplate()
         {
@@ -129,6 +123,23 @@ namespace RPGDataEditor.Wpf.Controls
             }
         }
 
-        protected virtual object CreateDefaultElement() => Activator.CreateInstance(elementType);
+        protected virtual object CreateDefaultElement()
+        {
+            try
+            {
+                return Activator.CreateInstance(elementType);
+            }
+            catch (Exception)
+            {
+                Type implementationProviderType = typeof(IImplementationProvider<>).MakeGenericType(elementType);
+                object provider = Application.Current.TryResolve(implementationProviderType);
+                if (provider == null)
+                {
+                    return null;
+                }
+                MethodInfo getMethod = implementationProviderType.GetMethod("Get", new Type[0]);
+                return getMethod.Invoke(provider, null);
+            }
+        }
     }
 }

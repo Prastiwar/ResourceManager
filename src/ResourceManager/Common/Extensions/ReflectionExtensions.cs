@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -21,6 +22,11 @@ namespace ResourceManager
             }
         }
 
+        public static object GetDefaultValue(Type type) => type.IsValueType ? Activator.CreateInstance(type) : null;
+
+        /// <summary> Returns true for array, IEnumerable, IEnumerable<>, excludes string </summary>
+        public static bool IsEnumerable(this Type type) => type.IsArray || (type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type));
+
         public static Type GetEnumerableElementType(this Type type)
         {
             if (type.IsArray)
@@ -29,11 +35,7 @@ namespace ResourceManager
                 return arrayElementType;
             }
             Type elementType = type.GetGenericArguments().FirstOrDefault();
-            if (elementType == null)
-            {
-                return typeof(object);
-            }
-            return elementType;
+            return elementType ?? typeof(object);
         }
 
         public static Assembly[] GetReferencedAssemblies(this Assembly assembly, bool includeRoot)

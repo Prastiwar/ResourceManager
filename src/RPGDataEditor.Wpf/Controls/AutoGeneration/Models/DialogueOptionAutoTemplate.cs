@@ -1,12 +1,11 @@
 ﻿using RPGDataEditor.Models;
-using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
 {
     public class DialogueOptionAutoTemplate : AutoTemplate<DialogueOption>
     {
-        public override DependencyObject LoadContent(PropertyInfo info = null)
+        public override DependencyObject LoadContent(object context, TemplateOptions options)
         {
             DialogueOptionView view = new DialogueOptionView();
             AutoControl.SetPreserveDataContext(view, false);

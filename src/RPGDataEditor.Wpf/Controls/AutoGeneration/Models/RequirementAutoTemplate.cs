@@ -1,12 +1,11 @@
 ﻿using RPGDataEditor.Models;
-using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls.AutoGeneration.Models
 {
     public class RequirementAutoTemplate : AutoTemplate<Requirement>
     {
-        public override DependencyObject LoadContent(PropertyInfo info = null)
+        public override DependencyObject LoadContent(object context, TemplateOptions options)
         {
             RequirementView view = new RequirementView();
             AutoControl.SetPreserveDataContext(view, false);

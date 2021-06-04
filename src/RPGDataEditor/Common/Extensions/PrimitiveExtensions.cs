@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -43,7 +44,11 @@ namespace RPGDataEditor
             return true;
         }
 
-        public static string MakeFriendlyName(this string text, bool preserveAcronyms = false)
+        private static readonly char[] braces = new char[] {
+            '[', ']', '(', ')', '{', '}'
+        };
+
+        public static string MakeFriendlyName(this string text, bool preserveBraces = false, bool preserveAcronyms = false)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -51,7 +56,10 @@ namespace RPGDataEditor
             }
 
             StringBuilder builder = new StringBuilder(text.Length * 2);
-            builder.Append(text[0]);
+            if (preserveBraces || !braces.Any(brace => brace == text[0]))
+            {
+                builder.Append(text[0]);
+            }
             for (int i = 1; i < text.Length; i++)
             {
                 if (char.IsUpper(text[i]))
@@ -64,8 +72,11 @@ namespace RPGDataEditor
                         builder.Append(' ');
                     }
                 }
-
                 builder.Append(text[i]);
+            }
+            if (!preserveBraces && braces.Any(brace => brace == builder[builder.Length - 1]))
+            {
+                builder.Remove(builder.Length - 1, 1);
             }
             return builder.ToString();
         }

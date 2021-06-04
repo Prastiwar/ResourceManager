@@ -1,6 +1,5 @@
 ﻿using RPGDataEditor.Minecraft.Models;
 using RPGDataEditor.Wpf.Controls;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,7 +7,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Controls
 {
     public class EquipmentAutoTemplate : AutoTemplate<Equipment>
     {
-        public override DependencyObject LoadContent(PropertyInfo info)
+        public override DependencyObject LoadContent(object context, TemplateOptions options)
         {
             StackPanel panel = new StackPanel();
             panel.Children.Add(new AutoControl() { PropertyName = nameof(Equipment.MainHand) });

@@ -10,22 +10,27 @@
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              Style="{DynamicResource DefaultEditorControl}">
     <StackPanel Margin="10">
-        <controls:AutoControl PropertyName="QuestTitle" />
-        <controls:AutoControl PropertyName="Message" />
+        <controls:AutoControl DataContext="{Binding Model}"
+                              PropertyName="Title" />
+        <controls:AutoControl DataContext="{Binding Model}"
+                              PropertyName="Message" />
         <materialDesign:Card HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
             <StackPanel>
                 <TextBlock Text="Choose completion task"
                            Margin="5" />
-                <controls:AutoControl PropertyName="CompletionTask">
+                <controls:AutoControl DataContext="{Binding Model}"
+                                      PropertyName="CompletionTask">
                     <i:Interaction.Behaviors>
                         <behaviors:ValidationListenerBehaviorView PropertyName="CompletionTask" />
                     </i:Interaction.Behaviors>
                 </controls:AutoControl>
             </StackPanel>
         </materialDesign:Card>
-        <controls:AutoControl PropertyName="Tasks" />
-        <controls:AutoControl PropertyName="Requirements" />
+        <controls:AutoControl DataContext="{Binding Model}"
+                              PropertyName="Tasks" />
+        <controls:AutoControl DataContext="{Binding Model}"
+                              PropertyName="Requirements" />
     </StackPanel>
 </UserControl>

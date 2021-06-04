@@ -12,55 +12,11 @@ using RPGDataEditor.Mvvm.Commands;
 using RPGDataEditor.Mvvm.Navigation;
 using RPGDataEditor.Services;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
-    public class ObservableDictionary<TValue> : IDictionary<string, TValue>, INotifyPropertyChanged, INotifyCollectionChanged
-    {
-        private Dictionary<string, TValue> internalDictionary = new Dictionary<string, TValue>();
-
-        public TValue this[string key] {
-            get {
-                throw new NotImplementedException();
-            }
-            set {
-                throw new NotImplementedException();
-            }
-        }
-
-        public ICollection<string> Keys => throw new NotImplementedException();
-
-        public ICollection<TValue> Values => throw new NotImplementedException();
-
-        public int Count => throw new NotImplementedException();
-
-        public bool IsReadOnly => throw new NotImplementedException();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        public void Add(string key, TValue value) => internalDictionary.Add(key, value);
-        public void Add(KeyValuePair<string, TValue> item) => internalDictionary.Add(item);
-        public void Clear() => internalDictionary.Clear();
-        public bool Contains(KeyValuePair<string, TValue> item) => internal.Contains(item);
-        public bool ContainsKey(string key) => throw new NotImplementedException();
-        public void CopyTo(KeyValuePair<string, TValue>[] array, int arrayIndex) => throw new NotImplementedException();
-        public IEnumerator<KeyValuePair<string, TValue>> GetEnumerator() => throw new NotImplementedException();
-        public bool Remove(string key) => throw new NotImplementedException();
-        public bool Remove(KeyValuePair<string, TValue> item) => throw new NotImplementedException();
-        public bool TryGetValue(string key, [MaybeNullWhen(false)] out TValue value) => throw new NotImplementedException();
-        IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
-    }
-
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
         public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource configurator, IAppPersistanceService persistance, IConfiguration configuration, ILogger<ConnectionTabViewModel> logger)
@@ -77,8 +33,6 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             get => configuration;
             set => SetProperty(ref configuration, value);
         }
-
-        public ObservableDictionary
 
         protected IMediator Mediator { get; }
 

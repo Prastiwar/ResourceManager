@@ -1,10 +1,12 @@
-﻿using ResourceManager;
+﻿using ResourceManager.Data;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Providers;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Markup;
 
 namespace RPGDataEditor.Wpf.Controls
@@ -39,6 +41,8 @@ namespace RPGDataEditor.Wpf.Controls
             }
         }
 
+        private static readonly char[] indexBraces = new char[] { '[', ']' };
+
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
@@ -69,65 +73,19 @@ namespace RPGDataEditor.Wpf.Controls
             {
                 return null;
             }
-            DependencyObject control = LoadControl(context, PropertyName);
-            if (control == null)
-            {
-                return null;
-            }
-            return control;
+            return LoadControl(context, PropertyName);
         }
 
         protected virtual DependencyObject LoadControl(object context, string propertyName)
         {
-            Type type = null;
-            PropertyInfo property = null;
-            if (propertyName == ".")
-            {
-                type = context.GetType();
-            }
-            else
-            {
-                property = context.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
-                if (property == null)
-                {
-                    return null;
-                }
-                type = property.PropertyType;
-            }
-            if (PropertyType != null)
-            {
-                type = PropertyType;
-            }
-            IAutoTemplateProvider provider = Application.Current.TryResolve<IAutoTemplateProvider>();
-            AutoTemplate template = provider.Resolve(type);
-            while (template == null)
-            {
-                foreach (Type interfaceType in type.GetInterfaces())
-                {
-                    template = provider.Resolve(interfaceType);
-                    if (template != null)
-                    {
-                        type = interfaceType;
-                        break;
-                    }
-                }
-                if (template != null)
-                {
-                    break;
-                }
-                type = type.BaseType;
-                if (type == null)
-                {
-                    break;
-                }
-                template = provider.Resolve(type);
-            }
-            DependencyObject control = template?.LoadContent(property);
+            Type propertyType = GetPropertyType(context, propertyName);
+            AutoTemplate template = GetTemplate(propertyName, propertyType);
+            DependencyObject control = template?.LoadContent(context, new TemplateOptions() { BindingName = propertyName });
             if (control is FrameworkElement element)
             {
                 if (GetPreserveDataContext(element))
                 {
-                    element.DataContext = DataContext;
+                    element.SetBinding(FrameworkElement.DataContextProperty, new Binding(nameof(DataContext)) { Source = this });
                 }
                 else
                 {
@@ -142,6 +100,80 @@ namespace RPGDataEditor.Wpf.Controls
                 }
             }
             return control;
+        }
+
+        protected virtual Type GetPropertyType(object context, string propertyName)
+        {
+            if (PropertyType != null)
+            {
+                return PropertyType;
+            }
+            Type type = null;
+            if (propertyName.StartsWith('[') && propertyName.EndsWith(']'))
+            {
+                if (context is IResource resource)
+                {
+                    ResourceProperty prop = resource.GetProperty(propertyName.Trim(indexBraces));
+                    type = prop?.DeclaredType;
+                }
+                else
+                {
+                    PropertyInfo property = context.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(prop => prop.GetIndexParameters().Length > 0);
+                    if (property == null)
+                    {
+                        return null;
+                    }
+                    ParameterInfo[] indexParameters = property.GetIndexParameters();
+                    if (indexParameters.Length != 1 || indexParameters[0].ParameterType != typeof(string))
+                    {
+                        return null;
+                    }
+                    type = property.PropertyType;
+                }
+            }
+            else if (propertyName == ".")
+            {
+                type = context.GetType();
+            }
+            else
+            {
+                PropertyInfo property = context.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+                type = property?.PropertyType;
+            }
+            return type;
+        }
+
+        protected virtual AutoTemplate GetTemplate(string propertyName, Type propertyType)
+        {
+            if (propertyType == null)
+            {
+                throw new InvalidOperationException("Cannot create control for unknown type for property name " + propertyName);
+            }
+            IAutoTemplateProvider provider = Application.Current.TryResolve<IAutoTemplateProvider>();
+            AutoTemplate template = provider.Resolve(propertyType);
+            while (template == null)
+            {
+                foreach (Type interfaceType in propertyType.GetInterfaces())
+                {
+                    template = provider.Resolve(interfaceType);
+                    if (template != null)
+                    {
+                        propertyType = interfaceType;
+                        break;
+                    }
+                }
+                if (template != null)
+                {
+                    break;
+                }
+                propertyType = propertyType.BaseType;
+                if (propertyType == null)
+                {
+                    break;
+                }
+                template = provider.Resolve(propertyType);
+            }
+            return template;
         }
     }
 }

@@ -18,43 +18,46 @@ namespace RPGDataEditor.Wpf
     {
         public static void ChangeType<TModel>(this ChangeableUserControl.ChangeTypeEventArgs e, object sender)
         {
-            if (sender is FrameworkElement element)
+            if (!(sender is DependencyObject element))
             {
-                ListDataCard card = FindAncestorOrSelf<ListDataCard>(element);
-                if (card?.ItemsSource is IList<TModel> list)
+                return;
+            }
+            ListDataCard card = FindAncestorOrSelf<ListDataCard>(element);
+            if (card?.ItemsSource is IList<TModel> list)
+            {
+                ChangeTypeInList(e, list);
+            }
+            else
+            {
+                DependencyProperty dataContextProp = FrameworkElement.DataContextProperty;
+                object elementDataContext = element.GetValue(dataContextProp);
+                object parentContext = null;
+                BindingExpression elementDataContextBinding = BindingOperations.GetBindingExpression(element, dataContextProp);
+                string contextPath = elementDataContextBinding?.ParentBinding.Path.Path;
+                DependencyObject parent = GetParent(element);
+                while (parentContext == null)
                 {
-                    ChangeTypeInList(e, list);
+                    if (contextPath == null || contextPath == ".")
+                    {
+                        contextPath = BindingOperations.GetBindingExpression(parent, dataContextProp)?.ParentBinding.Path.Path;
+                    }
+                    object parentDataContext = parent.GetValue(dataContextProp);
+                    if (parentDataContext != elementDataContext)
+                    {
+                        parentContext = parentDataContext;
+                        break;
+                    }
+                    parent = GetParent(parent);
+                    if (parent == null)
+                    {
+                        break;
+                    }
                 }
-                else
+                PropertyInfo property = parentContext.GetType().GetProperty(contextPath, BindingFlags.Public | BindingFlags.Instance);
+                if (property != null)
                 {
-                    object parentContext = null;
-                    string contextPath = element.GetBindingExpression(FrameworkElement.DataContextProperty)?.ParentBinding.Path.Path;
-                    DependencyObject parent = GetParent(element);
-                    while (parentContext == null)
-                    {
-                        if (parent is FrameworkElement parentElement)
-                        {
-                            if (contextPath == null || contextPath == ".")
-                            {
-                                contextPath = parentElement.GetBindingExpression(FrameworkElement.DataContextProperty)?.ParentBinding.Path.Path;
-                            }
-                            if (parentElement.DataContext != element.DataContext)
-                            {
-                                parentContext = parentElement.DataContext;
-                            }
-                        }
-                        parent = GetParent(parent);
-                        if (parent == null)
-                        {
-                            break;
-                        }
-                    }
-                    PropertyInfo property = parentContext.GetType().GetProperty(contextPath, BindingFlags.Public | BindingFlags.Instance);
-                    if (property != null)
-                    {
-                        TModel newModel = CreateModel<TModel>(e);
-                        property.SetValue(parentContext, newModel);
-                    }
+                    TModel newModel = CreateModel<TModel>(e);
+                    property.SetValue(parentContext, newModel);
                 }
             }
         }

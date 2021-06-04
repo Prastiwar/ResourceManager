@@ -4,7 +4,7 @@
                     xmlns:models="clr-namespace:RPGDataEditor.Models;assembly=RPGDataEditor">
     <DataTemplate x:Key="EntityInteractQuestTaskContent">
         <StackPanel>
-            <controls:ResourcePicker PickedId="{Binding Entity}"
+            <controls:ResourcePicker PickedId="{Binding EntityId}"
                                      ResourceType="{x:Type models:Npc}"
                                      Margin="5" />
         </StackPanel>

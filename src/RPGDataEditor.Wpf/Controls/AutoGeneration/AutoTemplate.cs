@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
@@ -10,7 +9,9 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected Type Type { get; }
 
-        public abstract DependencyObject LoadContent(PropertyInfo info);
+        public DependencyObject LoadContent(object context, string propertyName) => LoadContent(context, new TemplateOptions() { BindingName = propertyName });
+
+        public abstract DependencyObject LoadContent(object context, TemplateOptions options);
     }
 
     public abstract class AutoTemplate<T> : AutoTemplate

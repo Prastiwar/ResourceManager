@@ -15,7 +15,7 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
         /// <summary> Finds attribute by name and returns its value </summary>
         protected double GetFromAttributes(string name)
         {
-            AttributeData attribute = Model.Attributes.Where(x => x.Name == name).FirstOrDefault();
+            AttributeData attribute = Model.Attributes.FirstOrDefault(x => x.Name == name);
             if (attribute != null)
             {
                 return attribute.Value;
