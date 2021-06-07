@@ -1,4 +1,5 @@
 ﻿using RPGDataEditor.Models;
+using System.ComponentModel;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf.Controls
@@ -17,17 +18,18 @@ namespace RPGDataEditor.Wpf.Controls
         {
             DialogueOption targetModel = (DialogueOption)e.Item;
             string optionName = e.TargetType.Name;
+            PropertyDescriptor descriptor = TypeDescriptor.GetProperties(targetModel).Find(nameof(targetModel.NextDialogId), false);
             if (string.Compare(optionName, "quit", true) == 0)
             {
-                targetModel.NextDialogId = -1;
+                descriptor.SetValue(targetModel, -1);
             }
             else if (string.Compare(optionName, "job", true) == 0)
             {
-                targetModel.NextDialogId = -2;
+                descriptor.SetValue(targetModel, -2);
             }
             else
             {
-                targetModel.NextDialogId = 0;
+                descriptor.SetValue(targetModel, 0);
             }
         }
     }

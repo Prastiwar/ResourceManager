@@ -95,7 +95,7 @@ namespace RPGDataEditor.Wpf.Controls
 
         private Type elementType;
 
-        protected virtual void OnItemsSourceChanged() => elementType = ItemsSource.GetType().GetArrayElementType();
+        protected virtual void OnItemsSourceChanged() => elementType = ItemsSource?.GetType().GetArrayElementType();
 
         public override void OnApplyTemplate()
         {

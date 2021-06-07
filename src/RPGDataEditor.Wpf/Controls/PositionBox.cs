@@ -1,4 +1,5 @@
 ﻿using RPGDataEditor.Models;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,13 +22,19 @@ namespace RPGDataEditor.Wpf.Controls
         {
             if (e.NewValue == null)
             {
+                PositionBox box = d as PositionBox;
                 Position pos = new Position();
-                (d as PositionBox).Position = pos;
-                BindingExpression exp = BindingOperations.GetBindingExpression(d, PositionProperty);
-                // TODO: Find out why it doesnt update in TwoWay mode without this hack
-                if (exp.ParentBinding.Mode == BindingMode.TwoWay)
+                box.Position = pos;
+                object dataContext = box.DataContext;
+                if (dataContext != null)
                 {
-                    exp.ResolvedSource.GetType().GetProperty(exp.ResolvedSourcePropertyName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).SetValue(exp.ResolvedSource, pos);
+                    BindingExpression exp = BindingOperations.GetBindingExpression(d, PositionProperty);
+                    // TODO: Find out why it doesnt update in TwoWay mode without this hack
+                    if (exp != null && exp.ParentBinding?.Mode == BindingMode.TwoWay)
+                    {
+                        PropertyDescriptor descriptor = TypeDescriptor.GetProperties(dataContext).Find(exp.ResolvedSourcePropertyName, false);
+                        descriptor?.SetValue(dataContext, pos);
+                    }
                 }
             }
         }

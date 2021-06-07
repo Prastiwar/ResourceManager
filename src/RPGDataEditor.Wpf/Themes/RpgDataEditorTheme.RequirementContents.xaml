@@ -16,7 +16,7 @@
     </DataTemplate>
     <DataTemplate x:Key="ItemRequirementContent">
         <StackPanel Margin="5">
-            <controls:AutoControl PropertyName="Item" />
+            <controls:AutoControl PropertyName="ItemId" />
         </StackPanel>
     </DataTemplate>
     <DataTemplate x:Key="QuestRequirementContent">
