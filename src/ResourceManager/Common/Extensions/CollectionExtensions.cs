@@ -21,6 +21,14 @@ namespace ResourceManager
             }
         }
 
+        public static void RemoveRange<T>(this IList<T> list, IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                list.Remove(item);
+            }
+        }
+
         public static bool EquivalentTo<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IDictionary<TKey, TValue> dict2)
         {
             if (dictionary.Count == dict2.Count)

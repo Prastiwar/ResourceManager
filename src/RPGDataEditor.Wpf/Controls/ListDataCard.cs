@@ -1,7 +1,11 @@
-﻿using RPGDataEditor.Extensions.Prism.Wpf;
+﻿using ResourceManager;
+using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Providers;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +20,69 @@ namespace RPGDataEditor.Wpf.Controls
     {
         public static DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IList), typeof(ListDataCard),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnItemsSourceChanged));
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnItemsSourceChanged, OnItemsSourceCoerceValue));
+
+        private static object OnItemsSourceCoerceValue(DependencyObject d, object baseValue)
+        {
+            object dataContext = d.GetValue(DataContextProperty);
+            if (dataContext != null && baseValue == null)
+            {
+                BindingExpression expression = BindingOperations.GetBindingExpression(d, ItemsSourceProperty);
+                if (expression?.ResolvedSource != null)
+                {
+                    PropertyDescriptor property = TypeDescriptor.GetProperties(expression.ResolvedSource).Find(expression.ResolvedSourcePropertyName, false);
+                    if (property != null)
+                    {
+                        Type itemsType = property.PropertyType;
+                        Type elementType = itemsType.GetEnumerableElementType();
+                        object newInstance = null;
+                        try
+                        {
+                            if (itemsType.IsAbstract || itemsType.IsInterface)
+                            {
+                                Type implementationType = typeof(List<>).MakeGenericType(elementType);
+                                if (!itemsType.IsAssignableFrom(implementationType))
+                                {
+                                    if (itemsType.IsAssignableFrom(typeof(Collection<>).MakeGenericType(elementType)))
+                                    {
+                                        implementationType = typeof(Collection<>).MakeGenericType(elementType);
+                                    }
+                                    else if (itemsType.IsAssignableFrom(typeof(ObservableCollection<>).MakeGenericType(elementType)))
+                                    {
+                                        implementationType = typeof(ObservableCollection<>).MakeGenericType(elementType);
+                                    }
+                                    else
+                                    {
+                                        Type implementationProviderType = typeof(IImplementationProvider<>).MakeGenericType(itemsType);
+                                        object provider = Application.Current.TryResolve(implementationProviderType);
+                                        if (provider != null)
+                                        {
+                                            MethodInfo getMethod = implementationProviderType.GetMethod("Get", new Type[0]);
+                                            implementationType = (Type)getMethod.Invoke(provider, null);
+                                        }
+                                    }
+                                }
+                                newInstance = Activator.CreateInstance(implementationType);
+                            }
+                            else
+                            {
+                                newInstance = Activator.CreateInstance(itemsType);
+                            }
+                            property.SetValue(expression.ResolvedSource, newInstance);
+                            expression.UpdateTarget();
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex);
+                            return baseValue;
+                        }
+                        return expression.Target.GetValue(expression.TargetProperty);
+                    }
+                }
+            }
+            return baseValue;
+        }
+
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as ListDataCard).OnItemsSourceChanged();
         public IList ItemsSource {
             get => (IList)GetValue(ItemsSourceProperty);
@@ -113,11 +179,11 @@ namespace RPGDataEditor.Wpf.Controls
                     return textBlock;
                 });
             }
-            if (RemoveItemCommand == null && GetBindingExpression(RemoveItemCommandProperty) == null)
+            if (RemoveItemCommand == null && !this.HasBinding(RemoveItemCommandProperty))
             {
                 RemoveItemCommand = Commands.RemoveListItemCommand(() => ItemsSource);
             }
-            if (AddItemCommand == null && GetBindingExpression(AddItemCommandProperty) == null)
+            if (AddItemCommand == null && !this.HasBinding(AddItemCommandProperty))
             {
                 AddItemCommand = Commands.AddListItemCommand(() => ItemsSource, () => CreateDefaultElement());
             }

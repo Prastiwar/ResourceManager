@@ -31,7 +31,7 @@ namespace RPGDataEditor.Mvvm
             if (!isCancelled)
             {
                 await OnDialogClosing(result).ConfigureAwait(true);
-                Close(new Navigation.ModelDialogParameters<TModel>((Model as Resource).ToModel<TModel>()) { IsSuccess = result }.BuildPrism());
+                Close(new Navigation.ModelDialogParameters<TModel>(Model) { IsSuccess = result }.BuildPrism());
             }
         }
 
