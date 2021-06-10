@@ -16,15 +16,17 @@ namespace ResourceManager.DataSource.Ftp
     public class FtpDataSource : DataSource
     {
         public FtpDataSource(IConfiguration configuration, IConnectionMonitor monitor, IResourceDescriptorService descriptorService, ITextSerializer serializer, FtpDataSourceOptions options)
+            : base(configuration, monitor, descriptorService)
         {
-            Configuration = configuration;
-            Monitor = monitor;
             Serializer = serializer;
-            DescriptorService = descriptorService;
             Options = options;
         }
 
         public FtpDataSourceOptions Options { get; }
+
+        protected ITextSerializer Serializer { get; }
+
+        private readonly IDictionary<Type, ResourcesEntry> entries = new Dictionary<Type, ResourcesEntry>();
 
         public class ResourcesEntry
         {
@@ -35,22 +37,43 @@ namespace ResourceManager.DataSource.Ftp
             //public CachingPolicy CachingPolicy { get; set; }
         }
 
-        protected ITextSerializer Serializer { get; }
+        protected virtual FtpClient CreateClient() => new FtpClient() {
+            Host = Options.Host,
+            Port = Options.Port,
+            Credentials = new System.Net.NetworkCredential(Options.UserName, Options.Password)
+        };
 
-        private readonly IDictionary<Type, ResourcesEntry> entries = new Dictionary<Type, ResourcesEntry>();
-
+        // WARNING: Saving changes is not consistent and not atomic
+        // TODO: Fix consistency and atomicity
         public override void SaveChanges()
         {
-            throw new NotImplementedException();
+            FtpClient client = CreateClient();
             foreach (ITrackedResource tracking in TrackedResources)
             {
+                LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
+                string targetPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.Resource));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:
+                        string addedContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
+                        byte[] addedContentBytes = Encoding.UTF8.GetBytes(addedContent);
+                        FtpStatus createStatus = client.Upload(addedContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
                         break;
                     case ResourceState.Modified:
+                        string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
+                        byte[] updateContentBytes = Encoding.UTF8.GetBytes(updateContent);
+                        FtpStatus updateStatus = client.Upload(updateContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
+                        if (updateStatus == FtpStatus.Success)
+                        {
+                            string oldPath = descriptor.GetRelativeFullPath(tracking.OriginalResource);
+                            if (string.Compare(oldPath, targetPath) != 0)
+                            {
+                                client.DeleteFile(oldPath);
+                            }
+                        }
                         break;
                     case ResourceState.Removed:
+                        client.DeleteFile(targetPath);
                         break;
                     default:
                         break;
@@ -59,18 +82,37 @@ namespace ResourceManager.DataSource.Ftp
             TrackedResources.Clear();
         }
 
+        // WARNING: Saving changes is not consistent and not atomic
+        // TODO: Fix consistency and atomicity
         public override async Task SaveChangesAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            FtpClient client = CreateClient();
             foreach (ITrackedResource tracking in TrackedResources)
             {
+                LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
+                string targetPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.Resource));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:
+                        string addedContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
+                        byte[] addedContentBytes = Encoding.UTF8.GetBytes(addedContent);
+                        FtpStatus createStatus = await client.UploadAsync(addedContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
                         break;
                     case ResourceState.Modified:
+                        string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
+                        byte[] updateContentBytes = Encoding.UTF8.GetBytes(updateContent);
+                        FtpStatus updateStatus = await client.UploadAsync(updateContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
+                        if (updateStatus == FtpStatus.Success)
+                        {
+                            string oldPath = descriptor.GetRelativeFullPath(tracking.OriginalResource);
+                            if (string.Compare(oldPath, targetPath) != 0)
+                            {
+                                await client.DeleteFileAsync(oldPath);
+                            }
+                        }
                         break;
                     case ResourceState.Removed:
+                        await client.DeleteFileAsync(targetPath);
                         break;
                     default:
                         break;
@@ -108,12 +150,6 @@ namespace ResourceManager.DataSource.Ftp
             entries[resourceType] = entry;
             return entry.Resources.AsQueryable();
         }
-
-        private FtpClient CreateClient() => new FtpClient() {
-            Host = Options.Host,
-            Port = Options.Port,
-            Credentials = new System.Net.NetworkCredential(Options.UserName, Options.Password)
-        };
 
         public override IQueryable<string> Locate(Type resourceType)
         {

@@ -1,4 +1,5 @@
-﻿using ResourceManager.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using ResourceManager.Services;
 
 namespace ResourceManager.DataSource.Sql
 {
@@ -9,5 +10,7 @@ namespace ResourceManager.DataSource.Sql
         public string ConnectionString { get; set; }
 
         public IResourceDescriptorService DescriptorService { get; set; }
+        
+        public DbContext DatabaseContext { get; set; }
     }
 }

@@ -10,11 +10,18 @@ namespace ResourceManager.DataSource
 {
     public abstract class DataSource : IDataSource
     {
-        public IConfiguration Configuration { get; protected set; }
+        public DataSource(IConfiguration configuration, IConnectionMonitor monitor, IResourceDescriptorService descriptorService)
+        {
+            Configuration = configuration;
+            Monitor = monitor;
+            DescriptorService = descriptorService;
+        }
 
-        public IConnectionMonitor Monitor { get; protected set; }
+        public IConfiguration Configuration { get; }
 
-        public IResourceDescriptorService DescriptorService { get; protected set; }
+        public IConnectionMonitor Monitor { get; }
+
+        public IResourceDescriptorService DescriptorService { get; }
 
         protected IList<ITrackedResource> TrackedResources { get; } = new List<ITrackedResource>();
 

@@ -19,7 +19,7 @@ namespace ResourceManager.DataSource.Local
                 FileSearchPattern = configuration[nameof(BuilderOptions.FileSearchPattern)] ?? BuilderOptions.FileSearchPattern,
                 FolderPath = configuration[nameof(BuilderOptions.FolderPath)] ?? BuilderOptions.FolderPath,
             };
-            LocalDataSource dataSource = new LocalDataSource(configuration, monitor, BuilderOptions.DescriptorService, options);
+            LocalDataSource dataSource = new LocalDataSource(configuration, monitor, BuilderOptions.DescriptorService, BuilderOptions.Serializer, options);
             services.AddSingleton(dataSource);
             return dataSource;
         }

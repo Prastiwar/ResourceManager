@@ -11,7 +11,7 @@ namespace ResourceManager.DataSource
             ResourceType = asType ?? typeof(T);
         }
 
-        protected T OriginalResource { get; }
+        public T OriginalResource { get; }
 
         public Type ResourceType { get; private set; }
 
@@ -20,6 +20,8 @@ namespace ResourceManager.DataSource
         public ResourceState State { get; private set; }
 
         object ITrackedResource.Resource => Resource;
+
+        object ITrackedResource.OriginalResource => OriginalResource;
 
         public void Unchange()
         {

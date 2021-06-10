@@ -19,7 +19,7 @@ namespace ResourceManager.DataSource.Sql
             SqlDataSourceOptions options = new SqlDataSourceOptions() {
                 ConnectionString = connectionString
             };
-            SqlDataSource dataSource = new SqlDataSource(configuration, monitor, BuilderOptions.DescriptorService, options);
+            SqlDataSource dataSource = new SqlDataSource(configuration, monitor, BuilderOptions.DescriptorService, BuilderOptions.DatabaseContext, options);
             services.AddSingleton(dataSource);
             return dataSource;
         }

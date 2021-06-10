@@ -8,6 +8,8 @@ namespace ResourceManager.DataSource
 
         public object Resource { get; }
 
+        public object OriginalResource { get; }
+
         public ResourceState State { get; }
     }
 }

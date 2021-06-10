@@ -1,4 +1,5 @@
-﻿using ResourceManager.Services;
+﻿using ResourceManager.Data;
+using ResourceManager.Services;
 
 namespace ResourceManager.DataSource.Local
 {
@@ -9,6 +10,8 @@ namespace ResourceManager.DataSource.Local
         public string FileSearchPattern { get; set; }
 
         public string FolderPath { get; set; }
+
+        public ITextSerializer Serializer { get; set; }
 
         public IResourceDescriptorService DescriptorService { get; set; }
     }
