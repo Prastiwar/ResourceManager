@@ -27,6 +27,7 @@ namespace ResourceManager.DataSource
         {
             CheckerTimer?.Stop();
             TokenSource?.Cancel();
+            TokenSource = null;
             IsRunning = false;
         }
 

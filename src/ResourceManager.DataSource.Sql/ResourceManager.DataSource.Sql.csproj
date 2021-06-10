@@ -14,8 +14,4 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Monitoring\" />
-  </ItemGroup>
-
 </Project>

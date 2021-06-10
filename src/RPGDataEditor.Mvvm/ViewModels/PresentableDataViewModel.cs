@@ -1,8 +1,9 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource;
+using ResourceManager.Services;
 using RPGDataEditor.Mvvm.Commands;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,12 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class PresentableDataViewModel<TResource> : ModelsManagerViewModel<PresentableData> where TResource : IIdentifiable
     {
-        public PresentableDataViewModel(IMediator mediator, ILogger<PresentableDataViewModel<TResource>> logger) : base(mediator, logger) { }
+        public PresentableDataViewModel(IResourceDescriptorService descriptorService, IDataSource dataSource, ILogger<PresentableDataViewModel<TResource>> logger)
+            : base(dataSource, logger) => DescriptorService = descriptorService;
+
+        protected IResourceDescriptorService DescriptorService { get; }
+
+        protected abstract TResource CreateResource(PresentableData model);
 
         public override async Task Refresh()
         {
@@ -22,14 +28,29 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<PresentableData>();
             try
             {
-                IEnumerable<PresentableData> models = await Mediator.Send(new GetPresentablesByIdQuery(typeof(TResource), null));
-                Models.AddRange(models);
+                //IEnumerable<PresentableData> models = await Mediator.Send(new GetPresentablesByIdQuery(typeof(TResource), null));
+                string[] modelLocations = DataSource.Locate(typeof(TResource)).ToArray();
+                foreach (string location in modelLocations)
+                {
+                    PresentableData data = CreatePresentableData(location);
+                    Models.Add(data);
+                }
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
+        }
+
+        protected virtual PresentableData CreatePresentableData(string location)
+        {
+            PresentableData presentable = CreateModelInstance();
+            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(typeof(TResource));
+            KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
+            presentable.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value;
+            presentable.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
+            return presentable;
         }
 
         protected virtual async Task<TResource> RetrieveResource(PresentableData model)
@@ -49,8 +70,6 @@ namespace RPGDataEditor.Mvvm
             }
             return resource;
         }
-
-        protected virtual TResource CreateResource(PresentableData model) => default;
 
         protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
         {

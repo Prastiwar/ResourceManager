@@ -89,8 +89,6 @@ namespace RPGDataEditor.Wpf
 
             services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
 
-            services.AddDataSourceConfiguration(builder => builder.AddLocalDataSource().AddFtpDataSource().AddSqlDataSource(), ConfigureDataSource, ClearPreviousDataSource);
-
             services.AddFluentAssemblyScanner(null, scanner => {
                 Assembly[] dataSourceAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies(false)
                                                                              .SelectMany(assembly => assembly.GetReferencedAssemblies(true).Where(assembly => assembly.GetName().Name.Contains("ResourceManager.DataSource.")))
@@ -100,6 +98,16 @@ namespace RPGDataEditor.Wpf
                 scanner.Reset();
                 services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient);
             });
+
+            NewtonsoftSerializer serializer = new NewtonsoftSerializer();
+            services.AddSingleton<ITextSerializer>(serializer);
+            services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>();
+
+            services.AddSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
+            services.AddSingleton<IServiceProvider, PrismServiceProvider>();
+
+            services.AddSingleton<ISnackbarService, SnackbarService>();
+            services.AddSingleton<IDialogService, PrismDialogService>();
 
             services.AddResourceDescriptor(service => {
                 IResourceDescriptor fileQuestDescriptor = new PathResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{name}.json");
@@ -113,16 +121,12 @@ namespace RPGDataEditor.Wpf
                 IResourceDescriptor fileNpcDescriptor = new PathResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
                 IResourceDescriptor sqlNpcDescriptor = new SqlPathResourceDescriptor(typeof(Models.Npc), "npcs", ".{id}");
                 service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
+
+                services.AddDataSourceConfiguration(builder => builder.AddLocalDataSource().AddFtpDataSource(o => {
+                    o.Serializer = serializer;
+                    o.DescriptorService = service;
+                }).AddSqlDataSource(), ConfigureDataSource, ClearPreviousDataSource);
             });
-
-            services.AddSingleton<ITextSerializer, NewtonsoftSerializer>();
-            services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>();
-
-            services.AddSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
-            services.AddSingleton<IServiceProvider, PrismServiceProvider>();
-
-            services.AddSingleton<ISnackbarService, SnackbarService>();
-            services.AddSingleton<IDialogService, PrismDialogService>();
         }
 
         protected virtual void ClearPreviousDataSource(IServiceCollection services, IDataSource previousSource)

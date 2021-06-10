@@ -3,10 +3,10 @@ using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource;
 using RPGDataEditor.Mvvm.Commands;
 using RPGDataEditor.Mvvm.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,9 +15,9 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class ModelsManagerViewModel<TModel> : ScreenViewModel where TModel : IIdentifiable
     {
-        public ModelsManagerViewModel(IMediator mediator, ILogger<ModelsManagerViewModel<TModel>> logger) : base()
+        public ModelsManagerViewModel(IDataSource dataSource, ILogger<ModelsManagerViewModel<TModel>> logger) : base()
         {
-            Mediator = mediator;
+            DataSource = dataSource;
             Logger = logger;
         }
 
@@ -27,7 +27,7 @@ namespace RPGDataEditor.Mvvm
             protected set => SetProperty(ref models, value);
         }
 
-        protected IMediator Mediator { get; }
+        protected IDataSource DataSource { get; }
         protected ILogger<ModelsManagerViewModel<TModel>> Logger { get; }
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext) => Refresh();
@@ -38,7 +38,8 @@ namespace RPGDataEditor.Mvvm
             Models = new ObservableCollection<TModel>();
             try
             {
-                IEnumerable<TModel> models = (await Mediator.Send(new GetResourcesByIdQuery(typeof(TModel), null))).Cast<TModel>();
+                //IEnumerable<TModel> models = (await Mediator.Send(new GetResourcesByIdQuery(typeof(TModel), null))).Cast<TModel>();
+                var models = DataSource.Query<TModel>().ToList();
                 Models.AddRange(models);
             }
             catch (Exception ex)

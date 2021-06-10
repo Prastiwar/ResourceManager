@@ -1,8 +1,10 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using ResourceManager;
 using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource;
+using ResourceManager.Services;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +13,8 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class PresentableCategoryDataViewModel<TResource> : PresentableDataViewModel<TResource> where TResource : IIdentifiable
     {
-        public PresentableCategoryDataViewModel(IMediator mediator, ILogger<PresentableCategoryDataViewModel<TResource>> logger) : base(mediator, logger) { }
+        public PresentableCategoryDataViewModel(IResourceDescriptorService descriptorService, IDataSource dataSource, ILogger<PresentableCategoryDataViewModel<TResource>> logger)
+            : base(descriptorService, dataSource, logger) { }
 
         private ObservableCollection<string> categories;
         public ObservableCollection<string> Categories {
@@ -47,6 +50,17 @@ namespace RPGDataEditor.Mvvm
             }
             Categories.Add(newName);
             return newName;
+        }
+
+        protected override PresentableData CreatePresentableData(string location)
+        {
+            PresentableCategoryData presentable = (PresentableCategoryData)CreateModelInstance();
+            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(typeof(TResource));
+            KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
+            presentable.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value;
+            presentable.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
+            presentable.Category = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableCategoryData.Category), true) == 0).Value?.ToString();
+            return presentable;
         }
 
         public virtual async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
