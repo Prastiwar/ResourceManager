@@ -1,9 +1,10 @@
-﻿using MediatR;
-using ResourceManager.Commands;
+﻿using ResourceManager;
 using ResourceManager.Data;
+using ResourceManager.DataSource;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Mvvm;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -130,9 +131,9 @@ namespace RPGDataEditor.Wpf.Controls
             }
             try
             {
-                IMediator mediator = Application.Current.TryResolve<IMediator>();
-                object resource = await mediator.Send(new GetResourceByIdQuery(ResourceType, id));
-                PickedItem = resource as IIdentifiable;
+                IDataSource dataSource = Application.Current.TryResolve<IDataSource>();
+                //object resource = dataSource.Query(ResourceType).FirstOrDefault(x => IdentityEqualityComparer.Default.Equals(x.Id, id));
+                //PickedItem = resource as IIdentifiable;
             }
             catch (Exception ex)
             {

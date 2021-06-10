@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ResourceManager.DataSource.Sql.Configuration;
-using ResourceManager.DataSource.Sql.Data;
 
 namespace ResourceManager.DataSource.Sql
 {
@@ -18,7 +17,6 @@ namespace ResourceManager.DataSource.Sql
             SqlDataSourceOptions options = new SqlDataSourceOptions() {
                 ConnectionString = connectionString
             };
-            services.AddSingleton<ISqlClient>(new SqlClient(options));
             SqlDataSource dataSource = new SqlDataSource(configuration, monitor, BuilderOptions.DescriptorService, options);
             services.AddSingleton(dataSource);
             return dataSource;

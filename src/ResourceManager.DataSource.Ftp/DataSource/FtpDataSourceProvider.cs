@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ResourceManager.DataSource.File;
 using ResourceManager.DataSource.Ftp.Configuration;
-using ResourceManager.DataSource.Ftp.Data;
 
 namespace ResourceManager.DataSource.Ftp
 {
@@ -27,8 +25,6 @@ namespace ResourceManager.DataSource.Ftp
                 RelativePath = configuration["relativepath"]
             };
             FtpDataSource dataSource = new FtpDataSource(configuration, monitor, BuilderOptions.DescriptorService, BuilderOptions.Serializer, options);
-            FtpFileClient client = new FtpFileClient(options);
-            services.AddSingleton<IFileClient>(client);
             services.AddSingleton(dataSource);
             return dataSource;
         }

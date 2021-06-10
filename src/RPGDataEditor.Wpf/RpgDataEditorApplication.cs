@@ -27,8 +27,6 @@ using RPGDataEditor.Wpf.Services;
 using RPGDataEditor.Wpf.Views;
 using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Windows;
 
 namespace RPGDataEditor.Wpf
@@ -91,12 +89,6 @@ namespace RPGDataEditor.Wpf
             services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
 
             services.AddFluentAssemblyScanner(null, scanner => {
-                Assembly[] dataSourceAssemblies = Assembly.GetEntryAssembly().GetReferencedAssemblies(false)
-                                                                             .SelectMany(assembly => assembly.GetReferencedAssemblies(true).Where(assembly => assembly.GetName().Name.Contains("ResourceManager.DataSource.")))
-                                                                             .Distinct()
-                                                                             .ToArray();
-                services.AddFluentMediatr(scanner.IncludeIgnore(dataSourceAssemblies), p => Container.Resolve);
-                scanner.Reset();
                 services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient);
             });
 
@@ -150,13 +142,6 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void ConfigureDataSource(IServiceCollection services, IDataSource currentSource)
         {
-            Assembly dataSourceAssembly = currentSource.GetType().Assembly;
-            Assembly[] dataSourceAssemblies = dataSourceAssembly.GetReferencedAssemblies(true)
-                                                                .Where(x => x.GetName().Name.Contains("ResourceManager.DataSource."))
-                                                                .ToArray();
-            IFluentAssemblyScanner scanner = Container.Resolve<IFluentAssemblyScanner>();
-            services.RegisterMediatRDependencies(scanner, dataSourceAssemblies);
-
             IContainerRegistry registry = (IContainerRegistry)Container;
             registry.RegisterServices(services, services.BuildServiceProvider());
         }

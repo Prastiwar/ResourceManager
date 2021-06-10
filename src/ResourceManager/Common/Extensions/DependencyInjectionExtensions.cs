@@ -1,9 +1,6 @@
-﻿using MediatR;
-using MediatR.Pipeline;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ResourceManager.DataSource;
-using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,20 +31,6 @@ namespace ResourceManager
             public int Count => Types.Count;
 
             public void Add(Type type) => Types.Add(type);
-        }
-
-        public static void ValidateFluentMediatr(this IServiceCollection services)
-        {
-            services.AssertNoQueryDuplication(typeof(IRequestHandler<>));
-            services.AssertNoQueryDuplication(typeof(IRequestHandler<,>));
-            services.AssertNoQueryDuplication(typeof(INotificationHandler<>));
-            services.AssertNoQueryDuplication(typeof(IRequestPreProcessor<>));
-            services.AssertNoQueryDuplication(typeof(IRequestPostProcessor<,>));
-            services.AssertNoQueryDuplication(typeof(IRequestExceptionHandler<,>));
-            services.AssertNoQueryDuplication(typeof(IRequestExceptionHandler<,,>));
-            services.AssertNoQueryDuplication(typeof(IRequestExceptionAction<>));
-            services.AssertNoQueryDuplication(typeof(IRequestExceptionAction<,>));
-            services.AssertNoQueryDuplication(typeof(IPipelineBehavior<,>));
         }
 
         public static void AssertNoQueryDuplication(this IServiceCollection services, Type serviceType)
@@ -92,31 +75,6 @@ namespace ResourceManager
                     throw new DuplicationException($"There is duplication of handler for query of type: {queryEntries.Key.Name}, Handlers: {string.Join(", ", queryEntries.Value.Types)}");
                 }
             }
-        }
-
-        public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
-            => services.AddFluentMediatr(scanner, p => p.GetService, targetAssemblies);
-
-        public static void AddFluentMediatr(this IServiceCollection services, IFluentAssemblyScanner scanner, Func<IServiceProvider, ServiceFactory> factory, Assembly[] targetAssemblies = null)
-        {
-            services.AddTransient(factory);
-            services.AddTransient<IMediator, Mediator>();
-            services.RegisterMediatRDependencies(scanner, targetAssemblies);
-        }
-
-        public static void RegisterMediatRDependencies(this IServiceCollection services, IFluentAssemblyScanner scanner, Assembly[] targetAssemblies = null)
-        {
-            services.AddScannedServices(scanner, typeof(IRequestHandler<>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestHandler<,>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(INotificationHandler<>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestPreProcessor<>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestPostProcessor<,>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionHandler<,>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionHandler<,,>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionAction<>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IRequestExceptionAction<,>), ServiceLifetime.Transient, targetAssemblies);
-            services.AddScannedServices(scanner, typeof(IPipelineBehavior<,>), ServiceLifetime.Transient, targetAssemblies);
-            services.ValidateFluentMediatr();
         }
 
         public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime, Assembly[] targetAssemblies = null)

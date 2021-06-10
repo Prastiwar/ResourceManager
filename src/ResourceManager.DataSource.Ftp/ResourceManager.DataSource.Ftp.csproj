@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
-    <ProjectReference Include="..\ResourceManager.DataSource.File\ResourceManager.DataSource.File.csproj" />
   </ItemGroup>
 
 </Project>
