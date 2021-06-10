@@ -8,8 +8,10 @@
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:attach="clr-namespace:RPGDataEditor.Wpf"
              Style="{DynamicResource DefaultEditorControl}">
-    <StackPanel Margin="10">
+    <StackPanel Margin="10"
+                attach:ValidableHelper.ValidableHook="{Binding}">
         <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Title" />
         <controls:AutoControl DataContext="{Binding Model}"

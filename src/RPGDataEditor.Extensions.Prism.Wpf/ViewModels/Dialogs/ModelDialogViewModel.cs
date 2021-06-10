@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Prism.Services.Dialogs;
+using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
 using System.Threading.Tasks;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase
+    public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase, IValidationHook
     {
         public ModelDialogViewModel(IValidator<TModel> validator, ILogger<ModelDialogViewModel<TModel>> logger) : base(logger) => Validator = validator;
 
@@ -16,6 +17,8 @@ namespace RPGDataEditor.Mvvm
             get => model;
             set => SetProperty(ref model, value);
         }
+
+        public event EventHandler<ValidatedEventArgs> Validated;
 
         protected IValidator<TModel> Validator { get; }
 
@@ -40,6 +43,11 @@ namespace RPGDataEditor.Mvvm
             if (result)
             {
                 FluentValidation.Results.ValidationResult validationResult = await Validator.ValidateAsync(Model);
+                Validated?.Invoke(this, new ValidatedEventArgs(Model, validationResult));
+                if (validationResult.IsValid)
+                {
+                    System.Diagnostics.Debugger.Break();
+                }
                 return !validationResult.IsValid;
             }
             return false;

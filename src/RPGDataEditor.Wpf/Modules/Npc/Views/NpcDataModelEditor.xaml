@@ -7,9 +7,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
              xmlns:models="clr-namespace:RPGDataEditor.Models;assembly=RPGDataEditor"
+             xmlns:attach="clr-namespace:RPGDataEditor.Wpf"
              Style="{DynamicResource DefaultEditorControl}"
              x:Name="ThisNpcView">
-    <StackPanel Margin="10">
+    <StackPanel Margin="10"
+                attach:ValidableHelper.ValidableHook="{Binding}">
         <controls:AutoControl DataContext="{Binding Model}"
                               PropertyName="Name" />
         <materialDesign:Card HorizontalContentAlignment="Center"

@@ -8,7 +8,7 @@
              xmlns:attach="clr-namespace:RPGDataEditor.Wpf"
              Name="SETTINGS"
              Style="{DynamicResource DefaultControlStyle}"
-             attach:ValidableHelper.ValidableHook="{Binding DataContext}">
+             attach:ValidableHelper.ValidableHook="{Binding}">
     <StackPanel DataContext="{Binding Session}"
                 Margin="64">
         <CheckBox x:Name="IsPrettyJsonCheckbox"
