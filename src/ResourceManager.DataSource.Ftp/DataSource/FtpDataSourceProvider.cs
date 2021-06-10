@@ -26,7 +26,7 @@ namespace ResourceManager.DataSource.Ftp
                 Port = port,
                 RelativePath = configuration["relativepath"]
             };
-            FtpDataSource dataSource = new FtpDataSource(configuration, monitor, BuilderOptions.Serializer, BuilderOptions.DescriptorService, options);
+            FtpDataSource dataSource = new FtpDataSource(configuration, monitor, BuilderOptions.DescriptorService, BuilderOptions.Serializer, options);
             FtpFileClient client = new FtpFileClient(options);
             services.AddSingleton<IFileClient>(client);
             services.AddSingleton(dataSource);

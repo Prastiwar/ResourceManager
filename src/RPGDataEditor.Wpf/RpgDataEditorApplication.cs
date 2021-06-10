@@ -13,6 +13,7 @@ using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
 using ResourceManager.DataSource.Sql.Data;
+using ResourceManager.Services;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf;
@@ -108,25 +109,35 @@ namespace RPGDataEditor.Wpf
 
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<IDialogService, PrismDialogService>();
+            services.AddSingleton<IViewService, ViewService>();
 
-            services.AddResourceDescriptor(service => {
-                IResourceDescriptor fileQuestDescriptor = new PathResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{name}.json");
-                IResourceDescriptor sqlQuestDescriptor = new SqlPathResourceDescriptor(typeof(Models.Quest), "quests", ".{id}");
-                service.Register<Models.Quest>(fileQuestDescriptor, sqlQuestDescriptor);
+            services.AddDataSourceConfiguration(builder => {
+                ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
+                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{name}.json");
+                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{name}.json");
+                IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
+                fileDescriptorService.Register<Models.Quest>(fileQuestDescriptor);
+                fileDescriptorService.Register<Models.Dialogue>(fileDialogueDescriptor);
+                fileDescriptorService.Register<Models.Npc>(fileNpcDescriptor);
 
-                IResourceDescriptor fileDialogueDescriptor = new PathResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{name}.json");
-                IResourceDescriptor sqlDialogueDescriptor = new SqlPathResourceDescriptor(typeof(Models.Dialogue), "dialogues", ".{id}");
-                service.Register<Models.Dialogue>(fileDialogueDescriptor, sqlDialogueDescriptor);
-
-                IResourceDescriptor fileNpcDescriptor = new PathResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
-                IResourceDescriptor sqlNpcDescriptor = new SqlPathResourceDescriptor(typeof(Models.Npc), "npcs", ".{id}");
-                service.Register<Models.Npc>(fileNpcDescriptor, sqlNpcDescriptor);
-
-                services.AddDataSourceConfiguration(builder => builder.AddLocalDataSource().AddFtpDataSource(o => {
+                builder.AddLocalDataSource(o => {
+                    o.DescriptorService = fileDescriptorService;
+                });
+                builder.AddFtpDataSource(o => {
                     o.Serializer = serializer;
-                    o.DescriptorService = service;
-                }).AddSqlDataSource(), ConfigureDataSource, ClearPreviousDataSource);
-            });
+                    o.DescriptorService = fileDescriptorService;
+                });
+                builder.AddSqlDataSource(o => {
+                    IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Quest), "quests", ".{id}");
+                    IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Dialogue), "dialogues", ".{id}");
+                    IResourceDescriptor sqlNpcDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Npc), "npcs", ".{id}");
+
+                    o.DescriptorService = new ResourceDescriptorService();
+                    o.DescriptorService.Register<Models.Quest>(sqlQuestDescriptor);
+                    o.DescriptorService.Register<Models.Dialogue>(sqlDialogueDescriptor);
+                    o.DescriptorService.Register<Models.Npc>(sqlNpcDescriptor);
+                });
+            }, ConfigureDataSource, ClearPreviousDataSource);
         }
 
         protected virtual void ClearPreviousDataSource(IServiceCollection services, IDataSource previousSource)

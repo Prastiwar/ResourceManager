@@ -158,13 +158,6 @@ namespace ResourceManager
             }
         }
 
-        public static void AddResourceDescriptor(this IServiceCollection services, Action<IResourceDescriptorService> builder)
-        {
-            ResourceDescriptorService service = new ResourceDescriptorService();
-            builder?.Invoke(service);
-            services.AddSingleton<IResourceDescriptorService>(service);
-        }
-
         public static void AddFluentAssemblyScanner(this IServiceCollection services, Action<FluentAssemblyScannerBuilderOptions> options = null, Action<IFluentAssemblyScanner> scanner = null)
         {
             FluentAssemblyScannerBuilderOptions builderOptions = new FluentAssemblyScannerBuilderOptions() {

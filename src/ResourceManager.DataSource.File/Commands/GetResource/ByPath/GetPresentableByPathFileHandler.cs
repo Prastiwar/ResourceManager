@@ -22,7 +22,7 @@ namespace ResourceManager.DataSource.File.Commands
         {
             if (request.Paths == null || request.Paths.Length == 0)
             {
-                PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
+                LocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(request.ResourceType);
                 IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
                 return await GetPresentableByPaths(request.ResourceType, files.ToArray());
             }

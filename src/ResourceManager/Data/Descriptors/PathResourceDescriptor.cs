@@ -6,11 +6,11 @@ using System.Text.RegularExpressions;
 
 namespace ResourceManager.Data
 {
-    public class PathResourceDescriptor : ResourceDescriptor
+    public class LocationResourceDescriptor : ResourceDescriptor
     {
         private static readonly char[] bracketsArray = new char[] { '{', '}' };
 
-        public PathResourceDescriptor(Type type, string relativeRootPath, string relativeFullPathFormat) : base(type)
+        public LocationResourceDescriptor(Type type, string relativeRootPath, string relativeFullPathFormat) : base(type)
         {
             RelativeRootPath = relativeRootPath;
             RelativeFullPathFormat = relativeRootPath + relativeFullPathFormat;

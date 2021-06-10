@@ -1,9 +1,8 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Prism.Services.Dialogs;
 using ResourceManager;
-using ResourceManager.Commands;
 using ResourceManager.Data;
+using ResourceManager.DataSource;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Wpf.Mvvm;
@@ -16,7 +15,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class PickerDialogViewModel : DialogViewModelBase
     {
-        public PickerDialogViewModel(IMediator mediator, ILogger<PickerDialogViewModel> logger) : base(logger) => Mediator = mediator;
+        public PickerDialogViewModel(IDataSource dataSource, ILogger<PickerDialogViewModel> logger) : base(logger) => DataSource = dataSource;
 
         public override string Title => "Resource Picker";
 
@@ -38,7 +37,7 @@ namespace RPGDataEditor.Wpf.ViewModels
             set => SetProperty(ref models, value);
         }
 
-        protected IMediator Mediator { get; }
+        protected IDataSource DataSource { get; }
 
         protected sealed override void CloseDialog(object result) => Close(result is bool b && b);
 
@@ -68,24 +67,33 @@ namespace RPGDataEditor.Wpf.ViewModels
             int modelId = parameters.GetValue<int>(nameof(PickerDialogParameters.PickedId));
             if (model == null)
             {
-                model = Models.FirstOrDefault(x => (int)x.Id == modelId);
+                model = Models.FirstOrDefault(x => IdentityEqualityComparer.Default.Equals(x.Id, modelId));
             }
             else
             {
-                model = Models.FirstOrDefault(x => x.Id == model.Id);
+                model = Models.FirstOrDefault(x => IdentityEqualityComparer.Default.Equals(x.Id, model.Id));
             }
             Model = model ?? Models.First();
             IsLoading = false;
         }
 
-        protected virtual async Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
+        protected virtual Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
         {
-            IEnumerable<object> resources = await Mediator.Send(new GetResourcesByIdQuery(resourceType, null));
+            List<string> locations = DataSource.Locate(resourceType).ToList();
             List<IIdentifiable> list = new List<IIdentifiable>() {
                 new NullResource()
             };
-            list.AddRange(resources.Cast<IIdentifiable>());
-            return list;
+            foreach (string location in locations)
+            {
+                LocationResourceDescriptor pathDescriptor = DataSource.DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
+                KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
+                PresentableData presentable = new PresentableData(resourceType) {
+                    Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value,
+                    Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString()
+                };
+                list.Add(presentable);
+            }
+            return Task.FromResult(list);
         }
 
         private class NullResource : IIdentifiable

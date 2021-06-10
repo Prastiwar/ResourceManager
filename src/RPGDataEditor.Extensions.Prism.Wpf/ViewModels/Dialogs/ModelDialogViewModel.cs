@@ -1,8 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Prism.Services.Dialogs;
-using ResourceManager.Data;
-using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using System;
 using System.Threading.Tasks;
@@ -11,7 +9,7 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class ModelDialogViewModel<TModel> : DialogViewModelBase
     {
-        public ModelDialogViewModel(IMediator mediator, ILogger<ModelDialogViewModel<TModel>> logger) : base(logger) => Mediator = mediator;
+        public ModelDialogViewModel(IValidator<TModel> validator, ILogger<ModelDialogViewModel<TModel>> logger) : base(logger) => Validator = validator;
 
         private TModel model;
         public TModel Model {
@@ -19,7 +17,7 @@ namespace RPGDataEditor.Mvvm
             set => SetProperty(ref model, value);
         }
 
-        protected IMediator Mediator { get; }
+        protected IValidator<TModel> Validator { get; }
 
         public override string Title => typeof(TModel).Name + " Editor";
 
@@ -41,7 +39,7 @@ namespace RPGDataEditor.Mvvm
         {
             if (result)
             {
-                FluentValidation.Results.ValidationResult validationResult = await Mediator.Send(new ValidateResourceQuery(Model));
+                FluentValidation.Results.ValidationResult validationResult = await Validator.ValidateAsync(Model);
                 return !validationResult.IsValid;
             }
             return false;

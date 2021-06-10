@@ -1,7 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Prism.Services.Dialogs;
-using ResourceManager.Data;
 using RPGDataEditor.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Npc.ViewModels
 {
     public class NpcEditorViewModel : RPGDataEditor.Wpf.Npc.ViewModels.NpcEditorViewModel
     {
-        public NpcEditorViewModel(IMediator mediator, ILogger<NpcEditorViewModel> logger) : base(mediator, logger) { }
+        public NpcEditorViewModel(IValidator<RPGDataEditor.Models.Npc> validator, ILogger<NpcEditorViewModel> logger) : base(validator, logger) { }
 
         public override string Title => "Npc Editor";
 

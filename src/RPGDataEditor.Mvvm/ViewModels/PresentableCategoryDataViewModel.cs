@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using ResourceManager;
-using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.Services;
+using RPGDataEditor.Mvvm.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,8 +12,8 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class PresentableCategoryDataViewModel<TResource> : PresentableDataViewModel<TResource> where TResource : IIdentifiable
     {
-        public PresentableCategoryDataViewModel(IResourceDescriptorService descriptorService, IDataSource dataSource, ILogger<PresentableCategoryDataViewModel<TResource>> logger)
-            : base(descriptorService, dataSource, logger) { }
+        public PresentableCategoryDataViewModel(IViewService viewService, IDataSource dataSource, ILogger<PresentableCategoryDataViewModel<TResource>> logger)
+            : base(viewService, dataSource, logger) { }
 
         private ObservableCollection<string> categories;
         public ObservableCollection<string> Categories {
@@ -55,7 +54,7 @@ namespace RPGDataEditor.Mvvm
         protected override PresentableData CreatePresentableData(string location)
         {
             PresentableCategoryData presentable = (PresentableCategoryData)CreateModelInstance();
-            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(typeof(TResource));
+            LocationResourceDescriptor pathDescriptor = DataSource.DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(typeof(TResource));
             KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
             presentable.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value;
             presentable.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
@@ -65,20 +64,32 @@ namespace RPGDataEditor.Mvvm
 
         public virtual async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
         {
+            throw new System.NotImplementedException();
             bool categoryExists = Categories.IndexOf(newCategory) != -1;
             if (categoryExists)
             {
                 return false;
             }
             int oldCategoryIndex = Categories.IndexOf(oldCategory);
-            bool removed = Categories.Remove(oldCategory);
-            if (!removed)
+            if (oldCategoryIndex < 0)
             {
                 return false;
             }
-            RenameCategoryResults results = await Mediator.Send(new RenameCategoryRequest(typeof(TResource), default, oldCategory, newCategory));
-            if (!results.IsSuccess)
+            Categories.RemoveAt(oldCategoryIndex);
+            List<TResource> resources = null;// DataSource.Query<TResource>().Where(x => EqualityComparer<string>.Default.Equals(x.Category, oldCategory)).ToList();
+            foreach (TResource resource in resources)
             {
+                //resource.Category = newCategory;
+                await DataSource.UpdateAsync(resource);
+            }
+            try
+            {
+                await DataSource.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+                Categories.Insert(oldCategoryIndex, oldCategory);
+                Logger.LogError(ex, "Couldn't rename category {0} to {1}", oldCategory, newCategory);
                 return false;
             }
             Categories.Insert(oldCategoryIndex, newCategory);
@@ -91,11 +102,25 @@ namespace RPGDataEditor.Mvvm
 
         public virtual async Task<bool> RemoveCategoryAsync(string category)
         {
+            throw new System.NotImplementedException();
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                RemoveCategoryResults results = await Mediator.Send(new RemoveCategoryRequest(typeof(TResource), category));
-                return results.IsSuccess;
+                List<TResource> resources = null;// DataSource.Query<TResource>().Where(x => EqualityComparer<string>.Default.Equals(x.Category, oldCategory)).ToList();
+                foreach (TResource resource in resources)
+                {
+                    await DataSource.DeleteAsync(resource);
+                }
+                try
+                {
+                    await DataSource.SaveChangesAsync();
+                }
+                catch (System.Exception ex)
+                {
+                    Categories.Add(category);
+                    Logger.LogError(ex, "Couldn't remove category: " + category);
+                    return false;
+                }
             }
             return removed;
         }

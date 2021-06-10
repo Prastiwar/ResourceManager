@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace ResourceManager.DataSource
         public IConfiguration Configuration { get; protected set; }
 
         public IConnectionMonitor Monitor { get; protected set; }
+
+        public IResourceDescriptorService DescriptorService { get; protected set; }
 
         protected IList<ITrackedResource> TrackedResources { get; } = new List<ITrackedResource>();
 

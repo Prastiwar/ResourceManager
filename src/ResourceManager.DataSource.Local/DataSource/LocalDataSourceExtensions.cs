@@ -7,7 +7,7 @@ namespace ResourceManager.DataSource
     {
         public const string Name = "Local";
 
-        public static IConfigurableDataSourceBuilder AddLocalDataSource(this IConfigurableDataSourceBuilder builder, Action<LocalDataSourceBuilderOptions> options = null)
+        public static IConfigurableDataSourceBuilder AddLocalDataSource(this IConfigurableDataSourceBuilder builder, Action<LocalDataSourceBuilderOptions> options)
         {
             LocalDataSourceBuilderOptions builderOptions = new LocalDataSourceBuilderOptions {
                 Name = Name,

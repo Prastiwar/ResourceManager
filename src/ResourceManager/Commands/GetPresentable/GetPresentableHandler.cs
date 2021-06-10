@@ -22,11 +22,11 @@ namespace ResourceManager.Commands
 
         public abstract Task<IEnumerable<PresentableData>> Handle(TEnumerableQuery request, CancellationToken cancellationToken);
 
-        protected Task<PresentableData> GetPresentableByPath(Type resourceType, string path, PathResourceDescriptor pathDescriptor = null)
+        protected Task<PresentableData> GetPresentableByPath(Type resourceType, string path, LocationResourceDescriptor pathDescriptor = null)
         {
             if (pathDescriptor == null)
             {
-                pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+                pathDescriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
             }
             KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
             PresentableData data = null;
@@ -47,7 +47,7 @@ namespace ResourceManager.Commands
             return Task.FromResult(data);
         }
 
-        protected async Task<IEnumerable<PresentableData>> GetPresentableByPaths(Type resourceType, IEnumerable<string> paths, PathResourceDescriptor pathDescriptor = null)
+        protected async Task<IEnumerable<PresentableData>> GetPresentableByPaths(Type resourceType, IEnumerable<string> paths, LocationResourceDescriptor pathDescriptor = null)
         {
             if (paths == null)
             {
@@ -55,7 +55,7 @@ namespace ResourceManager.Commands
             }
             if (pathDescriptor == null)
             {
-                pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+                pathDescriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
             }
             IList<PresentableData> presentables = new List<PresentableData>();
             foreach (string path in paths)

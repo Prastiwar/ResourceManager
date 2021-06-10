@@ -15,7 +15,7 @@ namespace ResourceManager.DataSource.Ftp
 {
     public class FtpDataSource : DataSource
     {
-        public FtpDataSource(IConfiguration configuration, IConnectionMonitor monitor, ITextSerializer serializer, IResourceDescriptorService descriptorService, FtpDataSourceOptions options)
+        public FtpDataSource(IConfiguration configuration, IConnectionMonitor monitor, IResourceDescriptorService descriptorService, ITextSerializer serializer, FtpDataSourceOptions options)
         {
             Configuration = configuration;
             Monitor = monitor;
@@ -36,7 +36,6 @@ namespace ResourceManager.DataSource.Ftp
         }
 
         protected ITextSerializer Serializer { get; }
-        protected IResourceDescriptorService DescriptorService { get; }
 
         private readonly IDictionary<Type, ResourcesEntry> entries = new Dictionary<Type, ResourcesEntry>();
 
@@ -92,7 +91,7 @@ namespace ResourceManager.DataSource.Ftp
             }
             entry = new ResourcesEntry();
             FtpClient client = CreateClient();
-            PathResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+            LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
             string path = Path.Combine(Options.RelativePath ?? "", descriptor.RelativeRootPath);
             client.Connect();
             entry.Files = client.GetListing(path, FtpListOption.Recursive).Where(item => item.Type == FtpFileSystemObjectType.File).ToList();
@@ -119,7 +118,7 @@ namespace ResourceManager.DataSource.Ftp
         public override IQueryable<string> Locate(Type resourceType)
         {
             FtpClient client = CreateClient();
-            PathResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(resourceType);
+            LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
             string path = Path.Combine(Options.RelativePath ?? "", descriptor.RelativeRootPath);
             client.Connect();
             return client.GetListing(path, FtpListOption.Recursive)

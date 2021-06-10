@@ -28,7 +28,7 @@ namespace ResourceManager.Commands
             List<Exception> exceptions = new List<Exception>();
             if (paths == null || paths.Length == 0)
             {
-                SqlPathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlPathResourceDescriptor>(resourceType);
+                SqlLocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlLocationResourceDescriptor>(resourceType);
                 IEnumerable<object> resources = await Client.SelectAsync(pathDescriptor.TableName, resourceType);
                 IList<string> resourcePaths = new List<string>();
                 foreach (object resource in resources)
@@ -50,7 +50,7 @@ namespace ResourceManager.Commands
 
         private async Task AddResourcesByPaths(Type resourceType, IEnumerable<string> paths, IList<PresentableData> resources, List<Exception> exceptions)
         {
-            SqlPathResourceDescriptor sqlPathDescriptor = DescriptorService.GetRequiredDescriptor<SqlPathResourceDescriptor>(resourceType);
+            SqlLocationResourceDescriptor sqlPathDescriptor = DescriptorService.GetRequiredDescriptor<SqlLocationResourceDescriptor>(resourceType);
             foreach (string path in paths)
             {
                 try

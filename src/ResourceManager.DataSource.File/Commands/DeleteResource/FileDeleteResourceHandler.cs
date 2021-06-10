@@ -24,7 +24,7 @@ namespace ResourceManager.DataSource.File.Commands
             {
                 return new DeleteResourceResults(false);
             }
-            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
+            LocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(request.ResourceType);
             try
             {
                 string path = pathDescriptor.GetRelativeFullPath(request.Resource);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ResourceManager.DataSource.Sql.Configuration;
+using ResourceManager.Services;
 using System;
 using System.Linq;
 using System.Threading;
@@ -9,10 +10,11 @@ namespace ResourceManager.DataSource.Sql
 {
     public class SqlDataSource : DataSource
     {
-        public SqlDataSource(IConfiguration configuration, IConnectionMonitor monitor, SqlDataSourceOptions options)
+        public SqlDataSource(IConfiguration configuration, IConnectionMonitor monitor, IResourceDescriptorService descriptorService, SqlDataSourceOptions options)
         {
             Configuration = configuration;
             Monitor = monitor;
+            DescriptorService = descriptorService;
             Options = options;
         }
 

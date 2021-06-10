@@ -1,15 +1,13 @@
-﻿using FluentValidation.Results;
-using MediatR;
+﻿using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ResourceManager;
 using ResourceManager.DataSource;
-using RPGDataEditor.Core.Commands;
 using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Mvvm;
-using RPGDataEditor.Mvvm.Commands;
 using RPGDataEditor.Mvvm.Navigation;
+using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Services;
 using System;
 using System.Threading.Tasks;
@@ -19,12 +17,13 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
-        public ConnectionTabViewModel(IMediator mediator, IConfigurableDataSource configurator, IAppPersistanceService persistance, IConfiguration configuration, ILogger<ConnectionTabViewModel> logger)
+        public ConnectionTabViewModel(IViewService viewService, IValidator<IConfigurationSection> validator, IConfigurableDataSource configurator, IAppPersistanceService persistance, ILogger<ConnectionTabViewModel> logger)
         {
-            Mediator = mediator;
+            ViewService = viewService;
+            Validator = validator;
             Configurator = configurator;
             Persistance = persistance;
-            ConfigurationRoot = configuration;
+            Configuration = configurator.Configuration;
             Logger = logger;
         }
 
@@ -34,15 +33,15 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             set => SetProperty(ref configuration, value);
         }
 
-        protected IMediator Mediator { get; }
-
         protected IConfigurableDataSource Configurator { get; }
 
         protected IAppPersistanceService Persistance { get; }
 
-        protected IConfiguration ConfigurationRoot { get; }
-
         protected ILogger<ConnectionTabViewModel> Logger { get; }
+
+        protected IViewService ViewService { get; }
+
+        protected IValidator<IConfigurationSection> Validator { get; }
 
         public event EventHandler<ValidatedEventArgs> Validated;
 
@@ -52,7 +51,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
-            ValidationResult result = await Mediator.Send(new ValidateResourceQuery(typeof(IConfigurationSection), Configuration));
+            ValidationResult result = await Validator.ValidateAsync((IConfigurationSection)Configuration);
             RaiseValidated(Configuration, result);
             if (result.IsValid)
             {
@@ -76,7 +75,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext)
         {
-            Configuration = ConfigurationRoot.GetDataSourceSection();
+            Configuration = Configurator.Configuration;
             Configurator.CurrentSource.Monitor.Stop();
             return Task.CompletedTask;
         }
@@ -94,7 +93,7 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
         {
             if (!hasConnection)
             {
-                await Application.Current.Dispatcher.Invoke(async () => await Mediator.Send(new ShowDialogQuery(DialogNames.ConnectionDialog, null)));
+                await Application.Current.Dispatcher.Invoke(async () => await ViewService.DialogService.ShowDialogAsync(DialogNames.ConnectionDialog, null));
             }
         }
     }

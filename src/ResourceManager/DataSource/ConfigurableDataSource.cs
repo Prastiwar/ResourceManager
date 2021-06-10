@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ResourceManager.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace ResourceManager.DataSource
         public IConfiguration Configuration => CurrentSource.Configuration;
 
         public IConnectionMonitor Monitor => CurrentSource.Monitor;
+
+        public IResourceDescriptorService DescriptorService => CurrentSource.DescriptorService;
 
         protected IServiceCollection ActualServices { get; private set; }
 

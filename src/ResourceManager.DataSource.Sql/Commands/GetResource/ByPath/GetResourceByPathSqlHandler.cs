@@ -30,7 +30,7 @@ namespace ResourceManager.DataSource.Sql.Commands
         {
             string tableName = Client.GetTableName(request.ResourceType);
             IList<object> ids = new List<object>();
-            SqlPathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlPathResourceDescriptor>(request.ResourceType);
+            SqlLocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlLocationResourceDescriptor>(request.ResourceType);
             foreach (string path in request.Paths)
             {
                 KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
@@ -46,7 +46,7 @@ namespace ResourceManager.DataSource.Sql.Commands
         protected async Task<object> GetResourceByPath(Type resourceType, string path)
         {
             string tableName = Client.GetTableName(resourceType);
-            SqlPathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlPathResourceDescriptor>(resourceType);
+            SqlLocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<SqlLocationResourceDescriptor>(resourceType);
             KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(path);
             KeyValuePair<string, object> idParameter = parameters.FirstOrDefault(parameter => string.Compare(parameter.Key, "id", true) == 0);
             if (idParameter.Key != null)

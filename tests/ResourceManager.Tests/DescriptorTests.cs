@@ -17,7 +17,7 @@ namespace ResourceManager.Tests
         [Fact]
         public void ParseFilePathDescriptor()
         {
-            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "dummies", "/{category}/{id}_{name}x");
+            LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "dummies", "/{category}/{id}_{name}x");
             string path = "dummies/SomeCategory/1_Foox";
             KeyValuePair<string, object>[] parameters = descriptor.ParseParameters(path);
             Assert.Equal(3, parameters.Length);
@@ -34,7 +34,7 @@ namespace ResourceManager.Tests
         [Fact]
         public void ParseFilePathDescriptor2()
         {
-            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "", "{category}/{id}_{name}");
+            LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "", "{category}/{id}_{name}");
             string path = "SomeCategory/1_Foo";
             KeyValuePair<string, object>[] parameters = descriptor.ParseParameters(path);
             Assert.Equal(3, parameters.Length);
@@ -51,7 +51,7 @@ namespace ResourceManager.Tests
         [Fact]
         public void ParseSqlPathDescriptor()
         {
-            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "[dummies]", ".{id}");
+            LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "[dummies]", ".{id}");
             string path = "[dummies].1";
             KeyValuePair<string, object>[] parameters = descriptor.ParseParameters(path);
             Assert.Single(parameters);
@@ -64,7 +64,7 @@ namespace ResourceManager.Tests
         [Fact]
         public void ParseSqlPathDescriptor2()
         {
-            PathResourceDescriptor descriptor = new PathResourceDescriptor(typeof(DummyResource), "dummies", ".{id}");
+            LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "dummies", ".{id}");
             string path = "[dummies].1";
             Assert.Throws<ArgumentException>(() => descriptor.ParseParameters(path));
         }

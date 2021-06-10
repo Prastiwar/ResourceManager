@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ResourceManager.Services;
 using System;
 using System.Linq;
 using System.Threading;
@@ -12,8 +13,10 @@ namespace ResourceManager.DataSource
 
         IConnectionMonitor Monitor { get; }
 
+        IResourceDescriptorService DescriptorService { get; }
+
         void SaveChanges();
-        Task SaveChangesAsync(CancellationToken token);
+        Task SaveChangesAsync(CancellationToken token = default);
 
         IQueryable<object> Query(Type resourceType);
         IQueryable<T> Query<T>();

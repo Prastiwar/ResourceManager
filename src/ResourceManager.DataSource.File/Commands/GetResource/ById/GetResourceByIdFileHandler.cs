@@ -15,7 +15,7 @@ namespace ResourceManager.DataSource.File.Commands
 
         public override async Task<object> Handle(GetResourceByIdQuery request, CancellationToken cancellationToken)
         {
-            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
+            LocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
             foreach (string file in files)
             {
@@ -31,7 +31,7 @@ namespace ResourceManager.DataSource.File.Commands
 
         public override async Task<IEnumerable<object>> Handle(GetResourcesByIdQuery request, CancellationToken cancellationToken)
         {
-            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(request.ResourceType);
+            LocationResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(request.ResourceType);
             IEnumerable<string> files = await Client.ListFilesAsync(pathDescriptor.RelativeRootPath);
             IList<string> paths = new List<string>();
             if (request.Ids != null && request.Ids.Length > 0)

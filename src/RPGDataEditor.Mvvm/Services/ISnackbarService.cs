@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGDataEditor.Services
+namespace RPGDataEditor.Mvvm.Services
 {
     public interface ISnackbarService
     {

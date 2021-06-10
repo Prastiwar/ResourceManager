@@ -1,4 +1,4 @@
-﻿using RPGDataEditor.Services;
+﻿using RPGDataEditor.Mvvm.Services;
 
 namespace RPGDataEditor.Wpf.ViewModels
 {

@@ -1,4 +1,6 @@
-﻿namespace ResourceManager.DataSource.Local
+﻿using ResourceManager.Services;
+
+namespace ResourceManager.DataSource.Local
 {
     public class LocalDataSourceBuilderOptions
     {
@@ -7,5 +9,7 @@
         public string FileSearchPattern { get; set; }
 
         public string FolderPath { get; set; }
+
+        public IResourceDescriptorService DescriptorService { get; set; }
     }
 }

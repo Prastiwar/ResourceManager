@@ -1,11 +1,9 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using ResourceManager;
-using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using RPGDataEditor.Mvvm.Commands;
 using RPGDataEditor.Mvvm.Navigation;
+using RPGDataEditor.Mvvm.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,8 +13,9 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class ModelsManagerViewModel<TModel> : ScreenViewModel where TModel : IIdentifiable
     {
-        public ModelsManagerViewModel(IDataSource dataSource, ILogger<ModelsManagerViewModel<TModel>> logger) : base()
+        public ModelsManagerViewModel(IViewService viewService, IDataSource dataSource, ILogger<ModelsManagerViewModel<TModel>> logger) : base()
         {
+            ViewService = viewService;
             DataSource = dataSource;
             Logger = logger;
         }
@@ -27,19 +26,21 @@ namespace RPGDataEditor.Mvvm
             protected set => SetProperty(ref models, value);
         }
 
+        protected IViewService ViewService { get; }
+
         protected IDataSource DataSource { get; }
+
         protected ILogger<ModelsManagerViewModel<TModel>> Logger { get; }
 
         public override Task OnNavigatedToAsync(INavigationContext navigationContext) => Refresh();
 
-        public override async Task Refresh()
+        public override Task Refresh()
         {
             IsLoading = true;
             Models = new ObservableCollection<TModel>();
             try
             {
-                //IEnumerable<TModel> models = (await Mediator.Send(new GetResourcesByIdQuery(typeof(TModel), null))).Cast<TModel>();
-                var models = DataSource.Query<TModel>().ToList();
+                System.Collections.Generic.List<TModel> models = DataSource.Query<TModel>().ToList();
                 Models.AddRange(models);
             }
             catch (Exception ex)
@@ -47,6 +48,7 @@ namespace RPGDataEditor.Mvvm
                 Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
+            return Task.CompletedTask;
         }
 
         protected virtual TModel CreateModelInstance() => Activator.CreateInstance<TModel>();
@@ -58,14 +60,18 @@ namespace RPGDataEditor.Mvvm
             int nextId = Models.Count > 0 ? Models.Max(x => (int)x.Id) + 1 : 0;
             newModel.Id = nextId;
 
-            IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newModel));
-            if (result.IsSuccess)
+            bool result = await ViewService.DialogService.ShowModelDialogAsync(newModel);
+            if (result)
             {
-                CreateResourceResults results = await Mediator.Send(new CreateResourceRequest(typeof(TModel), newModel));
-                bool created = results.IsSuccess;
-                if (created)
+                try
                 {
-                    Models.Add(newModel);
+                    TrackedResource<TModel> tracked = await DataSource.AddAsync(newModel);
+                    await DataSource.SaveChangesAsync();
+                    Models.Add(tracked.Resource);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, $"Couldn't add model of type {typeof(TModel)}");
                 }
             }
             return newModel;
@@ -76,13 +82,16 @@ namespace RPGDataEditor.Mvvm
             bool removed = Models.Remove(model);
             if (removed)
             {
-                DeleteResourceResults results = await Mediator.Send(new DeleteResourceRequest(typeof(TModel), model));
-                bool deleted = results.IsSuccess;
-                if (!deleted)
+                try
+                {
+                    TrackedResource<TModel> tracked = await DataSource.DeleteAsync(model);
+                    await DataSource.SaveChangesAsync();
+                }
+                catch (Exception ex)
                 {
                     Models.Add(model);
+                    Logger.LogError(ex, $"Couldn't remove model of type {typeof(TModel)}");
                 }
-                return deleted;
             }
             return removed;
         }
@@ -90,17 +99,21 @@ namespace RPGDataEditor.Mvvm
         protected virtual async Task<EditorResults> OpenEditorAsync(TModel model)
         {
             TModel newModel = (TModel)model.DeepClone();
-            IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newModel));
-            if (result.IsSuccess)
+            bool result = await ViewService.DialogService.ShowModelDialogAsync(newModel);
+            if (result)
             {
-                UpdateResourceResults results = await Mediator.Send(new UpdateResourceQuery(typeof(TModel), model, newModel));
-                bool updated = results.IsSuccess;
-                if (updated)
+                try
                 {
+                    TrackedResource<TModel> tracked = await DataSource.UpdateAsync(model);
+                    await DataSource.SaveChangesAsync();
                     model.CopyProperties(newModel);
                 }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, $"Couldn't update model of type {typeof(TModel)}");
+                }
             }
-            return new EditorResults(newModel, result.IsSuccess);
+            return new EditorResults(newModel, result);
         }
     }
 }

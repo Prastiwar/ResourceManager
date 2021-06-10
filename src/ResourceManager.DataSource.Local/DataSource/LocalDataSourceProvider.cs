@@ -20,7 +20,7 @@ namespace ResourceManager.DataSource.Local
                 FolderPath = configuration[nameof(BuilderOptions.FolderPath)] ?? BuilderOptions.FolderPath,
             };
             services.AddSingleton<IFileClient>(new LocalFileClient(options));
-            LocalDataSource dataSource = new LocalDataSource(configuration, monitor, options);
+            LocalDataSource dataSource = new LocalDataSource(configuration, monitor, BuilderOptions.DescriptorService, options);
             services.AddSingleton(dataSource);
             return dataSource;
         }

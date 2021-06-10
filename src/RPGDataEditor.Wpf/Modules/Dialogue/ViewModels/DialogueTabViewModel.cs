@@ -2,16 +2,17 @@
 using Prism.Commands;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.Services;
 using RPGDataEditor.Models;
 using RPGDataEditor.Mvvm;
+using RPGDataEditor.Mvvm.Services;
 using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Dialogue.ViewModels
 {
     public class DialogueTabViewModel : PresentableCategoryDataViewModel<Models.Dialogue>
     {
-        public DialogueTabViewModel(IResourceDescriptorService resourceService, IDataSource dataSource, ILogger<DialogueTabViewModel> logger) : base(resourceService, dataSource, logger) { }
+        public DialogueTabViewModel(IViewService viewService, IDataSource dataSource, ILogger<DialogueTabViewModel> logger)
+            : base(viewService, dataSource, logger) { }
 
         public ICommand openEditorCommand;
         public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<PresentableData>(async presentable => await OpenEditorAsync(presentable));

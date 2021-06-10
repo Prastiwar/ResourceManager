@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using ResourceManager;
-using ResourceManager.Commands;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.Services;
-using RPGDataEditor.Mvvm.Commands;
+using RPGDataEditor.Mvvm.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,20 +13,17 @@ namespace RPGDataEditor.Mvvm
 {
     public abstract class PresentableDataViewModel<TResource> : ModelsManagerViewModel<PresentableData> where TResource : IIdentifiable
     {
-        public PresentableDataViewModel(IResourceDescriptorService descriptorService, IDataSource dataSource, ILogger<PresentableDataViewModel<TResource>> logger)
-            : base(dataSource, logger) => DescriptorService = descriptorService;
-
-        protected IResourceDescriptorService DescriptorService { get; }
+        public PresentableDataViewModel(IViewService viewService, IDataSource dataSource, ILogger<PresentableDataViewModel<TResource>> logger)
+            : base(viewService, dataSource, logger) { }
 
         protected abstract TResource CreateResource(PresentableData model);
 
-        public override async Task Refresh()
+        public override Task Refresh()
         {
             IsLoading = true;
             Models = new ObservableCollection<PresentableData>();
             try
             {
-                //IEnumerable<PresentableData> models = await Mediator.Send(new GetPresentablesByIdQuery(typeof(TResource), null));
                 string[] modelLocations = DataSource.Locate(typeof(TResource)).ToArray();
                 foreach (string location in modelLocations)
                 {
@@ -41,24 +36,25 @@ namespace RPGDataEditor.Mvvm
                 Logger.LogError(ex, "Failed to get resources at " + GetType().Name);
             }
             IsLoading = false;
+            return Task.CompletedTask;
         }
 
         protected virtual PresentableData CreatePresentableData(string location)
         {
             PresentableData presentable = CreateModelInstance();
-            PathResourceDescriptor pathDescriptor = DescriptorService.GetRequiredDescriptor<PathResourceDescriptor>(typeof(TResource));
+            LocationResourceDescriptor pathDescriptor = DataSource.DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(typeof(TResource));
             KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
             presentable.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value;
             presentable.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
             return presentable;
         }
 
-        protected virtual async Task<TResource> RetrieveResource(PresentableData model)
+        protected virtual Task<TResource> RetrieveResource(PresentableData model)
         {
             TResource resource;
             try
             {
-                resource = (TResource)await Mediator.Send(new GetResourceByIdQuery(typeof(TResource), model.Id));
+                resource = DataSource.Query<TResource>().First(x => IdentityEqualityComparer.Default.Equals(x.Id, model.Id));
             }
             catch (Exception ex)
             {
@@ -68,7 +64,7 @@ namespace RPGDataEditor.Mvvm
                     Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
                 }
             }
-            return resource;
+            return Task.FromResult(resource);
         }
 
         protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
@@ -79,15 +75,19 @@ namespace RPGDataEditor.Mvvm
                 return new EditorResults(null, false);
             }
             TResource newResource = (TResource)oldResource.DeepClone();
-            Navigation.IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newResource));
-            EditorResults results = new EditorResults(newResource, result.IsSuccess);
+            bool result = await ViewService.DialogService.ShowModelDialogAsync(newResource);
+            EditorResults results = new EditorResults(newResource, result);
             if (results.Success)
             {
-                UpdateResourceResults updateResults = await Mediator.Send(new UpdateResourceQuery(typeof(TResource), oldResource, newResource));
-                results.Success = updateResults.IsSuccess;
-                if (results.Success)
+                try
                 {
+                    TrackedResource<TResource> tracked = await DataSource.UpdateAsync(newResource);
+                    await DataSource.SaveChangesAsync();
                     model.Update(newResource);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, $"Couldn't update model of type {typeof(TResource)}");
                 }
             }
             return results;
@@ -100,13 +100,18 @@ namespace RPGDataEditor.Mvvm
             PresentableData newPresentable = CreateModelInstance();
             newPresentable.Id = GetNextId();
             TResource newResource = CreateResource(newPresentable);
-            Navigation.IDialogResult result = await Mediator.Send(ShowDialogQueryHelper.CreateModelQuery(newResource));
-            if (result.IsSuccess)
+            bool result = await ViewService.DialogService.ShowModelDialogAsync(newResource);
+            if (result)
             {
-                CreateResourceResults createResults = await Mediator.Send(new CreateResourceRequest(typeof(TResource), newResource));
-                if (createResults.IsSuccess)
+                try
                 {
+                    TrackedResource<TResource> tracked = await DataSource.AddAsync(newResource);
+                    await DataSource.SaveChangesAsync();
                     Models.Add(newPresentable);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, $"Couldn't add model of type {typeof(TResource)}");
                 }
             }
             return newPresentable;
