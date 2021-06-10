@@ -26,7 +26,10 @@ namespace ResourceManager.DataSource
         public void Stop()
         {
             CheckerTimer?.Stop();
-            TokenSource?.Cancel();
+            if (TokenSource != null && !TokenSource.IsCancellationRequested)
+            {
+                TokenSource.Cancel();
+            }
             TokenSource = null;
             IsRunning = false;
         }

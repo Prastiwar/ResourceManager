@@ -3,7 +3,7 @@ using ResourceManager.Services;
 
 namespace ResourceManager.DataSource.Ftp
 {
-    public class FtpDataSourceBuilderOptions
+    public class FtpDataSourceBuilderOptions : IDataSourceProviderBuilderOptions
     {
         public string Name { get; set; }
 

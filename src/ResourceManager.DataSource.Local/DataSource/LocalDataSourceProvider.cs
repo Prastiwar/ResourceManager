@@ -10,6 +10,8 @@ namespace ResourceManager.DataSource.Local
 
         protected LocalDataSourceBuilderOptions BuilderOptions { get; }
 
+        public IDataSourceProviderBuilderOptions GetBuilderOptions() => BuilderOptions;
+
         public IDataSource Provide(IServiceCollection services, IConfiguration configuration)
         {
             LocalConnectionMonitor monitor = new LocalConnectionMonitor();

@@ -2,7 +2,7 @@
 
 namespace ResourceManager.DataSource.Local
 {
-    public class LocalDataSourceBuilderOptions
+    public class LocalDataSourceBuilderOptions : IDataSourceProviderBuilderOptions
     {
         public string Name { get; set; }
 

@@ -88,9 +88,7 @@ namespace RPGDataEditor.Wpf
 
             services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
 
-            services.AddFluentAssemblyScanner(null, scanner => {
-                services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient);
-            });
+            services.AddFluentAssemblyScanner(null, scanner => services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient));
 
             NewtonsoftSerializer serializer = new NewtonsoftSerializer();
             services.AddSingleton<ITextSerializer>(serializer);
@@ -104,6 +102,8 @@ namespace RPGDataEditor.Wpf
             services.AddSingleton<IViewService, ViewService>();
 
             services.AddDataSourceConfiguration(builder => {
+                builder.RegisterResourceTypes(typeof(Models.Quest), typeof(Models.Dialogue), typeof(Models.Npc));
+
                 ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
                 IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{name}.json");
                 IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{name}.json");
@@ -112,13 +112,13 @@ namespace RPGDataEditor.Wpf
                 fileDescriptorService.Register<Models.Dialogue>(fileDialogueDescriptor);
                 fileDescriptorService.Register<Models.Npc>(fileNpcDescriptor);
 
-                builder.AddLocalDataSource(o => {
-                    o.DescriptorService = fileDescriptorService;
-                });
+                builder.AddLocalDataSource(o => o.DescriptorService = fileDescriptorService);
+
                 builder.AddFtpDataSource(o => {
                     o.Serializer = serializer;
                     o.DescriptorService = fileDescriptorService;
                 });
+
                 builder.AddSqlDataSource(o => {
                     IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Quest), "quests", ".{id}");
                     IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Dialogue), "dialogues", ".{id}");

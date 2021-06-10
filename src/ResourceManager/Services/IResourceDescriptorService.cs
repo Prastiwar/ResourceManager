@@ -9,5 +9,7 @@ namespace ResourceManager.Services
         IEnumerable<IResourceDescriptor> Describe(Type type);
 
         void Register(Type type, RegisterOptions options, params IResourceDescriptor[] descriptors);
+
+        IEnumerable<KeyValuePair<Type, IResourceDescriptor[]>> GetRegistrations();
     }
 }

@@ -10,6 +10,8 @@ namespace ResourceManager.DataSource.Ftp
 
         protected FtpDataSourceBuilderOptions BuilderOptions { get; }
 
+        public IDataSourceProviderBuilderOptions GetBuilderOptions() => BuilderOptions;
+
         public IDataSource Provide(IServiceCollection services, IConfiguration configuration)
         {
             string host = configuration["host"];

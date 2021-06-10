@@ -2,7 +2,7 @@
 
 namespace ResourceManager.DataSource.Sql
 {
-    public class SqlDataSourceBuilderOptions
+    public class SqlDataSourceBuilderOptions : IDataSourceProviderBuilderOptions
     {
         public string Name { get; set; }
 

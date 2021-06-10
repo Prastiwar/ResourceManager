@@ -5,6 +5,8 @@ namespace ResourceManager.DataSource
 {
     public interface IDataSourceProvider
     {
+        IDataSourceProviderBuilderOptions GetBuilderOptions();
+
         IDataSource Provide(IServiceCollection services, IConfiguration configuration);
     }
 }

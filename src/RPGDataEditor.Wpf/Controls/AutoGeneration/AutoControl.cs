@@ -1,5 +1,4 @@
-﻿using ResourceManager.Data;
-using RPGDataEditor.Extensions.Prism.Wpf;
+﻿using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Providers;
 using System;
 using System.Linq;
@@ -111,25 +110,17 @@ namespace RPGDataEditor.Wpf.Controls
             Type type = null;
             if (propertyName.StartsWith('[') && propertyName.EndsWith(']'))
             {
-                if (context is IResource resource)
+                PropertyInfo property = context.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(prop => prop.GetIndexParameters().Length > 0);
+                if (property == null)
                 {
-                    ResourceProperty prop = resource.GetProperty(propertyName.Trim(indexBraces));
-                    type = prop?.DeclaredType;
+                    return null;
                 }
-                else
+                ParameterInfo[] indexParameters = property.GetIndexParameters();
+                if (indexParameters.Length != 1 || indexParameters[0].ParameterType != typeof(string))
                 {
-                    PropertyInfo property = context.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(prop => prop.GetIndexParameters().Length > 0);
-                    if (property == null)
-                    {
-                        return null;
-                    }
-                    ParameterInfo[] indexParameters = property.GetIndexParameters();
-                    if (indexParameters.Length != 1 || indexParameters[0].ParameterType != typeof(string))
-                    {
-                        return null;
-                    }
-                    type = property.PropertyType;
+                    return null;
                 }
+                type = property.PropertyType;
             }
             else if (propertyName == ".")
             {

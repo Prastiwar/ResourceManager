@@ -7,11 +7,11 @@ namespace ResourceManager.Services
 {
     public class ResourceDescriptorService : IResourceDescriptorService
     {
-        protected Dictionary<Type, IResourceDescriptor[]> resources = new Dictionary<Type, IResourceDescriptor[]>();
+        protected Dictionary<Type, IResourceDescriptor[]> registrations = new Dictionary<Type, IResourceDescriptor[]>();
 
         public IEnumerable<IResourceDescriptor> Describe(Type type)
         {
-            if (resources.TryGetValue(type, out IResourceDescriptor[] typedResources))
+            if (registrations.TryGetValue(type, out IResourceDescriptor[] typedResources))
             {
                 return typedResources;
             }
@@ -25,15 +25,15 @@ namespace ResourceManager.Services
                 throw new ArgumentNullException(nameof(descriptors));
             }
             CheckDuplication(descriptors);
-            if (resources.TryGetValue(type, out IResourceDescriptor[] currentDescriptors))
+            if (registrations.TryGetValue(type, out IResourceDescriptor[] currentDescriptors))
             {
                 switch (options)
                 {
                     case RegisterOptions.Append:
-                        resources[type] = currentDescriptors.Concat(descriptors).ToArray();
+                        registrations[type] = currentDescriptors.Concat(descriptors).ToArray();
                         break;
                     case RegisterOptions.Replace:
-                        resources[type] = descriptors;
+                        registrations[type] = descriptors;
                         break;
                     default:
                         break;
@@ -41,7 +41,7 @@ namespace ResourceManager.Services
             }
             else
             {
-                resources[type] = descriptors;
+                registrations[type] = descriptors;
             }
         }
 
@@ -57,5 +57,8 @@ namespace ResourceManager.Services
                 }
             }
         }
+
+        public IEnumerable<KeyValuePair<Type, IResourceDescriptor[]>> GetRegistrations() => registrations;
+
     }
 }

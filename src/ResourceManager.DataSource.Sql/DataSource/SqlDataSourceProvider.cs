@@ -10,6 +10,8 @@ namespace ResourceManager.DataSource.Sql
 
         protected SqlDataSourceBuilderOptions BuilderOptions { get; }
 
+        public IDataSourceProviderBuilderOptions GetBuilderOptions() => BuilderOptions;
+
         public IDataSource Provide(IServiceCollection services, IConfiguration configuration)
         {
             string connectionString = string.IsNullOrEmpty(BuilderOptions.ConnectionString) ? BuilderOptions.ConnectionString : configuration["connectionstring"];
