@@ -15,6 +15,34 @@ namespace ResourceManager.Tests
     public class DescriptorTests
     {
         [Fact]
+        public void GetRelativeFullPathFromResource()
+        {
+            DummyResource res = new DummyResource() {
+                Category = "SomeCategory",
+                Id = 1,
+                Name = "Foo"
+            };
+            LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "dummies", "/{category}/{id}_{name}x");
+            string expectedPath = "dummies/SomeCategory/1_Foox";
+            string actualPath = descriptor.GetRelativeFullPath(res);
+            Assert.Equal(expectedPath, actualPath);
+        }
+
+        [Fact]
+        public void GetRelativeFullPathFromParameters()
+        {
+            KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[] {
+                new KeyValuePair<string, object>("category", "SomeCategory"),
+                new KeyValuePair<string, object>("id", 1),
+                new KeyValuePair<string, object>("name", "Foo")
+            };
+            LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "dummies", "/{category}/{id}_{name}x");
+            string expectedPath = "dummies/SomeCategory/1_Foox";
+            string actualPath = descriptor.GetRelativeFullPath(parameters);
+            Assert.Equal(expectedPath, actualPath);
+        }
+
+        [Fact]
         public void ParseFilePathDescriptor()
         {
             LocationResourceDescriptor descriptor = new LocationResourceDescriptor(typeof(DummyResource), "dummies", "/{category}/{id}_{name}x");

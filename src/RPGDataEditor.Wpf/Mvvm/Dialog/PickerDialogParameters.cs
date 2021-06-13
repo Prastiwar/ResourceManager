@@ -1,14 +1,13 @@
-﻿using ResourceManager.Data;
-using RPGDataEditor.Mvvm.Navigation;
+﻿using RPGDataEditor.Mvvm.Navigation;
 using System;
 
 namespace RPGDataEditor.Wpf.Mvvm
 {
     public class PickerDialogParameters : DialogParametersBuilder
     {
-        public PickerDialogParameters(IIdentifiable pickedItem) => PickedItem = pickedItem;
+        public PickerDialogParameters(object pickedItem) => PickedItem = pickedItem;
 
-        public PickerDialogParameters(Type resourceType, IIdentifiable pickedItem = null, int pickedId = -1)
+        public PickerDialogParameters(Type resourceType, object pickedItem, object pickedId)
         {
             ResourceType = resourceType;
             PickedItem = pickedItem;
@@ -20,13 +19,13 @@ namespace RPGDataEditor.Wpf.Mvvm
             set => Set(value);
         }
 
-        public IIdentifiable PickedItem {
-            get => Get<IIdentifiable>();
+        public object PickedItem {
+            get => Get<object>();
             set => Set(value);
         }
 
-        public int PickedId {
-            get => Get<int>();
+        public object PickedId {
+            get => Get<object>();
             set => Set(value);
         }
     }

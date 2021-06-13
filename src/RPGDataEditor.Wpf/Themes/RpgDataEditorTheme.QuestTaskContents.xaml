@@ -25,6 +25,7 @@
         <StackPanel>
             <controls:ResourcePicker PickedId="{Binding DialogueId}"
                                      ResourceType="{x:Type models:Dialogue}"
+                                     PickedItemStringFormat="(ID: {Id}) {Title}"
                                      Margin="5" />
         </StackPanel>
     </DataTemplate>

@@ -44,8 +44,9 @@ namespace ResourceManager.Data
                 throw new ArgumentNullException(nameof(resource));
             }
 
-            string[] argumentNames = RelativeFullPathFormat.Split(bracketsArray, StringSplitOptions.RemoveEmptyEntries);
+            string[] argumentNames = GetArgumentNames();
             object[] argumentValues = new object[argumentNames.Length];
+
             for (int i = 0; i < argumentNames.Length; i++)
             {
                 PropertyInfo property = resource.GetType().GetProperty(argumentNames[i], BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -65,7 +66,7 @@ namespace ResourceManager.Data
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            string[] argumentNames = RelativeFullPathFormat.Split(bracketsArray, StringSplitOptions.RemoveEmptyEntries);
+            string[] argumentNames = GetArgumentNames();
             object[] argumentValues = new object[argumentNames.Length];
             for (int i = 0; i < argumentNames.Length; i++)
             {
@@ -75,7 +76,7 @@ namespace ResourceManager.Data
             return string.Format(RelativeFullPathStringFormat, argumentValues);
         }
 
-        public virtual KeyValuePair<string, object>[] ParseParameters(string path)
+        public string[] GetArgumentNames()
         {
             string format = RelativeFullPathStringFormat;
             string[] splitFormat = RelativeFullPathFormat.Split(bracketsArray, StringSplitOptions.RemoveEmptyEntries);
@@ -88,6 +89,13 @@ namespace ResourceManager.Data
                 argumentNames[i] = splitFormat[splitArgumentFormatIndex];
                 splitArgumentFormatIndex += 2;
             }
+            return argumentNames;
+        }
+
+        public virtual KeyValuePair<string, object>[] ParseParameters(string path)
+        {
+            string format = RelativeFullPathStringFormat;
+            string[] argumentNames = GetArgumentNames();
             KeyValuePair<string, object>[] parameters = new KeyValuePair<string, object>[argumentNames.Length];
             string[] argumentValues = new string[format.Count(c => c == '{')];
 

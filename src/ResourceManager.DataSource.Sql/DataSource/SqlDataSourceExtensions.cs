@@ -16,7 +16,8 @@ namespace ResourceManager.DataSource
             options?.Invoke(builderOptions);
             if (builderOptions.DatabaseContext is null)
             {
-                throw new ArgumentNullException(nameof(builderOptions.DatabaseContext), $"Yout must provide {typeof(DbContext)} to use this provider");
+                // TODO: throw exception only when user will not configure db context later
+                //throw new ArgumentNullException(nameof(builderOptions.DatabaseContext), $"Yout must provide {typeof(DbContext)} to use this provider");
             }
             SqlDataSourceProvider provider = new SqlDataSourceProvider(builderOptions);
             return builder.Add(builderOptions.Name, provider);

@@ -112,11 +112,14 @@ namespace RPGDataEditor.Wpf
                 fileDescriptorService.Register<Models.Dialogue>(fileDialogueDescriptor);
                 fileDescriptorService.Register<Models.Npc>(fileNpcDescriptor);
 
-                builder.AddLocalDataSource(o => o.DescriptorService = fileDescriptorService);
+                builder.AddLocalDataSource(o => {
+                    o.DescriptorService = fileDescriptorService;
+                    o.Serializer = serializer;
+                });
 
                 builder.AddFtpDataSource(o => {
-                    o.Serializer = serializer;
                     o.DescriptorService = fileDescriptorService;
+                    o.Serializer = serializer;
                 });
 
                 builder.AddSqlDataSource(o => {

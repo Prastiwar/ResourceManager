@@ -64,7 +64,6 @@ namespace RPGDataEditor.Mvvm
 
         public virtual async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
         {
-            throw new System.NotImplementedException();
             bool categoryExists = Categories.IndexOf(newCategory) != -1;
             if (categoryExists)
             {
@@ -102,11 +101,10 @@ namespace RPGDataEditor.Mvvm
 
         public virtual async Task<bool> RemoveCategoryAsync(string category)
         {
-            throw new System.NotImplementedException();
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                List<TResource> resources = null;// DataSource.Query<TResource>().Where(x => EqualityComparer<string>.Default.Equals(x.Category, oldCategory)).ToList();
+                List<TResource> resources = null;// DataSource.Query<TResource>().Where(x => EqualityComparer<string>.Default.Equals(x.Category, category)).ToList();
                 foreach (TResource resource in resources)
                 {
                     await DataSource.DeleteAsync(resource);
