@@ -54,7 +54,7 @@ namespace RPGDataEditor.Wpf
         }
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-            => Container.Resolve<ILogger>().LogError(e.Exception, "Unhandled exception");
+            => Container.Resolve<ILogger<RpgDataEditorApplication>>().LogError(e.Exception, "Unhandled exception");
 
         protected virtual void OnExit(object sender, ExitEventArgs e) { }
 

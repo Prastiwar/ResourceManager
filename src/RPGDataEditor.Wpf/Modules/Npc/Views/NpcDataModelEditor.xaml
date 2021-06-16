@@ -36,7 +36,10 @@
                     <controls:ExpandButton HorizontalAlignment="Left"
                                            IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
                                            ExpandableElement="{x:Reference JobStackPanel}" />
-                    <ComboBox x:Name="JobComboBox"
+                    <!--<controls:AutoControl x:Name="NpcJobControl"
+                                          DataContext="{Binding Model}"
+                                          PropertyName="Job"/>-->
+                    <!--<ComboBox x:Name="JobComboBox"
                               Grid.Column="1"
                               Margin="10,-2,0,0"
                               DataContext="{Binding Model}"
@@ -48,9 +51,9 @@
                                       Content="NONE" />
                         <ComboBoxItem Name="TRADER"
                                       Content="TRADER" />
-                    </ComboBox>
+                    </ComboBox>-->
                 </Grid>
-                <StackPanel x:Name="JobStackPanel"
+                <!--<StackPanel x:Name="JobStackPanel"
                             Visibility="Collapsed">
                     <StackPanel x:Name="TraderStackPanel"
                                 DataContext="{Binding Model}"
@@ -58,7 +61,7 @@
                         <controls:AutoControl DataContext="{Binding Job}"
                                               PropertyName="Items" />
                     </StackPanel>
-                </StackPanel>
+                </StackPanel>-->
             </StackPanel>
         </materialDesign:Card>
         <controls:ExpandableCard HeaderText="Dialogues">

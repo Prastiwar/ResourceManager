@@ -13,7 +13,7 @@ namespace RPGDataEditor.Core.Serialization
         {
             object id = obj.GetValue<object>(nameof(Npc.Id));
             string name = obj.GetValue<string>(nameof(Npc.Name));
-            Position position = obj.GetValue<Position>(nameof(Npc.Position), default);
+            Position position = obj.GetValue<Position>(nameof(Npc.Position));
             IList<AttributeData> attributes = obj.GetValue<ObservableCollection<AttributeData>>(nameof(Npc.Attributes));
             NpcJob job = obj.GetValue<NpcJob>(nameof(Npc.Job));
             TalkData talkData = obj.GetValue<TalkData>(nameof(Npc.TalkData));

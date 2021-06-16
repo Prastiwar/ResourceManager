@@ -16,7 +16,14 @@ namespace RPGDataEditor.Mvvm
         public static async Task<bool> ShowModelDialogAsync<TModel>(this IDialogService dialogService, string name, TModel model)
         {
             IDialogResult result = await dialogService.ShowModelDialogWithResultAsync(name, model);
-            return result.Parameters.GetValue<bool>(nameof(ModelDialogParameters<TModel>.IsSuccess));
+            try
+            {
+                return result.Parameters.GetValue<bool>(nameof(ModelDialogParameters<TModel>.IsSuccess));
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
         }
         public static Task<IDialogResult> ShowModelDialogWithResultAsync<TModel>(this IDialogService dialogService, TModel model)
             => dialogService.ShowDialogAsync(typeof(TModel).Name, new ModelDialogParameters<TModel>(model).Build());

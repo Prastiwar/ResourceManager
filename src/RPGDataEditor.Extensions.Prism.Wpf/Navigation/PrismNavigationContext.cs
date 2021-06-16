@@ -10,8 +10,8 @@ namespace RPGDataEditor.Extensions.Prism.Wpf.Navigation
 
         public NavigationContext Context { get; }
 
-        public Uri Uri => Context.Uri;
+        public Uri Uri => Context?.Uri;
 
-        public NavigationParameters Parameters => Context.Parameters;
+        public NavigationParameters Parameters => Context?.Parameters;
     }
 }
