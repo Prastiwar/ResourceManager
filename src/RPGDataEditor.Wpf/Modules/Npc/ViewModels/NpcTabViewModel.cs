@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Prism.Commands;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
+using RPGDataEditor.Extensions.Prism.Wpf.ViewModels;
 using RPGDataEditor.Models;
-using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Services;
-using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Npc.ViewModels
 {
@@ -13,12 +11,6 @@ namespace RPGDataEditor.Wpf.Npc.ViewModels
     {
         public NpcTabViewModel(IViewService viewService, IDataSource dataSource, ILogger<NpcTabViewModel> logger)
             : base(viewService, dataSource, logger) { }
-
-        public ICommand openEditorCommand;
-        public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<PresentableData>(async presentable => await OpenEditorAsync(presentable));
-
-        public ICommand removeModelCommand;
-        public ICommand RemoveModelCommand => removeModelCommand ??= new DelegateCommand<PresentableData>(async presentable => await RemoveModelAsync(presentable));
 
         protected override PresentableData CreateModelInstance() => new PresentableNpc();
 

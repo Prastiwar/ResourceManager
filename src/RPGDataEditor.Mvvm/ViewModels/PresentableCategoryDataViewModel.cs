@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class PresentableCategoryDataViewModel<TResource> : PresentableDataViewModel<TResource> where TResource : IIdentifiable
+    public abstract class PresentableCategoryDataViewModel<TResource> : PresentableDataViewModel<TResource> where TResource : ICategorizable
     {
         public PresentableCategoryDataViewModel(IViewService viewService, IDataSource dataSource, ILogger<PresentableCategoryDataViewModel<TResource>> logger)
             : base(viewService, dataSource, logger) { }
@@ -75,10 +75,13 @@ namespace RPGDataEditor.Mvvm
                 return false;
             }
             Categories.RemoveAt(oldCategoryIndex);
-            List<TResource> resources = null;// DataSource.Query<TResource>().Where(x => EqualityComparer<string>.Default.Equals(x.Category, oldCategory)).ToList();
+            // TODO: Improve performance (AsEnumerable() is not the best option)
+            List<TResource> resources = DataSource.Query<TResource>()
+                                                  .AsEnumerable()
+                                                  .Where(x => EqualityComparer<string>.Default.Equals(x.Category, oldCategory)).ToList();
             foreach (TResource resource in resources)
             {
-                //resource.Category = newCategory;
+                resource.Category = newCategory;
                 await DataSource.UpdateAsync(resource);
             }
             try
@@ -104,7 +107,10 @@ namespace RPGDataEditor.Mvvm
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                List<TResource> resources = null;// DataSource.Query<TResource>().Where(x => EqualityComparer<string>.Default.Equals(x.Category, category)).ToList();
+                // TODO: Improve performance (AsEnumerable() is not the best option)
+                List<TResource> resources = DataSource.Query<TResource>()
+                                                      .AsEnumerable()
+                                                      .Where(x => EqualityComparer<string>.Default.Equals(x.Category, category)).ToList();
                 foreach (TResource resource in resources)
                 {
                     await DataSource.DeleteAsync(resource);

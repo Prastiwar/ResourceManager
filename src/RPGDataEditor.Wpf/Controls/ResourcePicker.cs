@@ -30,8 +30,7 @@ namespace RPGDataEditor.Wpf.Controls
             set => SetValue(IdPathProperty, value);
         }
 
-        public static DependencyProperty PickedItemStringFormatProperty = DependencyProperty.Register(nameof(PickedItemStringFormat), typeof(string), typeof(ResourcePicker), new PropertyMetadata("{0}", OnPickedItemStringFormatChanged));
-        private static void OnPickedItemStringFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }// => (d as ResourcePicker).OnPickedItemStringFormatChanged((string)e.OldValue, (string)e.NewValue);
+        public static DependencyProperty PickedItemStringFormatProperty = DependencyProperty.Register(nameof(PickedItemStringFormat), typeof(string), typeof(ResourcePicker), new PropertyMetadata("{0}"));
         public string PickedItemStringFormat {
             get => (string)GetValue(PickedItemStringFormatProperty);
             set => SetValue(PickedItemStringFormatProperty, value);
@@ -75,7 +74,7 @@ namespace RPGDataEditor.Wpf.Controls
             protected set => SetValue(IsLoadingPropertyKey, value);
         }
 
-        public static DependencyPropertyKey IsItemLoadedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsLoaded), typeof(bool), typeof(ResourcePicker), new PropertyMetadata());
+        public static DependencyPropertyKey IsItemLoadedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsLoaded), typeof(bool), typeof(ResourcePicker), new PropertyMetadata(true));
         public static DependencyProperty IsItemLoadedProperty = IsItemLoadedPropertyKey.DependencyProperty;
         public bool IsItemLoaded {
             get => (bool)GetValue(IsItemLoadedProperty);
@@ -98,7 +97,7 @@ namespace RPGDataEditor.Wpf.Controls
 
             MultiBinding resourceTextBlockBinding = new MultiBinding() {
                 Converter = StaticValueConverter.CreateMulti(x => {
-                    if (x == null || x.Length != 3)
+                    if (x == null || x.Length != 4)
                     {
                         return "";
                     }
@@ -111,7 +110,8 @@ namespace RPGDataEditor.Wpf.Controls
                     }
                     if (x[1] != null)
                     {
-                        if (string.IsNullOrEmpty(PickedItemStringFormat) || PickedItemStringFormat == "{0}")
+                        string format = x[2].ToString();
+                        if (string.IsNullOrEmpty(format) || format == "{0}")
                         {
                             return x[1].ToString();
                         }
@@ -128,7 +128,7 @@ namespace RPGDataEditor.Wpf.Controls
                             }
                         }
                     }
-                    if (x[2] is bool isLoaded)
+                    if (x[3] is bool isLoaded)
                     {
                         return isLoaded ? EmptyText : "Failed to load";
                     }
@@ -137,6 +137,7 @@ namespace RPGDataEditor.Wpf.Controls
             };
             resourceTextBlockBinding.Bindings.Add(new Binding(nameof(IsLoading)) { Source = this });
             resourceTextBlockBinding.Bindings.Add(new Binding(nameof(PickedItem)) { Source = this });
+            resourceTextBlockBinding.Bindings.Add(new Binding(nameof(PickedItemStringFormat)) { Source = this });
             resourceTextBlockBinding.Bindings.Add(new Binding(nameof(IsLoaded)) { Source = this });
             resourceTextBlock.SetBinding(TextBlock.TextProperty, resourceTextBlockBinding);
 

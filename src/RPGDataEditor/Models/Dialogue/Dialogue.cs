@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RPGDataEditor.Models
 {
-    public class Dialogue : IIdentifiable
+    public class Dialogue : ICategorizable
     {
         public object Id { get; set; }
 

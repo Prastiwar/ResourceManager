@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RPGDataEditor.Models
 {
-    public class Quest : IIdentifiable
+    public class Quest : ICategorizable
     {
         public object Id { get; set; }
 

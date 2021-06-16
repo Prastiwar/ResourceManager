@@ -7,7 +7,9 @@ namespace ResourceManager.Services
 {
     public class ResourceDescriptorService : IResourceDescriptorService
     {
-        protected Dictionary<Type, IResourceDescriptor[]> registrations = new Dictionary<Type, IResourceDescriptor[]>();
+        private readonly Dictionary<Type, IResourceDescriptor[]> registrations = new Dictionary<Type, IResourceDescriptor[]>();
+
+        private readonly Dictionary<Type, Type> mappings = new Dictionary<Type, Type>();
 
         public IEnumerable<IResourceDescriptor> Describe(Type type)
         {
@@ -15,8 +17,14 @@ namespace ResourceManager.Services
             {
                 return typedResources;
             }
+            else if (mappings.TryGetValue(type, out Type mappedType))
+            {
+                return Describe(mappedType);
+            }
             throw new MissingDescriptorException($"{type.Name} cannot be described by any descriptor");
         }
+
+        public void RegisterMap(Type fromType, Type toType) => mappings[fromType] = toType;
 
         public void Register(Type type, RegisterOptions options, params IResourceDescriptor[] descriptors)
         {
@@ -59,6 +67,5 @@ namespace ResourceManager.Services
         }
 
         public IEnumerable<KeyValuePair<Type, IResourceDescriptor[]>> GetRegistrations() => registrations;
-
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ResourceManager.Data
 {
-    public class PresentableCategoryData : PresentableData
+    public class PresentableCategoryData : PresentableData, ICategorizable
     {
         public PresentableCategoryData(Type presentingType) : base(presentingType) { }
 
