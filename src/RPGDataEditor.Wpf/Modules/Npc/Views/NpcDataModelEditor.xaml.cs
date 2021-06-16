@@ -1,12 +1,19 @@
 ﻿using RPGDataEditor.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Npc.Views
 {
     public partial class NpcEditor : UserControl
     {
-        public NpcEditor() => InitializeComponent();
+        public NpcEditor()
+        {
+            AddInitiationDialogue = Commands.AddListItemCommand(() => InitiationDialoguesListDataCard.ItemsSource, () => -1);
+            InitializeComponent();
+        }
+
+        public ICommand AddInitiationDialogue { get; }
 
         private void JobComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

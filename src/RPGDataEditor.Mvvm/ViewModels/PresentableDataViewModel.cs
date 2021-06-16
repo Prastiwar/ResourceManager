@@ -51,18 +51,18 @@ namespace RPGDataEditor.Mvvm
 
         protected virtual Task<TResource> RetrieveResource(PresentableData model)
         {
-            TResource resource;
+            TResource resource = default;
             try
             {
-                resource = DataSource.Query<TResource>().First(x => IdentityEqualityComparer.Default.Equals(x.Id, model.Id));
+                resource = DataSource.Query<TResource>().FirstOrDefault(x => IdentityEqualityComparer.Default.Equals(x.Id, model.Id));
+                if (resource is null)
+                {
+                    resource = CreateResource(model);
+                }
             }
             catch (Exception ex)
             {
-                resource = CreateResource(model);
-                if (resource is null)
-                {
-                    Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
-                }
+                Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
             }
             return Task.FromResult(resource);
         }

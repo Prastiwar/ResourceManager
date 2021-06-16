@@ -9,6 +9,7 @@
                                          ResourceType="{x:Type models:Dialogue}"
                                          PickedId="{Binding NextDialogId, Mode=TwoWay}"
                                          Margin="5"
+                                         PickedItemStringFormat="(ID: {Id}) {Title}"
                                          Visibility="{Binding NextDialogId, Converter={StaticResource NextDialogIdToVisibility}}" />
                 <controls:AutoControl PropertyName="Message" />
                 <controls:AutoControl PropertyName="Command" />

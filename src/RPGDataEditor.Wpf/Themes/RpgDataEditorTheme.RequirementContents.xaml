@@ -8,6 +8,7 @@
         <StackPanel Margin="5">
             <controls:ResourcePicker x:Name="DialoguePicker"
                                      ResourceType="{x:Type models:Dialogue}"
+                                     PickedItemStringFormat="(ID: {Id}) {Title}"
                                      PickedId="{Binding DialogueId, Mode=TwoWay}"
                                      EmptyText="Select Dialogue"
                                      Margin="5" />
@@ -23,6 +24,7 @@
         <StackPanel Margin="5">
             <controls:ResourcePicker x:Name="QuestPicker"
                                      ResourceType="{x:Type models:Quest}"
+                                     PickedItemStringFormat="(ID: {Id}) {Title}"
                                      PickedId="{Binding QuestId, Mode=TwoWay}"
                                      EmptyText="Select Quest"
                                      Margin="5" />

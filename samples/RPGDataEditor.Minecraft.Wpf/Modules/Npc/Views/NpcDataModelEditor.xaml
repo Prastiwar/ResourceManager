@@ -138,6 +138,7 @@
                     <DataTemplate>
                         <controls:ResourcePicker VerticalAlignment="Center"
                                                  ResourceType="{x:Type models:Dialogue}"
+                                                 PickedItemStringFormat="(ID: {Id}) {Title}"
                                                  EmptyText="Select initaition dialogue"
                                                  PickedId="{Binding .}" />
                     </DataTemplate>

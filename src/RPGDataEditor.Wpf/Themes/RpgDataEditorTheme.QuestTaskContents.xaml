@@ -5,6 +5,7 @@
     <DataTemplate x:Key="EntityInteractQuestTaskContent">
         <StackPanel>
             <controls:ResourcePicker PickedId="{Binding EntityId}"
+                                     PickedItemStringFormat="(ID: {Id} {Name})"
                                      ResourceType="{x:Type models:Npc}"
                                      Margin="5" />
         </StackPanel>

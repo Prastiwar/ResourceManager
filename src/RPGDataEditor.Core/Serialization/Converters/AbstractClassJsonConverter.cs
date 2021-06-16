@@ -28,10 +28,14 @@ namespace RPGDataEditor.Core.Serialization
             }
             string typeName = obj.GetValue<string>("type");
             Type realType = GetObjectType(typeName);
-            serializer.Converters.Remove(this);
-            T item = (T)obj.ToObject(realType, serializer);
-            serializer.Converters.Add(this);
-            return item;
+            if (realType != null)
+            {
+                serializer.Converters.Remove(this);
+                T item = (T)obj.ToObject(realType, serializer);
+                serializer.Converters.Add(this);
+                return item;
+            }
+            return default;
         }
 
         public override void WriteJson(JsonWriter writer, [AllowNull] T value, JsonSerializer serializer)

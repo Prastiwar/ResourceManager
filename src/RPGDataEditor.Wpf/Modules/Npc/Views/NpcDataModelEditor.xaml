@@ -64,15 +64,19 @@
         <controls:ExpandableCard HeaderText="Dialogues">
             <StackPanel x:Name="ListsPanel"
                         DataContext="{Binding Model}">
-                <controls:AutoControl DataContext="{Binding TalkData}"
+                <controls:AutoControl x:Name="TalkRangeTextBox"
+                                      DataContext="{Binding TalkData}"
                                       PropertyName="TalkRange" />
-                <controls:ListDataCard DataContext="{Binding TalkData}"
+                <controls:ListDataCard x:Name="InitiationDialoguesListDataCard"
+                                       DataContext="{Binding TalkData}"
                                        ItemsSource="{Binding InitationDialogues, Mode=OneWay}"
+                                       AddItemCommand="{Binding AddInitiationDialogue, ElementName=ThisNpcView}"
                                        HeaderText="{Binding InitationDialogues.Count, StringFormat='({0}) Initation Dialogues'}">
                     <DataTemplate>
                         <controls:ResourcePicker VerticalAlignment="Center"
                                                  ResourceType="{x:Type models:Dialogue}"
                                                  EmptyText="Select initaition dialogue"
+                                                 PickedItemStringFormat="(ID: {Id}) {Title}"
                                                  PickedId="{Binding .}" />
                     </DataTemplate>
                 </controls:ListDataCard>
