@@ -30,8 +30,9 @@ namespace RPGDataEditor.Wpf.Providers
         public virtual void RegisterDefaults(IContainerRegistry containerRegistry)
         {
             RegisterAutoTemplate<int>(containerRegistry, new IntAutoTemplate());
-            RegisterAutoTemplate<double>(containerRegistry, new DoubleAutoTemplate());
             RegisterAutoTemplate<float>(containerRegistry, new FloatAutoTemplate());
+            RegisterAutoTemplate<double>(containerRegistry, new DoubleAutoTemplate());
+            RegisterAutoTemplate<decimal>(containerRegistry, new DecimalAutoTemplate());
             RegisterAutoTemplate<bool>(containerRegistry, new BoolAutoTemplate());
 
             RegisterAutoTemplate<string>(containerRegistry, new StringAutoTemplate());
@@ -45,6 +46,7 @@ namespace RPGDataEditor.Wpf.Providers
             RegisterAutoTemplate<Requirement>(containerRegistry, new RequirementAutoTemplate());
             RegisterAutoTemplate<TalkLine>(containerRegistry, new TalkLineAutoTemplate());
             RegisterAutoTemplate<TradeItem>(containerRegistry, new TradeItemAutoTemplate());
+            RegisterAutoTemplate<NpcJob>(containerRegistry, new NpcJobAutoTemplate());
 
             RegisterListDataAutoTemplate<Requirement>(containerRegistry);
             RegisterListDataAutoTemplate<DialogueOption>(containerRegistry);

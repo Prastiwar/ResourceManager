@@ -27,42 +27,10 @@
                              HorizontalContentAlignment="Center"
                              Margin="5"
                              Padding="5">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <controls:ExpandButton HorizontalAlignment="Left"
-                                           IsEnabled="{Binding SelectedIndex, ElementName=JobComboBox, Mode=OneWay, Converter={StaticResource InvertStringToBoolConverter}, ConverterParameter=0}"
-                                           ExpandableElement="{x:Reference JobStackPanel}" />
-                    <!--<controls:AutoControl x:Name="NpcJobControl"
-                                          DataContext="{Binding Model}"
-                                          PropertyName="Job"/>-->
-                    <!--<ComboBox x:Name="JobComboBox"
-                              Grid.Column="1"
-                              Margin="10,-2,0,0"
-                              DataContext="{Binding Model}"
-                              DataContextChanged="JobComboBox_DataContextChanged"
-                              SelectionChanged="JobComboBox_SelectionChanged"
-                              materialDesign:HintAssist.Hint="Job Type"
-                              Style="{DynamicResource MaterialDesignFloatingHintComboBox}">
-                        <ComboBoxItem Name="NONE"
-                                      Content="NONE" />
-                        <ComboBoxItem Name="TRADER"
-                                      Content="TRADER" />
-                    </ComboBox>-->
-                </Grid>
-                <!--<StackPanel x:Name="JobStackPanel"
-                            Visibility="Collapsed">
-                    <StackPanel x:Name="TraderStackPanel"
-                                DataContext="{Binding Model}"
-                                Visibility="Collapsed">
-                        <controls:AutoControl DataContext="{Binding Job}"
-                                              PropertyName="Items" />
-                    </StackPanel>
-                </StackPanel>-->
-            </StackPanel>
+            <controls:AutoControl x:Name="NpcJobControl"
+                                  DataContext="{Binding Model}"
+                                  PropertyType="{x:Type models:NpcJob}"
+                                  PropertyName="Job" />
         </materialDesign:Card>
         <controls:ExpandableCard HeaderText="Dialogues">
             <StackPanel x:Name="ListsPanel"

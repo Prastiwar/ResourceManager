@@ -28,6 +28,10 @@ namespace RPGDataEditor.Providers
 
         public virtual T Get(Type targetType)
         {
+            if (targetType is null)
+            {
+                return null;
+            }
             if (targetType.IsAbstract)
             {
                 return Get(GetImplementationType(targetType));

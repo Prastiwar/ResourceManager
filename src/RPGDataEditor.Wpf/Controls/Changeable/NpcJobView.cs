@@ -1,11 +1,12 @@
 ﻿using RPGDataEditor.Models;
 using System.Windows;
 
-namespace RPGDataEditor.Wpf.Controls.Changeable
+namespace RPGDataEditor.Wpf.Controls
 {
     public class NpcJobView : ChangeableUserControl
     {
         private static readonly TypeSource[] sources = new TypeSource[] {
+            new TypeSource("None", null),
             new TypeSource("Trader", typeof(TraderNpcJob)),
         };
 
@@ -26,7 +27,7 @@ namespace RPGDataEditor.Wpf.Controls.Changeable
         {
             if (DataContext == null)
             {
-                return null;
+                return sources[0];
             }
             return new TypeSource(DataContext.GetType().Name.Replace("NpcJob", ""), DataContext.GetType());
         }

@@ -8,6 +8,8 @@ using System.Windows.Interactivity;
 
 namespace RPGDataEditor.Wpf.Controls
 {
+    public class DecimalAutoTemplate : NumericAutoTemplate<decimal> { }
+
     public class IntAutoTemplate : NumericAutoTemplate<int> { }
 
     public class DoubleAutoTemplate : NumericAutoTemplate<double> { }
