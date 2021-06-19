@@ -17,6 +17,7 @@ namespace RPGDataEditor.Minecraft.Wpf.Providers
             RegisterAutoTemplate<Equipment>(containerRegistry, new EquipmentAutoTemplate());
             RegisterAutoTemplate<RPGDataEditor.Models.TradeItem>(containerRegistry, new Controls.TradeItemAutoTemplate());
             RegisterAutoTemplate<TradeItem>(containerRegistry, new Controls.TradeItemAutoTemplate());
+            RegisterAutoTemplate<RPGDataEditor.Models.NpcJob>(containerRegistry, new Controls.NpcJobAutoTemplate());
 
             RegisterListDataAutoTemplate<TradeItem>(containerRegistry, new TradeItemsDataCollectionAutoTemplate());
             containerRegistry.RegisterInstance<AutoTemplate>(new TradeItemsDataCollectionAutoTemplate(), typeof(IList<RPGDataEditor.Models.TradeItem>).FullName);

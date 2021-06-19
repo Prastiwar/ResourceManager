@@ -14,6 +14,8 @@ namespace RPGDataEditor.Minecraft.Wpf
 {
     public partial class App : RPGDataEditor.Wpf.RpgDataEditorApplication
     {
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
+
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
@@ -21,7 +23,7 @@ namespace RPGDataEditor.Minecraft.Wpf
                 string viewName = viewType.FullName;
                 string minecraftAssembly = typeof(App).Assembly.FullName;
                 string viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-                string shortViewModelName = viewName.Replace(".Views.", ".ViewRPGDataEditor.Models.");
+                string shortViewModelName = viewName.Replace(".Views.", ".ViewModels.");
                 string shortMcViewModelName = shortViewModelName.Replace("RPGDataEditor.Wpf", "RPGDataEditor.Minecraft.Wpf");
 
                 string minecraftViewModelName = $"{shortMcViewModelName}ViewModel, {minecraftAssembly}";
@@ -78,7 +80,5 @@ namespace RPGDataEditor.Minecraft.Wpf
         //    containerRegistry.Register<IValidator<RPGDataEditor.Models.Dialogue>, DialogueValidator>();
         //    containerRegistry.Register<IValidator<Equipment>, EquipmentValidator>();
         //}
-
-        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
     }
 }

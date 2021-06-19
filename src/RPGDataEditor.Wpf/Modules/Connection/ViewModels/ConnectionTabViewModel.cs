@@ -55,7 +55,15 @@ namespace RPGDataEditor.Wpf.Connection.ViewModels
             RaiseValidated(Configuration, result);
             if (result.IsValid)
             {
-                Configurator.Configure(Configuration);
+                try
+                {
+                    Configurator.Configure(Configuration);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Attempt to configure data source with invalid values");
+                    return false;
+                }
                 bool connected = await Configurator.CurrentSource.Monitor.ForceCheckAsync(default);
                 if (!connected)
                 {
