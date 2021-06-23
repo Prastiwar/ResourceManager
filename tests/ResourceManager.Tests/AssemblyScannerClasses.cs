@@ -2,7 +2,7 @@
 {
     public interface IService { }
 
-    public abstract class TestService : IService { }
+    public abstract class AbstractTestService : IService { }
 
     public class TestService1 : IService { }
 
@@ -20,7 +20,7 @@
 
     public class PartiallyClosedGeneric<T> : IPartiallyClosedGeneric<T, int> { }
 
-    public class CombinedService : IService, IQueryHandler<object, CombinedService> { }
+    public class CombinedServiceQueryHandler : IService, IQueryHandler<object, CombinedServiceQueryHandler> { }
 
     public interface IEmptyInterface { }
 

@@ -9,6 +9,6 @@ namespace ResourceManager
 
         public IEnumerable<TypeScan> Scans { get; }
 
-        public bool HasResults => Scans.Any();
+        public bool HasResults => Scans.Any(s => s.ResultTypes.Any());
     }
 }

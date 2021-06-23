@@ -35,9 +35,9 @@ namespace RPGDataEditor.Core.Serialization
                 { nameof(Quest.Title).ToFirstLower(), value.Title },
                 { nameof(Quest.Message).ToFirstLower(), value.Message },
                 { nameof(Quest.Category).ToFirstLower(), value.Category },
-                { nameof(Quest.CompletionTask).ToFirstLower(), JToken.FromObject(value.CompletionTask, serializer) },
-                { nameof(Quest.Tasks).ToFirstLower(), JArray.FromObject(value.Tasks, serializer) },
-                { nameof(Quest.Requirements).ToFirstLower(), JArray.FromObject(value.Requirements, serializer) },
+                { nameof(Quest.CompletionTask).ToFirstLower(), value.CompletionTask != null ? JToken.FromObject(value.CompletionTask, serializer) : null },
+                { nameof(Quest.Tasks).ToFirstLower(), value.Tasks != null ? JArray.FromObject(value.Tasks, serializer) : null },
+                { nameof(Quest.Requirements).ToFirstLower(), value.Requirements != null ? JArray.FromObject(value.Requirements, serializer) : null },
             };
     }
 }

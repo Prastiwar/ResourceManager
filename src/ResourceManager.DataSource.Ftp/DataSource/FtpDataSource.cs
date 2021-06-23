@@ -43,11 +43,12 @@ namespace ResourceManager.DataSource.Ftp
             Credentials = new System.Net.NetworkCredential(Options.UserName, Options.Password)
         };
 
-        // WARNING: Saving changes is not consistent and not atomic
         // TODO: Fix consistency and atomicity
+        // WARNING: Saving changes is not consistent and not atomic
         public override void SaveChanges()
         {
             FtpClient client = CreateClient();
+            client.Connect();
             foreach (ITrackedResource tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
@@ -58,6 +59,10 @@ namespace ResourceManager.DataSource.Ftp
                         string addedContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
                         byte[] addedContentBytes = Encoding.UTF8.GetBytes(addedContent);
                         FtpStatus createStatus = client.Upload(addedContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
+                        if (createStatus == FtpStatus.Failed)
+                        {
+                            throw new FtpException("Add operation failed");
+                        }
                         break;
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
@@ -70,6 +75,9 @@ namespace ResourceManager.DataSource.Ftp
                             {
                                 client.DeleteFile(oldPath);
                             }
+                        } else if (updateStatus == FtpStatus.Failed)
+                        {
+                            throw new FtpException("Update operation failed");
                         }
                         break;
                     case ResourceState.Removed:
@@ -82,11 +90,12 @@ namespace ResourceManager.DataSource.Ftp
             TrackedResources.Clear();
         }
 
-        // WARNING: Saving changes is not consistent and not atomic
         // TODO: Fix consistency and atomicity
+        // WARNING: Saving changes is not consistent and not atomic
         public override async Task SaveChangesAsync(CancellationToken token)
         {
             FtpClient client = CreateClient();
+            await client.ConnectAsync();
             foreach (ITrackedResource tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
@@ -97,6 +106,10 @@ namespace ResourceManager.DataSource.Ftp
                         string addedContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
                         byte[] addedContentBytes = Encoding.UTF8.GetBytes(addedContent);
                         FtpStatus createStatus = await client.UploadAsync(addedContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
+                        if (createStatus == FtpStatus.Failed)
+                        {
+                            throw new FtpException("Add operation failed");
+                        }
                         break;
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
@@ -109,6 +122,10 @@ namespace ResourceManager.DataSource.Ftp
                             {
                                 await client.DeleteFileAsync(oldPath);
                             }
+                        }
+                        else if (updateStatus == FtpStatus.Failed)
+                        {
+                            throw new FtpException("Update operation failed");
                         }
                         break;
                     case ResourceState.Removed:
@@ -123,14 +140,16 @@ namespace ResourceManager.DataSource.Ftp
 
         public override IQueryable<object> Query(Type resourceType)
         {
-            if (entries.TryGetValue(resourceType, out ResourcesEntry entry))
-            {
-                //if (!entry.CachingPolicy.IsExpired())
-                //{
-                //    return entry.Resources.AsQueryable();
-                //}
-                return entry.Resources.AsQueryable();
-            }
+            // TODO: Optimize it with cache
+            ResourcesEntry entry = null;
+            //if (entries.TryGetValue(resourceType, out ResourcesEntry entry))
+            //{
+            //    if (!entry.CachingPolicy.IsExpired())
+            //    {
+            //        return entry.Resources.AsQueryable();
+            //    }
+            //    return entry.Resources.AsQueryable();
+            //}
             entry = new ResourcesEntry();
             FtpClient client = CreateClient();
             LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);

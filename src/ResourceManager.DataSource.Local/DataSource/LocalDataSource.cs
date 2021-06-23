@@ -73,7 +73,7 @@ namespace ResourceManager.DataSource.Local
             foreach (ITrackedResource tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
-                string targetPath = Path.Combine(Options.FolderPath, descriptor.GetRelativeFullPath(tracking.Resource));
+                string targetPath = Path.Combine(Options.FolderPath, descriptor.GetRelativeFullPath(tracking.Resource).TrimStart('/', '\\'));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:

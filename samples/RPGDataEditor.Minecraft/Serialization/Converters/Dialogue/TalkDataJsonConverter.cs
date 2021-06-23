@@ -29,9 +29,10 @@ namespace RPGDataEditor.Minecraft.Serialization
         public override JObject ToJObject(TalkData value, JsonSerializer serializer)
         {
             JObject obj = base.ToJObject(value, serializer);
-            obj.Add(nameof(Models.TalkData.InteractLines).ToFirstLower(), JArray.FromObject((value as Models.TalkData).InteractLines));
-            obj.Add(nameof(Models.TalkData.DeathLines).ToFirstLower(), JArray.FromObject((value as Models.TalkData).DeathLines));
-            obj.Add(nameof(Models.TalkData.HurtLines).ToFirstLower(), JArray.FromObject((value as Models.TalkData).HurtLines));
+            Models.TalkData extendedData = (value as Models.TalkData);
+            obj.Add(nameof(Models.TalkData.InteractLines).ToFirstLower(), extendedData.InteractLines != null ? JArray.FromObject(extendedData.InteractLines) : null);
+            obj.Add(nameof(Models.TalkData.DeathLines).ToFirstLower(), extendedData.DeathLines != null ? JArray.FromObject(extendedData.DeathLines) : null);
+            obj.Add(nameof(Models.TalkData.HurtLines).ToFirstLower(), extendedData.HurtLines != null ? JArray.FromObject(extendedData.HurtLines) : null);
             return obj;
         }
     }

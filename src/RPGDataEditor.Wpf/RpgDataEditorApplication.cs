@@ -105,8 +105,8 @@ namespace RPGDataEditor.Wpf
                 builder.RegisterResourceTypes(typeof(Models.Quest), typeof(Models.Dialogue), typeof(Models.Npc));
 
                 ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
-                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{name}.json");
-                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{name}.json");
+                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{title}.json");
+                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
                 IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
                 fileDescriptorService.Register<Models.Quest>(fileQuestDescriptor);
                 fileDescriptorService.Register<Models.Dialogue>(fileDialogueDescriptor);

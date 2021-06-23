@@ -1,0 +1,23 @@
+{
+  "id": 1,
+  "title": "TestTitle",
+  "message": "TestMessage",
+  "category": "TestCategory",
+  "completionTask": {
+    "type": "Kill",
+    "kill": "minecraft:zombie",
+    "amount": 1
+  },
+  "tasks": [
+    {
+      "type": "Reach",
+      "pos": {
+        "x": 50.0,
+        "y": 100.0,
+        "z": 150.0
+      },
+      "distance": 20.0
+    }
+  ],
+  "requirements": []
+}

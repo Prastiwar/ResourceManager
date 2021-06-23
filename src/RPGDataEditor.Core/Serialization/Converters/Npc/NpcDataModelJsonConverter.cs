@@ -31,10 +31,10 @@ namespace RPGDataEditor.Core.Serialization
         public override JObject ToJObject(Npc value, JsonSerializer serializer) => new JObject() {
                 { nameof(Npc.Id).ToFirstLower(), JToken.FromObject(value.Id) },
                 { nameof(Npc.Name).ToFirstLower(), value.Name },
-                { nameof(Npc.Position).ToFirstLower(), JToken.FromObject(value.Position, serializer) },
-                { nameof(Npc.Attributes).ToFirstLower(), JArray.FromObject(value.Attributes, serializer) },
-                { nameof(Npc.Job).ToFirstLower(), JToken.FromObject(value.Job, serializer) },
-                { nameof(Npc.TalkData).ToFirstLower(), JToken.FromObject(value.TalkData, serializer) }
+                { nameof(Npc.Position).ToFirstLower(), value.Position != null ? JToken.FromObject(value.Position, serializer) : null },
+                { nameof(Npc.Attributes).ToFirstLower(), value.Attributes != null ? JArray.FromObject(value.Attributes, serializer) : null },
+                { nameof(Npc.Job).ToFirstLower(), value.Job != null ? JToken.FromObject(value.Job, serializer) : null },
+                { nameof(Npc.TalkData).ToFirstLower(), value.TalkData != null ? JToken.FromObject(value.TalkData, serializer) : null }
             };
     }
 }

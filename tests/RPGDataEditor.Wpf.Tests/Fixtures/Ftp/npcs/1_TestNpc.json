@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "name": "TestNpc",
+  "position": {
+    "x": -297,
+    "y": 66,
+    "z": -500
+  },
+  "job": {
+    "type": "Trader",
+    "items": [
+      {
+        "itemid": "1",
+        "buy": 10000,
+        "sell": 5000,
+        "count": 1
+      }
+    ]
+  },
+  "talkData": {
+    "talkRange": 10,
+    "initationDialogues": [
+      0
+    ]
+  }
+}

@@ -48,13 +48,15 @@ namespace RPGDataEditor.Mvvm
             presentable.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
             return presentable;
         }
+        protected Task<TResource> GetOrCreateResource(PresentableData model) => GetOrCreateResource(model, out bool _);
 
-        protected virtual Task<TResource> RetrieveResource(PresentableData model)
+        protected virtual Task<TResource> GetOrCreateResource(PresentableData model, out bool created)
         {
             TResource resource = default;
             try
             {
                 resource = DataSource.Query<TResource>().FirstOrDefault(x => IdentityEqualityComparer.Default.Equals(x.Id, model.Id));
+                created = resource is null;
                 if (resource is null)
                 {
                     resource = CreateResource(model);
@@ -62,6 +64,7 @@ namespace RPGDataEditor.Mvvm
             }
             catch (Exception ex)
             {
+                created = false;
                 Logger.LogError(ex, "Couldn't retrieve model " + typeof(TResource));
             }
             return Task.FromResult(resource);
@@ -69,7 +72,7 @@ namespace RPGDataEditor.Mvvm
 
         protected override async Task<EditorResults> OpenEditorAsync(PresentableData model)
         {
-            TResource oldResource = await RetrieveResource(model);
+            TResource oldResource = await GetOrCreateResource(model, out bool shouldAdd);
             if (oldResource == null)
             {
                 return new EditorResults(null, false);
@@ -81,7 +84,14 @@ namespace RPGDataEditor.Mvvm
             {
                 try
                 {
-                    TrackedResource<TResource> tracked = await DataSource.UpdateAsync(newResource);
+                    if (shouldAdd)
+                    {
+                        TrackedResource<TResource> tracked = await DataSource.AddAsync(newResource);
+                    }
+                    else
+                    {
+                        TrackedResource<TResource> tracked = await DataSource.UpdateAsync(newResource);
+                    }
                     await DataSource.SaveChangesAsync();
                     model.Update(newResource);
                 }

@@ -8,6 +8,7 @@ namespace ResourceManager.DataSource
         {
             OriginalResource = resource;
             Resource = resource;
+            State = state;
             ResourceType = asType ?? typeof(T);
         }
 

@@ -35,9 +35,9 @@ namespace RPGDataEditor.Core.Serialization
                 { nameof(Dialogue.Title).ToFirstLower(), value.Title },
                 { nameof(Dialogue.Message).ToFirstLower(), value.Message },
                 { nameof(Dialogue.Category).ToFirstLower(), value.Category },
-                { nameof(Dialogue.StartQuestId).ToFirstLower(), JToken.FromObject(value.StartQuestId) },
-                { nameof(Dialogue.Requirements).ToFirstLower(), JArray.FromObject(value.Requirements, serializer) },
-                { nameof(Dialogue.Options).ToFirstLower(), JToken.FromObject(value.Options, serializer) },
+                { nameof(Dialogue.StartQuestId).ToFirstLower(), value.StartQuestId != null ? JToken.FromObject(value.StartQuestId) : null },
+                { nameof(Dialogue.Requirements).ToFirstLower(), value.Requirements != null ? JArray.FromObject(value.Requirements, serializer) : null },
+                { nameof(Dialogue.Options).ToFirstLower(), value.Options != null ? JToken.FromObject(value.Options, serializer) : null },
             };
     }
 }

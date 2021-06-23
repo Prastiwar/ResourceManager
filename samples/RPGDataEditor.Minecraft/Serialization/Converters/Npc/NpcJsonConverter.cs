@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ResourceManager;
 using RPGDataEditor.Core;
 using RPGDataEditor.Minecraft.Models;
 using System;
@@ -50,17 +49,18 @@ namespace RPGDataEditor.Minecraft.Serialization
         public override JObject ToJObject(RPGDataEditor.Models.Npc value, JsonSerializer serializer)
         {
             JObject obj = base.ToJObject(value, serializer);
-            obj.Add(nameof(Npc.Title).ToFirstLower(), (value as Npc).Title);
-            obj.Add(nameof(Npc.TextureLocation).ToFirstLower(), (value as Npc).TextureLocation);
-            obj.Add(nameof(Npc.Invulnerable).ToFirstLower(), (value as Npc).Invulnerable);
-            obj.Add(nameof(Npc.LookAtPlayer).ToFirstLower(), (value as Npc).LookAtPlayer);
-            obj.Add(nameof(Npc.HealthRegen).ToFirstLower(), (value as Npc).HealthRegen);
-            obj.Add(nameof(Npc.Equipment).ToFirstLower(), JToken.FromObject((value as Npc).Equipment, serializer));
-            obj.Add(nameof(Npc.MovementType).ToFirstLower(), (value as Npc).MovementType.ToString().ToUpper());
-            obj.Add(nameof(Npc.Paths).ToFirstLower(), JArray.FromObject((value as Npc).Paths, serializer));
-            obj.Add(nameof(Npc.AmbientSoundLocation).ToFirstLower(), (value as Npc).AmbientSoundLocation);
-            obj.Add(nameof(Npc.DeathSoundLocation).ToFirstLower(), (value as Npc).DeathSoundLocation);
-            obj.Add(nameof(Npc.HurtSoundLocation).ToFirstLower(), (value as Npc).HurtSoundLocation);
+            Npc extendedNpc = (value as Npc);
+            obj.Add(nameof(Npc.Title).ToFirstLower(), extendedNpc.Title);
+            obj.Add(nameof(Npc.TextureLocation).ToFirstLower(), extendedNpc.TextureLocation);
+            obj.Add(nameof(Npc.Invulnerable).ToFirstLower(), extendedNpc.Invulnerable);
+            obj.Add(nameof(Npc.LookAtPlayer).ToFirstLower(), extendedNpc.LookAtPlayer);
+            obj.Add(nameof(Npc.HealthRegen).ToFirstLower(), extendedNpc.HealthRegen);
+            obj.Add(nameof(Npc.Equipment).ToFirstLower(), extendedNpc.Equipment != null ? JToken.FromObject(extendedNpc.Equipment, serializer) : null);
+            obj.Add(nameof(Npc.MovementType).ToFirstLower(), extendedNpc.MovementType.ToString().ToUpper());
+            obj.Add(nameof(Npc.Paths).ToFirstLower(), extendedNpc.Paths != null ? JArray.FromObject(extendedNpc.Paths, serializer) : null);
+            obj.Add(nameof(Npc.AmbientSoundLocation).ToFirstLower(), extendedNpc.AmbientSoundLocation);
+            obj.Add(nameof(Npc.DeathSoundLocation).ToFirstLower(), extendedNpc.DeathSoundLocation);
+            obj.Add(nameof(Npc.HurtSoundLocation).ToFirstLower(), extendedNpc.HurtSoundLocation);
             return obj;
         }
     }

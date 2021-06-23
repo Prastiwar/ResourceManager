@@ -12,19 +12,19 @@ namespace RPGDataEditor.Extensions.Prism.Wpf.ViewModels
         public PresentableCategoryDataViewModel(IViewService viewService, IDataSource dataSource, ILogger<Mvvm.PresentableCategoryDataViewModel<TResource>> logger)
             : base(viewService, dataSource, logger) { }
 
-        public ICommand openEditorCommand;
+        private ICommand openEditorCommand;
         public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<PresentableData>(async presentable => await OpenEditorAsync(presentable));
 
-        public ICommand removeModelCommand;
+        private ICommand removeModelCommand;
         public ICommand RemoveModelCommand => removeModelCommand ??= new DelegateCommand<PresentableData>(async presentable => await RemoveModelAsync(presentable));
 
-        public ICommand addCategoryCommand;
+        private ICommand addCategoryCommand;
         public ICommand AddCategoryCommand => addCategoryCommand ??= new DelegateCommand(() => CreateCategory());
 
-        public ICommand showCategoryCommand;
+        private ICommand showCategoryCommand;
         public ICommand ShowCategoryCommand => showCategoryCommand ??= new DelegateCommand<string>(category => ShowCategory(category));
 
-        public ICommand removeCategoryCommand;
+        private ICommand removeCategoryCommand;
         public ICommand RemoveCategoryCommand => removeCategoryCommand ??= new DelegateCommand<string>(async category => await RemoveCategoryAsync(category));
     }
 }

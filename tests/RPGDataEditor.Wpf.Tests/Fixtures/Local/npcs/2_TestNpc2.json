@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "name": "TestNpc2",
+  "position": {
+    "x": -297,
+    "y": 66,
+    "z": -500
+  },
+  "talkData": {
+    "talkRange": 10,
+    "initationDialogues": [
+      0
+    ]
+  }
+}

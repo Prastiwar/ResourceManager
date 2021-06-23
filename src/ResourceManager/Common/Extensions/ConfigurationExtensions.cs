@@ -20,5 +20,12 @@ namespace ResourceManager
             IConfigurationSection section = GetDataSourceSection(configuration);
             section["Type"] = name;
         }
+
+        public static IConfigurationSection SetAndGetDataSource(this IConfiguration configuration, string name)
+        {
+            IConfigurationSection section = GetDataSourceSection(configuration);
+            section["Type"] = name;
+            return section;
+        }
     }
 }

@@ -20,8 +20,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ResourceManager.DataSource.Ftp\ResourceManager.DataSource.Ftp.csproj" />
+    <ProjectReference Include="..\..\src\ResourceManager.DataSource.Local\ResourceManager.DataSource.Local.csproj" />
+    <ProjectReference Include="..\..\src\ResourceManager.DataSource.Sql\ResourceManager.DataSource.Sql.csproj" />
     <ProjectReference Include="..\..\src\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
     <ProjectReference Include="..\..\src\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Fixtures\Ftp\" />
+    <Folder Include="Fixtures\Local\" />
+    <Folder Include="Fixtures\Sql\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fixtures\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
 </Project>

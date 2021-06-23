@@ -22,7 +22,7 @@ namespace RPGDataEditor.Core.Serialization
 
         public override JObject ToJObject(TalkData value, JsonSerializer serializer) => new JObject() {
                 { nameof(TalkData.TalkRange).ToFirstLower(), value.TalkRange },
-                { nameof(TalkData.InitationDialogues).ToFirstLower(), JArray.FromObject(value.InitationDialogues) },
+                { nameof(TalkData.InitationDialogues).ToFirstLower(), value.InitationDialogues != null ? JArray.FromObject(value.InitationDialogues) : null },
             };
     }
 }

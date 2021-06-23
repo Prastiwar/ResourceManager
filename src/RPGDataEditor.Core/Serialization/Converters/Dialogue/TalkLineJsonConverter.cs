@@ -20,7 +20,7 @@ namespace RPGDataEditor.Core.Serialization
 
         public override JObject ToJObject(TalkLine value, JsonSerializer serializer) => new JObject() {
                 { nameof(TalkLine.Text).ToFirstLower(), value.Text },
-                { nameof(TalkLine.SoundId).ToFirstLower(), JToken.FromObject(value.SoundId) }
+                { nameof(TalkLine.SoundId).ToFirstLower(), value.SoundId != null ? JToken.FromObject(value.SoundId) : null }
             };
     }
 }

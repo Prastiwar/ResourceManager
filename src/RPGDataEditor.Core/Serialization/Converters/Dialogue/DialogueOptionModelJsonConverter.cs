@@ -22,9 +22,9 @@ namespace RPGDataEditor.Core.Serialization
         }
 
         public override JObject ToJObject(DialogueOption value, JsonSerializer serializer) => new JObject() {
-                { nameof(DialogueOption.NextDialogId).ToFirstLower(), JToken.FromObject(value.NextDialogId) },
+                { nameof(DialogueOption.NextDialogId).ToFirstLower(), value.NextDialogId != null ? JToken.FromObject(value.NextDialogId) : null },
                 { nameof(DialogueOption.Message).ToFirstLower(), value.Message },
-                { nameof(DialogueOption.Requirements).ToFirstLower(), JArray.FromObject(value.Requirements, serializer) },
+                { nameof(DialogueOption.Requirements).ToFirstLower(), value.Requirements != null ? JArray.FromObject(value.Requirements, serializer) : null },
             };
     }
 }
