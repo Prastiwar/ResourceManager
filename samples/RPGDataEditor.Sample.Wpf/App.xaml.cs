@@ -1,9 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Prism.Ioc;
 using Prism.Modularity;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
+using ResourceManager.DataSource.Sql.Configuration;
 using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
 using RPGDataEditor.Sample.DataSource;
@@ -12,6 +16,7 @@ using RPGDataEditor.Sample.Serialization;
 using RPGDataEditor.Sample.Wpf.Providers;
 using RPGDataEditor.Wpf;
 using RPGDataEditor.Wpf.Providers;
+using System;
 
 namespace RPGDataEditor.Sample.Wpf
 {
@@ -58,9 +63,11 @@ namespace RPGDataEditor.Sample.Wpf
                 o.DescriptorService.Register<Quest>(sqlQuestDescriptor);
                 o.DescriptorService.Register<Dialogue>(sqlDialogueDescriptor);
                 o.DescriptorService.Register<Npc>(sqlNpcDescriptor);
-                o.DatabaseContext = new DefaultDbContext();
+                o.CreateDatabaseContext = CreateSqlDbContext;
             });
         }
+
+        protected virtual DbContext CreateSqlDbContext(string connectionString, IConfiguration configuration, SqlDataSourceOptions options) => new DefaultDbContext(connectionString, configuration);
 
         protected override JsonSerializerSettings CreateJsonSettings()
         {
@@ -82,6 +89,17 @@ namespace RPGDataEditor.Sample.Wpf
             settings.Converters.Add(new TalkDataJsonConverter());
             settings.Converters.Add(new TalkLineJsonConverter());
             return settings;
+        }
+
+        protected override void OnConfigured(IServiceProvider provider)
+        {
+            base.OnConfigured(provider);
+            IConfiguration configuration = provider.GetRequiredService<IConfiguration>();
+            IConfigurationSection dataSourceSection = configuration.GetDataSourceSection();
+            if (!dataSourceSection.GetSection("EngineName").Exists())
+            {
+                dataSourceSection["EngineName"] = "MSSQL";
+            }
         }
     }
 }

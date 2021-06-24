@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls">
+                    xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
     <DataTemplate x:Key="LocalConnectionContent">
         <StackPanel Margin="64">
             <controls:AutoControl DataContext="{Binding ., Converter={StaticResource LocalProxyConfigurationConverter}}"
@@ -21,8 +22,14 @@
                                   PropertyName="Password" />
         </StackPanel>
     </DataTemplate>
-    <DataTemplate x:Key="MssqlConnectionContent">
+    <DataTemplate x:Key="SqlConnectionContent">
         <StackPanel Margin="64">
+            <ComboBox DataContext="{Binding ., Converter={StaticResource SqlProxyConfigurationConverter}}"
+                      SelectedItem="{Binding EngineName}"
+                      Margin="6,6,6,12">
+                <sys:String>MSSQL</sys:String>
+                <sys:String>SQLite</sys:String>
+            </ComboBox>
             <controls:AutoControl DataContext="{Binding ., Converter={StaticResource SqlProxyConfigurationConverter}}"
                                   PropertyName="ConnectionString" />
         </StackPanel>
