@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:RPGDataEditor.Wpf.Converters">
     <converters:ExpandListDataCardConverter x:Key="ExpandListDataCardConverter" />
-    <converters:NextDialogIdToVisibility x:Key="NextDialogIdToVisibility" />
     <converters:ValuesToListConverter x:Key="ValuesToListConverter" />
     <converters:CombinePropertyPathConverter x:Key="CombinePropertyPathConverter" />
     <converters:HexDecColorConverter x:Key="HexDecColorConverter" />

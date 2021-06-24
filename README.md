@@ -15,15 +15,36 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/pulls)
 [![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/pulls)
 
-## Getting Started
+## Connection
 
-See our wiki for [documentation](https://github.com/Prastiwar/RPGDataEditor/wiki).
+Connection to data source allows to manipulate data within different storage like ftp, sql database or local OS file system   
 
+### Supported Data Sources:
 
-## Using
+- #### Local
 
-See our wiki for [documentation](https://github.com/Prastiwar/RPGDataEditor/wiki).
+This data source connects to local os file system with provided FolderPath - full path to root of all resources. Before using this connection make sure your account have read/write permissions in given folder path.
 
+- #### FTP
+
+This data source connects to file system using FTP. It needs host, username and password to connect desired server. If port is set to 0, client will try to find correct port. If username and password will not be provided, it will connect to server as anonymous user, so make sure your server supports it. You can provide relative path to server root to use desired location. Before connecting to server make sure your account has read/write permissions to access given path.
+
+- #### SQL
+
+This data source connects to SQL database using connection string. Before using this connection make sure your login has select/insert/update/delete permissions to needed tables.
+
+## Default Data Architecture
+
+RPGDataEditor uses 3 resources: Npc, Quest, Dialogue
+
+TBA
+
+## Extending RPGDataEditor.Wpf
+
+There are few important things you need to setup before succesfully launch RPGDataEditor.Wpf extension app
+1. Serialization - you must configure serialization module so each resource that extends base resource, must have own converter, so additional properties will be also serialized
+2. Validation - you must configure validation module so each resource must have own IValidator<> 
+3. Ignore base types - TBA
 
 ## Contributing
 
@@ -38,7 +59,3 @@ See also the list of [contributors](https://github.com/Prastiwar/RPGDataEditor/c
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/Prastiwar/RPGDataEditor/blob/master/LICENSE) file for details.
-
-## TODO
-
-- [ ] Support MSSQL database

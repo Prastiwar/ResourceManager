@@ -12,8 +12,6 @@ using Prism.Regions;
 using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.DataSource.Sql.Data;
-using ResourceManager.Services;
 using RPGDataEditor.Core.Serialization;
 using RPGDataEditor.Core.Services;
 using RPGDataEditor.Extensions.Prism.Wpf;
@@ -31,7 +29,7 @@ using System.Windows;
 
 namespace RPGDataEditor.Wpf
 {
-    public class RpgDataEditorApplication : PrismApplication
+    public abstract class RpgDataEditorApplication : PrismApplication
     {
         public RpgDataEditorApplication()
         {
@@ -66,8 +64,6 @@ namespace RPGDataEditor.Wpf
             regionAdapterMappings.RegisterMapping(typeof(System.Windows.Controls.TabControl), Container.Resolve<TabControlAdapter>());
         }
 
-        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();
-
         protected sealed override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             JsonConvert.DefaultSettings = CreateJsonSettings;
@@ -78,8 +74,13 @@ namespace RPGDataEditor.Wpf
             containerRegistry.RegisterServices(services, provider);
             Configure(containerRegistry);
 
+            if (Container.Resolve<IAutoTemplateProvider>() is DefaultAutoTemplateProvider autoTemplateProvider)
+            {
+                autoTemplateProvider.RegisterDefaults(containerRegistry);
+            }
+
             InitializeAutoUpdater();
-            OnConfigured(containerRegistry);
+            OnConfigured(provider);
         }
 
         protected virtual void Configure(IServiceCollection services)
@@ -90,9 +91,8 @@ namespace RPGDataEditor.Wpf
 
             services.AddFluentAssemblyScanner(null, scanner => services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient));
 
-            NewtonsoftSerializer serializer = new NewtonsoftSerializer();
-            services.AddSingleton<ITextSerializer>(serializer);
-            services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>();
+            services.AddSingleton<ITextSerializer, NewtonsoftSerializer>();
+            services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>(x => new LocalAppPersistanceService(x.GetRequiredService<ITextSerializer>()) { FolderPath = CacheDirectoryPath });
 
             services.AddSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             services.AddSingleton<IServiceProvider, PrismServiceProvider>();
@@ -101,39 +101,10 @@ namespace RPGDataEditor.Wpf
             services.AddSingleton<IDialogService, PrismDialogService>();
             services.AddSingleton<IViewService, ViewService>();
 
-            services.AddDataSourceConfiguration(builder => {
-                builder.RegisterResourceTypes(typeof(Models.Quest), typeof(Models.Dialogue), typeof(Models.Npc));
-
-                ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
-                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{title}.json");
-                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
-                IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
-                fileDescriptorService.Register<Models.Quest>(fileQuestDescriptor);
-                fileDescriptorService.Register<Models.Dialogue>(fileDialogueDescriptor);
-                fileDescriptorService.Register<Models.Npc>(fileNpcDescriptor);
-
-                builder.AddLocalDataSource(o => {
-                    o.DescriptorService = fileDescriptorService;
-                    o.Serializer = serializer;
-                });
-
-                builder.AddFtpDataSource(o => {
-                    o.DescriptorService = fileDescriptorService;
-                    o.Serializer = serializer;
-                });
-
-                builder.AddSqlDataSource(o => {
-                    IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Quest), "quests", ".{id}");
-                    IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Dialogue), "dialogues", ".{id}");
-                    IResourceDescriptor sqlNpcDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Npc), "npcs", ".{id}");
-
-                    o.DescriptorService = new ResourceDescriptorService();
-                    o.DescriptorService.Register<Models.Quest>(sqlQuestDescriptor);
-                    o.DescriptorService.Register<Models.Dialogue>(sqlDialogueDescriptor);
-                    o.DescriptorService.Register<Models.Npc>(sqlNpcDescriptor);
-                });
-            }, ConfigureDataSource, ClearPreviousDataSource);
+            services.AddDataSourceConfiguration(builder => ConfigureDataSources(builder), ConfigureDataSource, ClearPreviousDataSource);
         }
+
+        protected abstract void ConfigureDataSources(IConfigurableDataSourceBuilder builder);
 
         protected virtual void ClearPreviousDataSource(IServiceCollection services, IDataSource previousSource)
         {
@@ -149,14 +120,12 @@ namespace RPGDataEditor.Wpf
             registry.RegisterServices(services, services.BuildServiceProvider());
         }
 
+        /// <summary> This method is used to save prism compatibility, you should prefer Configure(IServiceCollection services) </summary>
         protected virtual void Configure(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterDialog<UpdateDialog>(typeof(UpdateDialog).Name);
             containerRegistry.RegisterDialog<ConnectionDialog>(typeof(ConnectionDialog).Name);
-
-            AutoTemplateProvider controlProvider = new AutoTemplateProvider(Container);
-            controlProvider.RegisterDefaults(containerRegistry);
-            containerRegistry.RegisterInstance<IAutoTemplateProvider>(controlProvider);
+            containerRegistry.RegisterInstance<IAutoTemplateProvider>(new DefaultAutoTemplateProvider(Container));
         }
 
         protected virtual JsonSerializerSettings CreateJsonSettings()
@@ -168,23 +137,6 @@ namespace RPGDataEditor.Wpf
                 Formatting = Formatting.Indented
             };
             settings.Converters.Add(new NumberCastsConverter());
-            settings.Converters.Add(new PlayerRequirementJsonConverter());
-
-            settings.Converters.Add(new NpcJobJsonConverter());
-            settings.Converters.Add(new NpcJsonConverter());
-            settings.Converters.Add(new TradeItemJsonConverter());
-            settings.Converters.Add(new AttributeDataModelJsonConverter());
-
-            settings.Converters.Add(new PositionJsonConverter());
-
-            settings.Converters.Add(new QuestTaskJsonConverter());
-            settings.Converters.Add(new QuestJsonConverter());
-
-            settings.Converters.Add(new DialogueJsonConverter());
-            settings.Converters.Add(new DialogueOptionJsonConverter());
-            settings.Converters.Add(new TalkDataJsonConverter());
-            settings.Converters.Add(new TalkLineJsonConverter());
-
             settings.Converters.Add(new ConfigurationSectionJsonConverter());
             return settings;
         }
@@ -208,20 +160,16 @@ namespace RPGDataEditor.Wpf
             };
         }
 
-        protected virtual void OnConfigured(IContainerRegistry containerRegistry)
+        protected virtual void OnConfigured(IServiceProvider provider)
         {
-            IConfiguration configuration = containerRegistry.GetContainer().Resolve<IConfiguration>();
-            if (containerRegistry.GetContainer().Resolve<IAppPersistanceService>() is LocalAppPersistanceService service)
-            {
-                service.FolderPath = CacheDirectoryPath;
-            }
+            IConfiguration configuration = provider.GetRequiredService<IConfiguration>();
             IConfigurationSection dataSourceSection = configuration.GetDataSourceSection();
             if (!dataSourceSection.GetSection(DataSourceExtensions.NameKey).Exists())
             {
                 dataSourceSection[DataSourceExtensions.NameKey] = LocalDataSourceExtensions.Name;
             }
 
-            IConfigurableDataSource configurableDataSource = Container.Resolve<IConfigurableDataSource>();
+            IConfigurableDataSource configurableDataSource = provider.GetRequiredService<IConfigurableDataSource>();
             configurableDataSource.Configure(dataSourceSection);
             configuration.GetReloadToken().RegisterChangeCallback((config) => configurableDataSource.Configure((IConfiguration)config), dataSourceSection);
         }

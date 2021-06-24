@@ -10,17 +10,11 @@
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Converters.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/DataTemplates.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.Styles.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.PositionBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.MaterialColorPicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.ResourcePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.ChangeableUserControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.ListDataCard.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.ExpandableCard.xaml" />
-        
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.RequirementContents.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.QuestTaskContents.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.DialogueOptionContents.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.NpcJobContents.xaml" />
         <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/RpgDataEditorTheme.ConnectionContents.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

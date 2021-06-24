@@ -9,6 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RPGDataEditor\RPGDataEditor.csproj" />
+    <ProjectReference Include="..\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
   </ItemGroup>
 </Project>

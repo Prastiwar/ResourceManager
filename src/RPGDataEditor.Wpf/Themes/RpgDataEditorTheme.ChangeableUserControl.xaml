@@ -18,23 +18,7 @@
         <Setter Property="Template"
                 Value="{StaticResource ChangeableUserControlTemplate}" />
     </Style>
-    <Style TargetType="{x:Type controls:RequirementView}">
-        <Setter Property="Template"
-                Value="{StaticResource ChangeableUserControlTemplate}" />
-    </Style>
-    <Style TargetType="{x:Type controls:QuestTaskView}">
-        <Setter Property="Template"
-                Value="{StaticResource ChangeableUserControlTemplate}" />
-    </Style>
-    <Style TargetType="{x:Type controls:DialogueOptionView}">
-        <Setter Property="Template"
-                Value="{StaticResource ChangeableUserControlTemplate}" />
-    </Style>
     <Style TargetType="{x:Type controls:SessionControl}">
-        <Setter Property="Template"
-                Value="{StaticResource ChangeableUserControlTemplate}" />
-    </Style>
-    <Style TargetType="{x:Type controls:NpcJobView}">
         <Setter Property="Template"
                 Value="{StaticResource ChangeableUserControlTemplate}" />
     </Style>

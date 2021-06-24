@@ -4,14 +4,13 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
-             xmlns:models="clr-namespace:RPGDataEditor.Models;assembly=RPGDataEditor"
              xmlns:attach="clr-namespace:RPGDataEditor.Wpf"
              Name="SETTINGS"
              Style="{DynamicResource DefaultControlStyle}"
              attach:ValidableHelper.ValidableHook="{Binding}">
     <StackPanel DataContext="{Binding Session}"
                 Margin="64">
-        <CheckBox x:Name="IsPrettyJsonCheckbox"
+        <!--<CheckBox x:Name="IsPrettyJsonCheckbox"
                   Margin="8"
                   DataContext="{Binding Options}"
                   IsChecked="{Binding PrettyPrint}"
@@ -67,6 +66,6 @@
                     <behaviors:ValidationListenerBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
-        </StackPanel>
+        </StackPanel>-->
     </StackPanel>
 </UserControl>
