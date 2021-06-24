@@ -3,8 +3,6 @@ using Prism.Regions;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Sample.Models;
 using RPGDataEditor.Sample.Wpf.Views;
-using RPGDataEditor.Wpf.Connection.Views;
-using RPGDataEditor.Wpf.Settings.Views;
 using RPGDataEditor.Wpf.Views;
 using System;
 

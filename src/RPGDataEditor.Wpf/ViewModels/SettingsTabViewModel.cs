@@ -4,7 +4,7 @@ using RPGDataEditor.Mvvm;
 using System;
 using System.Windows.Input;
 
-namespace RPGDataEditor.Wpf.Settings.ViewModels
+namespace RPGDataEditor.Wpf.ViewModels
 {
     public class SettingsTabViewModel : ScreenViewModel
     {

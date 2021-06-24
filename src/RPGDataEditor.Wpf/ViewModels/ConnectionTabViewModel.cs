@@ -13,7 +13,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RPGDataEditor.Wpf.Connection.ViewModels
+namespace RPGDataEditor.Wpf.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {

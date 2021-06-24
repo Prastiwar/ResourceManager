@@ -2,7 +2,7 @@
 using ResourceManager;
 using System.Windows.Controls;
 
-namespace RPGDataEditor.Wpf.Connection.Views
+namespace RPGDataEditor.Wpf.Views
 {
     public partial class ConnectionTab : UserControl
     {

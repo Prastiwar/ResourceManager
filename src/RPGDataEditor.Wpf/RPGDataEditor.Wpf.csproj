@@ -25,7 +25,7 @@
     <ProjectReference Include="..\RPGDataEditor.Extensions.Prism.Wpf\RPGDataEditor.Extensions.Prism.Wpf.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Modules\Shared\Views\ConnectionDialog.xaml">
+    <Page Update="Views\ConnectionDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Themes\DataTemplates.xaml">
