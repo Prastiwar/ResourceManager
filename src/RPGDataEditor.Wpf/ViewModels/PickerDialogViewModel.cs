@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace RPGDataEditor.Wpf.ViewModels
 {
@@ -35,6 +36,12 @@ namespace RPGDataEditor.Wpf.ViewModels
         public IList<IIdentifiable> Models {
             get => models;
             set => SetProperty(ref models, value);
+        }
+
+        private IValueConverter modelNameConverter;
+        public IValueConverter ModelNameConverter {
+            get => modelNameConverter;
+            set => SetProperty(ref modelNameConverter, value);
         }
 
         protected IDataSource DataSource { get; }
@@ -63,6 +70,8 @@ namespace RPGDataEditor.Wpf.ViewModels
             list.Sort(new IdentifiableComparer());
             Models = list;
 
+            ModelNameConverter = parameters.GetValue<IValueConverter>(nameof(PickerDialogParameters.ModelNameConverter));
+
             IIdentifiable model = parameters.GetValue<IIdentifiable>(nameof(PickerDialogParameters.PickedItem));
             int modelId = parameters.GetValue<int>(nameof(PickerDialogParameters.PickedId));
             if (model == null)
@@ -79,21 +88,10 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected virtual Task<List<IIdentifiable>> LoadResourcesAsync(Type resourceType)
         {
-            List<string> locations = DataSource.Locate(resourceType).ToList();
-            List<IIdentifiable> list = new List<IIdentifiable>() {
-                new NullResource()
-            };
-            foreach (string location in locations)
-            {
-                LocationResourceDescriptor pathDescriptor = DataSource.DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
-                KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
-                PresentableData presentable = new PresentableData(resourceType) {
-                    Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value,
-                    Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString()
-                };
-                list.Add(presentable);
-            }
-            return Task.FromResult(list);
+            // TODO: Improve performance, .AsEnumerable() is not the best option
+            List<IIdentifiable> resources = DataSource.Query(resourceType).AsEnumerable().Cast<IIdentifiable>().ToList();
+            resources.Insert(0, new NullResource());
+            return Task.FromResult(resources);
         }
 
         private class NullResource : IIdentifiable

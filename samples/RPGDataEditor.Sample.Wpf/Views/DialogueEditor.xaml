@@ -22,6 +22,7 @@
                                      DataContext="{Binding Model}"
                                      PickedItemStringFormat="(ID: {Id}) {Title}"
                                      PickedId="{Binding StartQuestId, Mode=TwoWay}"
+                                     ModelNameConverter="{StaticResource QuestPresentableNameConverter}"
                                      ResourceType="{x:Type models:Quest}" />
         </materialDesign:Card>
         <controls:AutoControl DataContext="{Binding Model}"

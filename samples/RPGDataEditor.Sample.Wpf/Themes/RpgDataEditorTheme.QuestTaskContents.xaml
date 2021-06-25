@@ -7,6 +7,7 @@
             <controls:ResourcePicker PickedId="{Binding EntityId}"
                                      PickedItemStringFormat="(ID: {Id} {Name})"
                                      ResourceType="{x:Type models:Npc}"
+                                     ModelNameConverter="{StaticResource NpcPresentableNameConverter}"
                                      Margin="5" />
         </StackPanel>
     </DataTemplate>
@@ -27,6 +28,7 @@
             <controls:ResourcePicker PickedId="{Binding DialogueId}"
                                      ResourceType="{x:Type models:Dialogue}"
                                      PickedItemStringFormat="(ID: {Id}) {Title}"
+                                     ModelNameConverter="{StaticResource DialoguePresentableNameConverter}"
                                      Margin="5" />
         </StackPanel>
     </DataTemplate>

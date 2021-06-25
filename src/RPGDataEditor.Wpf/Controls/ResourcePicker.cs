@@ -4,6 +4,7 @@ using ResourceManager.DataSource;
 using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Wpf.Converters;
 using RPGDataEditor.Wpf.Mvvm;
+using RPGDataEditor.Wpf.Views;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -49,6 +50,14 @@ namespace RPGDataEditor.Wpf.Controls
             get => GetValue(PickedIdProperty);
             set => SetValue(PickedIdProperty, value);
         }
+
+        public static readonly DependencyProperty ModelNameConverterProperty =
+            DependencyProperty.Register("ModelNameConverter", typeof(IValueConverter), typeof(ResourcePicker), new PropertyMetadata(StaticValueConverter.Create(x => x.ToString(), null)));
+        public IValueConverter ModelNameConverter {
+            get => (IValueConverter)GetValue(ModelNameConverterProperty);
+            set => SetValue(ModelNameConverterProperty, value);
+        }
+
 
         public static DependencyProperty EmptyTextProperty = DependencyProperty.Register(nameof(EmptyText), typeof(string), typeof(ResourcePicker), new PropertyMetadata("None", OnEmptyTextChanged));
         private static void OnEmptyTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -178,12 +187,12 @@ namespace RPGDataEditor.Wpf.Controls
 
         protected virtual async void OnResourceChanged(Type oldValue, Type newValue) => await ReassignItemAsync();
 
-        protected virtual async Task ReassignItemAsync()
+        protected virtual Task ReassignItemAsync()
         {
             object id = PickedId;
             if (ResourceType == null || id == null || IdentityEqualityComparer.Default.Equals(id, -1))
             {
-                return;
+                return Task.CompletedTask;
             }
             IsLoading = true;
             try
@@ -204,6 +213,7 @@ namespace RPGDataEditor.Wpf.Controls
                 IsLoading = false;
                 IsItemLoaded = false;
             }
+            return Task.CompletedTask;
         }
 
         private async void PickButton_Click(object sender, RoutedEventArgs e) => await PickItemAsync();
@@ -212,7 +222,7 @@ namespace RPGDataEditor.Wpf.Controls
         {
             RPGDataEditor.Mvvm.Services.IDialogService service = Application.Current.TryResolve<RPGDataEditor.Mvvm.Services.IDialogService>();
             RPGDataEditor.Mvvm.Navigation.IDialogResult result =
-                await service.ShowDialogAsync(DialogNames.PickerDialog, new PickerDialogParameters(ResourceType, PickedItem, PickedId).Build()).ConfigureAwait(true);
+                await service.ShowDialogAsync(DialogNames.PickerDialog, new PickerDialogParameters(ResourceType, PickedItem, PickedId, ModelNameConverter).Build()).ConfigureAwait(true);
             if (result.IsSuccess)
             {
                 object pickedItem = result.Parameters.GetValue(nameof(PickerDialogParameters.PickedItem));

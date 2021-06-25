@@ -4,5 +4,5 @@
              xmlns:views="clr-namespace:RPGDataEditor.Wpf.Views;assembly=RPGDataEditor.Wpf"
              Name="DIALOGUE"
              Style="{DynamicResource DefaultControlStyle}">
-    <views:CategoryTabControl />
+    <views:CategoryTabControl ModelNameConverter="{StaticResource DialoguePresentableNameConverter}" />
 </UserControl>

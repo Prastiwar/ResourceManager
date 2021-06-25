@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace RPGDataEditor.Mvvm
 {
-    public abstract class PresentableCategoryDataViewModel<TResource> : PresentableDataViewModel<TResource> where TResource : ICategorizable
+    public abstract class CategoryModelsManagerViewModel<TResource> : ModelsManagerViewModel<TResource> where TResource : ICategorizable
     {
-        public PresentableCategoryDataViewModel(IViewService viewService, IDataSource dataSource, ILogger<PresentableCategoryDataViewModel<TResource>> logger)
+        public CategoryModelsManagerViewModel(IViewService viewService, IDataSource dataSource, ILogger<CategoryModelsManagerViewModel<TResource>> logger)
             : base(viewService, dataSource, logger) { }
 
         private ObservableCollection<string> categories;
@@ -31,10 +31,8 @@ namespace RPGDataEditor.Mvvm
         {
             Categories = new ObservableCollection<string>();
             await base.Refresh();
-            Categories.AddRange(Models.Select(x => (x as PresentableCategoryData).Category).Distinct());
+            Categories.AddRange(Models.Select(x => x.Category).Distinct());
         }
-
-        protected override PresentableData CreateModelInstance() => new PresentableCategoryData(typeof(TResource)) { Category = CurrentCategory };
 
         protected virtual void ShowCategory(string category) => CurrentCategory = category;
 
@@ -51,17 +49,6 @@ namespace RPGDataEditor.Mvvm
             return newName;
         }
 
-        protected override PresentableData CreatePresentableData(string location)
-        {
-            PresentableCategoryData presentable = (PresentableCategoryData)CreateModelInstance();
-            LocationResourceDescriptor pathDescriptor = DataSource.DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(typeof(TResource));
-            KeyValuePair<string, object>[] parameters = pathDescriptor.ParseParameters(location);
-            presentable.Id = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Id), true) == 0).Value;
-            presentable.Name = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableData.Name), true) == 0).Value?.ToString();
-            presentable.Category = parameters.FirstOrDefault(x => string.Compare(x.Key, nameof(PresentableCategoryData.Category), true) == 0).Value?.ToString();
-            return presentable;
-        }
-
         public virtual async Task<bool> RenameCategoryAsync(string oldCategory, string newCategory)
         {
             bool categoryExists = Categories.IndexOf(newCategory) != -1;
@@ -75,14 +62,12 @@ namespace RPGDataEditor.Mvvm
                 return false;
             }
             Categories.RemoveAt(oldCategoryIndex);
-            // TODO: Improve performance (AsEnumerable() is not the best option)
-            List<TResource> resources = DataSource.Query<TResource>()
-                                                  .AsEnumerable()
-                                                  .Where(x => EqualityComparer<string>.Default.Equals(x.Category, oldCategory)).ToList();
-            foreach (TResource resource in resources)
+            Categories.Insert(oldCategoryIndex, newCategory);
+            IEnumerable<TResource> foundModels = Models.Where(x => string.Compare(x.Category, oldCategory) == 0);
+            foreach (TResource model in foundModels)
             {
-                resource.Category = newCategory;
-                await DataSource.UpdateAsync(resource);
+                model.Category = newCategory;
+                await DataSource.UpdateAsync(model);
             }
             try
             {
@@ -90,14 +75,14 @@ namespace RPGDataEditor.Mvvm
             }
             catch (System.Exception ex)
             {
+                foreach (TResource model in foundModels)
+                {
+                    model.Category = oldCategory;
+                }
+                Categories.RemoveAt(oldCategoryIndex);
                 Categories.Insert(oldCategoryIndex, oldCategory);
                 Logger.LogError(ex, "Couldn't rename category {0} to {1}", oldCategory, newCategory);
                 return false;
-            }
-            Categories.Insert(oldCategoryIndex, newCategory);
-            foreach (PresentableCategoryData model in Models.Cast<PresentableCategoryData>().Where(x => string.Compare(x.Category, oldCategory) == 0))
-            {
-                model.Category = newCategory;
             }
             return true;
         }
@@ -107,13 +92,10 @@ namespace RPGDataEditor.Mvvm
             bool removed = Categories.Remove(category);
             if (removed)
             {
-                // TODO: Improve performance (AsEnumerable() is not the best option)
-                List<TResource> resources = DataSource.Query<TResource>()
-                                                      .AsEnumerable()
-                                                      .Where(x => EqualityComparer<string>.Default.Equals(x.Category, category)).ToList();
-                foreach (TResource resource in resources)
+                IEnumerable<TResource> foundModels = Models.Where(x => string.Compare(x.Category, category) == 0);
+                foreach (TResource model in foundModels)
                 {
-                    await DataSource.DeleteAsync(resource);
+                    await DataSource.DeleteAsync(model);
                 }
                 try
                 {

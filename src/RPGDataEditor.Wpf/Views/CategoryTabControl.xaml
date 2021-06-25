@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
              mc:Ignorable="d"
+             x:Name="ThisControl"
              Style="{DynamicResource DefaultControlStyle}">
     <Grid>
         <Grid.RowDefinitions>
@@ -53,11 +56,17 @@
                                         Command="{Binding DataContext.RemoveModelCommand, Source={x:Reference CategoryModelList}}"
                                         CommandParameter="{Binding .}" />
                                 <TextBlock x:Name="ModelLabel"
-                                           Text="{Binding ., Mode=OneWay}"
                                            Margin="2"
                                            VerticalAlignment="Center"
                                            Style="{DynamicResource MaterialDesignBody1TextBlock}"
-                                           Foreground="{DynamicResource MaterialDesignDarkForeground}" />
+                                           Foreground="{DynamicResource MaterialDesignDarkForeground}">
+                                    <i:Interaction.Behaviors>
+                                        <behaviors:SetBindingBehavior TargetProperty="{x:Static TextBlock.TextProperty}"
+                                                                      Path="."
+                                                                      Mode="OneWay"
+                                                                      Converter="{Binding ModelNameConverter, Source={x:Reference ThisControl}}"/>
+                                    </i:Interaction.Behaviors>
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>

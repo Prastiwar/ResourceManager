@@ -1,4 +1,4 @@
-﻿using ResourceManager.Data;
+﻿using RPGDataEditor.Sample.Models;
 using System;
 using System.Windows.Controls;
 
@@ -18,7 +18,7 @@ namespace RPGDataEditor.Sample.Wpf.Views
             {
                 return true;
             }
-            PresentableData npc = (PresentableData)item;
+            Npc npc = (Npc)item;
             if (int.TryParse(searchText, out int id))
             {
                 return (int)npc.Id == id;

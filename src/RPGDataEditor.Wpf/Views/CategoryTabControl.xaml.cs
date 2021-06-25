@@ -1,15 +1,21 @@
-﻿using System;
+﻿using RPGDataEditor.Wpf.Converters;
+using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.Views
 {
     public partial class CategoryTabControl : UserControl
     {
+        public static readonly DependencyProperty ModelNameConverterProperty =
+            DependencyProperty.Register("ModelNameConverter", typeof(IValueConverter), typeof(CategoryTabControl), new PropertyMetadata(StaticValueConverter.Create(x => x.ToString(), null)));
+        public IValueConverter ModelNameConverter {
+            get => (IValueConverter)GetValue(ModelNameConverterProperty);
+            set => SetValue(ModelNameConverterProperty, value);
+        }
+
         public CategoryTabControl()
         {
             InitializeComponent();

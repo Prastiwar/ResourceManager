@@ -48,6 +48,7 @@
                                                  ResourceType="{x:Type models:Dialogue}"
                                                  EmptyText="Select initaition dialogue"
                                                  PickedItemStringFormat="(ID: {Id}) {Title}"
+                                                 ModelNameConverter="{StaticResource DialoguePresentableNameConverter}"
                                                  PickedId="{Binding .}" />
                     </DataTemplate>
                 </controls:ListDataCard>

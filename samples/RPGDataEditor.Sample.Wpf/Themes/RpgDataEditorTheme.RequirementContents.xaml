@@ -11,6 +11,7 @@
                                      PickedItemStringFormat="(ID: {Id}) {Title}"
                                      PickedId="{Binding DialogueId, Mode=TwoWay}"
                                      EmptyText="Select Dialogue"
+                                     ModelNameConverter="{StaticResource DialoguePresentableNameConverter}"
                                      Margin="5" />
             <controls:AutoControl PropertyName="Completed" />
         </StackPanel>
@@ -27,6 +28,7 @@
                                      PickedItemStringFormat="(ID: {Id}) {Title}"
                                      PickedId="{Binding QuestId, Mode=TwoWay}"
                                      EmptyText="Select Quest"
+                                     ModelNameConverter="{StaticResource QuestPresentableNameConverter}"
                                      Margin="5" />
             <ComboBox x:Name="StageComboBox"
                       SelectedItem="{Binding Stage}"

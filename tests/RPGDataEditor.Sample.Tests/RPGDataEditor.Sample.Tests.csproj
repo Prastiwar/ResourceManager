@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\src\ResourceManager.DataSource.Ftp\ResourceManager.DataSource.Ftp.csproj" />
     <ProjectReference Include="..\..\src\ResourceManager.DataSource.Local\ResourceManager.DataSource.Local.csproj" />
     <ProjectReference Include="..\..\src\ResourceManager.DataSource.Sql\ResourceManager.DataSource.Sql.csproj" />
+    <ProjectReference Include="..\..\src\RPGDataEditor.Wpf\RPGDataEditor.Wpf.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,16 +7,16 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Extensions.Prism.Wpf.ViewModels
 {
-    public abstract class PresentableCategoryDataViewModel<TResource> : Mvvm.PresentableCategoryDataViewModel<TResource> where TResource : ICategorizable
+    public abstract class CategoryModelsManagerViewModel<TResource> : Mvvm.CategoryModelsManagerViewModel<TResource> where TResource : ICategorizable
     {
-        public PresentableCategoryDataViewModel(IViewService viewService, IDataSource dataSource, ILogger<Mvvm.PresentableCategoryDataViewModel<TResource>> logger)
+        public CategoryModelsManagerViewModel(IViewService viewService, IDataSource dataSource, ILogger<CategoryModelsManagerViewModel<TResource>> logger)
             : base(viewService, dataSource, logger) { }
 
         private ICommand openEditorCommand;
-        public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<PresentableData>(async presentable => await OpenEditorAsync(presentable));
+        public ICommand OpenEditorCommand => openEditorCommand ??= new DelegateCommand<TResource>(async presentable => await OpenEditorAsync(presentable));
 
         private ICommand removeModelCommand;
-        public ICommand RemoveModelCommand => removeModelCommand ??= new DelegateCommand<PresentableData>(async presentable => await RemoveModelAsync(presentable));
+        public ICommand RemoveModelCommand => removeModelCommand ??= new DelegateCommand<TResource>(async presentable => await RemoveModelAsync(presentable));
 
         private ICommand addCategoryCommand;
         public ICommand AddCategoryCommand => addCategoryCommand ??= new DelegateCommand(() => CreateCategory());

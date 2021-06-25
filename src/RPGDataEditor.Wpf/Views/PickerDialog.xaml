@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:behaviors="clr-namespace:RPGDataEditor.Wpf.Behaviors"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             x:Name="ThisControl"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Background="{DynamicResource MaterialDialogColor}"
              Style="{DynamicResource DefaultControlStyle}">
@@ -32,7 +35,14 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding .}" />
+                        <TextBlock>
+                            <i:Interaction.Behaviors>
+                                <behaviors:SetBindingBehavior TargetProperty="{x:Static TextBlock.TextProperty}"
+                                                              Path="."
+                                                              Mode="OneWay"
+                                                              Converter="{Binding DataContext.ModelNameConverter, Source={x:Reference ItemListView}}" />
+                            </i:Interaction.Behaviors>
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
