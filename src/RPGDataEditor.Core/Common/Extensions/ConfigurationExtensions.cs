@@ -8,8 +8,8 @@ namespace RPGDataEditor
     {
         public const string SessionFileName = "session";
 
-        public static Task SaveConfigAsync(this IAppPersistanceService service, IConfigurationSection section) => service.SaveAsync(SessionFileName, section);
+        public static Task SaveConfigAsync(this IAppPersistanceService service, IConfiguration configuration) => service.SaveAsync(SessionFileName, configuration);
 
-        public static void SaveConfig(this IAppPersistanceService service, IConfigurationSection section) => service.Save(SessionFileName, section);
+        public static void SaveConfig(this IAppPersistanceService service, IConfiguration configuration) => service.Save(SessionFileName, configuration);
     }
 }
