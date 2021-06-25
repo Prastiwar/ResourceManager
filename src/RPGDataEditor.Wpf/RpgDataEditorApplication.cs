@@ -89,7 +89,9 @@ namespace RPGDataEditor.Wpf
 
             services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
 
-            services.AddFluentAssemblyScanner(null, scanner => services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient));
+            services.AddFluentAssemblyScanner(null, scanner => {
+                services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient, new ScannerOptionsBuilder().Exclude(typeof(InlineValidator<>)).Build());
+            });
 
             services.AddSingleton<ITextSerializer, NewtonsoftSerializer>();
             services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>(x => new LocalAppPersistanceService(x.GetRequiredService<ITextSerializer>()) { FolderPath = CacheDirectoryPath });

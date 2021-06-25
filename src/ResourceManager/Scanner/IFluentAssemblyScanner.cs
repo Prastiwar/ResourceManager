@@ -1,15 +1,17 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace ResourceManager
 {
     public interface IFluentAssemblyScanner
     {
-        IFluentAssemblyScanner Include(Assembly[] assemblies);
-        IFluentAssemblyScanner IncludeIgnore(Assembly[] assemblies);
-        IFluentAssemblyScanner Reset();
+        HashSet<Type> ExcludedTypes { get; }
 
-        IFluentTypeSelector Scan(Assembly[] assemblies);
+        IList<Assembly> ScanAssemblies { get; }
+
+        IFluentTypeSelector Scan(IEnumerable<Assembly> assemblies);
         IFluentTypeSelector Scan();
-        IFluentTypeSelector Ignore(Assembly[] assemblies);
+        IFluentTypeSelector ScanIgnoring(IEnumerable<Assembly> assemblies);
     }
 }

@@ -17,7 +17,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
-        public ConnectionTabViewModel(IViewService viewService, IValidator<IConfigurationSection> validator, IConfigurableDataSource configurator, IAppPersistanceService persistance, ILogger<ConnectionTabViewModel> logger)
+        public ConnectionTabViewModel(IViewService viewService, IValidator<IConfiguration> validator, IConfigurableDataSource configurator, IAppPersistanceService persistance, ILogger<ConnectionTabViewModel> logger)
         {
             ViewService = viewService;
             Validator = validator;
@@ -41,7 +41,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         protected IViewService ViewService { get; }
 
-        protected IValidator<IConfigurationSection> Validator { get; }
+        protected IValidator<IConfiguration> Validator { get; }
 
         public event EventHandler<ValidatedEventArgs> Validated;
 
@@ -51,7 +51,7 @@ namespace RPGDataEditor.Wpf.ViewModels
 
         public override async Task<bool> CanNavigateFrom(INavigationContext navigationContext)
         {
-            ValidationResult result = await Validator.ValidateAsync((IConfigurationSection)Configuration);
+            ValidationResult result = await Validator.ValidateAsync(Configuration);
             RaiseValidated(Configuration, result);
             if (result.IsValid)
             {

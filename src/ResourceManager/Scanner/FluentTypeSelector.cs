@@ -6,11 +6,11 @@ namespace ResourceManager
 {
     public class FluentTypeSelector : IFluentTypeSelector
     {
-        public FluentTypeSelector(Assembly[] assemblies) => Assemblies = assemblies;
+        public FluentTypeSelector(IEnumerable<Assembly> assemblies) => Assemblies = assemblies;
 
         protected IList<Type> TypesToScan { get; private set; } = new List<Type>();
 
-        protected Assembly[] Assemblies { get; }
+        protected IEnumerable<Assembly> Assemblies { get; }
 
         protected HashSet<Type> IgnoredTypes { get; set; }
 
@@ -23,12 +23,6 @@ namespace ResourceManager
         public IFluentTypeSelector Ignore(HashSet<Type> types)
         {
             IgnoredTypes = types ?? new HashSet<Type>();
-            return this;
-        }
-
-        public IFluentTypeSelector Ignore(params Type[] types)
-        {
-            IgnoredTypes = new HashSet<Type>(types);
             return this;
         }
 
@@ -56,7 +50,7 @@ namespace ResourceManager
             return this;
         }
 
-        public IFluentTypeSelector Select(params Type[] types)
+        public IFluentTypeSelector Select(Type[] types)
         {
             foreach (Type item in types)
             {

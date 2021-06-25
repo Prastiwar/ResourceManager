@@ -77,14 +77,30 @@ namespace ResourceManager
             }
         }
 
-        public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime, Assembly[] targetAssemblies = null)
-            => services.AddScannedServices(scanner, typeof(TFrom), lifetime, targetAssemblies);
+        public static void AddScannedServices<TFrom>(this IServiceCollection services, IFluentAssemblyScanner scanner, ServiceLifetime lifetime, ScannerOptions options = null)
+            => services.AddScannedServices(scanner, typeof(TFrom), lifetime, options);
 
-        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ServiceLifetime lifetime, Assembly[] targetAssemblies = null)
+        public static void AddScannedServices(this IServiceCollection services, IFluentAssemblyScanner scanner, Type serviceType, ServiceLifetime lifetime, ScannerOptions options = null)
         {
-            IFluentTypeSelector selector = targetAssemblies != null && targetAssemblies.Length > 0
-                                            ? scanner.Scan(targetAssemblies)
+            IFluentTypeSelector selector = null;
+            if (options != null)
+            {
+                selector = options.TargetAssemblies != null && options.TargetAssemblies.Any()
+                                            ? scanner.Scan(options.TargetAssemblies)
                                             : scanner.Scan();
+                if (options.ExcludedTypes is HashSet<Type> set)
+                {
+                    selector = selector.Ignore(set);
+                }
+                else
+                {
+                    selector = selector.Ignore(new HashSet<Type>(options.ExcludedTypes));
+                }
+            }
+            else
+            {
+                selector = scanner.Scan();
+            }
             TypeScan results = selector.Select(serviceType).Get().Scans.First();
             foreach (Type implementationType in results.ResultTypes)
             {
