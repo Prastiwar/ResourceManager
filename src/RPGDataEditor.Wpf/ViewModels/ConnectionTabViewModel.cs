@@ -8,7 +8,6 @@ using RPGDataEditor.Core.Validation;
 using RPGDataEditor.Mvvm;
 using RPGDataEditor.Mvvm.Navigation;
 using RPGDataEditor.Mvvm.Services;
-using RPGDataEditor.Services;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,12 +16,11 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class ConnectionTabViewModel : ScreenViewModel, IValidationHook
     {
-        public ConnectionTabViewModel(IViewService viewService, IValidator<IConfiguration> validator, IConfigurableDataSource configurator, IAppPersistanceService persistance, ILogger<ConnectionTabViewModel> logger)
+        public ConnectionTabViewModel(IViewService viewService, IValidator<IConfiguration> validator, IConfigurableDataSource configurator, ILogger<ConnectionTabViewModel> logger)
         {
             ViewService = viewService;
             Validator = validator;
             Configurator = configurator;
-            Persistance = persistance;
             Configuration = configurator.Configuration;
             Logger = logger;
         }
@@ -34,8 +32,6 @@ namespace RPGDataEditor.Wpf.ViewModels
         }
 
         protected IConfigurableDataSource Configurator { get; }
-
-        protected IAppPersistanceService Persistance { get; }
 
         protected ILogger<ConnectionTabViewModel> Logger { get; }
 
@@ -68,14 +64,6 @@ namespace RPGDataEditor.Wpf.ViewModels
                 if (!connected)
                 {
                     return false;
-                }
-                try
-                {
-                    await Persistance.SaveConfigAsync((IConfigurationSection)Configuration);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "Couldn't save session");
                 }
             }
             return result.IsValid;

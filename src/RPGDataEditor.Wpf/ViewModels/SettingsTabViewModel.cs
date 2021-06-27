@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using ResourceManager.DataSource;
 using RPGDataEditor.Mvvm;
-using RPGDataEditor.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,17 +13,15 @@ namespace RPGDataEditor.Wpf.ViewModels
 {
     public class SettingsTabViewModel : ScreenViewModel
     {
-        public SettingsTabViewModel(IDataSource dataSource, IConfiguration configuration, IAppPersistanceService persistanceService, ILogger<SettingsTabViewModel> logger)
+        public SettingsTabViewModel(IDataSource dataSource, IConfiguration configuration, ILogger<SettingsTabViewModel> logger)
         {
             DataSource = dataSource;
             Configuration = configuration;
-            PersistanceService = persistanceService;
             Logger = logger;
         }
 
         protected IDataSource DataSource { get; }
         protected IConfiguration Configuration { get; }
-        protected IAppPersistanceService PersistanceService { get; }
         protected ILogger<SettingsTabViewModel> Logger { get; }
 
         private ICommand ceateBackupCommand;
@@ -37,7 +34,6 @@ namespace RPGDataEditor.Wpf.ViewModels
                 if (SetProperty(ref backupFolderPath, value))
                 {
                     Configuration["BackupFolderPath"] = value;
-                    PersistanceService.SaveConfig(Configuration);
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace RPGDataEditor.Core.Validation
                                                                       .When(x => IsType(x, "sql"))
                                                                       .WithName("ConnectionString");
 
-            RuleFor(x => x.GetDataSourceSection()["FolderPath"]).Must(x => Directory.Exists(x.ToString())).WithMessage("Folder doesn't exists")
+            RuleFor(x => x.GetDataSourceSection()["FolderPath"]).Must(x => x != null && Directory.Exists(x.ToString())).WithMessage("Folder doesn't exists")
                                                                 .When(x => IsType(x, "local"))
                                                                 .WithName("FolderPath");
 

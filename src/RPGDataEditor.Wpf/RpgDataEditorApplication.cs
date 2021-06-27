@@ -18,7 +18,6 @@ using RPGDataEditor.Extensions.Prism.Wpf;
 using RPGDataEditor.Extensions.Prism.Wpf.Services;
 using RPGDataEditor.Mvvm.Services;
 using RPGDataEditor.Providers;
-using RPGDataEditor.Services;
 using RPGDataEditor.Wpf.Mvvm;
 using RPGDataEditor.Wpf.Providers;
 using RPGDataEditor.Wpf.Services;
@@ -39,17 +38,15 @@ namespace RPGDataEditor.Wpf
 
         public static new RpgDataEditorApplication Current => Application.Current as RpgDataEditorApplication;
 
-        protected string AppRootPath => new DirectoryInfo(BinaryPath).Parent.FullName;
-
-        protected string BinaryPath => Path.Combine(Environment.CurrentDirectory + "bin");
-
-        protected virtual string CacheDirectoryPath {
+        protected virtual string SessionFilePath {
             get {
-                string path = Path.Combine(AppRootPath, "cache");
+                string path = Path.GetFullPath("./cache");
                 Directory.CreateDirectory(path);
-                return path;
+                return Path.Combine(path, "session.json");
             }
         }
+
+        protected virtual Func<string> LogFilePathFunc => () => $"./logs/log_{DateTime.Now.ToString("dd_MM_yyyy")}.txt";
 
         protected virtual void OnUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
             => Container.Resolve<ILogger<RpgDataEditorApplication>>().LogError(e.Exception, "Unhandled exception");
@@ -85,16 +82,15 @@ namespace RPGDataEditor.Wpf
 
         protected virtual void Configure(IServiceCollection services)
         {
-            services.AddLogging(builder => builder.AddFile(() => $"./logs/log_{DateTime.Now.ToString("dd_MM_yyyy")}.txt"));
+            services.AddLogging(builder => builder.AddFile(LogFilePathFunc));
 
-            services.AddConfiguration(builder => builder.AddJsonFile(Path.Combine(CacheDirectoryPath, ConfigurationExtensions.SessionFileName + ".json"), true, true));
+            services.AddConfiguration(builder => builder.AddWriteableJsonFile(SessionFilePath, true, true));
 
             services.AddFluentAssemblyScanner(null, scanner => {
                 services.AddScannedServices(scanner, typeof(IValidator<>), ServiceLifetime.Transient, new ScannerOptionsBuilder().Exclude(typeof(InlineValidator<>)).Build());
             });
 
             services.AddSingleton<ITextSerializer, NewtonsoftSerializer>();
-            services.AddSingleton<IAppPersistanceService, LocalAppPersistanceService>(x => new LocalAppPersistanceService(x.GetRequiredService<ITextSerializer>()) { FolderPath = CacheDirectoryPath });
 
             services.AddSingleton(typeof(IImplementationProvider<>), typeof(DefaultImplementationProvider<>));
             services.AddSingleton<IServiceProvider, PrismServiceProvider>();

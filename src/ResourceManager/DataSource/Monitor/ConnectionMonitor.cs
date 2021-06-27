@@ -26,9 +26,13 @@ namespace ResourceManager.DataSource
         public void Stop()
         {
             CheckerTimer?.Stop();
-            if (TokenSource != null && !TokenSource.IsCancellationRequested)
+            try
             {
-                TokenSource.Cancel();
+                TokenSource?.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Ignore exception
             }
             TokenSource = null;
             IsRunning = false;
