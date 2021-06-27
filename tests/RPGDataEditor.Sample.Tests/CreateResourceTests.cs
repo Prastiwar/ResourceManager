@@ -84,6 +84,7 @@ namespace RPGDataEditor.Sample.Tests
             IDataSource dataSource = GetIntegratedSqlDataSource();
             await dataSource.AddAsync(dialogue);
             await dataSource.SaveChangesAsync();
+            // TODO: Test Asserts
         }
 
         [Fact]
@@ -125,6 +126,7 @@ namespace RPGDataEditor.Sample.Tests
             IDataSource dataSource = GetIntegratedSqlDataSource();
             await dataSource.AddAsync(quest);
             await dataSource.SaveChangesAsync();
+            // TODO: Test Asserts
         }
 
         [Fact]
@@ -166,6 +168,7 @@ namespace RPGDataEditor.Sample.Tests
             IDataSource dataSource = GetIntegratedSqlDataSource();
             await dataSource.AddAsync(npc);
             await dataSource.SaveChangesAsync();
+            // TODO: Test Asserts
         }
     }
 }

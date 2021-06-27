@@ -32,8 +32,7 @@ namespace RPGDataEditor.Sample.Wpf
 
         protected override void ConfigureDataSources(IConfigurableDataSourceBuilder builder)
         {
-            // TODO: Serializer is defined in base app, should use it instead making new instance
-            Core.Services.NewtonsoftSerializer serializer = new Core.Services.NewtonsoftSerializer();
+            ITextSerializer serializer = new Core.Services.NewtonsoftSerializer();
             builder.RegisterResourceTypes(typeof(Quest), typeof(Dialogue), typeof(Npc));
 
             ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();

@@ -34,6 +34,7 @@ namespace RPGDataEditor.Sample.DataSource
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // TODO: Improve model creation
             modelBuilder.Entity<Quest>();
             modelBuilder.Entity<Dialogue>();
             modelBuilder.Entity<Npc>();

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
+using ResourceManager.Data;
 using ResourceManager.DataSource;
 using RPGDataEditor.Mvvm;
 using System;
@@ -11,18 +12,20 @@ using System.Windows.Input;
 
 namespace RPGDataEditor.Wpf.ViewModels
 {
-    public class SettingsTabViewModel : ScreenViewModel
+    public class BackupTabViewModel : ScreenViewModel
     {
-        public SettingsTabViewModel(IDataSource dataSource, IConfiguration configuration, ILogger<SettingsTabViewModel> logger)
+        public BackupTabViewModel(IDataSource dataSource, ITextSerializer textSerializer, IConfiguration configuration, ILogger<BackupTabViewModel> logger)
         {
             DataSource = dataSource;
+            TextSerializer = textSerializer;
             Configuration = configuration;
             Logger = logger;
         }
 
         protected IDataSource DataSource { get; }
+        protected ITextSerializer TextSerializer { get; }
         protected IConfiguration Configuration { get; }
-        protected ILogger<SettingsTabViewModel> Logger { get; }
+        protected ILogger<BackupTabViewModel> Logger { get; }
 
         private ICommand ceateBackupCommand;
         public ICommand CreateBackupCommand => ceateBackupCommand ??= new DelegateCommand<Type>((type) => CreateBackup(type));
@@ -44,7 +47,8 @@ namespace RPGDataEditor.Wpf.ViewModels
             DateTime now = DateTime.Now;
             string fileName = $"{resourceType.Name}-backup-{now.ToString("dd_MM_yyyy")}-{now.ToString("HH_mm_ss")}";
             string filePath = Path.Combine(BackupFolderPath, fileName);
-            string backup = ""; // TODO: Create backup
+            Type realListType = typeof(List<>).MakeGenericType(resourceType);
+            string backup = TextSerializer.Serialize(resources, realListType);
             await File.WriteAllTextAsync(filePath, backup);
         }
     }

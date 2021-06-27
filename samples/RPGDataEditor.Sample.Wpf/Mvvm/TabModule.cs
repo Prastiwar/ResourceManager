@@ -17,7 +17,7 @@ namespace RPGDataEditor.Sample.Wpf
                 typeof(NpcTab),
                 typeof(DialogueTab),
                 typeof(QuestTab),
-                typeof(SettingsTab)
+                typeof(BackupTab)
             };
 
         protected override void RegisterDialogs(IContainerRegistry containerRegistry)
