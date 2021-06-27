@@ -66,7 +66,8 @@ namespace RPGDataEditor.Sample.Wpf
             });
         }
 
-        protected virtual DbContext CreateSqlDbContext(string connectionString, IConfiguration configuration, SqlDataSourceOptions options) => new DefaultDbContext(connectionString, configuration);
+        protected virtual DbContext CreateSqlDbContext(string connectionString, IConfiguration configuration, SqlDataSourceOptions options) 
+            => new DefaultDbContext(connectionString, configuration);
 
         protected override JsonSerializerSettings CreateJsonSettings()
         {

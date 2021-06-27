@@ -33,18 +33,38 @@ This data source connects to file system using FTP. It needs host, username and 
 
 This data source connects to SQL database using connection string. Before using this connection make sure your login has select/insert/update/delete permissions to needed tables.
 
-## Default Data Architecture
-
-RPGDataEditor uses 3 resources: Npc, Quest, Dialogue
-
-TBA
-
 ## Extending RPGDataEditor.Wpf
 
-There are few important things you need to setup before succesfully launch RPGDataEditor.Wpf extension app
-1. Serialization - you must configure serialization module so each resource that extends base resource, must have own converter, so additional properties will be also serialized
-2. Validation - you must configure validation module so each resource must have own IValidator<> 
-3. Ignore base types - TBA
+You can see in samples how to properly exend it, there are few important things you need to setup before succesfully creating RPGDataEditor app
+1. Models - Quest, dialogues, tasks, npcs, any resource you want to manage you need to define on your own. **Main resources need to implement `IIdentifiable` interface**
+2. Serialization - you must configure serialization module so each resource that extends base resource, must have own converter, so additional properties will be also serialized
+3. Validation - you must configure validation module so each resource must have own IValidator<> 
+4. DefaultDbContext - you should configure model creation with own DbContext - it's required only when you want to support SQL connection
+   
+5. WPF project extension
+   
+- [x] Make sure your `App.cs` extend `RpgDataEditorApplication` 
+- [x] Create `RegionTabModuleBase` implementation 
+- [x] Register your `RegionTabModuleBase` in `App.cs` like `protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();` 
+- [x] Build your data sources in `protected override void ConfigureDataSources(IConfigurableDataSourceBuilder builder)` 
+- [x] Configure json settings in `protected override JsonSerializerSettings CreateJsonSettings()` (add your converters) 
+
+- [x] Add static converters to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Converters.xaml" />` 
+- [x] Add default themes to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Generic.xaml" />` 
+
+ViewModels
+- [x] Any editable resource can just extend `ModelDialogViewModel<>`
+- [x] Any resource that has it's own Tab can just extend `ModelsManagerViewModel<>` or `CategoryModelsManagerViewModel<>`
+
+Optional AutoControl system in Views
+- [x] Types that can be auto templated should extend AutoTemplate 
+- [x] extend `DefaultAutoTemplateProvider` and register your AutoTemplate's
+
+## Sample
+
+RPGDataEditor.Sample uses 3 resources: Npc, Quest, Dialogue
+
+More description SOON
 
 ## Contributing
 
