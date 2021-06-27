@@ -45,7 +45,7 @@ namespace ResourceManager.DataSource.Ftp
                 await Client.ConnectAsync(token).ConfigureAwait(true);
                 await Client.DisconnectAsync(token).ConfigureAwait(true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }

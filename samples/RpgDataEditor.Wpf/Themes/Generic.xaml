@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/ResourceManager.Wpf;component/Themes/Converters.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RpgDataEditor.Wpf;component/Themes/RpgDataEditorTheme.ChangeableUserControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RpgDataEditor.Wpf;component/Themes/RpgDataEditorTheme.PositionBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RpgDataEditor.Wpf;component/Themes/RpgDataEditorTheme.RequirementContents.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RpgDataEditor.Wpf;component/Themes/RpgDataEditorTheme.QuestTaskContents.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RpgDataEditor.Wpf;component/Themes/RpgDataEditorTheme.DialogueOptionContents.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RpgDataEditor.Wpf;component/Themes/RpgDataEditorTheme.NpcJobContents.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

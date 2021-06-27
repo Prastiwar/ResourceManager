@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="Moq" Version="4.14.0" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,7 +21,47 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\RPGDataEditor.Core\RPGDataEditor.Core.csproj" />
+    <ProjectReference Include="..\..\samples\RpgDataEditor\RpgDataEditor.csproj" />
+    <ProjectReference Include="..\..\src\ResourceManager.DataSource.Ftp\ResourceManager.DataSource.Ftp.csproj" />
+    <ProjectReference Include="..\..\src\ResourceManager.DataSource.Local\ResourceManager.DataSource.Local.csproj" />
+    <ProjectReference Include="..\..\src\ResourceManager.DataSource.Sql\ResourceManager.DataSource.Sql.csproj" />
+    <ProjectReference Include="..\..\src\ResourceManager.Wpf\ResourceManager.Wpf.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Fixtures\Ftp\" />
+    <Folder Include="Fixtures\Local\" />
+    <Folder Include="Fixtures\Sql\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fixtures\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fixtures\Ftp-Server\FileZilla Server.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\Ftp-Server\FileZilla Server.exe">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\Ftp-Server\install-service.bat">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\Ftp-Server\legal.htm">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\Ftp-Server\libeay32.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\Ftp-Server\license.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Fixtures\Ftp-Server\ssleay32.dll">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
 </Project>

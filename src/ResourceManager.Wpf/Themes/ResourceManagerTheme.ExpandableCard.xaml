@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:controls="clr-namespace:ResourceManager.Wpf.Controls">
+    <ControlTemplate TargetType="{x:Type controls:ExpandableCard}"
+                     x:Key="ExpandableCardTemplate">
+        <materialDesign:Card HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <controls:ExpandButton x:Name="ExpandButton"
+                                           HorizontalAlignment="Left"
+                                           ExpandableElement="{x:Reference ExpandableContentPresenter}" />
+                    <TextBlock Text="{TemplateBinding HeaderText}"
+                               Margin="10,0,0,0" />
+                </StackPanel>
+                <ContentPresenter x:Name="ExpandableContentPresenter"
+                                  Visibility="Visible"
+                                  Content="{TemplateBinding Content}" />
+            </StackPanel>
+        </materialDesign:Card>
+    </ControlTemplate>
+    <Style TargetType="{x:Type controls:ExpandableCard}">
+        <Setter Property="Template"
+                Value="{StaticResource ExpandableCardTemplate}" />
+    </Style>
+</ResourceDictionary>

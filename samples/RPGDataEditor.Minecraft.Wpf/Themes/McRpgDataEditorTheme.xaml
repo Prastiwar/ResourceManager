@@ -1,7 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Minecraft.Wpf;component/Themes/McRpgDataEditorTheme.RequirementContents.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Minecraft.Wpf;component/Themes/McRpgDataEditorTheme.DialogueOptionContents.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Minecraft.Wpf;component/Themes/McRpgDataEditorTheme.QuestTaskContents.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-</ResourceDictionary>

@@ -2,18 +2,18 @@
 
 ***ResourceManager is framework to fast development of simple software tool desktop application which provides ability to edit resources***
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/Prastiwar/RPGDataEditor.svg?label=Updated&style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/commits/master)
-[![license](https://img.shields.io/github/license/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/blob/master/LICENSE)
-[![GitHub forks](https://img.shields.io/github/forks/Prastiwar/RPGDataEditor.svg?style=social&label=Fork&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/fork)
-[![GitHub stars](https://img.shields.io/github/stars/Prastiwar/RPGDataEditor.svg?style=social&label=★Star&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/stargazers)
-[![GitHub watchers](https://img.shields.io/github/watchers/Prastiwar/RPGDataEditor.svg?style=social&labelWatcher&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/watchers)
-[![GitHub contributors](https://img.shields.io/github/contributors/Prastiwar/RPGDataEditor.svg?style=social&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/contributors)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Prastiwar/ResourceManager.svg?label=Updated&style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/commits/master)
+[![license](https://img.shields.io/github/license/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/blob/master/LICENSE)
+[![GitHub forks](https://img.shields.io/github/forks/Prastiwar/ResourceManager.svg?style=social&label=Fork&longCache=true)](https://github.com/Prastiwar/ResourceManager/fork)
+[![GitHub stars](https://img.shields.io/github/stars/Prastiwar/ResourceManager.svg?style=social&label=★Star&longCache=true)](https://github.com/Prastiwar/ResourceManager/stargazers)
+[![GitHub watchers](https://img.shields.io/github/watchers/Prastiwar/ResourceManager.svg?style=social&labelWatcher&longCache=true)](https://github.com/Prastiwar/ResourceManager/watchers)
+[![GitHub contributors](https://img.shields.io/github/contributors/Prastiwar/ResourceManager.svg?style=social&longCache=true)](https://github.com/Prastiwar/ResourceManager/contributors)
 
-![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)
-[![GitHub issues](https://img.shields.io/github/issues/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/pulls)
-[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Prastiwar/RPGDataEditor.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/RPGDataEditor/pulls)
+![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)
+[![GitHub issues](https://img.shields.io/github/issues/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/pulls)
+[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/pulls)
 
 ## 🎛️ Connection
 
@@ -33,9 +33,9 @@ This data source connects to file system using FTP. It needs host, username and 
 
 This data source connects to SQL database using connection string. Before using this connection make sure your login has select/insert/update/delete permissions to needed tables.
 
-## ⚒️ Extending RPGDataEditor.Wpf
+## ⚒️ Extending ResourceManager.Wpf
 
-You can see in samples how to properly exend it, there are few important things you need to setup before succesfully creating RPGDataEditor app
+You can see in samples how to properly exend it, there are few important things you need to setup before succesfully creating ResourceManager app
 
 #### 🚧 Models 
 Quest, dialogues, tasks, npcs, any resource you want to manage you need to define on your own. **Main resources need to implement `IIdentifiable` interface**
@@ -50,14 +50,14 @@ you must configure validation module so each resource must have own IValidator<>
 you should configure model creation with own DbContext - it's required only when you want to support SQL connection
    
 #### 🔨 WPF project extension
-- Make sure your `App.cs` extend `RpgDataEditorApplication` 
+- Make sure your `App.cs` extend `ResourceManagerApplication` 
 - Create `RegionTabModuleBase` implementation 
 - Register your `RegionTabModuleBase` in `App.cs` like `protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();` 
 - Build your data sources in `protected override void ConfigureDataSources(IConfigurableDataSourceBuilder builder)` 
 - Configure json settings in `protected override JsonSerializerSettings CreateJsonSettings()` (add your converters) 
 
-- Add static converters to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Converters.xaml" />` 
-- Add default themes to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/RPGDataEditor.Wpf;component/Themes/Generic.xaml" />` 
+- Add static converters to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/ResourceManager.Wpf;component/Themes/Converters.xaml" />` 
+- Add default themes to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/ResourceManager.Wpf;component/Themes/Generic.xaml" />` 
 
 ViewModels
 - Any editable resource can just extend `ModelDialogViewModel<>`
@@ -67,7 +67,7 @@ Optional AutoControl system in Views
 - Types that can be auto templated should extend `AutoTemplate` 
 - Extend `DefaultAutoTemplateProvider`, register your `AutoTemplate`'s and register `IAutoTemplateProvider`
 
-## 🎓 RPGDataEditor Sample
+## 🎓 RpgDataEditor Sample
 
 ### Resources
 
@@ -85,8 +85,8 @@ Resource composed of message, options
 ## 🤝 Contributing
 
 You can freely contribute with us by reporting issues and making pull requests!
-Please read [CONTRIBUTING.md](https://github.com/Prastiwar/RPGDataEditor/blob/master/.github/CONTRIBUTING.md) for details on contributing.
+Please read [CONTRIBUTING.md](https://github.com/Prastiwar/ResourceManager/blob/master/.github/CONTRIBUTING.md) for details on contributing.
 
 ## 📘 License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/Prastiwar/RPGDataEditor/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/Prastiwar/ResourceManager/blob/master/LICENSE) file for details.

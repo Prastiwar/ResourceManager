@@ -1,0 +1,110 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:prism="http://prismlibrary.com/"
+                    xmlns:controls="clr-namespace:ResourceManager.Wpf.Controls"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Style TargetType="{x:Type Control}"
+           x:Key="DefaultControlStyle">
+        <Style.Setters>
+            <Setter Property="prism:ViewModelLocator.AutoWireViewModel"
+                    Value="True" />
+            <Setter Property="FontFamily"
+                    Value="{DynamicResource MaterialDesignFont}" />
+            <Setter Property="TextElement.Foreground"
+                    Value="{DynamicResource MaterialDesignBody}" />
+            <Setter Property="TextElement.FontWeight"
+                    Value="Regular" />
+            <Setter Property="TextElement.FontSize"
+                    Value="13" />
+            <Setter Property="TextOptions.TextFormattingMode"
+                    Value="Ideal" />
+            <Setter Property="TextOptions.TextRenderingMode"
+                    Value="Auto" />
+        </Style.Setters>
+    </Style>
+    <Style TargetType="{x:Type Control}"
+           x:Key="DefaultPrismWindowStyle">
+        <Style.Setters>
+            <Setter Property="MinHeight"
+                    Value="512" />
+            <Setter Property="MinWidth"
+                    Value="800" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource DefaultControlStyle}"
+           TargetType="{x:Type ContentControl}"
+           x:Key="DefaultEditorControl">
+        <Style.Setters>
+            <Setter Property="Background"
+                    Value="{DynamicResource MaterialDialogColor}" />
+            <Setter Property="ContentTemplate"
+                    Value="{DynamicResource EditorDialogTemplate}" />
+            <Setter Property="prism:Dialog.WindowStyle"
+                    Value="{DynamicResource DefaultPrismWindowStyle}" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}"
+           TargetType="{x:Type controls:SearchBox}">
+        <Style.Setters>
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="materialDesign:TextFieldAssist.PrefixText"
+                    Value="🔍  " />
+            <Setter Property="materialDesign:HintAssist.Hint"
+                    Value="Search.." />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
+           TargetType="{x:Type controls:ExpandButton}">
+        <Style.Setters>
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
+           TargetType="{x:Type Button}"
+           x:Key="DeleteFlatButtonStyle">
+        <Style.Setters>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <materialDesign:PackIcon Kind="Delete"
+                                                 FontSize="14" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CommandParameter"
+                    Value="{Binding .}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+        </Style.Setters>
+    </Style>
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}"
+           TargetType="{x:Type Button}"
+           x:Key="AddFlatButtonStyle">
+        <Style.Setters>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <materialDesign:PackIcon Kind="Add"
+                                                 FontSize="14" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="Width"
+                    Value="16" />
+            <Setter Property="Height"
+                    Value="16" />
+        </Style.Setters>
+    </Style>
+</ResourceDictionary>

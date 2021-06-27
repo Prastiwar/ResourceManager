@@ -1,0 +1,71 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:controls="clr-namespace:ResourceManager.Wpf.Controls"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <ControlTemplate TargetType="{x:Type controls:ListDataCard}"
+                     x:Key="ListDataCardTemplate">
+        <materialDesign:Card x:Name="CardContainer"
+                             HorizontalContentAlignment="Center"
+                             Margin="5"
+                             Padding="5">
+            <StackPanel>
+                <StackPanel x:Name="HeaderPanel"
+                            Orientation="Horizontal">
+                    <controls:ExpandButton ExpandableElement="{x:Reference ListDataView}"
+                                           Visibility="{TemplateBinding IsExpandable, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <controls:ExpandButton.IsExpanded>
+                            <MultiBinding Converter="{StaticResource ExpandListDataCardConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="IsExpanded"
+                                             RelativeSource="{RelativeSource AncestorType=controls:ListDataCard}" />
+                                    <Binding Path="IsExpandable"
+                                             RelativeSource="{RelativeSource AncestorType=controls:ListDataCard}" />
+                                    <Binding Path="NoExpandableVisibility"
+                                             RelativeSource="{RelativeSource AncestorType=controls:ListDataCard}" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </controls:ExpandButton.IsExpanded>
+                    </controls:ExpandButton>
+                    <Button Command="{TemplateBinding AddItemCommand}"
+                            CommandParameter="{TemplateBinding AddItemCommandParameter}"
+                            Style="{DynamicResource AddFlatButtonStyle}"
+                            Visibility="{TemplateBinding IsReadOnly, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                    <ContentPresenter x:Name="HeaderContentPresenter"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                </StackPanel>
+                <ListView x:Name="ListDataView"
+                          ItemsSource="{TemplateBinding ItemsSource}"
+                          AlternationCount="{x:Static sys:Int32.MaxValue}"
+                          HorizontalContentAlignment="Stretch">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Card HorizontalContentAlignment="Center"
+                                                 Padding="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Command="{Binding RemoveItemCommand, RelativeSource={RelativeSource AncestorType=controls:ListDataCard}}"
+                                            CommandParameter="{Binding .}"
+                                            Visibility="{Binding IsReadOnly, RelativeSource={RelativeSource AncestorType=controls:ListDataCard}, Converter={StaticResource InvertedBoolToVisibilityConverter}}"
+                                            VerticalAlignment="Top"
+                                            Margin="0,12,0,0"
+                                            Style="{DynamicResource DeleteFlatButtonStyle}" />
+                                    <ContentPresenter Grid.Column="1"
+                                                      DataContext="{Binding .}"
+                                                      ContentTemplate="{Binding ItemContentTemplate, RelativeSource={RelativeSource AncestorType=controls:ListDataCard}}" />
+                                </Grid>
+                            </materialDesign:Card>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </materialDesign:Card>
+    </ControlTemplate>
+    <Style TargetType="{x:Type controls:ListDataCard}">
+        <Setter Property="Template"
+                Value="{StaticResource ListDataCardTemplate}" />
+    </Style>
+</ResourceDictionary>

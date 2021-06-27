@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ResourceManager.Wpf</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autoupdater.NET.Official" Version="1.6.4" />
+    <PackageReference Include="FluentValidation" Version="9.5.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
+    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Extensions.Configuration.WriteableJson\Extensions.Configuration.WriteableJson.csproj" />
+    <ProjectReference Include="..\Extensions.Logging.File\Extensions.Logging.File.csproj" />
+    <ProjectReference Include="..\ResourceManager.DataSource.Ftp\ResourceManager.DataSource.Ftp.csproj" />
+    <ProjectReference Include="..\ResourceManager.DataSource.Local\ResourceManager.DataSource.Local.csproj" />
+    <ProjectReference Include="..\ResourceManager.DataSource.Sql\ResourceManager.DataSource.Sql.csproj" />
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\ResourceManager.Core\ResourceManager.Core.csproj" />
+    <ProjectReference Include="..\ResourceManager.Mvvm\ResourceManager.Mvvm.csproj" />
+    <ProjectReference Include="..\ResourceManager.Extensions.Prism.Wpf\ResourceManager.Extensions.Prism.Wpf.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ConnectionDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Themes\DataTemplates.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.ExpandableCard.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.ListDataCard.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.ConnectionContents.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.Styles.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.ResourcePicker.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.ChangeableUserControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\ResourceManagerTheme.MaterialColorPicker.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>
