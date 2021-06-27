@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "title": "TestTitle",
+  "message": "TestMessage",
+  "category": "TestCategory",
+  "startQuest": 1,
+  "requirements": [],
+  "options": [
+    {
+      "nextDialogId": -2,
+      "message": "TestOptionMessage",
+      "color": 16755200,
+      "requirements": []
+    }
+  ]
+}

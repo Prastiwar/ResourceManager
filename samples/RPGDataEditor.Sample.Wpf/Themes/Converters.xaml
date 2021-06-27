@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:RPGDataEditor.Sample.Wpf.Converters">
+    <converters:NextDialogIdToVisibility x:Key="NextDialogIdToVisibility" />
+    <converters:NpcPresentableNameConverter x:Key="NpcPresentableNameConverter" />
+    <converters:QuestPresentableNameConverter x:Key="QuestPresentableNameConverter" />
+    <converters:DialoguePresentableNameConverter x:Key="DialoguePresentableNameConverter" />
+</ResourceDictionary>

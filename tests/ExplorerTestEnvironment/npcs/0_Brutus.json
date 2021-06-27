@@ -1,0 +1,78 @@
+{
+  "id": 0,
+  "name": "Brutus",
+  "position": {
+    "x": -328,
+    "y": 68,
+    "z": -525
+  },
+  "attributes": [
+    {
+      "name": "minecraft:generic.max_health",
+      "value": 20.0
+    },
+    {
+      "name": "minecraft:generic.knockback_resistance",
+      "value": 0.0
+    },
+    {
+      "name": "minecraft:generic.movement_speed",
+      "value": 0.6
+    },
+    {
+      "name": "minecraft:generic.attack_damage",
+      "value": 2.0
+    },
+    {
+      "name": "minecraft:generic.attack_knockback",
+      "value": 0.0
+    },
+    {
+      "name": "minecraft:generic.attack_speed",
+      "value": 4.0
+    },
+    {
+      "name": "minecraft:generic.armor",
+      "value": 0.0
+    },
+    {
+      "name": "minecraft:generic.armor_toughness",
+      "value": 0.0
+    },
+    {
+      "name": "craftpolis:npc.respawn_time",
+      "value": 5.0
+    }
+  ],
+  "job": null,
+  "talkData": {
+    "talkRange": 10,
+    "initationDialogues": [],
+    "interactLines": [
+      {
+        "text": "Hello!",
+        "soundId": null
+      }
+    ],
+    "deathLines": [],
+    "hurtLines": []
+  },
+  "title": "Kat",
+  "textureLocation": "http://novask.in/4636423053.png",
+  "invulnerable": true,
+  "lookAtPlayer": false,
+  "healthRegen": 0,
+  "equipment": {
+    "chest": null,
+    "head": null,
+    "mainHand": "eidolon:reaper_scythe",
+    "offHand": null,
+    "feet": null,
+    "legs": null
+  },
+  "movementType": "STATIC",
+  "paths": [],
+  "ambientSoundLocation": "",
+  "deathSoundLocation": null,
+  "hurtSoundLocation": null
+}

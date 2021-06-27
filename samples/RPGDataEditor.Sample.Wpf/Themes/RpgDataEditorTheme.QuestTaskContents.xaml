@@ -1,0 +1,35 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:RPGDataEditor.Sample.Models;assembly=RPGDataEditor.Sample"
+                    xmlns:controls="clr-namespace:RPGDataEditor.Wpf.Controls;assembly=RPGDataEditor.Wpf">
+    <DataTemplate x:Key="EntityInteractQuestTaskContent">
+        <StackPanel>
+            <controls:ResourcePicker PickedId="{Binding EntityId}"
+                                     PickedItemStringFormat="(ID: {Id} {Name})"
+                                     ResourceType="{x:Type models:Npc}"
+                                     ModelNameConverter="{StaticResource NpcPresentableNameConverter}"
+                                     Margin="5" />
+        </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="KillQuestTaskContent">
+        <StackPanel>
+            <controls:AutoControl PropertyName="TargetId" />
+            <controls:AutoControl PropertyName="Amount" />
+        </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="ReachQuestTaskContent">
+        <StackPanel>
+            <controls:AutoControl PropertyName="Pos" />
+            <controls:AutoControl PropertyName="Distance" />
+        </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="DialogueQuestTaskContent">
+        <StackPanel>
+            <controls:ResourcePicker PickedId="{Binding DialogueId}"
+                                     ResourceType="{x:Type models:Dialogue}"
+                                     PickedItemStringFormat="(ID: {Id}) {Title}"
+                                     ModelNameConverter="{StaticResource DialoguePresentableNameConverter}"
+                                     Margin="5" />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>
