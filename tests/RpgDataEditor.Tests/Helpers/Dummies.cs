@@ -87,5 +87,21 @@ namespace RpgDataEditor.Tests
                 return npc;
             }
         }
+
+        public static Dialogue CategoryDialogue {
+            get {
+                Dialogue dialogue = Dialogue;
+                dialogue.Id = int.MaxValue / 5;
+                return dialogue;
+            }
+        }
+
+        public static Quest CategoryQuest {
+            get {
+                Quest quest = Quest;
+                quest.Id = int.MaxValue / 5;
+                return quest;
+            }
+        }
     }
 }

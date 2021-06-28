@@ -171,6 +171,7 @@ namespace RpgDataEditor.Tests
             ITextSerializer serializer = ServiceProvider.GetRequiredService<ITextSerializer>();
             string text = serializer.Serialize(resource);
             string fullFilePath = Path.GetFullPath(filePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullFilePath));
             File.WriteAllText(fullFilePath, text);
         }
 
@@ -212,12 +213,33 @@ namespace RpgDataEditor.Tests
         }
 
         protected string GetDialoguePath(string dataSourceName, Dialogue dialogue)
-            => $"./Fixtures/{dataSourceName}-temp/dialogues/{dialogue.Category}/{dialogue.Id}_{dialogue.Title}.json";
+        {
+            string path = $"./Fixtures/{dataSourceName}-temp/dialogues";
+            if (dialogue != null)
+            {
+                path += $"/{dialogue.Category}/{dialogue.Id}_{dialogue.Title}.json";
+            }
+            return path;
+        }
 
         protected string GetQuestPath(string dataSourceName, Quest quest)
-            => $"./Fixtures/{dataSourceName}-temp/quests/{quest.Category}/{quest.Id}_{quest.Title}.json";
+        {
+            string path = $"./Fixtures/{dataSourceName}-temp/quests";
+            if (quest != null)
+            {
+                path += $"/{quest.Category}/{quest.Id}_{quest.Title}.json";
+            }
+            return path;
+        }
 
         protected string GetNpcPath(string dataSourceName, Npc npc)
-            => $"./Fixtures/{dataSourceName}-temp/npcs/{npc.Id}_{npc.Name}.json";
+        {
+            string path = $"./Fixtures/{dataSourceName}-temp/npcs";
+            if (npc != null)
+            {
+                path += $"/{npc.Id}_{npc.Name}.json";
+            }
+            return path;
+        }
     }
 }
