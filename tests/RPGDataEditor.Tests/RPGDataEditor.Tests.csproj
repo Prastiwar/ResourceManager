@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\samples\RpgDataEditor.Wpf\RpgDataEditor.Wpf.csproj" />
     <ProjectReference Include="..\..\samples\RpgDataEditor\RpgDataEditor.csproj" />
     <ProjectReference Include="..\..\src\ResourceManager.DataSource.Ftp\ResourceManager.DataSource.Ftp.csproj" />
     <ProjectReference Include="..\..\src\ResourceManager.DataSource.Local\ResourceManager.DataSource.Local.csproj" />

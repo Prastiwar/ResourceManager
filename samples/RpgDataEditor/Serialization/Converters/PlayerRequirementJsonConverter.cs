@@ -5,7 +5,7 @@ namespace RpgDataEditor.Serialization
 {
     public class PlayerRequirementJsonConverter : AbstractClassJsonConverter<Requirement>
     {
-        public PlayerRequirementJsonConverter() : base(new[] { typeof(Requirement).Assembly }, "RpgDataEditor.Models") { }
+        public PlayerRequirementJsonConverter() : base(new[] { typeof(Requirement).Assembly }) { }
 
         protected override string Suffix => "Requirement";
     }

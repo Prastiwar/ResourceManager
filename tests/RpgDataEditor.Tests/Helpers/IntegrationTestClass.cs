@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using ResourceManager;
+using ResourceManager.Core.Serialization;
 using ResourceManager.Core.Services;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
@@ -10,6 +12,8 @@ using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
 using ResourceManager.Wpf.Converters;
 using RpgDataEditor.DataSource;
+using RpgDataEditor.Models;
+using RpgDataEditor.Serialization;
 using System;
 using System.IO;
 using System.Threading;
@@ -121,16 +125,18 @@ namespace RpgDataEditor.Tests
             ServiceCollection services = new ServiceCollection();
             services.AddConfiguration(builder => builder.AddInMemoryCollection());
             NewtonsoftSerializer serializer = new NewtonsoftSerializer();
+            JsonConvert.DefaultSettings = CreateJsonSettings;
+            services.AddSingleton<ITextSerializer, NewtonsoftSerializer>();
             services.AddDataSourceConfiguration(builder => {
-                builder.RegisterResourceTypes(typeof(Models.Quest), typeof(Models.Dialogue), typeof(Models.Npc));
+                builder.RegisterResourceTypes(typeof(Quest), typeof(Dialogue), typeof(Npc));
 
                 ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
-                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Models.Quest), "/quests", "/{category}/{id}_{title}.json");
-                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Models.Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
-                IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Models.Npc), "/npcs", "/{id}_{name}.json");
-                fileDescriptorService.Register<Models.Quest>(fileQuestDescriptor);
-                fileDescriptorService.Register<Models.Dialogue>(fileDialogueDescriptor);
-                fileDescriptorService.Register<Models.Npc>(fileNpcDescriptor);
+                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Quest), "/quests", "/{category}/{id}_{title}.json");
+                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
+                IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Npc), "/npcs", "/{id}_{name}.json");
+                fileDescriptorService.Register<Quest>(fileQuestDescriptor);
+                fileDescriptorService.Register<Dialogue>(fileDialogueDescriptor);
+                fileDescriptorService.Register<Npc>(fileNpcDescriptor);
 
                 builder.AddLocalDataSource(o => {
                     o.DescriptorService = fileDescriptorService;
@@ -143,20 +149,75 @@ namespace RpgDataEditor.Tests
                 });
 
                 builder.AddSqlDataSource(o => {
-                    IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Quest), "quests", ".{id}");
-                    IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Dialogue), "dialogues", ".{id}");
-                    IResourceDescriptor sqlNpcDescriptor = new SqlLocationResourceDescriptor(typeof(Models.Npc), "npcs", ".{id}");
+                    IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Quest), "quests", ".{id}");
+                    IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Dialogue), "dialogues", ".{id}");
+                    IResourceDescriptor sqlNpcDescriptor = new SqlLocationResourceDescriptor(typeof(Npc), "npcs", ".{id}");
 
                     o.DescriptorService = new ResourceDescriptorService();
-                    o.DescriptorService.Register<Models.Quest>(sqlQuestDescriptor);
-                    o.DescriptorService.Register<Models.Dialogue>(sqlDialogueDescriptor);
-                    o.DescriptorService.Register<Models.Npc>(sqlNpcDescriptor);
+                    o.DescriptorService.Register<Quest>(sqlQuestDescriptor);
+                    o.DescriptorService.Register<Dialogue>(sqlDialogueDescriptor);
+                    o.DescriptorService.Register<Npc>(sqlNpcDescriptor);
                     o.CreateDatabaseContext = CreateSqlDbContext;
                 });
             }, null, null);
             return services.BuildServiceProvider();
         }
+
         protected virtual DbContext CreateSqlDbContext(string connectionString, IConfiguration configuration, SqlDataSourceOptions options)
             => new DefaultDbContext(connectionString, configuration);
+
+        protected void CreateLocalFile(string filePath, object resource)
+        {
+            ITextSerializer serializer = ServiceProvider.GetRequiredService<ITextSerializer>();
+            string text = serializer.Serialize(resource);
+            string fullFilePath = Path.GetFullPath(filePath);
+            File.WriteAllText(fullFilePath, text);
+        }
+
+        protected T GetLocalResource<T>(string filePath)
+        {
+            ITextSerializer serializer = ServiceProvider.GetRequiredService<ITextSerializer>();
+            string text = File.ReadAllText(filePath);
+            return (T)serializer.Deserialize(text, typeof(T));
+        }
+
+        protected virtual JsonSerializerSettings CreateJsonSettings()
+        {
+            PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
+            propResolver.SetAllLetterCase(Lettercase.CamelCase);
+            JsonSerializerSettings settings = new JsonSerializerSettings {
+                ContractResolver = propResolver,
+                Formatting = Formatting.Indented
+            };
+            settings.Converters.Add(new NumberCastsConverter());
+            settings.Converters.Add(new ConfigurationSectionJsonConverter());
+
+            settings.Converters.Add(new PlayerRequirementJsonConverter());
+
+            settings.Converters.Add(new NpcJsonConverter());
+            settings.Converters.Add(new NpcJobJsonConverter());
+            settings.Converters.Add(new TradeItemJsonConverter());
+            settings.Converters.Add(new AttributeDataModelJsonConverter());
+
+            settings.Converters.Add(new PositionJsonConverter());
+
+            settings.Converters.Add(new QuestTaskJsonConverter());
+            settings.Converters.Add(new QuestJsonConverter());
+
+            settings.Converters.Add(new DialogueJsonConverter());
+            settings.Converters.Add(new DialogueOptionJsonConverter());
+            settings.Converters.Add(new TalkDataJsonConverter());
+            settings.Converters.Add(new TalkLineJsonConverter());
+            return settings;
+        }
+
+        protected string GetDialoguePath(string dataSourceName, Dialogue dialogue)
+            => $"./Fixtures/{dataSourceName}-temp/dialogues/{dialogue.Category}/{dialogue.Id}_{dialogue.Title}.json";
+
+        protected string GetQuestPath(string dataSourceName, Quest quest)
+            => $"./Fixtures/{dataSourceName}-temp/quests/{quest.Category}/{quest.Id}_{quest.Title}.json";
+
+        protected string GetNpcPath(string dataSourceName, Npc npc)
+            => $"./Fixtures/{dataSourceName}-temp/npcs/{npc.Id}_{npc.Name}.json";
     }
 }

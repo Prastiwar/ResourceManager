@@ -7,21 +7,26 @@ using Xunit;
 
 namespace RpgDataEditor.Tests
 {
-    public class CreateResourceTests : IntegrationTestClass
+    public class DeleteResourceTests : IntegrationTestClass
     {
         [Fact]
-        public async Task CreateDialogueWithFtp()
+        public async Task DeleteDialogueWithFtp()
         {
-            Dialogue dialogue = Dummies.Dialogue;
+            Dialogue dialogue = Dummies.DeleteDialogue;
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
                 try
                 {
                     IDataSource dataSource = GetIntegratedFtpDataSource(tokenSource.Token);
-                    await dataSource.AddAsync(dialogue);
-                    await dataSource.SaveChangesAsync();
                     string relativePath = GetDialoguePath("Ftp", dialogue);
+                    if (!File.Exists(relativePath))
+                    {
+                        CreateLocalFile(relativePath, dialogue);
+                    }
                     Assert.True(File.Exists(relativePath));
+                    await dataSource.DeleteAsync(dialogue);
+                    await dataSource.SaveChangesAsync();
+                    Assert.False(File.Exists(relativePath));
                 }
                 catch (System.Exception)
                 {
@@ -32,39 +37,49 @@ namespace RpgDataEditor.Tests
         }
 
         [Fact]
-        public async Task CreateDialogueWithLocal()
+        public async Task DeleteDialogueWithLocal()
         {
-            Dialogue dialogue = Dummies.Dialogue;
+            Dialogue dialogue = Dummies.DeleteDialogue;
             IDataSource dataSource = GetIntegratedLocalDataSource();
-            await dataSource.AddAsync(dialogue);
-            await dataSource.SaveChangesAsync();
             string relativePath = GetDialoguePath("Local", dialogue);
+            if (!File.Exists(relativePath))
+            {
+                CreateLocalFile(relativePath, dialogue);
+            }
             Assert.True(File.Exists(relativePath));
+            await dataSource.DeleteAsync(dialogue);
+            await dataSource.SaveChangesAsync();
+            Assert.False(File.Exists(relativePath));
         }
 
         [Fact]
-        public async Task CreateDialogueWithSql()
+        public async Task DeleteDialogueWithSql()
         {
-            Dialogue dialogue = Dummies.Dialogue;
+            Dialogue dialogue = Dummies.DeleteDialogue;
             IDataSource dataSource = GetIntegratedSqlDataSource();
-            await dataSource.AddAsync(dialogue);
+            await dataSource.DeleteAsync(dialogue);
             await dataSource.SaveChangesAsync();
             // TODO: Test Asserts
         }
 
         [Fact]
-        public async Task CreateQuestWithFtp()
+        public async Task DeleteQuestWithFtp()
         {
-            Quest quest = Dummies.Quest;
+            Quest quest = Dummies.DeleteQuest;
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
                 try
                 {
                     IDataSource dataSource = GetIntegratedFtpDataSource(tokenSource.Token);
-                    await dataSource.AddAsync(quest);
-                    await dataSource.SaveChangesAsync();
                     string relativePath = GetQuestPath("Ftp", quest);
+                    if (!File.Exists(relativePath))
+                    {
+                        CreateLocalFile(relativePath, quest);
+                    }
                     Assert.True(File.Exists(relativePath));
+                    await dataSource.DeleteAsync(quest);
+                    await dataSource.SaveChangesAsync();
+                    Assert.False(File.Exists(relativePath));
                 }
                 catch (System.Exception)
                 {
@@ -75,39 +90,49 @@ namespace RpgDataEditor.Tests
         }
 
         [Fact]
-        public async Task CreateQuestWithLocal()
+        public async Task DeleteQuestWithLocal()
         {
-            Quest quest = Dummies.Quest;
+            Quest quest = Dummies.DeleteQuest;
             IDataSource dataSource = GetIntegratedLocalDataSource();
-            await dataSource.AddAsync(quest);
-            await dataSource.SaveChangesAsync();
             string relativePath = GetQuestPath("Local", quest);
+            if (!File.Exists(relativePath))
+            {
+                CreateLocalFile(relativePath, quest);
+            }
             Assert.True(File.Exists(relativePath));
+            await dataSource.DeleteAsync(quest);
+            await dataSource.SaveChangesAsync();
+            Assert.False(File.Exists(relativePath));
         }
 
         [Fact]
-        public async Task CreateQuestWithSql()
+        public async Task DeleteQuestWithSql()
         {
-            Quest quest = Dummies.Quest;
+            Quest quest = Dummies.DeleteQuest;
             IDataSource dataSource = GetIntegratedSqlDataSource();
-            await dataSource.AddAsync(quest);
+            await dataSource.DeleteAsync(quest);
             await dataSource.SaveChangesAsync();
             // TODO: Test Asserts
         }
 
         [Fact]
-        public async Task CreateNpcWithFtp()
+        public async Task DeleteNpcWithFtp()
         {
-            Npc npc = Dummies.Npc;
+            Npc npc = Dummies.DeleteNpc;
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
                 try
                 {
                     IDataSource dataSource = GetIntegratedFtpDataSource(tokenSource.Token);
-                    await dataSource.AddAsync(npc);
-                    await dataSource.SaveChangesAsync();
                     string relativePath = GetNpcPath("Ftp", npc);
+                    if (!File.Exists(relativePath))
+                    {
+                        CreateLocalFile(relativePath, npc);
+                    }
                     Assert.True(File.Exists(relativePath));
+                    await dataSource.DeleteAsync(npc);
+                    await dataSource.SaveChangesAsync();
+                    Assert.False(File.Exists(relativePath));
                 }
                 catch (System.Exception)
                 {
@@ -118,22 +143,27 @@ namespace RpgDataEditor.Tests
         }
 
         [Fact]
-        public async Task CreateNpcWithLocal()
+        public async Task DeleteNpcWithLocal()
         {
-            Npc npc = Dummies.Npc;
+            Npc npc = Dummies.DeleteNpc;
             IDataSource dataSource = GetIntegratedLocalDataSource();
-            await dataSource.AddAsync(npc);
-            await dataSource.SaveChangesAsync();
             string relativePath = GetNpcPath("Local", npc);
+            if (!File.Exists(relativePath))
+            {
+                CreateLocalFile(relativePath, npc);
+            }
             Assert.True(File.Exists(relativePath));
+            await dataSource.DeleteAsync(npc);
+            await dataSource.SaveChangesAsync();
+            Assert.False(File.Exists(relativePath));
         }
 
         [Fact]
-        public async Task CreateNpcWithSql()
+        public async Task DeleteNpcWithSql()
         {
-            Npc npc = Dummies.Npc;
+            Npc npc = Dummies.DeleteNpc;
             IDataSource dataSource = GetIntegratedSqlDataSource();
-            await dataSource.AddAsync(npc);
+            await dataSource.DeleteAsync(npc);
             await dataSource.SaveChangesAsync();
             // TODO: Test Asserts
         }

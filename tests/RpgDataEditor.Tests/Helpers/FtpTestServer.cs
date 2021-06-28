@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.ServiceProcess;
+using Xunit;
 
 namespace RpgDataEditor.Tests
 {
@@ -21,14 +23,23 @@ namespace RpgDataEditor.Tests
         public void Stop()
         {
             ServiceController controller = GetServerServiceAsync();
-            controller.Stop();
+            try
+            {
+                controller.Stop();
+            }
+            catch (Exception)
+            {
+                Trace.TraceWarning("Couldn't stop service ResourceManagerFtpTestServer");
+            }
         }
 
         protected ServiceController GetServerServiceAsync()
         {
             try
             {
-                return new ServiceController("ResourceManagerFtpTestServer");
+                ServiceController controller = new ServiceController("ResourceManagerFtpTestServer");
+                Assert.Equal("ResourceManagerFtpTestServer", controller.ServiceName);
+                return controller;
             }
             catch (Exception)
             {
