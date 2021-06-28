@@ -70,12 +70,13 @@ namespace ResourceManager.DataSource.Ftp
                         FtpStatus updateStatus = client.Upload(updateContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
                         if (updateStatus == FtpStatus.Success)
                         {
-                            string oldPath = descriptor.GetRelativeFullPath(tracking.OriginalResource);
-                            if (string.Compare(oldPath, targetPath) != 0)
+                            string originalPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                            if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                             {
-                                client.DeleteFile(oldPath);
+                                client.DeleteFile(originalPath);
                             }
-                        } else if (updateStatus == FtpStatus.Failed)
+                        }
+                        else if (updateStatus == FtpStatus.Failed)
                         {
                             throw new FtpException("Update operation failed");
                         }
@@ -117,10 +118,10 @@ namespace ResourceManager.DataSource.Ftp
                         FtpStatus updateStatus = await client.UploadAsync(updateContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
                         if (updateStatus == FtpStatus.Success)
                         {
-                            string oldPath = descriptor.GetRelativeFullPath(tracking.OriginalResource);
-                            if (string.Compare(oldPath, targetPath) != 0)
+                            string originalPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                            if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                             {
-                                await client.DeleteFileAsync(oldPath);
+                                await client.DeleteFileAsync(originalPath);
                             }
                         }
                         else if (updateStatus == FtpStatus.Failed)
@@ -153,7 +154,7 @@ namespace ResourceManager.DataSource.Ftp
             entry = new ResourcesEntry();
             FtpClient client = CreateClient();
             LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
-            string path = Path.Combine(Options.RelativePath ?? "", descriptor.RelativeRootPath);
+            string path = Path.Combine(Options.RelativePath ?? "", descriptor.RelativeRootPath.TrimStart('/').TrimStart('\\'));
             client.Connect();
             entry.Files = client.GetListing(path, FtpListOption.Recursive).Where(item => item.Type == FtpFileSystemObjectType.File).ToList();
             entry.Resources = new List<object>(entry.Files.Count);
@@ -168,18 +169,6 @@ namespace ResourceManager.DataSource.Ftp
             }
             entries[resourceType] = entry;
             return entry.Resources.AsQueryable();
-        }
-
-        public override IQueryable<string> Locate(Type resourceType)
-        {
-            FtpClient client = CreateClient();
-            LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
-            string path = Path.Combine(Options.RelativePath ?? "", descriptor.RelativeRootPath);
-            client.Connect();
-            return client.GetListing(path, FtpListOption.Recursive)
-                         .Where(item => item.Type == FtpFileSystemObjectType.File)
-                         .Select(item => item.FullName)
-                         .AsQueryable();
         }
     }
 }

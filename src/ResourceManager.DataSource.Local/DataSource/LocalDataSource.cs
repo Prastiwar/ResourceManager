@@ -31,7 +31,7 @@ namespace ResourceManager.DataSource.Local
             foreach (ITrackedResource tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
-                string targetPath = Path.Combine(Options.FolderPath, descriptor.GetRelativeFullPath(tracking.Resource));
+                string targetPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.Resource));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:
@@ -45,10 +45,10 @@ namespace ResourceManager.DataSource.Local
                         try
                         {
                             File.WriteAllText(targetPath, updateContent);
-                            string oldPath = descriptor.GetRelativeFullPath(tracking.OriginalResource);
-                            if (string.Compare(oldPath, targetPath) != 0)
+                            string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                            if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                             {
-                                File.Delete(oldPath);
+                                File.Delete(originalPath);
                             }
                         }
                         catch (Exception ex)
@@ -73,7 +73,7 @@ namespace ResourceManager.DataSource.Local
             foreach (ITrackedResource tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
-                string targetPath = Path.Combine(Options.FolderPath, descriptor.GetRelativeFullPath(tracking.Resource).TrimStart('/', '\\'));
+                string targetPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.Resource).TrimStart('/', '\\'));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:
@@ -87,10 +87,10 @@ namespace ResourceManager.DataSource.Local
                         try
                         {
                             await File.WriteAllTextAsync(targetPath, updateContent);
-                            string oldPath = descriptor.GetRelativeFullPath(tracking.OriginalResource);
-                            if (string.Compare(oldPath, targetPath) != 0)
+                            string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                            if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                             {
-                                File.Delete(oldPath);
+                                File.Delete(originalPath);
                             }
                         }
                         catch (Exception ex)
@@ -108,28 +108,19 @@ namespace ResourceManager.DataSource.Local
             TrackedResources.Clear();
         }
 
-        public override IQueryable<object> Query(Type resourceType) 
-            => Locate(resourceType).ToArray().Select(path => {
-            string content = File.ReadAllText(path);
-            return Serializer.Deserialize(content, resourceType);
-        }).AsQueryable();
-
-        public override IQueryable<string> Locate(Type resourceType)
+        public override IQueryable<object> Query(Type resourceType)
         {
             LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
-            string directoryPath = Path.Combine(Options.FolderPath, descriptor.RelativeRootPath);
-            IList<string> contents = new List<string>();
+            string directoryPath = Path.Combine(Options.GetFullFolderPath(), descriptor.RelativeRootPath.TrimStart('/').TrimStart('\\'));
             if (Directory.Exists(directoryPath))
             {
-
                 IEnumerable<string> files = Directory.EnumerateFiles(directoryPath, Options.FileSearchPattern, SearchOption.AllDirectories).Select(path => path.Replace("\\", "/"));
-                foreach (string file in files)
-                {
+                return files.Select(file => {
                     string content = File.ReadAllText(file);
-                    contents.Add(content);
-                }
+                    return Serializer.Deserialize(content, resourceType);
+                }).AsQueryable();
             }
-            return contents.AsQueryable();
+            return Array.Empty<object>().AsQueryable();
         }
     }
 }

@@ -21,9 +21,6 @@ namespace ResourceManager.DataSource
         IQueryable<object> Query(Type resourceType);
         IQueryable<T> Query<T>();
 
-        IQueryable<string> Locate(Type resourceType);
-        IQueryable<string> Locate<T>();
-
         TrackedResource<object> Attach(object resource, Type resourceType);
         TrackedResource<T> Attach<T>(T resource);
 

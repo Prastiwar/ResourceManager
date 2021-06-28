@@ -30,8 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fixtures\Ftp\" />
-    <Folder Include="Fixtures\Local\" />
     <Folder Include="Fixtures\Sql\" />
   </ItemGroup>
 

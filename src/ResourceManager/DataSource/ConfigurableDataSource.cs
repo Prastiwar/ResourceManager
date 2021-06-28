@@ -60,9 +60,6 @@ namespace ResourceManager.DataSource
         public IQueryable<object> Query(Type resourceType) => CurrentSource.Query(resourceType);
         public IQueryable<T> Query<T>() => CurrentSource.Query<T>();
 
-        public IQueryable<string> Locate(Type resourceType) => CurrentSource.Locate(resourceType);
-        public IQueryable<string> Locate<T>() => CurrentSource.Locate<T>();
-
         public TrackedResource<object> Attach(object resource, Type resourceType) => CurrentSource.Attach(resource, resourceType);
         public TrackedResource<T> Attach<T>(T resource) => CurrentSource.Attach(resource);
 

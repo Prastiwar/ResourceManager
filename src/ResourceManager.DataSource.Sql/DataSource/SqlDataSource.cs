@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ResourceManager.DataSource.Sql.Configuration;
-using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
 using System;
 using System.Linq;
@@ -28,14 +27,6 @@ namespace ResourceManager.DataSource.Sql
         public override Task SaveChangesAsync(CancellationToken token) => DbContext.SaveChangesAsync(token);
 
         public override IQueryable<object> Query(Type resourceType) => DbContext.Set(resourceType);
-
-        public override IQueryable<string> Locate(Type resourceType)
-        {
-            SqlLocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<SqlLocationResourceDescriptor>(resourceType);
-            // TODO: Improve performance: Calling ToArray() is not good since it loads every resources to memory
-            object[] resources = Query(resourceType).ToArray();
-            return resources.Select(resource => descriptor.GetRelativeFullPath(resource)).AsQueryable();
-        }
 
         protected override TrackedResource<T> CreateTracked<T>(T resource, ResourceState state, Type asType = null)
         {

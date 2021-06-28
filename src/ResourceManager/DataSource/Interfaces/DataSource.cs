@@ -33,10 +33,6 @@ namespace ResourceManager.DataSource
 
         public IQueryable<T> Query<T>() => Query(typeof(T)).Cast<T>();
 
-        public abstract IQueryable<string> Locate(Type resourceType);
-
-        public IQueryable<string> Locate<T>() => Locate(typeof(T));
-
         public TrackedResource<object> Attach(object resource, Type resourceType) => CreateTracked(resource, ResourceState.Unchanged, resourceType);
         public TrackedResource<T> Attach<T>(T resource) => CreateTracked(resource, ResourceState.Unchanged);
 
