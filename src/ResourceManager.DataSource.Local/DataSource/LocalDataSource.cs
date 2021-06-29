@@ -42,18 +42,11 @@ namespace ResourceManager.DataSource.Local
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
                         Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                        try
+                        File.WriteAllText(targetPath, updateContent);
+                        string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                        if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                         {
-                            File.WriteAllText(targetPath, updateContent);
-                            string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource));
-                            if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
-                            {
-                                File.Delete(originalPath);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            continue;
+                            File.Delete(originalPath);
                         }
                         break;
                     case ResourceState.Removed:
@@ -84,18 +77,11 @@ namespace ResourceManager.DataSource.Local
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
                         Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                        try
+                        await File.WriteAllTextAsync(targetPath, updateContent);
+                        string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource).TrimStart('/', '\\'));
+                        if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                         {
-                            await File.WriteAllTextAsync(targetPath, updateContent);
-                            string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource));
-                            if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
-                            {
-                                File.Delete(originalPath);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            continue;
+                            File.Delete(originalPath);
                         }
                         break;
                     case ResourceState.Removed:
@@ -111,7 +97,7 @@ namespace ResourceManager.DataSource.Local
         public override IQueryable<object> Query(Type resourceType)
         {
             LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
-            string directoryPath = Path.Combine(Options.GetFullFolderPath(), descriptor.RelativeRootPath.TrimStart('/').TrimStart('\\'));
+            string directoryPath = Path.Combine(Options.GetFullFolderPath(), descriptor.RelativeRootPath.TrimStart('/', '\\'));
             if (Directory.Exists(directoryPath))
             {
                 IEnumerable<string> files = Directory.EnumerateFiles(directoryPath, Options.FileSearchPattern, SearchOption.AllDirectories).Select(path => path.Replace("\\", "/"));

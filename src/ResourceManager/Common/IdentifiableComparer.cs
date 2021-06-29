@@ -7,6 +7,10 @@ namespace ResourceManager
 {
     public class IdentifiableComparer : Comparer<IIdentifiable>
     {
+        public static new IdentifiableComparer Default { get; }
+
+        static IdentifiableComparer() => Default = new IdentifiableComparer();
+
         public override int Compare([AllowNull] IIdentifiable x, [AllowNull] IIdentifiable y)
         {
             int xId = x.Id is int xInteger ? xInteger : Convert.ToInt32(x.Id);

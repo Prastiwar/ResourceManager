@@ -83,6 +83,10 @@ namespace ResourceManager.DataSource
                 }
                 return trackedResource;
             }
+            if (state == ResourceState.Modified)
+            {
+                throw new InvalidOperationException("You cannot update no-tracking resource. Call Attach() first, update your values then call this method.");
+            }
             TrackingEntry entry = new TrackingEntry(resource, state, asType);
             TrackedResources.Add(entry);
             return new TrackedResource<T>(entry);
