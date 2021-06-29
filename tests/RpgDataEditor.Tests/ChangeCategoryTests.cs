@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
 using ResourceManager.Mvvm;
@@ -84,7 +85,6 @@ namespace RpgDataEditor.Tests
                 {
                     IDataSource dataSource = GetIntegratedFtpDataSource(tokenSource.Token);
                     CategoryModelsManagerViewModel<TResource> viewModel = getViewModel.Invoke(dataSource);
-                    await viewModel.Refresh();
                     string relativePath = getFilePath(resource);
                     if (!File.Exists(relativePath))
                     {
@@ -94,11 +94,13 @@ namespace RpgDataEditor.Tests
                     string category = resource.Category;
                     string newCategory = Guid.NewGuid().ToString();
 
+                    await viewModel.Refresh();
                     bool renamed = await viewModel.RenameCategoryAsync(category, newCategory);
                     Assert.True(renamed);
                     Assert.False(File.Exists(relativePath));
 
-                    string newRelativePath = getFilePath(resource);
+                    TResource newResource = viewModel.Models.First(r => IdentifiableComparer.Default.Compare(r, resource) == 0);
+                    string newRelativePath = getFilePath(newResource);
                     TResource fromFile = GetLocalResource<TResource>(newRelativePath);
                     Assert.NotNull(fromFile);
                     Assert.Equal(newCategory, fromFile.Category);
@@ -116,7 +118,6 @@ namespace RpgDataEditor.Tests
         {
             IDataSource dataSource = GetIntegratedLocalDataSource();
             CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-            await viewModel.Refresh();
             string relativePath = getFilePath(resource);
             if (!File.Exists(relativePath))
             {
@@ -126,11 +127,13 @@ namespace RpgDataEditor.Tests
             string fromCategory = resource.Category;
             string newCategory = Guid.NewGuid().ToString();
 
+            await viewModel.Refresh();
             bool renamed = await viewModel.RenameCategoryAsync(fromCategory, newCategory);
             Assert.True(renamed);
             Assert.False(File.Exists(relativePath));
 
-            string newRelativePath = getFilePath(resource);
+            TResource newResource = viewModel.Models.First(r => IdentifiableComparer.Default.Compare(r, resource) == 0);
+            string newRelativePath = getFilePath(newResource);
             TResource fromFile = GetLocalResource<TResource>(newRelativePath);
             Assert.NotNull(fromFile);
             Assert.Equal(newCategory, fromFile.Category);
@@ -149,12 +152,12 @@ namespace RpgDataEditor.Tests
                 Assert.True(hasDialogue);
             }
             CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-            await viewModel.Refresh();
             string fromCategory = resource.Category;
             string newCategory = Guid.NewGuid().ToString();
+            await viewModel.Refresh();
             bool renamed = await viewModel.RenameCategoryAsync(fromCategory, newCategory);
             Assert.True(renamed);
-            TResource updated = dataSource.Query<TResource>().ToList().First(d => d.Id == resource.Id);
+            TResource updated = dataSource.Query<TResource>().ToList().First(d => IdentifiableComparer.Default.Compare(d, resource) == 0);
             Assert.Equal(newCategory, updated.Category);
         }
 
@@ -173,8 +176,8 @@ namespace RpgDataEditor.Tests
                     }
                     Assert.True(File.Exists(relativePath));
                     CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-                    await viewModel.Refresh();
                     string category = resource.Category;
+                    await viewModel.Refresh();
                     bool removed = await viewModel.RemoveCategoryAsync(category);
                     Assert.True(removed);
                     Assert.False(File.Exists(relativePath));
@@ -198,8 +201,8 @@ namespace RpgDataEditor.Tests
             }
             Assert.True(File.Exists(relativePath));
             CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-            await viewModel.Refresh();
             string category = resource.Category;
+            await viewModel.Refresh();
             bool removed = await viewModel.RemoveCategoryAsync(category);
             Assert.True(removed);
             Assert.False(File.Exists(relativePath));

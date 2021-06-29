@@ -28,19 +28,19 @@ namespace ResourceManager.DataSource.Sql
 
         public override IQueryable<object> Query(Type resourceType) => DbContext.Set(resourceType);
 
-        protected override TrackedResource<T> CreateTracked<T>(T resource, ResourceState state, Type asType = null)
+        protected override TrackedResource<T> GetOrCreateTracked<T>(T resource, ResourceState state, Type asType = null)
         {
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry = DbContext.Entry(resource);
-            entry.State = state switch {
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entityEntry = DbContext.Entry(resource);
+            entityEntry.State = state switch {
                 ResourceState.Unchanged => EntityState.Unchanged,
                 ResourceState.Added => EntityState.Added,
                 ResourceState.Modified => EntityState.Modified,
                 ResourceState.Removed => EntityState.Deleted,
                 _ => throw new InvalidOperationException()
             };
-            TrackedResource<T> tracked = new TrackedResource<T>(resource, state, asType);
-            TrackedResources.Add(tracked);
-            return tracked;
+            TrackingEntry entry = new EntityTrackingEntry(entityEntry);
+            TrackedResources.Add(entry);
+            return new TrackedResource<T>(entry);
         }
     }
 }

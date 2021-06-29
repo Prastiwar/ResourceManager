@@ -28,7 +28,7 @@ namespace ResourceManager.DataSource.Local
         // TODO: Fix consistency and atomicity
         public override void SaveChanges()
         {
-            foreach (ITrackedResource tracking in TrackedResources)
+            foreach (TrackingEntry tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
                 string targetPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.Resource));
@@ -70,7 +70,7 @@ namespace ResourceManager.DataSource.Local
         // TODO: Fix consistency and atomicity
         public override async Task SaveChangesAsync(CancellationToken token)
         {
-            foreach (ITrackedResource tracking in TrackedResources)
+            foreach (TrackingEntry tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
                 string targetPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.Resource).TrimStart('/', '\\'));
@@ -117,7 +117,10 @@ namespace ResourceManager.DataSource.Local
                 IEnumerable<string> files = Directory.EnumerateFiles(directoryPath, Options.FileSearchPattern, SearchOption.AllDirectories).Select(path => path.Replace("\\", "/"));
                 return files.Select(file => {
                     string content = File.ReadAllText(file);
-                    return Serializer.Deserialize(content, resourceType);
+                    object resource = Serializer.Deserialize(content, resourceType);
+                    TrackingEntry newEntry = new TrackingEntry(resource, ResourceState.Unchanged, resourceType);
+                    TrackedResources.Add(newEntry);
+                    return resource;
                 }).AsQueryable();
             }
             return Array.Empty<object>().AsQueryable();

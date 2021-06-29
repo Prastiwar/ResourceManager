@@ -49,10 +49,10 @@ namespace ResourceManager.DataSource.Ftp
         {
             FtpClient client = CreateClient();
             client.Connect();
-            foreach (ITrackedResource tracking in TrackedResources)
+            foreach (TrackingEntry tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
-                string targetPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.Resource));
+                string targetPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.Resource).TrimStart('/').TrimStart('\\'));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:
@@ -70,7 +70,7 @@ namespace ResourceManager.DataSource.Ftp
                         FtpStatus updateStatus = client.Upload(updateContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
                         if (updateStatus == FtpStatus.Success)
                         {
-                            string originalPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                            string originalPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.OriginalResource).TrimStart('/').TrimStart('\\'));
                             if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                             {
                                 client.DeleteFile(originalPath);
@@ -97,10 +97,10 @@ namespace ResourceManager.DataSource.Ftp
         {
             FtpClient client = CreateClient();
             await client.ConnectAsync();
-            foreach (ITrackedResource tracking in TrackedResources)
+            foreach (TrackingEntry tracking in TrackedResources)
             {
                 LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(tracking.ResourceType);
-                string targetPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.Resource));
+                string targetPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.Resource).TrimStart('/').TrimStart('\\'));
                 switch (tracking.State)
                 {
                     case ResourceState.Added:
@@ -118,7 +118,7 @@ namespace ResourceManager.DataSource.Ftp
                         FtpStatus updateStatus = await client.UploadAsync(updateContentBytes, targetPath, FtpRemoteExists.Overwrite, true);
                         if (updateStatus == FtpStatus.Success)
                         {
-                            string originalPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.OriginalResource));
+                            string originalPath = Path.Combine(Options.RelativePath ?? "", descriptor.GetRelativeFullPath(tracking.OriginalResource).TrimStart('/').TrimStart('\\'));
                             if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                             {
                                 await client.DeleteFileAsync(originalPath);
@@ -164,6 +164,8 @@ namespace ResourceManager.DataSource.Ftp
                 {
                     string content = Encoding.UTF8.GetString(bytes);
                     object resource = Serializer.Deserialize(content, resourceType);
+                    TrackingEntry newEntry = new TrackingEntry(resource, ResourceState.Unchanged, resourceType);
+                    TrackedResources.Add(newEntry);
                     entry.Resources.Add(resource);
                 }
             }

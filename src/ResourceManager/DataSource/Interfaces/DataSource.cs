@@ -23,7 +23,7 @@ namespace ResourceManager.DataSource
 
         public IResourceDescriptorService DescriptorService { get; }
 
-        protected IList<ITrackedResource> TrackedResources { get; } = new List<ITrackedResource>();
+        protected IList<TrackingEntry> TrackedResources { get; } = new List<TrackingEntry>();
 
         public abstract void SaveChanges();
 
@@ -33,31 +33,61 @@ namespace ResourceManager.DataSource
 
         public IQueryable<T> Query<T>() => Query(typeof(T)).Cast<T>();
 
-        public TrackedResource<object> Attach(object resource, Type resourceType) => CreateTracked(resource, ResourceState.Unchanged, resourceType);
-        public TrackedResource<T> Attach<T>(T resource) => CreateTracked(resource, ResourceState.Unchanged);
+        public TrackedResource<object> Attach(object resource, Type resourceType) => GetOrCreateTracked(resource, ResourceState.Unchanged, resourceType);
+        public TrackedResource<T> Attach<T>(T resource) => GetOrCreateTracked(resource, ResourceState.Unchanged);
 
         public Task<TrackedResource<object>> AddAsync(object resource, Type resourceType) => CreateTrackedAsync(resource, ResourceState.Added, resourceType);
         public Task<TrackedResource<T>> AddAsync<T>(T resource) => CreateTrackedAsync(resource, ResourceState.Added);
-        public TrackedResource<object> Add(object resource, Type resourceType) => CreateTracked(resource, ResourceState.Added, resourceType);
-        public TrackedResource<T> Add<T>(T resource) => CreateTracked(resource, ResourceState.Added);
+        public TrackedResource<object> Add(object resource, Type resourceType) => GetOrCreateTracked(resource, ResourceState.Added, resourceType);
+        public TrackedResource<T> Add<T>(T resource) => GetOrCreateTracked(resource, ResourceState.Added);
 
         public Task<TrackedResource<object>> UpdateAsync(object resource, Type resourceType) => CreateTrackedAsync(resource, ResourceState.Modified, resourceType);
         public Task<TrackedResource<T>> UpdateAsync<T>(T resource) => CreateTrackedAsync(resource, ResourceState.Modified);
-        public TrackedResource<object> Update(object resource, Type resourceType) => CreateTracked(resource, ResourceState.Modified, resourceType);
-        public TrackedResource<T> Update<T>(T resource) => CreateTracked(resource, ResourceState.Modified);
+        public TrackedResource<object> Update(object resource, Type resourceType) => GetOrCreateTracked(resource, ResourceState.Modified, resourceType);
+        public TrackedResource<T> Update<T>(T resource) => GetOrCreateTracked(resource, ResourceState.Modified);
 
         public Task<TrackedResource<object>> DeleteAsync(object resource, Type resourceType) => CreateTrackedAsync(resource, ResourceState.Removed, resourceType);
         public Task<TrackedResource<T>> DeleteAsync<T>(T resource) => CreateTrackedAsync(resource, ResourceState.Removed);
-        public TrackedResource<object> Delete(object resource, Type resourceType) => CreateTracked(resource, ResourceState.Removed, resourceType);
-        public TrackedResource<T> Delete<T>(T resource) => CreateTracked(resource, ResourceState.Removed);
+        public TrackedResource<object> Delete(object resource, Type resourceType) => GetOrCreateTracked(resource, ResourceState.Removed, resourceType);
+        public TrackedResource<T> Delete<T>(T resource) => GetOrCreateTracked(resource, ResourceState.Removed);
 
-        protected virtual TrackedResource<T> CreateTracked<T>(T resource, ResourceState state, Type asType = null)
+        protected virtual TrackedResource<T> GetOrCreateTracked<T>(T resource, ResourceState state, Type asType = null)
         {
-            TrackedResource<T> tracked = new TrackedResource<T>(resource, state, asType);
-            TrackedResources.Add(tracked);
-            return tracked;
+            if (resource is null)
+            {
+                throw new ArgumentNullException(nameof(resource));
+            }
+            TrackingEntry foundTrackingEntry = TrackedResources.FirstOrDefault(t => t.Resource is T res && EqualityComparer<T>.Default.Equals(res, resource));
+            if (foundTrackingEntry != null)
+            {
+                TrackedResource<T> trackedResource = new TrackedResource<T>(foundTrackingEntry);
+                if (trackedResource.State != state)
+                {
+                    switch (state)
+                    {
+                        case ResourceState.Unchanged:
+                            trackedResource.Unchange();
+                            break;
+                        case ResourceState.Added:
+                            trackedResource.Create();
+                            break;
+                        case ResourceState.Modified:
+                            trackedResource.Update();
+                            break;
+                        case ResourceState.Removed:
+                            trackedResource.Delete();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return trackedResource;
+            }
+            TrackingEntry entry = new TrackingEntry(resource, state, asType);
+            TrackedResources.Add(entry);
+            return new TrackedResource<T>(entry);
         }
 
-        protected virtual Task<TrackedResource<T>> CreateTrackedAsync<T>(T resource, ResourceState state, Type asType = null) => Task.FromResult(CreateTracked(resource, state, asType));
+        protected virtual Task<TrackedResource<T>> CreateTrackedAsync<T>(T resource, ResourceState state, Type asType = null) => Task.FromResult(GetOrCreateTracked(resource, state, asType));
     }
 }
