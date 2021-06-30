@@ -36,6 +36,7 @@ namespace RpgDataEditor.Tests.Sql
             Mock<ILogger<DialogueTabViewModel>> logger = new Mock<ILogger<DialogueTabViewModel>>();
             return new DialogueTabViewModel(null, dataSource, logger.Object);
         }
+
         protected QuestTabViewModel CreateQuestTabViewModel(IDataSource dataSource)
         {
             Mock<ILogger<QuestTabViewModel>> logger = new Mock<ILogger<QuestTabViewModel>>();

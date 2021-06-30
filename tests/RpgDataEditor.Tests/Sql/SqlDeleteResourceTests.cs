@@ -1,5 +1,6 @@
 ﻿using ResourceManager.DataSource;
 using RpgDataEditor.Models;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace RpgDataEditor.Tests.Sql
                 IDataSource dataSource = integration.ConnectDataSource();
                 await dataSource.DeleteAsync(dialogue);
                 await dataSource.SaveChangesAsync();
-                // TODO: Test Asserts
+                Assert.DoesNotContain(dialogue, dataSource.Query<Dialogue>().ToList());
             }
         }
 
@@ -29,7 +30,7 @@ namespace RpgDataEditor.Tests.Sql
                 IDataSource dataSource = integration.ConnectDataSource();
                 await dataSource.DeleteAsync(quest);
                 await dataSource.SaveChangesAsync();
-                // TODO: Test Asserts
+                Assert.DoesNotContain(quest, dataSource.Query<Quest>().ToList());
             }
         }
 
@@ -42,7 +43,7 @@ namespace RpgDataEditor.Tests.Sql
                 IDataSource dataSource = integration.ConnectDataSource();
                 await dataSource.DeleteAsync(npc);
                 await dataSource.SaveChangesAsync();
-                // TODO: Test Asserts
+                Assert.DoesNotContain(npc, dataSource.Query<Npc>().ToList());
             }
         }
     }
