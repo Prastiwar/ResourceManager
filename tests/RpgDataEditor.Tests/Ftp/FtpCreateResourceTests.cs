@@ -6,39 +6,49 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Ftp
 {
-    public class FtpCreateResourceTests : FtpIntegrationTestClass
+    [Collection(NonParallelCollectionDefinition.NAME)]
+    public class FtpCreateResourceTests
     {
         [Fact]
         public async Task CreateDialogue()
         {
-            Dialogue dialogue = Dummies.Dialogue;
-            IDataSource dataSource = ConnectDataSource();
-            await dataSource.AddAsync(dialogue);
-            await dataSource.SaveChangesAsync();
-            string relativePath = GetDialoguePath("Ftp", dialogue);
-            Assert.True(File.Exists(relativePath));
+            using (FtpIntegrationTestProvider integration = new FtpIntegrationTestProvider())
+            {
+                Dialogue dialogue = Dummies.Dialogue;
+                IDataSource dataSource = integration.ConnectDataSource();
+                await dataSource.AddAsync(dialogue);
+                await dataSource.SaveChangesAsync();
+                string relativePath = integration.GetDialoguePath(dialogue);
+                Assert.True(File.Exists(relativePath));
+            }
         }
 
         [Fact]
         public async Task CreateQuest()
         {
-            Quest quest = Dummies.Quest;
-            IDataSource dataSource = ConnectDataSource();
-            await dataSource.AddAsync(quest);
-            await dataSource.SaveChangesAsync();
-            string relativePath = GetQuestPath("Ftp", quest);
-            Assert.True(File.Exists(relativePath));
+            using (FtpIntegrationTestProvider integration = new FtpIntegrationTestProvider())
+            {
+                Quest quest = Dummies.Quest;
+                IDataSource dataSource = integration.ConnectDataSource();
+                await dataSource.AddAsync(quest);
+                await dataSource.SaveChangesAsync();
+                string relativePath = integration.GetQuestPath(quest);
+                Assert.True(File.Exists(relativePath));
+            }
         }
 
         [Fact]
         public async Task CreateNpc()
         {
-            Npc npc = Dummies.Npc;
-            IDataSource dataSource = ConnectDataSource();
-            await dataSource.AddAsync(npc);
-            await dataSource.SaveChangesAsync();
-            string relativePath = GetNpcPath("Ftp", npc);
-            Assert.True(File.Exists(relativePath));
+            using (FtpIntegrationTestProvider integration = new FtpIntegrationTestProvider())
+            {
+                Npc npc = Dummies.Npc;
+                IDataSource dataSource = integration.ConnectDataSource();
+                await dataSource.AddAsync(npc);
+                await dataSource.SaveChangesAsync();
+                string relativePath = integration.GetNpcPath(npc);
+                Assert.True(File.Exists(relativePath));
+            }
         }
     }
 }

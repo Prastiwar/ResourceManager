@@ -15,83 +15,55 @@ using System.Threading;
 
 namespace RpgDataEditor.Tests
 {
-    public abstract class IntegrationTestClass
+    public abstract class IntegrationTestProvider : IDisposable
     {
-        public IntegrationTestClass() => ServiceProvider = ConfigureServices(new ServiceCollection());
+        public IntegrationTestProvider(string key)
+        {
+            TempKey = key;
+            ServiceProvider = ConfigureServices(new ServiceCollection());
+            InitializeFixture();
+        }
 
         protected IServiceProvider ServiceProvider { get; }
 
-        private readonly int repeatIOCount = 10;
+        public string TempKey { get; set; }
 
-        /// <summary> https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?redirectedfrom=MSDN&view=net-5.0 </summary>
-        private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        protected abstract string DataSourceName { get; }
+
+        protected virtual string FixtureFolderName => "Fixtures";
+
+        protected virtual string RootPath => $"./{FixtureFolderName}/{DataSourceName}-{TempKey}";
+
+        /// <summary> Clears fixtures temp location and creates new using TempKey </summary>
+        protected void InitializeFixture()
         {
-            if (source.FullName.ToLower() == target.FullName.ToLower())
+            DisposedCheck();
+            if (string.IsNullOrEmpty(TempKey))
             {
-                return;
+                TempKey = Guid.NewGuid().ToString();
             }
-
-            if (Directory.Exists(target.FullName) == false)
-            {
-                Directory.CreateDirectory(target.FullName);
-            }
-
-            // Copy each file into it's new directory.
-            foreach (FileInfo fi in source.GetFiles())
-            {
-                Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
-                fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
-            }
-
-            // Copy each subdirectory using recursion.
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
-            {
-                DirectoryInfo nextTargetSubDir =
-                    target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAll(diSourceSubDir, nextTargetSubDir);
-            }
-        }
-
-        /// <summary> Copies files from fixtures defined with name to temp location </summary>
-        protected void InitializeFixture(string fixtureName)
-        {
-            string path = $"./Fixtures/{fixtureName}";
-            string tempPath = $"./Fixtures/{fixtureName}-temp";
-            string fullPath = Path.GetFullPath(tempPath);
-            if (fullPath.StartsWith("\\\\?\\"))
-            {
-
-            }
+            string tempPath = RootPath;
             if (Directory.Exists(tempPath))
             {
-                for (int i = 0; i < repeatIOCount; i++)
+                try
                 {
-                    try
-                    {
-                        Directory.Delete(tempPath, true);
-                    }
-                    catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
-                    {
-                        Thread.Sleep(100);
-                        continue;
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        break;
-                    }
-                    break;
+                    RetryHelper.TryOperation(() => Directory.Delete(tempPath, true), RetryHelper.UnauthorizedIOExceptions);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    // Directory was already deleted
                 }
             }
-            //DirectoryInfo targetPath = Directory.CreateDirectory(tempPath);
-            //CopyAll(new DirectoryInfo(path), targetPath);
+            RetryHelper.TryOperation(() => Directory.CreateDirectory(tempPath), RetryHelper.UnauthorizedIOExceptions);
         }
 
-        protected abstract IDataSource ConnectDataSource(CancellationToken token = default);
+        public abstract IDataSource ConnectDataSource(CancellationToken token = default);
 
         protected abstract void BuildDataSource(IConfigurableDataSourceBuilder builder, ResourceDescriptorService descriptorService);
 
         protected virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            DisposedCheck();
             services.AddConfiguration(builder => builder.AddInMemoryCollection());
             NewtonsoftSerializer serializer = new NewtonsoftSerializer();
             JsonConvert.DefaultSettings = CreateJsonSettings;
@@ -112,46 +84,27 @@ namespace RpgDataEditor.Tests
             return services.BuildServiceProvider();
         }
 
-        protected void CreateLocalFile(string filePath, object resource)
+        public void CreateLocalFile(string filePath, object resource)
         {
+            DisposedCheck();
             ITextSerializer serializer = ServiceProvider.GetRequiredService<ITextSerializer>();
             string text = serializer.Serialize(resource);
             string fullFilePath = Path.GetFullPath(filePath);
-            Directory.CreateDirectory(Path.GetDirectoryName(fullFilePath));
-            for (int i = 0; i < repeatIOCount; i++)
-            {
-                try
-                {
-                    File.WriteAllText(fullFilePath, text);
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    continue;
-                }
-                break;
-            }
+            RetryHelper.TryOperation(() => Directory.CreateDirectory(Path.GetDirectoryName(fullFilePath)), RetryHelper.DirectoryNotFoundExceptions);
+            RetryHelper.TryOperation(() => File.WriteAllText(fullFilePath, text), RetryHelper.DirectoryNotFoundExceptions);
         }
 
-        protected T GetLocalResource<T>(string filePath)
+        public T GetLocalResource<T>(string filePath)
         {
+            DisposedCheck();
             ITextSerializer serializer = ServiceProvider.GetRequiredService<ITextSerializer>();
-            for (int i = 0; i < repeatIOCount; i++)
-            {
-                try
-                {
-                    string text = File.ReadAllText(filePath);
-                    return (T)serializer.Deserialize(text, typeof(T));
-                }
-                catch (IOException)
-                {
-                    continue;
-                }
-            }
-            throw new InvalidProgramException();
+            string text = RetryHelper.TryOperation(() => File.ReadAllText(filePath), RetryHelper.IOExceptionsFilter);
+            return (T)serializer.Deserialize(text, typeof(T));
         }
 
         protected virtual JsonSerializerSettings CreateJsonSettings()
         {
+            DisposedCheck();
             PrettyOrderPropertyResolver propResolver = new PrettyOrderPropertyResolver();
             propResolver.SetAllLetterCase(Lettercase.CamelCase);
             JsonSerializerSettings settings = new JsonSerializerSettings {
@@ -180,9 +133,10 @@ namespace RpgDataEditor.Tests
             return settings;
         }
 
-        protected string GetDialoguePath(string dataSourceName, Dialogue dialogue)
+        public string GetDialoguePath(Dialogue dialogue)
         {
-            string path = $"./Fixtures/{dataSourceName}-temp/dialogues";
+            DisposedCheck();
+            string path = $"{RootPath}/dialogues";
             if (dialogue != null)
             {
                 path += $"/{dialogue.Category}/{dialogue.Id}_{dialogue.Title}.json";
@@ -190,9 +144,10 @@ namespace RpgDataEditor.Tests
             return path;
         }
 
-        protected string GetQuestPath(string dataSourceName, Quest quest)
+        public string GetQuestPath(Quest quest)
         {
-            string path = $"./Fixtures/{dataSourceName}-temp/quests";
+            DisposedCheck();
+            string path = $"{RootPath}/quests";
             if (quest != null)
             {
                 path += $"/{quest.Category}/{quest.Id}_{quest.Title}.json";
@@ -200,14 +155,43 @@ namespace RpgDataEditor.Tests
             return path;
         }
 
-        protected string GetNpcPath(string dataSourceName, Npc npc)
+        public string GetNpcPath(Npc npc)
         {
-            string path = $"./Fixtures/{dataSourceName}-temp/npcs";
+            DisposedCheck();
+            string path = $"{RootPath}/npcs";
             if (npc != null)
             {
                 path += $"/{npc.Id}_{npc.Name}.json";
             }
             return path;
+        }
+
+        private bool disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    RetryHelper.TryOperation(() => Directory.Delete(RootPath, true), RetryHelper.UnauthorizedIOExceptions);
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void DisposedCheck()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
         }
     }
 }

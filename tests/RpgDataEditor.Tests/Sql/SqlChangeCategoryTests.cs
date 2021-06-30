@@ -13,7 +13,7 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Sql
 {
-    public class SqlChangeCategoryTests : SqlIntegrationTestClass
+    public class SqlChangeCategoryTests
     {
         [Fact]
         public Task RenameDialogueCategory()
@@ -45,42 +45,48 @@ namespace RpgDataEditor.Tests.Sql
         protected async Task RenameCategory<TResource>(TResource resource, Func<IDataSource, CategoryModelsManagerViewModel<TResource>> getViewModel)
             where TResource : ICategorizable
         {
-            IDataSource dataSource = ConnectDataSource();
-            bool hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-            if (!hasDialogue)
+            using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                await dataSource.AddAsync(resource);
-                await dataSource.SaveChangesAsync();
-                hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-                Assert.True(hasDialogue);
+                IDataSource dataSource = integration.ConnectDataSource();
+                bool hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
+                if (!hasDialogue)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
+                    Assert.True(hasDialogue);
+                }
+                CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
+                string fromCategory = resource.Category;
+                string newCategory = Guid.NewGuid().ToString();
+                await viewModel.Refresh();
+                bool renamed = await viewModel.RenameCategoryAsync(fromCategory, newCategory);
+                Assert.True(renamed);
+                TResource updated = dataSource.Query<TResource>().ToList().First(d => IdentifiableComparer.Default.Compare(d, resource) == 0);
+                Assert.Equal(newCategory, updated.Category);
             }
-            CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-            string fromCategory = resource.Category;
-            string newCategory = Guid.NewGuid().ToString();
-            await viewModel.Refresh();
-            bool renamed = await viewModel.RenameCategoryAsync(fromCategory, newCategory);
-            Assert.True(renamed);
-            TResource updated = dataSource.Query<TResource>().ToList().First(d => IdentifiableComparer.Default.Compare(d, resource) == 0);
-            Assert.Equal(newCategory, updated.Category);
         }
 
         protected async Task DeleteCategory<TResource>(TResource resource, Func<IDataSource, CategoryModelsManagerViewModel<TResource>> getViewModel)
             where TResource : ICategorizable
         {
-            IDataSource dataSource = ConnectDataSource();
-            bool hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-            if (!hasDialogue)
+            using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                await dataSource.AddAsync(resource);
-                await dataSource.SaveChangesAsync();
-                hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-                Assert.True(hasDialogue);
+                IDataSource dataSource = integration.ConnectDataSource();
+                bool hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
+                if (!hasDialogue)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
+                    Assert.True(hasDialogue);
+                }
+                CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
+                await viewModel.Refresh();
+                bool removed = await viewModel.RemoveCategoryAsync(resource.Category);
+                Assert.True(removed);
+                Assert.DoesNotContain(dataSource.Query<TResource>().ToList(), d => EqualityComparer<string>.Default.Equals(d.Category, resource.Category));
             }
-            CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-            await viewModel.Refresh();
-            bool removed = await viewModel.RemoveCategoryAsync(resource.Category);
-            Assert.True(removed);
-            Assert.DoesNotContain(dataSource.Query<TResource>().ToList(), d => EqualityComparer<string>.Default.Equals(d.Category, resource.Category));
         }
     }
 }

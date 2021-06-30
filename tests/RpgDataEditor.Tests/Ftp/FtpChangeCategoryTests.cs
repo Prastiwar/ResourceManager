@@ -13,23 +13,24 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Ftp
 {
-    public class FtpChangeCategoryTests : FtpIntegrationTestClass
+    [Collection(NonParallelCollectionDefinition.NAME)]
+    public class FtpChangeCategoryTests
     {
         [Fact]
         public Task RenameDialogueCategory()
-            => RenameCategory(Dummies.CategoryDialogue, CreateDialogueTabViewModel, dialogue => GetDialoguePath("Ftp", dialogue));
+            => RenameCategory(Dummies.CategoryDialogue, CreateDialogueTabViewModel, (integration, dialogue) => integration.GetDialoguePath(dialogue));
 
         [Fact]
         public Task RenameQuestCategory()
-            => RenameCategory(Dummies.CategoryQuest, CreateQuestTabViewModel, quest => GetQuestPath("Ftp", quest));
+            => RenameCategory(Dummies.CategoryQuest, CreateQuestTabViewModel, (integration, quest) => integration.GetQuestPath(quest));
 
         [Fact]
         public Task DeleteDialogueCategory()
-            => DeleteCategory(Dummies.CategoryDialogue, CreateDialogueTabViewModel, dialogue => GetDialoguePath("Ftp", dialogue));
+            => DeleteCategory(Dummies.CategoryDialogue, CreateDialogueTabViewModel, (integration, dialogue) => integration.GetDialoguePath(dialogue));
 
         [Fact]
         public Task DeleteQuestCategory()
-            => DeleteCategory(Dummies.CategoryQuest, CreateQuestTabViewModel, quest => GetQuestPath("Ftp", quest));
+            => DeleteCategory(Dummies.CategoryQuest, CreateQuestTabViewModel, (integration, quest) => integration.GetQuestPath(quest));
 
         protected DialogueTabViewModel CreateDialogueTabViewModel(IDataSource dataSource)
         {
@@ -42,48 +43,54 @@ namespace RpgDataEditor.Tests.Ftp
             return new QuestTabViewModel(null, dataSource, logger.Object);
         }
 
-        protected async Task RenameCategory<TResource>(TResource resource, Func<IDataSource, CategoryModelsManagerViewModel<TResource>> getViewModel, Func<TResource, string> getFilePath)
+        protected async Task RenameCategory<TResource>(TResource resource, Func<IDataSource, CategoryModelsManagerViewModel<TResource>> getViewModel, Func<FtpIntegrationTestProvider, TResource, string> getFilePath)
             where TResource : ICategorizable
         {
-            IDataSource dataSource = ConnectDataSource();
-            CategoryModelsManagerViewModel<TResource> viewModel = getViewModel.Invoke(dataSource);
-            string relativePath = getFilePath(resource);
-            if (!File.Exists(relativePath))
+            using (FtpIntegrationTestProvider integration = new FtpIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, resource);
+                IDataSource dataSource = integration.ConnectDataSource();
+                CategoryModelsManagerViewModel<TResource> viewModel = getViewModel.Invoke(dataSource);
+                string relativePath = getFilePath(integration, resource);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, resource);
+                }
+                Assert.True(File.Exists(relativePath));
+                string category = resource.Category;
+                string newCategory = Guid.NewGuid().ToString();
+
+                await viewModel.Refresh();
+                bool renamed = await viewModel.RenameCategoryAsync(category, newCategory);
+                Assert.True(renamed);
+                Assert.False(File.Exists(relativePath));
+
+                TResource newResource = viewModel.Models.First(r => IdentifiableComparer.Default.Compare(r, resource) == 0);
+                string newRelativePath = getFilePath(integration, newResource);
+                TResource fromFile = integration.GetLocalResource<TResource>(newRelativePath);
+                Assert.NotNull(fromFile);
+                Assert.Equal(newCategory, fromFile.Category);
             }
-            Assert.True(File.Exists(relativePath));
-            string category = resource.Category;
-            string newCategory = Guid.NewGuid().ToString();
-
-            await viewModel.Refresh();
-            bool renamed = await viewModel.RenameCategoryAsync(category, newCategory);
-            Assert.True(renamed);
-            Assert.False(File.Exists(relativePath));
-
-            TResource newResource = viewModel.Models.First(r => IdentifiableComparer.Default.Compare(r, resource) == 0);
-            string newRelativePath = getFilePath(newResource);
-            TResource fromFile = GetLocalResource<TResource>(newRelativePath);
-            Assert.NotNull(fromFile);
-            Assert.Equal(newCategory, fromFile.Category);
         }
 
-        protected async Task DeleteCategory<TResource>(TResource resource, Func<IDataSource, CategoryModelsManagerViewModel<TResource>> getViewModel, Func<TResource, string> getFilePath)
+        protected async Task DeleteCategory<TResource>(TResource resource, Func<IDataSource, CategoryModelsManagerViewModel<TResource>> getViewModel, Func<FtpIntegrationTestProvider, TResource, string> getFilePath)
             where TResource : ICategorizable
         {
-            IDataSource dataSource = ConnectDataSource();
-            string relativePath = getFilePath(resource);
-            if (!File.Exists(relativePath))
+            using (FtpIntegrationTestProvider integration = new FtpIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, resource);
+                IDataSource dataSource = integration.ConnectDataSource();
+                string relativePath = getFilePath(integration, resource);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, resource);
+                }
+                Assert.True(File.Exists(relativePath));
+                CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
+                string category = resource.Category;
+                await viewModel.Refresh();
+                bool removed = await viewModel.RemoveCategoryAsync(category);
+                Assert.True(removed);
+                Assert.False(File.Exists(relativePath));
             }
-            Assert.True(File.Exists(relativePath));
-            CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
-            string category = resource.Category;
-            await viewModel.Refresh();
-            bool removed = await viewModel.RemoveCategoryAsync(category);
-            Assert.True(removed);
-            Assert.False(File.Exists(relativePath));
         }
     }
 }

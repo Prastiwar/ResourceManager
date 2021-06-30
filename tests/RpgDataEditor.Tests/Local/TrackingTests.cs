@@ -7,37 +7,43 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Local
 {
-    public class TrackingTests : LocalIntegrationTestClass
+    public class TrackingTests
     {
         [Fact]
         public async Task ThrowOnUpdateNoTracking()
         {
-            IDataSource dataSource = ConnectDataSource();
-            Dialogue dialogue = Dummies.Dialogue;
-            string relativePath = GetDialoguePath("Local", dialogue);
-            if (!File.Exists(relativePath))
+            using (LocalIntegrationTestProvider integration = new LocalIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, dialogue);
-            }
-            Assert.True(File.Exists(relativePath));
+                IDataSource dataSource = integration.ConnectDataSource();
+                Dialogue dialogue = Dummies.Dialogue;
+                string relativePath = integration.GetDialoguePath(dialogue);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, dialogue);
+                }
+                Assert.True(File.Exists(relativePath));
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => dataSource.UpdateAsync(dialogue));
+                await Assert.ThrowsAsync<InvalidOperationException>(() => dataSource.UpdateAsync(dialogue));
+            }
         }
 
         [Fact]
         public async Task DontThrowOnUpdateTracking()
         {
-            IDataSource dataSource = ConnectDataSource();
-            Dialogue dialogue = Dummies.Dialogue;
-            string relativePath = GetDialoguePath("Local", dialogue);
-            if (!File.Exists(relativePath))
+            using (LocalIntegrationTestProvider integration = new LocalIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, dialogue);
+                IDataSource dataSource = integration.ConnectDataSource();
+                Dialogue dialogue = Dummies.Dialogue;
+                string relativePath = integration.GetDialoguePath(dialogue);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, dialogue);
+                }
+                Assert.True(File.Exists(relativePath));
+                dataSource.Attach(dialogue);
+                TrackedResource<Dialogue> updateTracked = await dataSource.UpdateAsync(dialogue);
+                Assert.Equal(ResourceState.Modified, updateTracked.State);
             }
-            Assert.True(File.Exists(relativePath));
-            dataSource.Attach(dialogue);
-            TrackedResource<Dialogue> updateTracked = await dataSource.UpdateAsync(dialogue);
-            Assert.Equal(ResourceState.Modified, updateTracked.State);
         }
     }
 }

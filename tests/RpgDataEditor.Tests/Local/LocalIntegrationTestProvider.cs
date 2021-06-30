@@ -5,28 +5,33 @@ using ResourceManager.Core.Services;
 using ResourceManager.DataSource;
 using ResourceManager.Services;
 using ResourceManager.Wpf.Converters;
+using System;
 using System.Threading;
 
 namespace RpgDataEditor.Tests.Local
 {
-    public class LocalIntegrationTestClass : IntegrationTestClass
+    public class LocalIntegrationTestProvider : IntegrationTestProvider
     {
-        protected override void BuildDataSource(IConfigurableDataSourceBuilder builder, ResourceDescriptorService descriptorService) 
-            => builder.AddLocalDataSource(o => {
-            o.DescriptorService = descriptorService;
-            o.Serializer = new NewtonsoftSerializer();
-        });
+        public LocalIntegrationTestProvider() : base(Guid.NewGuid().ToString()) { }
 
-        protected override IDataSource ConnectDataSource(CancellationToken token = default)
+        protected override string DataSourceName => "Local";
+
+        protected override void BuildDataSource(IConfigurableDataSourceBuilder builder, ResourceDescriptorService descriptorService)
+            => builder.AddLocalDataSource(o => {
+                o.DescriptorService = descriptorService;
+                o.Serializer = new NewtonsoftSerializer();
+            });
+
+        public override IDataSource ConnectDataSource(CancellationToken token = default)
         {
+            DisposedCheck();
             IDataSource dataSource = ServiceProvider.GetRequiredService<IDataSource>();
             if (dataSource is IConfigurableDataSource configurable)
             {
                 IConfigurationSection dataSourceConfiguration = ServiceProvider.GetRequiredService<IConfiguration>().SetAndGetDataSource("Local");
                 LocalProxyConfiguration proxy = new LocalProxyConfiguration(dataSourceConfiguration) {
-                    FolderPath = "./Fixtures/Local-temp"
+                    FolderPath = $"./{FixtureFolderName}/{DataSourceName}-{TempKey}"
                 };
-                InitializeFixture("Local");
                 configurable.Configure(dataSourceConfiguration);
             }
             return dataSource;

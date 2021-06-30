@@ -6,54 +6,64 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Local
 {
-    public class LocalDeleteResourceTests : LocalIntegrationTestClass
+    [Collection(NonParallelCollectionDefinition.NAME)]
+    public class LocalDeleteResourceTests
     {
         [Fact]
         public async Task DeleteDialogue()
         {
-            Dialogue dialogue = Dummies.DeleteDialogue;
-            IDataSource dataSource = ConnectDataSource();
-            string relativePath = GetDialoguePath("Local", dialogue);
-            if (!File.Exists(relativePath))
+            using (LocalIntegrationTestProvider integration = new LocalIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, dialogue);
+                Dialogue dialogue = Dummies.DeleteDialogue;
+                IDataSource dataSource = integration.ConnectDataSource();
+                string relativePath = integration.GetDialoguePath(dialogue);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, dialogue);
+                }
+                Assert.True(File.Exists(relativePath));
+                await dataSource.DeleteAsync(dialogue);
+                await dataSource.SaveChangesAsync();
+                Assert.False(File.Exists(relativePath));
             }
-            Assert.True(File.Exists(relativePath));
-            await dataSource.DeleteAsync(dialogue);
-            await dataSource.SaveChangesAsync();
-            Assert.False(File.Exists(relativePath));
         }
 
         [Fact]
         public async Task DeleteQuest()
         {
-            Quest quest = Dummies.DeleteQuest;
-            IDataSource dataSource = ConnectDataSource();
-            string relativePath = GetQuestPath("Local", quest);
-            if (!File.Exists(relativePath))
+            using (LocalIntegrationTestProvider integration = new LocalIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, quest);
+                Quest quest = Dummies.DeleteQuest;
+                IDataSource dataSource = integration.ConnectDataSource();
+                string relativePath = integration.GetQuestPath(quest);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, quest);
+                }
+                Assert.True(File.Exists(relativePath));
+                await dataSource.DeleteAsync(quest);
+                await dataSource.SaveChangesAsync();
+                Assert.False(File.Exists(relativePath));
             }
-            Assert.True(File.Exists(relativePath));
-            await dataSource.DeleteAsync(quest);
-            await dataSource.SaveChangesAsync();
-            Assert.False(File.Exists(relativePath));
         }
 
         [Fact]
         public async Task DeleteNpc()
         {
-            Npc npc = Dummies.DeleteNpc;
-            IDataSource dataSource = ConnectDataSource();
-            string relativePath = GetNpcPath("Local", npc);
-            if (!File.Exists(relativePath))
+            using (LocalIntegrationTestProvider integration = new LocalIntegrationTestProvider())
             {
-                CreateLocalFile(relativePath, npc);
+                Npc npc = Dummies.DeleteNpc;
+                IDataSource dataSource = integration.ConnectDataSource();
+                string relativePath = integration.GetNpcPath(npc);
+                if (!File.Exists(relativePath))
+                {
+                    integration.CreateLocalFile(relativePath, npc);
+                }
+                Assert.True(File.Exists(relativePath));
+                await dataSource.DeleteAsync(npc);
+                await dataSource.SaveChangesAsync();
+                Assert.False(File.Exists(relativePath));
             }
-            Assert.True(File.Exists(relativePath));
-            await dataSource.DeleteAsync(npc);
-            await dataSource.SaveChangesAsync();
-            Assert.False(File.Exists(relativePath));
         }
     }
 }

@@ -24,6 +24,12 @@ namespace ResourceManager.DataSource.Local
 
         protected ITextSerializer Serializer { get; }
 
+        private int iOOperationTries;
+        protected int IOOperationTries {
+            get => iOOperationTries;
+            set => iOOperationTries = value > 0 ? value : 1;
+        }
+
         // WARNING: Saving changes is not consistent and not atomic
         // TODO: Fix consistency and atomicity
         public override void SaveChanges()
@@ -36,21 +42,21 @@ namespace ResourceManager.DataSource.Local
                 {
                     case ResourceState.Added:
                         string addedContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
-                        Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                        File.WriteAllText(targetPath, addedContent);
+                        RetryHelper.TryOperation(() => Directory.CreateDirectory(Path.GetDirectoryName(targetPath)));
+                        RetryHelper.TryOperation(() => File.WriteAllText(targetPath, addedContent), RetryHelper.UnauthorizedIOExceptions);
                         break;
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
-                        Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                        File.WriteAllText(targetPath, updateContent);
+                        RetryHelper.TryOperation(() => Directory.CreateDirectory(Path.GetDirectoryName(targetPath)));
+                        RetryHelper.TryOperation(() => File.WriteAllText(targetPath, updateContent), RetryHelper.UnauthorizedIOExceptions);
                         string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource));
                         if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                         {
-                            File.Delete(originalPath);
+                            RetryHelper.TryOperation(() => File.Delete(originalPath), RetryHelper.UnauthorizedIOExceptions);
                         }
                         break;
                     case ResourceState.Removed:
-                        File.Delete(targetPath);
+                        RetryHelper.TryOperation(() => File.Delete(targetPath), RetryHelper.UnauthorizedIOExceptions);
                         break;
                     default:
                         break;
@@ -71,21 +77,21 @@ namespace ResourceManager.DataSource.Local
                 {
                     case ResourceState.Added:
                         string addedContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
-                        Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                        await File.WriteAllTextAsync(targetPath, addedContent);
+                        RetryHelper.TryOperation(() => Directory.CreateDirectory(Path.GetDirectoryName(targetPath)));
+                        await RetryHelper.TryOperationAsync(() => File.WriteAllTextAsync(targetPath, addedContent), RetryHelper.UnauthorizedIOExceptions);
                         break;
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
-                        Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                        await File.WriteAllTextAsync(targetPath, updateContent);
+                        RetryHelper.TryOperation(() => Directory.CreateDirectory(Path.GetDirectoryName(targetPath)));
+                        await RetryHelper.TryOperationAsync(() => File.WriteAllTextAsync(targetPath, updateContent), RetryHelper.UnauthorizedIOExceptions);
                         string originalPath = Path.Combine(Options.GetFullFolderPath(), descriptor.GetRelativeFullPath(tracking.OriginalResource).TrimStart('/', '\\'));
                         if (!EqualityComparer<string>.Default.Equals(originalPath, targetPath))
                         {
-                            File.Delete(originalPath);
+                            RetryHelper.TryOperation(() => File.Delete(originalPath), RetryHelper.UnauthorizedIOExceptions);
                         }
                         break;
                     case ResourceState.Removed:
-                        File.Delete(targetPath);
+                        RetryHelper.TryOperation(() => File.Delete(targetPath), RetryHelper.UnauthorizedIOExceptions);
                         break;
                     default:
                         break;

@@ -5,36 +5,45 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Sql
 {
-    public class SqlDeleteResourceTests : SqlIntegrationTestClass
+    public class SqlDeleteResourceTests
     {
         [Fact]
         public async Task DeleteDialogue()
         {
-            Dialogue dialogue = Dummies.DeleteDialogue;
-            IDataSource dataSource = ConnectDataSource();
-            await dataSource.DeleteAsync(dialogue);
-            await dataSource.SaveChangesAsync();
-            // TODO: Test Asserts
+            using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
+            {
+                Dialogue dialogue = Dummies.DeleteDialogue;
+                IDataSource dataSource = integration.ConnectDataSource();
+                await dataSource.DeleteAsync(dialogue);
+                await dataSource.SaveChangesAsync();
+                // TODO: Test Asserts
+            }
         }
 
         [Fact]
         public async Task DeleteQuest()
         {
-            Quest quest = Dummies.DeleteQuest;
-            IDataSource dataSource = ConnectDataSource();
-            await dataSource.DeleteAsync(quest);
-            await dataSource.SaveChangesAsync();
-            // TODO: Test Asserts
+            using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
+            {
+                Quest quest = Dummies.DeleteQuest;
+                IDataSource dataSource = integration.ConnectDataSource();
+                await dataSource.DeleteAsync(quest);
+                await dataSource.SaveChangesAsync();
+                // TODO: Test Asserts
+            }
         }
 
         [Fact]
         public async Task DeleteNpc()
         {
-            Npc npc = Dummies.DeleteNpc;
-            IDataSource dataSource = ConnectDataSource();
-            await dataSource.DeleteAsync(npc);
-            await dataSource.SaveChangesAsync();
-            // TODO: Test Asserts
+            using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
+            {
+                Npc npc = Dummies.DeleteNpc;
+                IDataSource dataSource = integration.ConnectDataSource();
+                await dataSource.DeleteAsync(npc);
+                await dataSource.SaveChangesAsync();
+                // TODO: Test Asserts
+            }
         }
     }
 }
