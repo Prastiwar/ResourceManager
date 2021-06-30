@@ -9,7 +9,6 @@ using ResourceManager.Core.Services;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
 using ResourceManager.DataSource.Sql.Configuration;
-using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
 using ResourceManager.Wpf;
 using ResourceManager.Wpf.Providers;
@@ -36,33 +35,26 @@ namespace RpgDataEditor.Wpf
             ITextSerializer serializer = new NewtonsoftSerializer();
             builder.RegisterResourceTypes(typeof(Quest), typeof(Dialogue), typeof(Npc));
 
-            ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
-            IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Quest), "/quests", "/{category}/{id}_{title}.json");
-            IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
-            IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Npc), "/npcs", "/{id}_{name}.json");
-            fileDescriptorService.Register<Quest>(fileQuestDescriptor);
-            fileDescriptorService.Register<Dialogue>(fileDialogueDescriptor);
-            fileDescriptorService.Register<Npc>(fileNpcDescriptor);
+            ResourceDescriptorService descriptorService = new ResourceDescriptorService();
+            IResourceDescriptor questDescriptor = new LocationResourceDescriptor(typeof(Quest), "/quests", "/{category}/{id}_{title}.json");
+            IResourceDescriptor dialogueDescriptor = new LocationResourceDescriptor(typeof(Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
+            IResourceDescriptor npcDescriptor = new LocationResourceDescriptor(typeof(Npc), "/npcs", "/{id}_{name}.json");
+            descriptorService.Register<Quest>(questDescriptor);
+            descriptorService.Register<Dialogue>(dialogueDescriptor);
+            descriptorService.Register<Npc>(npcDescriptor);
 
             builder.AddLocalDataSource(o => {
-                o.DescriptorService = fileDescriptorService;
+                o.DescriptorService = descriptorService;
                 o.Serializer = serializer;
             });
 
             builder.AddFtpDataSource(o => {
-                o.DescriptorService = fileDescriptorService;
+                o.DescriptorService = descriptorService;
                 o.Serializer = serializer;
             });
 
             builder.AddSqlDataSource(o => {
-                IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Quest), "quests", ".{id}");
-                IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Dialogue), "dialogues", ".{id}");
-                IResourceDescriptor sqlNpcDescriptor = new SqlLocationResourceDescriptor(typeof(Npc), "npcs", ".{id}");
-
-                o.DescriptorService = new ResourceDescriptorService();
-                o.DescriptorService.Register<Quest>(sqlQuestDescriptor);
-                o.DescriptorService.Register<Dialogue>(sqlDialogueDescriptor);
-                o.DescriptorService.Register<Npc>(sqlNpcDescriptor);
+                o.DescriptorService = descriptorService;
                 o.CreateDatabaseContext = CreateSqlDbContext;
             });
         }

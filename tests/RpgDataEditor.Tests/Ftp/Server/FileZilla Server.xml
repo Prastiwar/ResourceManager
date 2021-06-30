@@ -7,7 +7,7 @@
     <Groups>
         <Group Name="testgroup">
             <Option Name="Bypass server userlimit">1</Option>
-            <Option Name="User Limit">3</Option>
+            <Option Name="User Limit">0</Option>
             <Option Name="IP Limit">0</Option>
             <Option Name="Enabled">1</Option>
             <Option Name="Comments" />

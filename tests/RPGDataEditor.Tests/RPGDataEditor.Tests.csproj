@@ -30,37 +30,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fixtures\Sql\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Fixtures\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Fixtures\Ftp-Server\FileZilla Server.xml">
+    <None Update="Ftp\Server\FileZilla Server.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\Ftp-Server\FileZilla Server.exe">
+    <None Update="Ftp\Server\FileZilla Server.exe">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\Ftp-Server\install-service.bat">
+    <None Update="Ftp\Server\install-service.bat">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\Ftp-Server\legal.htm">
+    <None Update="Ftp\Server\legal.htm">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\Ftp-Server\libeay32.dll">
+    <None Update="Ftp\Server\libeay32.dll">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\Ftp-Server\license.txt">
+    <None Update="Ftp\Server\license.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Fixtures\Ftp-Server\ssleay32.dll">
+    <None Update="Ftp\Server\ssleay32.dll">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Fixtures\Sql\" />
   </ItemGroup>
   
 </Project>

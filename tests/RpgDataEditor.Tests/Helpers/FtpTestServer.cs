@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.ServiceProcess;
 using Xunit;
 
@@ -17,19 +16,6 @@ namespace RpgDataEditor.Tests
             if (controller.Status != ServiceControllerStatus.Running)
             {
                 throw new InvalidProgramException("ResourceManagerFtpTestServer service is not running. Cannot run test.");
-            }
-        }
-
-        public void Stop()
-        {
-            ServiceController controller = GetServerServiceAsync();
-            try
-            {
-                controller.Stop();
-            }
-            catch (Exception)
-            {
-                Trace.TraceWarning("Couldn't stop service ResourceManagerFtpTestServer");
             }
         }
 

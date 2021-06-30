@@ -5,14 +5,14 @@ using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RpgDataEditor.Tests
+namespace RpgDataEditor.Tests.Local
 {
-    public class TrackingTests : IntegrationTestClass
+    public class TrackingTests : LocalIntegrationTestClass
     {
         [Fact]
         public async Task ThrowOnUpdateNoTracking()
         {
-            IDataSource dataSource = GetIntegratedLocalDataSource();
+            IDataSource dataSource = ConnectDataSource();
             Dialogue dialogue = Dummies.Dialogue;
             string relativePath = GetDialoguePath("Local", dialogue);
             if (!File.Exists(relativePath))
@@ -27,7 +27,7 @@ namespace RpgDataEditor.Tests
         [Fact]
         public async Task DontThrowOnUpdateTracking()
         {
-            IDataSource dataSource = GetIntegratedLocalDataSource();
+            IDataSource dataSource = ConnectDataSource();
             Dialogue dialogue = Dummies.Dialogue;
             string relativePath = GetDialoguePath("Local", dialogue);
             if (!File.Exists(relativePath))

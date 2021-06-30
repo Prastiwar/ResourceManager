@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using ResourceManager;
@@ -7,11 +6,7 @@ using ResourceManager.Core.Serialization;
 using ResourceManager.Core.Services;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
-using ResourceManager.DataSource.Sql.Configuration;
-using ResourceManager.DataSource.Sql.Data;
 using ResourceManager.Services;
-using ResourceManager.Wpf.Converters;
-using RpgDataEditor.DataSource;
 using RpgDataEditor.Models;
 using RpgDataEditor.Serialization;
 using System;
@@ -20,11 +15,13 @@ using System.Threading;
 
 namespace RpgDataEditor.Tests
 {
-    public class IntegrationTestClass
+    public abstract class IntegrationTestClass
     {
-        public IntegrationTestClass() => ServiceProvider = CreateIntegratedServices();
+        public IntegrationTestClass() => ServiceProvider = ConfigureServices(new ServiceCollection());
 
         protected IServiceProvider ServiceProvider { get; }
+
+        private readonly int repeatIOCount = 10;
 
         /// <summary> https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?redirectedfrom=MSDN&view=net-5.0 </summary>
         private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
@@ -55,74 +52,46 @@ namespace RpgDataEditor.Tests
             }
         }
 
-        private void InitializeFixture(string fixtureName)
+        /// <summary> Copies files from fixtures defined with name to temp location </summary>
+        protected void InitializeFixture(string fixtureName)
         {
             string path = $"./Fixtures/{fixtureName}";
             string tempPath = $"./Fixtures/{fixtureName}-temp";
+            string fullPath = Path.GetFullPath(tempPath);
+            if (fullPath.StartsWith("\\\\?\\"))
+            {
+
+            }
             if (Directory.Exists(tempPath))
             {
-                Directory.Delete(tempPath, true);
+                for (int i = 0; i < repeatIOCount; i++)
+                {
+                    try
+                    {
+                        Directory.Delete(tempPath, true);
+                    }
+                    catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
+                    {
+                        Thread.Sleep(100);
+                        continue;
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        break;
+                    }
+                    break;
+                }
             }
-            DirectoryInfo targetPath = Directory.CreateDirectory(tempPath);
-            CopyAll(new DirectoryInfo(path), targetPath);
+            //DirectoryInfo targetPath = Directory.CreateDirectory(tempPath);
+            //CopyAll(new DirectoryInfo(path), targetPath);
         }
 
-        protected IDataSource GetIntegratedLocalDataSource()
-        {
-            IDataSource dataSource = ServiceProvider.GetRequiredService<IDataSource>();
-            if (dataSource is IConfigurableDataSource configurable)
-            {
-                IConfigurationSection dataSourceConfiguration = ServiceProvider.GetRequiredService<IConfiguration>().SetAndGetDataSource("Local");
-                LocalProxyConfiguration proxy = new LocalProxyConfiguration(dataSourceConfiguration) {
-                    FolderPath = "./Fixtures/Local-temp"
-                };
-                InitializeFixture("Local");
-                configurable.Configure(dataSourceConfiguration);
-            }
-            return dataSource;
-        }
+        protected abstract IDataSource ConnectDataSource(CancellationToken token = default);
 
-        protected IDataSource GetIntegratedFtpDataSource(CancellationToken token)
-        {
-            IDataSource dataSource = ServiceProvider.GetRequiredService<IDataSource>();
-            if (dataSource is IConfigurableDataSource configurable)
-            {
-                IConfigurationSection dataSourceConfiguration = ServiceProvider.GetRequiredService<IConfiguration>().SetAndGetDataSource("Ftp");
-                FtpProxyConfiguration proxy = new FtpProxyConfiguration(dataSourceConfiguration) {
-                    Host = "localhost",
-                    UserName = "testerro",
-                    Password = "123456".ToSecure()
-                };
-                string relativePath = "Fixtures/Ftp-temp";
-                string rootPath = Path.GetFullPath(relativePath);
-                InitializeFixture("Ftp");
-                FtpTestServer server = new FtpTestServer(rootPath);
-                server.Start();
-                token.Register(server.Stop);
-                configurable.Configure(dataSourceConfiguration);
-            }
-            return dataSource;
-        }
+        protected abstract void BuildDataSource(IConfigurableDataSourceBuilder builder, ResourceDescriptorService descriptorService);
 
-        protected IDataSource GetIntegratedSqlDataSource()
+        protected virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            IDataSource dataSource = ServiceProvider.GetRequiredService<IDataSource>();
-            if (dataSource is IConfigurableDataSource configurable)
-            {
-                IConfigurationSection dataSourceConfiguration = ServiceProvider.GetRequiredService<IConfiguration>().SetAndGetDataSource("Sql");
-                SqlProxyConfiguration proxy = new SqlProxyConfiguration(dataSourceConfiguration);
-                string relativePath = "./Fixtures/Sql/Database.sqlite";
-                string databaseFilePath = Path.GetFullPath(relativePath);
-                proxy.ConnectionString = $"Data Source = {databaseFilePath}; Version = 3;";
-                InitializeFixture("Sql");
-                configurable.Configure(dataSourceConfiguration);
-            }
-            return dataSource;
-        }
-
-        protected virtual IServiceProvider CreateIntegratedServices()
-        {
-            ServiceCollection services = new ServiceCollection();
             services.AddConfiguration(builder => builder.AddInMemoryCollection());
             NewtonsoftSerializer serializer = new NewtonsoftSerializer();
             JsonConvert.DefaultSettings = CreateJsonSettings;
@@ -130,41 +99,18 @@ namespace RpgDataEditor.Tests
             services.AddDataSourceConfiguration(builder => {
                 builder.RegisterResourceTypes(typeof(Quest), typeof(Dialogue), typeof(Npc));
 
-                ResourceDescriptorService fileDescriptorService = new ResourceDescriptorService();
-                IResourceDescriptor fileQuestDescriptor = new LocationResourceDescriptor(typeof(Quest), "/quests", "/{category}/{id}_{title}.json");
-                IResourceDescriptor fileDialogueDescriptor = new LocationResourceDescriptor(typeof(Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
-                IResourceDescriptor fileNpcDescriptor = new LocationResourceDescriptor(typeof(Npc), "/npcs", "/{id}_{name}.json");
-                fileDescriptorService.Register<Quest>(fileQuestDescriptor);
-                fileDescriptorService.Register<Dialogue>(fileDialogueDescriptor);
-                fileDescriptorService.Register<Npc>(fileNpcDescriptor);
+                ResourceDescriptorService descriptorService = new ResourceDescriptorService();
+                IResourceDescriptor questDescriptor = new LocationResourceDescriptor(typeof(Quest), "/quests", "/{category}/{id}_{title}.json");
+                IResourceDescriptor dialogueDescriptor = new LocationResourceDescriptor(typeof(Dialogue), "/dialogues", "/{category}/{id}_{title}.json");
+                IResourceDescriptor npcDescriptor = new LocationResourceDescriptor(typeof(Npc), "/npcs", "/{id}_{name}.json");
+                descriptorService.Register<Quest>(questDescriptor);
+                descriptorService.Register<Dialogue>(dialogueDescriptor);
+                descriptorService.Register<Npc>(npcDescriptor);
 
-                builder.AddLocalDataSource(o => {
-                    o.DescriptorService = fileDescriptorService;
-                    o.Serializer = serializer;
-                });
-
-                builder.AddFtpDataSource(o => {
-                    o.DescriptorService = fileDescriptorService;
-                    o.Serializer = serializer;
-                });
-
-                builder.AddSqlDataSource(o => {
-                    IResourceDescriptor sqlQuestDescriptor = new SqlLocationResourceDescriptor(typeof(Quest), "quests", ".{id}");
-                    IResourceDescriptor sqlDialogueDescriptor = new SqlLocationResourceDescriptor(typeof(Dialogue), "dialogues", ".{id}");
-                    IResourceDescriptor sqlNpcDescriptor = new SqlLocationResourceDescriptor(typeof(Npc), "npcs", ".{id}");
-
-                    o.DescriptorService = new ResourceDescriptorService();
-                    o.DescriptorService.Register<Quest>(sqlQuestDescriptor);
-                    o.DescriptorService.Register<Dialogue>(sqlDialogueDescriptor);
-                    o.DescriptorService.Register<Npc>(sqlNpcDescriptor);
-                    o.CreateDatabaseContext = CreateSqlDbContext;
-                });
+                BuildDataSource(builder, descriptorService);
             }, null, null);
             return services.BuildServiceProvider();
         }
-
-        protected virtual DbContext CreateSqlDbContext(string connectionString, IConfiguration configuration, SqlDataSourceOptions options)
-            => new DefaultDbContext(connectionString, configuration);
 
         protected void CreateLocalFile(string filePath, object resource)
         {
@@ -172,14 +118,36 @@ namespace RpgDataEditor.Tests
             string text = serializer.Serialize(resource);
             string fullFilePath = Path.GetFullPath(filePath);
             Directory.CreateDirectory(Path.GetDirectoryName(fullFilePath));
-            File.WriteAllText(fullFilePath, text);
+            for (int i = 0; i < repeatIOCount; i++)
+            {
+                try
+                {
+                    File.WriteAllText(fullFilePath, text);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    continue;
+                }
+                break;
+            }
         }
 
         protected T GetLocalResource<T>(string filePath)
         {
             ITextSerializer serializer = ServiceProvider.GetRequiredService<ITextSerializer>();
-            string text = File.ReadAllText(filePath);
-            return (T)serializer.Deserialize(text, typeof(T));
+            for (int i = 0; i < repeatIOCount; i++)
+            {
+                try
+                {
+                    string text = File.ReadAllText(filePath);
+                    return (T)serializer.Deserialize(text, typeof(T));
+                }
+                catch (IOException)
+                {
+                    continue;
+                }
+            }
+            throw new InvalidProgramException();
         }
 
         protected virtual JsonSerializerSettings CreateJsonSettings()
