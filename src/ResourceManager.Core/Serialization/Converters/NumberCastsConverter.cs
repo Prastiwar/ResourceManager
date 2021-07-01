@@ -19,7 +19,7 @@ namespace ResourceManager.Core.Serialization
             {
                 return Convert.ChangeType(jsonValue.Value<int>(), objectType);
             }
-            throw new FormatException();
+            return Activator.CreateInstance(objectType);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => writer.WriteValue(value);

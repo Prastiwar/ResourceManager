@@ -5,7 +5,7 @@ namespace RpgDataEditor.Models
 {
     public class Npc : IIdentifiable
     {
-        public object Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
@@ -16,5 +16,10 @@ namespace RpgDataEditor.Models
         public NpcJob Job { get; set; }
 
         public IList<AttributeData> Attributes { get; set; }
+
+        object IIdentifiable.Id {
+            get => Id;
+            set => Id = (int)System.Convert.ToInt64(value);
+        }
     }
 }

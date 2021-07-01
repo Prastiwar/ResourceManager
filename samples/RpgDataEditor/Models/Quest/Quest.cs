@@ -5,7 +5,7 @@ namespace RpgDataEditor.Models
 {
     public class Quest : ICategorizable
     {
-        public object Id { get; set; }
+        public int Id { get; set; }
 
         public string Title { get; set; }
 
@@ -18,5 +18,10 @@ namespace RpgDataEditor.Models
         public IList<IQuestTask> Tasks { get; set; }
 
         public IList<Requirement> Requirements { get; set; }
+
+        object IIdentifiable.Id {
+            get => Id;
+            set => Id = (int)System.Convert.ToInt64(value);
+        }
     }
 }

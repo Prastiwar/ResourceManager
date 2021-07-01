@@ -14,7 +14,7 @@ namespace RpgDataEditor.Serialization
     {
         public override Dialogue ReadJObject(Type objectType, JObject obj)
         {
-            object id = obj.GetValue<object>(nameof(Dialogue.Id));
+            int id = obj.GetValue<int>(nameof(Dialogue.Id), 0);
             string title = obj.GetValue<string>(nameof(Dialogue.Title));
             string message = obj.GetValue<string>(nameof(Dialogue.Message));
             string category = obj.GetValue<string>(nameof(Dialogue.Category));

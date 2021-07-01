@@ -14,7 +14,7 @@ namespace RpgDataEditor.Serialization
     {
         public override Npc ReadJObject(Type objectType, JObject obj)
         {
-            object id = obj.GetValue<object>(nameof(Npc.Id));
+            int id = obj.GetValue<int>(nameof(Npc.Id), 0);
             string name = obj.GetValue<string>(nameof(Npc.Name));
             Position position = obj.GetValue<Position>(nameof(Npc.Position));
             IList<AttributeData> attributes = obj.GetValue<ObservableCollection<AttributeData>>(nameof(Npc.Attributes));

@@ -3,16 +3,31 @@ using System.Collections.Generic;
 
 namespace RpgDataEditor.Tests
 {
-    public class Dummies
+    public static class Dummies
     {
+        private static readonly List<Requirement> requirements = new List<Requirement>() {
+                new MoneyRequirement() { Money = 10 },
+                new DialogueRequirement() { DialogueId = 1 },
+                new ItemRequirement() { ItemId = 1 },
+                new QuestRequirement() {
+                    QuestId = 1,
+                    Stage = QuestStage.Done
+                }
+            };
+
         public static Dialogue Dialogue => new Dialogue() {
             Id = int.MaxValue / 2,
             StartQuestId = 1,
             Title = "TestTitle",
             Category = "TestCategory",
             Message = "TestMessage",
-            Requirements = new List<Requirement>(),
-            Options = new List<DialogueOption>()
+            Requirements = requirements,
+            Options = new List<DialogueOption>() {
+                new DialogueOption() {
+                    Message = "TestOptionMessage",
+                    Requirements = requirements,
+                }
+            }
         };
 
         public static Quest Quest => new Quest() {
@@ -20,8 +35,23 @@ namespace RpgDataEditor.Tests
             Title = "TestTitle",
             Category = "TestCategory",
             Message = "TestMessage",
-            CompletionTask = new ReachQuestTask(),
-            Requirements = new List<Requirement>(),
+            CompletionTask = new ReachQuestTask() {
+                Distance = 5,
+                Pos = new Position() { Y = 10 }
+            },
+            Requirements = requirements,
+            Tasks = new List<IQuestTask>() {
+                new ReachQuestTask() {
+                    Distance = 5,
+                    Pos = new Position() { Z = 10 }
+                },
+                new KillQuestTask() {
+                    Amount = 1,
+                    TargetId = 1
+                },
+                new EntityInteractQuestTask() { EntityId = 1 },
+                new ItemInteractQuestTask() { ItemId = "item" }
+            }
         };
 
         public static Npc Npc => new Npc() {
@@ -35,9 +65,14 @@ namespace RpgDataEditor.Tests
                     }
                 }
             },
-            Position = new Position(),
-            TalkData = new TalkData(),
-            Attributes = new List<AttributeData>(),
+            Position = new Position() { X = 10 },
+            TalkData = new TalkData() {
+                TalkRange = 5,
+                InitationDialogues = new List<int>() { int.MaxValue / 2 }
+            },
+            Attributes = new List<AttributeData>() {
+                new AttributeData("Health", 100)
+            },
         };
 
         public static Dialogue UpdateDialogue {

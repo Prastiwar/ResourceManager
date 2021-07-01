@@ -14,7 +14,7 @@ namespace RpgDataEditor.Serialization
     {
         public override Quest ReadJObject(Type objectType, JObject obj)
         {
-            object id = obj.GetValue<object>(nameof(Quest.Id));
+            int id = obj.GetValue<int>(nameof(Quest.Id), 0);
             string title = obj.GetValue<string>(nameof(Quest.Title));
             string message = obj.GetValue<string>(nameof(Quest.Message));
             string category = obj.GetValue<string>(nameof(Quest.Category));

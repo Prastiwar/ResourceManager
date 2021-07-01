@@ -31,13 +31,16 @@ namespace RpgDataEditor.DataSource
             }
         }
 
+        public DbSet<Dialogue> Dialogues { get; set; }
+        public DbSet<Npc> Npcs { get; set; }
+        public DbSet<Quest> Quests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // TODO: Improve model creation
-            modelBuilder.Entity<Quest>();
-            modelBuilder.Entity<Dialogue>();
-            modelBuilder.Entity<Npc>();
+            modelBuilder.ApplyConfiguration(new DialogueEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new QuestEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new NpcEntityConfiguration());
         }
     }
 }

@@ -13,7 +13,7 @@ namespace RpgDataEditor.Serialization
     {
         public override DialogueOption ReadJObject(Type objectType, JObject obj)
         {
-            int nextDialogId = obj.GetValue(nameof(DialogueOption.NextDialogId), -1);
+            int nextDialogId = obj.GetValue<int>(nameof(DialogueOption.NextDialogId), -1);
             string message = obj.GetValue<string>(nameof(DialogueOption.Message));
             IList<Requirement> requirements = obj.GetValue<List<Requirement>>(nameof(DialogueOption.Requirements));
             DialogueOption model = new DialogueOption() {
