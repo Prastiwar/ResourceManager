@@ -13,9 +13,9 @@ namespace RpgDataEditor.Models
 
         public string Category { get; set; }
 
-        public IQuestTask CompletionTask { get; set; }
+        public QuestTask CompletionTask { get; set; }
 
-        public IList<IQuestTask> Tasks { get; set; }
+        public IList<QuestTask> Tasks { get; set; }
 
         public IList<Requirement> Requirements { get; set; }
 

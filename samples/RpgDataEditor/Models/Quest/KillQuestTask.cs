@@ -1,6 +1,6 @@
 ﻿namespace RpgDataEditor.Models
 {
-    public class KillQuestTask : IQuestTask
+    public class KillQuestTask : QuestTask
     {
         public object TargetId { get; set; }
 

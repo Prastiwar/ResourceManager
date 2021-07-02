@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
-using ResourceManager;
 using ResourceManager.DataSource;
 using System.IO;
 

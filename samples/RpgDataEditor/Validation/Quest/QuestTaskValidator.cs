@@ -4,7 +4,7 @@ using RpgDataEditor.Models;
 
 namespace RpgDataEditor.Validation
 {
-    public class QuestTaskValidator : AbstractValidator<IQuestTask>
+    public class QuestTaskValidator : AbstractValidator<QuestTask>
     {
         public QuestTaskValidator()
         {

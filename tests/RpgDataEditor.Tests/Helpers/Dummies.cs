@@ -40,7 +40,7 @@ namespace RpgDataEditor.Tests
                 Pos = new Position() { Y = 10 }
             },
             Requirements = requirements,
-            Tasks = new List<IQuestTask>() {
+            Tasks = new List<QuestTask>() {
                 new ReachQuestTask() {
                     Distance = 5,
                     Pos = new Position() { Z = 10 }
@@ -50,7 +50,7 @@ namespace RpgDataEditor.Tests
                     TargetId = 1
                 },
                 new EntityInteractQuestTask() { EntityId = 1 },
-                new ItemInteractQuestTask() { ItemId = "item" }
+                new ItemInteractQuestTask() { ItemId = 1 }
             }
         };
 
@@ -60,7 +60,7 @@ namespace RpgDataEditor.Tests
             Job = new TraderNpcJob() {
                 Items = new List<TradeItem>() {
                     new TradeItem() {
-                        ItemId = "id",
+                        ItemId = 1,
                         Buy = 10,
                     }
                 }

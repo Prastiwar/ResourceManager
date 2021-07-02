@@ -15,7 +15,7 @@ namespace RpgDataEditor.Wpf.Providers
             RegisterAutoTemplate<Position>(containerRegistry, new PositionAutoTemplate());
 
             RegisterAutoTemplate<DialogueOption>(containerRegistry, new DialogueOptionAutoTemplate());
-            RegisterAutoTemplate<IQuestTask>(containerRegistry, new QuestTaskAutoTemplate());
+            RegisterAutoTemplate<QuestTask>(containerRegistry, new QuestTaskAutoTemplate());
             RegisterAutoTemplate<Requirement>(containerRegistry, new RequirementAutoTemplate());
             RegisterAutoTemplate<TalkLine>(containerRegistry, new TalkLineAutoTemplate());
             RegisterAutoTemplate<TradeItem>(containerRegistry, new TradeItemAutoTemplate());
@@ -23,7 +23,7 @@ namespace RpgDataEditor.Wpf.Providers
 
             RegisterListDataAutoTemplate<Requirement>(containerRegistry);
             RegisterListDataAutoTemplate<DialogueOption>(containerRegistry);
-            RegisterListDataAutoTemplate<IQuestTask>(containerRegistry);
+            RegisterListDataAutoTemplate<QuestTask>(containerRegistry);
             RegisterListDataAutoTemplate<TalkLine>(containerRegistry);
             RegisterListDataAutoTemplate<TradeItem>(containerRegistry);
         }

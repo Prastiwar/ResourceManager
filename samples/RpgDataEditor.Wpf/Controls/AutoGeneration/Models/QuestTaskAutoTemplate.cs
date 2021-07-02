@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace RpgDataEditor.Wpf.Controls
 {
-    public class QuestTaskAutoTemplate : AutoTemplate<IQuestTask>
+    public class QuestTaskAutoTemplate : AutoTemplate<QuestTask>
     {
         public override DependencyObject LoadContent(object context, TemplateOptions options)
         {
@@ -15,6 +15,6 @@ namespace RpgDataEditor.Wpf.Controls
             return view;
         }
 
-        private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeType<IQuestTask>(sender);
+        private void View_TypeChange(object sender, ChangeableUserControl.ChangeTypeEventArgs e) => e.ChangeType<QuestTask>(sender);
     }
 }

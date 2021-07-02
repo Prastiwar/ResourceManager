@@ -19,9 +19,14 @@ namespace RpgDataEditor.DataSource
 
             // TODO: Map tasks
             builder.Ignore(x => x.Tasks);
+            //builder.HasMany(x => x.Tasks)
+            //       .WithOne()
+            //       .HasForeignKey("OwnerId");
 
-            // TODO: Map completion task
-            builder.Ignore(x => x.CompletionTask);
+            builder.HasOne(x => x.CompletionTask)
+                   .WithMany()
+                   .HasForeignKey("OwnerId")
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

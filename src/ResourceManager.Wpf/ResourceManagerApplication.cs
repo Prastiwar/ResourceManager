@@ -167,7 +167,16 @@ namespace ResourceManager.Wpf
             }
 
             IConfigurableDataSource configurableDataSource = provider.GetRequiredService<IConfigurableDataSource>();
-            configurableDataSource.Configure(dataSourceSection);
+            try
+            {
+                configurableDataSource.Configure(dataSourceSection);
+            }
+            catch (Exception ex)
+            {
+                provider.GetRequiredService<ILogger<ResourceManagerApplication>>().LogError(ex, "Couldn't load configured data source");
+                dataSourceSection[DataSourceExtensions.NameKey] = LocalDataSourceExtensions.Name;
+                configurableDataSource.Configure(dataSourceSection);
+            }
             configuration.GetReloadToken().RegisterChangeCallback((config) => configurableDataSource.Configure((IConfiguration)config), dataSourceSection);
         }
     }

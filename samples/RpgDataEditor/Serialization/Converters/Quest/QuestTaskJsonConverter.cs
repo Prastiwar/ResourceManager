@@ -3,9 +3,9 @@ using RpgDataEditor.Models;
 
 namespace RpgDataEditor.Serialization
 {
-    public class QuestTaskJsonConverter : AbstractClassJsonConverter<IQuestTask>
+    public class QuestTaskJsonConverter : AbstractClassJsonConverter<QuestTask>
     {
-        public QuestTaskJsonConverter() : base(new[] { typeof(IQuestTask).Assembly }) { }
+        public QuestTaskJsonConverter() : base(new[] { typeof(QuestTask).Assembly }) { }
 
         protected override string Suffix => "QuestTask";
     }

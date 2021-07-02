@@ -49,11 +49,12 @@ namespace RpgDataEditor.DataSource
                                     (c1, c2) => c1.SequenceEqual(c2),
                                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                                     c => c.ToList()));
-                t.Ignore(x => x.InitationDialogues);
             });
 
-            // TODO: Map Job
-            builder.Ignore(x => x.Job);
+            builder.HasOne(x => x.Job)
+                   .WithMany()
+                   .HasForeignKey("OwnerId")
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ResourceManager.DataSource.Sql
     {
         public static IQueryable<object> Set(this DbContext context, Type entityType)
         {
-            MethodInfo method = typeof(DbContext).GetMethod(nameof(DbContext.Set), BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo method = typeof(DbContext).GetMethod(nameof(DbContext.Set), BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
             method = method.MakeGenericMethod(entityType);
             return (method.Invoke(context, null) as IQueryable).Cast<object>();
         }

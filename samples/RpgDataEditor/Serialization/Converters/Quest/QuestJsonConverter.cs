@@ -18,8 +18,8 @@ namespace RpgDataEditor.Serialization
             string title = obj.GetValue<string>(nameof(Quest.Title));
             string message = obj.GetValue<string>(nameof(Quest.Message));
             string category = obj.GetValue<string>(nameof(Quest.Category));
-            IQuestTask completionTask = obj.GetValue<IQuestTask>(nameof(Quest.CompletionTask));
-            IList<IQuestTask> tasks = obj.GetValue<ObservableCollection<IQuestTask>>(nameof(Quest.Tasks));
+            QuestTask completionTask = obj.GetValue<QuestTask>(nameof(Quest.CompletionTask));
+            IList<QuestTask> tasks = obj.GetValue<ObservableCollection<QuestTask>>(nameof(Quest.Tasks));
             IList<Requirement> requirements = obj.GetValue<ObservableCollection<Requirement>>(nameof(Quest.Requirements));
             Quest model = new Quest() {
                 Id = id,

@@ -1,6 +1,6 @@
 ﻿namespace RpgDataEditor.Models
 {
-    public class DialogueQuestTask : IQuestTask
+    public class DialogueQuestTask : QuestTask
     {
         public object DialogueId { get; set; }
     }

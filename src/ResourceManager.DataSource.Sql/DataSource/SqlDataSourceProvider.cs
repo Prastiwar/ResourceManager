@@ -19,11 +19,11 @@ namespace ResourceManager.DataSource.Sql
             {
                 throw new System.ArgumentNullException("Connection string is needed");
             }
-            SqlConnectionMonitor monitor = new SqlConnectionMonitor(connectionString);
             SqlDataSourceOptions options = new SqlDataSourceOptions() {
                 ConnectionString = connectionString
             };
             Microsoft.EntityFrameworkCore.DbContext context = BuilderOptions.CreateDatabaseContext.Invoke(connectionString, configuration, options);
+            SqlConnectionMonitor monitor = new SqlConnectionMonitor(context);
             SqlDataSource dataSource = new SqlDataSource(configuration, monitor, BuilderOptions.DescriptorService, context, options);
             services.AddSingleton(dataSource);
             return dataSource;

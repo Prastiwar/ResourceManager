@@ -1,4 +1,4 @@
 ﻿namespace RpgDataEditor.Models
 {
-    public interface IQuestTask { }
+    public abstract class QuestTask { }
 }
