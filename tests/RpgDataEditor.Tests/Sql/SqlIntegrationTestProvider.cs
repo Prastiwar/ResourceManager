@@ -35,7 +35,8 @@ namespace RpgDataEditor.Tests.Sql
                 SqlProxyConfiguration proxy = new SqlProxyConfiguration(dataSourceConfiguration);
                 string relativePath = $"./{FixtureFolderName}/{DataSourceName}/Database.sqlite";
                 string databaseFilePath = Path.GetFullPath(relativePath);
-                proxy.ConnectionString = $"Data Source = {databaseFilePath}; Version = 3;";
+                proxy.ConnectionString = $"Data Source={databaseFilePath}";
+                proxy.EngineName = "sqlite";
                 configurable.Configure(dataSourceConfiguration);
             }
             return dataSource;

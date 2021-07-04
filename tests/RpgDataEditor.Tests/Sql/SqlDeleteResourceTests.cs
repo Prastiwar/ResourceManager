@@ -6,6 +6,8 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Sql
 {
+
+    [Collection(NonParallelCollectionDefinition.NAME)]
     public class SqlDeleteResourceTests
     {
         [Fact]
@@ -13,11 +15,19 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Dialogue dialogue = Dummies.DeleteDialogue;
+                Dialogue resource = Dummies.DeleteDialogue;
                 IDataSource dataSource = integration.ConnectDataSource();
-                await dataSource.DeleteAsync(dialogue);
+                bool hasResource = dataSource.Query<Dialogue>().ToList().Contains(resource);
+                if (!hasResource)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasResource = dataSource.Query<Dialogue>().ToList().Contains(resource);
+                    Assert.True(hasResource);
+                }
+                await dataSource.DeleteAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Assert.DoesNotContain(dialogue, dataSource.Query<Dialogue>().ToList());
+                Assert.DoesNotContain(resource, dataSource.Query<Dialogue>().ToList());
             }
         }
 
@@ -26,11 +36,19 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Quest quest = Dummies.DeleteQuest;
+                Quest resource = Dummies.DeleteQuest;
                 IDataSource dataSource = integration.ConnectDataSource();
-                await dataSource.DeleteAsync(quest);
+                bool hasResource = dataSource.Query<Quest>().ToList().Contains(resource);
+                if (!hasResource)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasResource = dataSource.Query<Quest>().ToList().Contains(resource);
+                    Assert.True(hasResource);
+                }
+                await dataSource.DeleteAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Assert.DoesNotContain(quest, dataSource.Query<Quest>().ToList());
+                Assert.DoesNotContain(resource, dataSource.Query<Quest>().ToList());
             }
         }
 
@@ -39,11 +57,19 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Npc npc = Dummies.DeleteNpc;
+                Npc resource = Dummies.DeleteNpc;
                 IDataSource dataSource = integration.ConnectDataSource();
-                await dataSource.DeleteAsync(npc);
+                bool hasResource = dataSource.Query<Npc>().ToList().Contains(resource);
+                if (!hasResource)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasResource = dataSource.Query<Npc>().ToList().Contains(resource);
+                    Assert.True(hasResource);
+                }
+                await dataSource.DeleteAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Assert.DoesNotContain(npc, dataSource.Query<Npc>().ToList());
+                Assert.DoesNotContain(resource, dataSource.Query<Npc>().ToList());
             }
         }
     }

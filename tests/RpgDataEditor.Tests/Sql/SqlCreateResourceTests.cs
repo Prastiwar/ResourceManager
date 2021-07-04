@@ -6,6 +6,8 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Sql
 {
+
+    [Collection(NonParallelCollectionDefinition.NAME)]
     public class SqlCreateResourceTests
     {
         [Fact]

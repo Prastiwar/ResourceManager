@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
 using RpgDataEditor.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RpgDataEditor.DataSource
 {
@@ -43,18 +39,11 @@ namespace RpgDataEditor.DataSource
 
             builder.OwnsOne(x => x.TalkData, t => {
                 t.Property(x => x.InitationDialogues)
-                 .HasConversion(v => JsonConvert.SerializeObject(v),
-                                v => JsonConvert.DeserializeObject<List<int>>(v),
-                                new ValueComparer<List<int>>(
-                                    (c1, c2) => c1.SequenceEqual(c2),
-                                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                                    c => c.ToList()));
+                 .HasJsonConversion();
             });
 
-            builder.HasOne(x => x.Job)
-                   .WithMany()
-                   .HasForeignKey("OwnerId")
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(x => x.Job)
+                   .HasJsonConversion();
         }
     }
 }

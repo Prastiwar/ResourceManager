@@ -8,6 +8,8 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Sql
 {
+
+    [Collection(NonParallelCollectionDefinition.NAME)]
     public class SqlUpdateResourceTests
     {
         [Fact]
@@ -15,14 +17,22 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Dialogue dialogue = Dummies.UpdateDialogue;
+                Dialogue resource = Dummies.UpdateDialogue;
                 IDataSource dataSource = integration.ConnectDataSource();
-                dataSource.Attach(dialogue);
-                dialogue.Message = Guid.NewGuid().ToString();
-                await dataSource.UpdateAsync(dialogue);
+                bool hasResource = dataSource.Query<Dialogue>().ToList().Contains(resource);
+                if (!hasResource)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasResource = dataSource.Query<Dialogue>().ToList().Contains(resource);
+                    Assert.True(hasResource);
+                }
+                dataSource.Attach(resource);
+                resource.Message = Guid.NewGuid().ToString();
+                await dataSource.UpdateAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Dialogue updated = dataSource.Query<Dialogue>().ToList().First(d => IdentifiableComparer.Default.Compare(d, dialogue) == 0);
-                Assert.Equal(dialogue.Message, updated.Message);
+                Dialogue updated = dataSource.Query<Dialogue>().ToList().First(d => IdentifiableComparer.Default.Compare(d, resource) == 0);
+                Assert.Equal(resource.Message, updated.Message);
             }
         }
 
@@ -31,14 +41,22 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Quest quest = Dummies.UpdateQuest;
+                Quest resource = Dummies.UpdateQuest;
                 IDataSource dataSource = integration.ConnectDataSource();
-                dataSource.Attach(quest);
-                quest.Message = Guid.NewGuid().ToString();
-                await dataSource.UpdateAsync(quest);
+                bool hasResource = dataSource.Query<Quest>().ToList().Contains(resource);
+                if (!hasResource)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasResource = dataSource.Query<Quest>().ToList().Contains(resource);
+                    Assert.True(hasResource);
+                }
+                dataSource.Attach(resource);
+                resource.Message = Guid.NewGuid().ToString();
+                await dataSource.UpdateAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Quest updated = dataSource.Query<Quest>().ToList().First(d => IdentifiableComparer.Default.Compare(d, quest) == 0);
-                Assert.Equal(quest.Message, updated.Message);
+                Quest updated = dataSource.Query<Quest>().ToList().First(d => IdentifiableComparer.Default.Compare(d, resource) == 0);
+                Assert.Equal(resource.Message, updated.Message);
             }
         }
 
@@ -47,14 +65,22 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Npc npc = Dummies.UpdateNpc;
+                Npc resource = Dummies.UpdateNpc;
                 IDataSource dataSource = integration.ConnectDataSource();
-                dataSource.Attach(npc);
-                npc.TalkData.TalkRange = new Random().Next(0, int.MaxValue);
-                await dataSource.UpdateAsync(npc);
+                bool hasResource = dataSource.Query<Npc>().ToList().Contains(resource);
+                if (!hasResource)
+                {
+                    await dataSource.AddAsync(resource);
+                    await dataSource.SaveChangesAsync();
+                    hasResource = dataSource.Query<Npc>().ToList().Contains(resource);
+                    Assert.True(hasResource);
+                }
+                dataSource.Attach(resource);
+                resource.TalkData.TalkRange = new Random().Next(0, int.MaxValue);
+                await dataSource.UpdateAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Npc updated = dataSource.Query<Npc>().ToList().First(d => IdentifiableComparer.Default.Compare(d, npc) == 0);
-                Assert.Equal(npc.TalkData.TalkRange, updated.TalkData.TalkRange);
+                Npc updated = dataSource.Query<Npc>().ToList().First(d => IdentifiableComparer.Default.Compare(d, resource) == 0);
+                Assert.Equal(resource.TalkData.TalkRange, updated.TalkData.TalkRange);
             }
         }
     }

@@ -31,38 +31,12 @@ namespace RpgDataEditor.DataSource
                  .HasConversion(to => Convert.ToInt32(to),
                                 from => from);
 
-                // TODO: Configure requirements
-                o.Ignore(x => x.Requirements);
+                o.Property(x => x.Requirements)
+                 .HasJsonConversion();
             });
 
-            // TODO: Configure requirements
-            builder.Ignore(x => x.Requirements);
-
-            //builder.Entity<Requirement>()
-            //            .HasNoKey()
-            //            .HasDiscriminator<string>("Type")
-            //            .HasValue<DialogueRequirement>(typeof(DialogueRequirement).Name)
-            //            .HasValue<ItemRequirement>(typeof(ItemRequirement).Name)
-            //            .HasValue<MoneyRequirement>(typeof(MoneyRequirement).Name)
-            //            .HasValue<QuestRequirement>(typeof(QuestRequirement).Name);
-
-            //builder.Entity<ItemRequirement>()
-            //            .Property(x => x.ItemId)
-            //            .HasColumnType("INTEGER")
-            //            .HasConversion(to => Convert.ToInt32(to),
-            //                           from => from);
-
-            //builder.Entity<DialogueRequirement>()
-            //            .Property(x => x.DialogueId)
-            //            .HasColumnType("INTEGER")
-            //            .HasConversion(to => Convert.ToInt32(to),
-            //                           from => from);
-
-            //builder.Entity<QuestRequirement>()
-            //            .Property(x => x.QuestId)
-            //            .HasColumnType("INTEGER")
-            //            .HasConversion(to => Convert.ToInt32(to),
-            //                           from => from);
+            builder.Property(x => x.Requirements)
+                   .HasJsonConversion();
         }
     }
 }

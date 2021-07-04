@@ -14,19 +14,14 @@ namespace RpgDataEditor.DataSource
                    .HasConversion(to => Convert.ToInt32(to),
                                   from => from);
 
-            // TODO: Map requirements
-            builder.Ignore(x => x.Requirements);
+            builder.Property(x => x.Requirements)
+                   .HasJsonConversion();
 
-            // TODO: Map tasks
-            builder.Ignore(x => x.Tasks);
-            //builder.HasMany(x => x.Tasks)
-            //       .WithOne()
-            //       .HasForeignKey("OwnerId");
+            builder.Property(x => x.Tasks)
+                   .HasJsonConversion();
 
-            builder.HasOne(x => x.CompletionTask)
-                   .WithMany()
-                   .HasForeignKey("OwnerId")
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(x => x.CompletionTask)
+                   .HasJsonConversion();
         }
     }
 }

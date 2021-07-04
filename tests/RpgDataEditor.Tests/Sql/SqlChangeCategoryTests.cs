@@ -13,6 +13,7 @@ using Xunit;
 
 namespace RpgDataEditor.Tests.Sql
 {
+    [Collection(NonParallelCollectionDefinition.NAME)]
     public class SqlChangeCategoryTests
     {
         [Fact]
@@ -49,13 +50,13 @@ namespace RpgDataEditor.Tests.Sql
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
                 IDataSource dataSource = integration.ConnectDataSource();
-                bool hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-                if (!hasDialogue)
+                bool hasResource = dataSource.Query<TResource>().ToList().Contains(resource);
+                if (!hasResource)
                 {
                     await dataSource.AddAsync(resource);
                     await dataSource.SaveChangesAsync();
-                    hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-                    Assert.True(hasDialogue);
+                    hasResource = dataSource.Query<TResource>().ToList().Contains(resource);
+                    Assert.True(hasResource);
                 }
                 CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
                 string fromCategory = resource.Category;
@@ -74,13 +75,13 @@ namespace RpgDataEditor.Tests.Sql
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
                 IDataSource dataSource = integration.ConnectDataSource();
-                bool hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-                if (!hasDialogue)
+                bool hasResource = dataSource.Query<TResource>().ToList().Contains(resource);
+                if (!hasResource)
                 {
                     await dataSource.AddAsync(resource);
                     await dataSource.SaveChangesAsync();
-                    hasDialogue = dataSource.Query<TResource>().ToList().Contains(resource);
-                    Assert.True(hasDialogue);
+                    hasResource = dataSource.Query<TResource>().ToList().Contains(resource);
+                    Assert.True(hasResource);
                 }
                 CategoryModelsManagerViewModel<TResource> viewModel = getViewModel(dataSource);
                 await viewModel.Refresh();

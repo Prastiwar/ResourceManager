@@ -24,6 +24,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\EntityFrameworkCore.Metadata.Json\EntityFrameworkCore.Metadata.Json.csproj" />
     <ProjectReference Include="..\..\src\ResourceManager.Core\ResourceManager.Core.csproj" />
   </ItemGroup>
 </Project>

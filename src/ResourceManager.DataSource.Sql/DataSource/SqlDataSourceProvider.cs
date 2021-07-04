@@ -26,6 +26,7 @@ namespace ResourceManager.DataSource.Sql
             SqlConnectionMonitor monitor = new SqlConnectionMonitor(context);
             SqlDataSource dataSource = new SqlDataSource(configuration, monitor, BuilderOptions.DescriptorService, context, options);
             services.AddSingleton(dataSource);
+            context.Database.EnsureCreated();
             return dataSource;
         }
     }
