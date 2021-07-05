@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
 using ResourceManager.DataSource.Sql.Configuration;
 using ResourceManager.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,14 +32,22 @@ namespace ResourceManager.DataSource.Sql
 
         protected override TrackedResource<T> GetOrCreateTracked<T>(T resource, ResourceState state, Type asType = null)
         {
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entityEntry = DbContext.Entry(resource);
-            entityEntry.State = state switch {
+            EntityEntry entityEntry = DbContext.ChangeTracker.Entries().FirstOrDefault(x => x is T entity && EqualityComparer<T>.Default.Equals(entity, resource));
+            if (entityEntry == null)
+            {
+                entityEntry = DbContext.Entry(resource);
+            }
+            EntityState newState = state switch {
                 ResourceState.Unchanged => EntityState.Unchanged,
                 ResourceState.Added => EntityState.Added,
                 ResourceState.Modified => EntityState.Modified,
                 ResourceState.Removed => EntityState.Deleted,
                 _ => throw new InvalidOperationException()
             };
+            if (entityEntry.State != newState)
+            {
+                entityEntry.State = newState;
+            }
             TrackingEntry entry = new EntityTrackingEntry(entityEntry);
             TrackedResources.Add(entry);
             return new TrackedResource<T>(entry);

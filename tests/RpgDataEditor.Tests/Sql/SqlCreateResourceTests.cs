@@ -15,11 +15,11 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Dialogue dialogue = Dummies.Dialogue;
+                Dialogue resource = Dummies.Dialogue;
                 IDataSource dataSource = integration.ConnectDataSource();
-                await dataSource.AddAsync(dialogue);
+                await dataSource.AddAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Assert.Contains(dialogue, dataSource.Query<Dialogue>().ToList());
+                Assert.Contains(resource, dataSource.Query<Dialogue>().ToList());
             }
         }
 
@@ -28,11 +28,11 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Quest quest = Dummies.Quest;
+                Quest resource = Dummies.Quest;
                 IDataSource dataSource = integration.ConnectDataSource();
-                await dataSource.AddAsync(quest);
+                await dataSource.AddAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Assert.Contains(quest, dataSource.Query<Quest>().ToList());
+                Assert.Contains(resource, dataSource.Query<Quest>().ToList());
             }
         }
 
@@ -41,11 +41,11 @@ namespace RpgDataEditor.Tests.Sql
         {
             using (SqlIntegrationTestProvider integration = new SqlIntegrationTestProvider())
             {
-                Npc npc = Dummies.Npc;
+                Npc resource = Dummies.Npc;
                 IDataSource dataSource = integration.ConnectDataSource();
-                await dataSource.AddAsync(npc);
+                await dataSource.AddAsync(resource);
                 await dataSource.SaveChangesAsync();
-                Assert.Contains(npc, dataSource.Query<Npc>().ToList());
+                Assert.Contains(resource, dataSource.Query<Npc>().ToList());
             }
         }
     }

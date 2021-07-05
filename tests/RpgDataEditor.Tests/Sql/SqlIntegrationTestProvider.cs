@@ -33,7 +33,7 @@ namespace RpgDataEditor.Tests.Sql
             {
                 IConfigurationSection dataSourceConfiguration = ServiceProvider.GetRequiredService<IConfiguration>().SetAndGetDataSource("Sql");
                 SqlProxyConfiguration proxy = new SqlProxyConfiguration(dataSourceConfiguration);
-                string relativePath = $"./{FixtureFolderName}/{DataSourceName}/Database.sqlite";
+                string relativePath = $"{RootPath}/Database.sqlite";
                 string databaseFilePath = Path.GetFullPath(relativePath);
                 proxy.ConnectionString = $"Data Source={databaseFilePath}";
                 proxy.EngineName = "sqlite";
