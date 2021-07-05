@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using ResourceManager;
 using ResourceManager.Data;
 using ResourceManager.DataSource;
 using ResourceManager.Mvvm.Navigation;
@@ -65,16 +64,18 @@ namespace ResourceManager.Mvvm
             {
                 try
                 {
+                    newModel.Id = null;
                     TrackedResource<TModel> tracked = await DataSource.AddAsync(newModel);
                     await DataSource.SaveChangesAsync();
                     Models.Add(tracked.Resource);
+                    return tracked.Resource;
                 }
                 catch (Exception ex)
                 {
                     Logger.LogError(ex, $"Couldn't add model of type {typeof(TModel)}");
                 }
             }
-            return newModel;
+            return default;
         }
 
         protected virtual async Task<bool> RemoveModelAsync(TModel model)

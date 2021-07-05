@@ -44,10 +44,6 @@ namespace ResourceManager.Mvvm
             {
                 FluentValidation.Results.ValidationResult validationResult = await Validator.ValidateAsync(Model);
                 Validated?.Invoke(this, new ValidatedEventArgs(Model, validationResult));
-                if (validationResult.IsValid)
-                {
-                    System.Diagnostics.Debugger.Break();
-                }
                 return !validationResult.IsValid;
             }
             return false;

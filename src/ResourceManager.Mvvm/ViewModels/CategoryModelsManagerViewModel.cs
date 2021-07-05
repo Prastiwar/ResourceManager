@@ -34,6 +34,13 @@ namespace ResourceManager.Mvvm
             Categories.AddRange(Models.Select(x => x.Category).Distinct());
         }
 
+        protected override TResource CreateModelInstance()
+        {
+            TResource resource = base.CreateModelInstance();
+            resource.Category = CurrentCategory;
+            return resource;
+        }
+
         protected virtual void ShowCategory(string category) => CurrentCategory = category;
 
         protected string CreateCategory()

@@ -12,9 +12,7 @@ namespace RpgDataEditor.DataSource
             builder.ToTable("Dialogues");
 
             builder.Property(x => x.Id)
-                   .HasColumnType("INTEGER")
-                   .HasConversion(to => Convert.ToInt32(to),
-                                  from => from);
+                    .ValueGeneratedOnAdd();
 
             builder.Property(x => x.StartQuestId)
                    .HasColumnType("INTEGER")

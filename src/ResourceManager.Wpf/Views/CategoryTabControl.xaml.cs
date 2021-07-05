@@ -1,5 +1,6 @@
 ﻿using ResourceManager.Wpf.Converters;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,7 +46,7 @@ namespace ResourceManager.Wpf.Views
                     return true;
                 }
                 dynamic categorizedItem = item;
-                return categorizedItem.Category.CompareTo(tag) == 0;
+                return EqualityComparer<string>.Default.Equals(categorizedItem.Category, tag);
             }
             return true;
         }

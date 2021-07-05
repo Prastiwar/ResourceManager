@@ -26,5 +26,8 @@ namespace ResourceManager.Extensions.Prism.Wpf.ViewModels
 
         private ICommand removeCategoryCommand;
         public ICommand RemoveCategoryCommand => removeCategoryCommand ??= new DelegateCommand<string>(async category => await RemoveCategoryAsync(category));
+
+        private ICommand addModelCommand;
+        public ICommand AddModelCommand => addModelCommand ??= new DelegateCommand<string>(async category => await CreateModelAsync());
     }
 }
