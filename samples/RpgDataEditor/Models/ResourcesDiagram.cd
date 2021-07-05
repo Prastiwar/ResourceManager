@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RpgDataEditor.Models.Dialogue" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="1.25" Width="1.5" />
+    <AssociationLine Name="Requirements" Type="RpgDataEditor.Models.Requirement" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.75" Y="2.282" />
+        <Point X="8.375" Y="2.282" />
+        <Point X="8.375" Y="7.75" />
+        <Point X="8.75" Y="7.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAEAAAAAAAAAAAAIAAAQAAAAAIABACAE=</HashCode>
+      <FileName>Models\Dialogue\Dialogue.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Requirements" />
+      <Property Name="Options" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.24" />
+  </Class>
+  <Class Name="RpgDataEditor.Models.DialogueOption">
+    <Position X="8.75" Y="3.75" Width="1.5" />
+    <AssociationLine Name="Requirements" Type="RpgDataEditor.Models.Requirement" FixedToPoint="true">
+      <Path>
+        <Point X="9.812" Y="5.046" />
+        <Point X="9.812" Y="7.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAIAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Models\Dialogue\DialogueOption.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Requirements" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="RpgDataEditor.Models.TalkData">
+    <Position X="2" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Dialogue\TalkData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.AttributeData">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\Npc\AttributeData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.Npc" BaseTypeListCollapsed="true">
+    <Position X="1.75" Y="1.25" Width="1.5" />
+    <AssociationLine Name="Job" Type="RpgDataEditor.Models.NpcJob" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="1.75" />
+        <Point X="4.5" Y="1.75" />
+        <Point X="4.5" Y="3.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Position" Type="RpgDataEditor.Models.Position" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="1.562" />
+        <Point X="7.25" Y="1.562" />
+        <Point X="7.25" Y="4.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="TalkData" Type="RpgDataEditor.Models.TalkData" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="1.937" />
+        <Point X="3.458" Y="1.937" />
+        <Point X="3.458" Y="6" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAKAAAAAAAAAAAgAAAAAAQQAAACAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Models\Npc\Npc.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Job" />
+      <Property Name="Position" />
+      <Property Name="TalkData" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Attributes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RpgDataEditor.Models.NpcJob" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Npc\NpcJob.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.TradeItem">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAwAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Npc\TradeItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.TraderNpcJob" Collapsed="true">
+    <Position X="4" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Npc\TraderNpcJob.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="RpgDataEditor.Models.DialogueQuestTask">
+    <Position X="15.5" Y="6.5" Width="1.75" />
+    <InheritanceLine Type="RpgDataEditor.Models.QuestTask" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.25" Y="4.062" />
+        <Point X="16.25" Y="6.314" />
+        <Point X="16.688" Y="6.314" />
+        <Point X="16.688" Y="6.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Quest\DialogueQuestTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.EntityInteractQuestTask">
+    <Position X="12.75" Y="8.5" Width="2" />
+    <InheritanceLine Type="RpgDataEditor.Models.QuestTask" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.25" Y="4.062" />
+        <Point X="16.25" Y="6.305" />
+        <Point X="15.3" Y="6.305" />
+        <Point X="15.3" Y="8.2" />
+        <Point X="13.625" Y="8.2" />
+        <Point X="13.625" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Quest\EntityInteractQuestTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.ItemInteractQuestTask">
+    <Position X="15.25" Y="8.5" Width="2" />
+    <InheritanceLine Type="RpgDataEditor.Models.QuestTask" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="16.25" Y="4.062" />
+        <Point X="16.25" Y="6.311" />
+        <Point X="15.3" Y="6.311" />
+        <Point X="15.3" Y="8.2" />
+        <Point X="16.25" Y="8.2" />
+        <Point X="16.25" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Quest\ItemInteractQuestTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.KillQuestTask">
+    <Position X="13.25" Y="6.5" Width="1.5" />
+    <InheritanceLine Type="RpgDataEditor.Models.QuestTask" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="16.25" Y="4.062" />
+        <Point X="16.25" Y="4.143" />
+        <Point X="16.253" Y="4.143" />
+        <Point X="16.253" Y="6.318" />
+        <Point X="14" Y="6.318" />
+        <Point X="14" Y="6.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\Quest\KillQuestTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.Quest" BaseTypeListCollapsed="true">
+    <Position X="15.5" Y="1.25" Width="1.5" />
+    <AssociationLine Name="Requirements" Type="RpgDataEditor.Models.Requirement" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.5" Y="1.625" />
+        <Point X="11.161" Y="1.625" />
+        <Point X="11.161" Y="7.75" />
+        <Point X="10.25" Y="7.75" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Tasks" Type="RpgDataEditor.Models.QuestTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="15.5" Y="1.812" />
+        <Point X="15.125" Y="1.812" />
+        <Point X="15.125" Y="3.812" />
+        <Point X="15.5" Y="3.812" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.096" Y="0.148" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="CompletionTask" Type="RpgDataEditor.Models.QuestTask" FixedFromPoint="true">
+      <Path>
+        <Point X="16.188" Y="3.123" />
+        <Point X="16.188" Y="3.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.255" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAACAAAAAAEAAAAAAAAAAAAIAAAAAAAAIIAAACAE=</HashCode>
+      <FileName>Models\Quest\Quest.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CompletionTask" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Requirements" />
+      <Property Name="Tasks" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.146" />
+  </Class>
+  <Class Name="RpgDataEditor.Models.QuestTask" Collapsed="true">
+    <Position X="15.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Quest\QuestTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.ReachQuestTask">
+    <Position X="12.75" Y="4.75" Width="1.5" />
+    <InheritanceLine Type="RpgDataEditor.Models.QuestTask" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="16.25" Y="4.062" />
+        <Point X="16.25" Y="5.562" />
+        <Point X="14.25" Y="5.562" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Pos" Type="RpgDataEditor.Models.Position" FixedToPoint="true">
+      <Path>
+        <Point X="12.75" Y="5.562" />
+        <Point X="11.245" Y="5.562" Type="JumpStart" />
+        <Point X="11.078" Y="5.562" Type="JumpEnd" />
+        <Point X="9.896" Y="5.562" Type="JumpStart" />
+        <Point X="9.729" Y="5.562" Type="JumpEnd" />
+        <Point X="8.458" Y="5.562" Type="JumpStart" />
+        <Point X="8.292" Y="5.562" Type="JumpEnd" />
+        <Point X="8" Y="5.562" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Quest\ReachQuestTask.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Pos" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RpgDataEditor.Models.DialogueRequirement">
+    <Position X="9" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="RpgDataEditor.Models.Requirement" ManuallyRouted="true">
+      <Path>
+        <Point X="9.5" Y="8.062" />
+        <Point X="9.5" Y="8.26" />
+        <Point X="9.75" Y="8.26" />
+        <Point X="9.75" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Requirement\DialogueRequirement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.ItemRequirement">
+    <Position X="7.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Requirement\ItemRequirement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.MoneyRequirement">
+    <Position X="5.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Requirement\MoneyRequirement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.QuestRequirement">
+    <Position X="10.75" Y="8.5" Width="1.5" />
+    <InheritanceLine Type="RpgDataEditor.Models.Requirement" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="9.5" Y="8.062" />
+        <Point X="9.5" Y="8.26" />
+        <Point X="11.5" Y="8.26" />
+        <Point X="11.5" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAA=</HashCode>
+      <FileName>Models\Requirement\QuestRequirement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.Requirement" Collapsed="true">
+    <Position X="8.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Requirement\Requirement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RpgDataEditor.Models.Position">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAE=</HashCode>
+      <FileName>Models\Position.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="RpgDataEditor.Models.QuestStage">
+    <Position X="12.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABA=</HashCode>
+      <FileName>Models\Quest\QuestStage.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

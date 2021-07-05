@@ -1,19 +1,9 @@
 # 🛠️ 🚀 ResourceManager 
 
-***ResourceManager is framework to fast development of simple software tool desktop application which provides ability to edit resources***
+***ResourceManager is framework for fast development of simple software tool desktop application which provides ability to edit resources***
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/Prastiwar/ResourceManager.svg?label=Updated&style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/commits/master)
 [![license](https://img.shields.io/github/license/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/blob/master/LICENSE)
-[![GitHub forks](https://img.shields.io/github/forks/Prastiwar/ResourceManager.svg?style=social&label=Fork&longCache=true)](https://github.com/Prastiwar/ResourceManager/fork)
-[![GitHub stars](https://img.shields.io/github/stars/Prastiwar/ResourceManager.svg?style=social&label=★Star&longCache=true)](https://github.com/Prastiwar/ResourceManager/stargazers)
-[![GitHub watchers](https://img.shields.io/github/watchers/Prastiwar/ResourceManager.svg?style=social&labelWatcher&longCache=true)](https://github.com/Prastiwar/ResourceManager/watchers)
-[![GitHub contributors](https://img.shields.io/github/contributors/Prastiwar/ResourceManager.svg?style=social&longCache=true)](https://github.com/Prastiwar/ResourceManager/contributors)
-
 ![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)
-[![GitHub issues](https://img.shields.io/github/issues/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/pulls)
-[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/pulls)
 
 ## 🎛️ Connection
 
@@ -31,30 +21,30 @@ This data source connects to file system using FTP. It needs host, username and 
 
 #### 📦 ☁️ SQL
 
-This data source connects to SQL database using connection string. Before using this connection make sure your login has select/insert/update/delete permissions to needed tables.
+This data source connects to SQL database using connection string. Before using this connection make sure your login has select/insert/update/delete permissions for needed tables.
 
 ## ⚒️ Extending ResourceManager.Wpf
 
-You can see in samples how to properly exend it, there are few important things you need to setup before succesfully creating ResourceManager app
+You can see in samples how to properly extend it, there are few important things you need to setup before succesfully creating ResourceManager app
 
 #### 🚧 Models 
 Quest, dialogues, tasks, npcs, any resource you want to manage you need to define on your own. **Main resources need to implement `IIdentifiable` interface**
 
-#### 📝 Serialization 
-you must configure serialization module so each resource that extends base resource, must have own converter, so additional properties will be also serialized
+#### 📝 Serialization ***(optional)*** 
+This is just optimization step and is not required. ResourceManager.Wpf uses [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) by default, so registering own JsonConverter for each resource type will result in performance improvement and control about what is serialized and how.   
 
 #### ✔️ Validation 
-you must configure validation module so each resource must have own IValidator<> 
+You must configure validation module so each resource must have own `IValidator<>` which is interface coming from [FluentValidation](https://github.com/FluentValidation/FluentValidation) library
 
-#### DefaultDbContext 
-you should configure model creation with own DbContext - it's required only when you want to support SQL connection
+#### DefaultDbContext ***(semi-optional)*** 
+If you want support SQL Data Source, it's required to configure model creation with own DbContext.
    
 #### 🔨 WPF project extension
 - Make sure your `App.cs` extend `ResourceManagerApplication` 
 - Create `RegionTabModuleBase` implementation 
-- Register your `RegionTabModuleBase` in `App.cs` like `protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<TabModule>();` 
-- Build your data sources in `protected override void ConfigureDataSources(IConfigurableDataSourceBuilder builder)` 
-- Configure json settings in `protected override JsonSerializerSettings CreateJsonSettings()` (add your converters) 
+- Register your `RegionTabModuleBase` implementation in `App.cs` like `protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) => moduleCatalog.AddModule<YourTabModule>();` 
+- Configure data sources which you want to support using `protected override void ConfigureDataSources(IConfigurableDataSourceBuilder builder)` 
+- ***(optional)*** Configure json settings in `protected override JsonSerializerSettings CreateJsonSettings()` (add your converters) 
 
 - Add static converters to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/ResourceManager.Wpf;component/Themes/Converters.xaml" />` 
 - Add default themes to `App.xaml` with `<ResourceDictionary Source="pack://application:,,,/ResourceManager.Wpf;component/Themes/Generic.xaml" />` 
@@ -63,24 +53,16 @@ ViewModels
 - Any editable resource can just extend `ModelDialogViewModel<>`
 - Any resource that has it's own Tab can just extend `ModelsManagerViewModel<>` or `CategoryModelsManagerViewModel<>`
 
-Optional AutoControl system in Views
+***(optional)*** AutoControl system in Views
 - Types that can be auto templated should extend `AutoTemplate` 
 - Extend `DefaultAutoTemplateProvider`, register your `AutoTemplate`'s and register `IAutoTemplateProvider`
 
 ## 🎓 RpgDataEditor Sample
 
 ### Resources
+RpgDataEditor uses 3 resources: 🧔 Npc, ☑️ Quest, 💭 Dialogue. They are shown with their relations and dependencies in picture below:
 
-#### 🧔 Npc 
-Resource composed with name, position
-
-#### ☑️ Quest 
-Resource composed with title, tasks
-
-#### 💭 Dialogue 
-Resource composed of message, options
-
-### More description SOON 🔜 
+![Resources](docs/sampleresources.png)
 
 ## 🤝 Contributing
 
