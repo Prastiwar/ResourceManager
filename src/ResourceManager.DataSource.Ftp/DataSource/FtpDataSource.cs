@@ -165,7 +165,13 @@ namespace ResourceManager.DataSource.Ftp
                     string content = Encoding.UTF8.GetString(bytes);
                     object resource = Serializer.Deserialize(content, resourceType);
                     TrackingEntry newEntry = new TrackingEntry(resource, ResourceState.Unchanged, resourceType);
-                    TrackedResources.Add(newEntry);
+                    TrackingEntry trackedEntry = TrackedResources.FirstOrDefault(x => x.ResourceType == resourceType &&
+                                                                                 x.State != ResourceState.Added &&
+                                                                                 x.OriginalResource == resource);
+                    if (trackedEntry == null)
+                    {
+                        TrackedResources.Add(newEntry);
+                    }
                     entry.Resources.Add(resource);
                 }
             }

@@ -31,7 +31,7 @@ namespace ResourceManager.DataSource
 
         public abstract IQueryable<object> Query(Type resourceType);
 
-        public IQueryable<T> Query<T>() => Query(typeof(T)).Cast<T>();
+        public virtual IQueryable<T> Query<T>() => Query(typeof(T)).Cast<T>();
 
         public TrackedResource<object> Attach(object resource, Type resourceType) => GetOrCreateTracked(resource, ResourceState.Unchanged, resourceType);
         public TrackedResource<T> Attach<T>(T resource) => GetOrCreateTracked(resource, ResourceState.Unchanged);

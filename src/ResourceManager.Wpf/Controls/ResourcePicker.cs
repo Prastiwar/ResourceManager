@@ -1,10 +1,8 @@
-﻿using ResourceManager;
-using ResourceManager.Data;
+﻿using ResourceManager.Data;
 using ResourceManager.DataSource;
 using ResourceManager.Extensions.Prism.Wpf;
 using ResourceManager.Wpf.Converters;
 using ResourceManager.Wpf.Mvvm;
-using ResourceManager.Wpf.Views;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -204,9 +202,9 @@ namespace ResourceManager.Wpf.Controls
                     object idValue = prop?.GetValue(x);
                     return IdentityEqualityComparer.Default.Equals(idValue, id);
                 });
+                PickedItem = resource;
                 IsLoading = false;
                 IsItemLoaded = true;
-                PickedItem = resource;
             }
             catch (Exception ex)
             {

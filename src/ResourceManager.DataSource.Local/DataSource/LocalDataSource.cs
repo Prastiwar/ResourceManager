@@ -110,6 +110,13 @@ namespace ResourceManager.DataSource.Local
                 return files.Select(file => {
                     string content = File.ReadAllText(file);
                     object resource = Serializer.Deserialize(content, resourceType);
+                    TrackingEntry entry = TrackedResources.FirstOrDefault(x => x.ResourceType == resourceType &&
+                                                                          x.State != ResourceState.Added &&
+                                                                          x.OriginalResource == resource);
+                    if (entry != null)
+                    {
+                        return resource;
+                    }
                     TrackingEntry newEntry = new TrackingEntry(resource, ResourceState.Unchanged, resourceType);
                     TrackedResources.Add(newEntry);
                     return resource;

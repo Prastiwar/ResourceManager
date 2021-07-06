@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 
 namespace ResourceManager.Core.Serialization
@@ -27,6 +29,10 @@ namespace ResourceManager.Core.Serialization
                 return default;
             }
             string typeName = obj.GetValue<string>("type");
+            if (string.IsNullOrEmpty(typeName))
+            {
+                return default;
+            }
             Type realType = GetObjectType(typeName);
             if (realType != null)
             {
@@ -56,11 +62,11 @@ namespace ResourceManager.Core.Serialization
                                                              : "." + type + Suffix;
             if (Assemblies == null)
             {
-                return GetObjectType(suffixType, typeof(AbstractClassJsonConverter<T>).Assembly.FullName);
+                return GetObjectType(suffixType, typeof(AbstractClassJsonConverter<T>).Assembly);
             }
             foreach (Assembly assembly in Assemblies)
             {
-                Type foundType = GetObjectType(suffixType, assembly.FullName);
+                Type foundType = GetObjectType(suffixType, assembly);
                 if (foundType != null)
                 {
                     return foundType;
@@ -69,10 +75,13 @@ namespace ResourceManager.Core.Serialization
             return null;
         }
 
-        protected Type GetObjectType(string type, string assemblyName)
+        protected Type GetObjectType(string typeName, Assembly assembly)
         {
-            string typeWithAssemblyName = type + ", " + assemblyName;
-            foreach (string namespaceName in NamespaceNames)
+            string typeWithAssemblyName = typeName + ", " + assembly.FullName;
+            IEnumerable<string> namespaces = NamespaceNames != null && NamespaceNames.Length > 0
+                                            ? NamespaceNames
+                                            : assembly.GetExportedTypes().Select(x => x.Namespace).Distinct();
+            foreach (string namespaceName in namespaces)
             {
                 Type foundType = Type.GetType(namespaceName + typeWithAssemblyName);
                 if (foundType != null)
