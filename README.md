@@ -2,8 +2,8 @@
 
 ***ResourceManager is framework for fast development of simple software tool desktop application which provides ability to edit resources***
 
-[![license](https://img.shields.io/github/license/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/blob/master/LICENSE)
-![GitHub repo size in bytes](https://img.shields.io/github/repo-size/Prastiwar/ResourceManager.svg?style=flat-square&longCache=true)
+[![License](https://img.shields.io/github/license/Prastiwar/ResourceManager?style=flat-square&longCache=true)](https://github.com/Prastiwar/ResourceManager/blob/main/LICENSE)
+![GitHub repo size](https://img.shields.io/github/repo-size/Prastiwar/ResourceManager?style=flat-square&longCache=true)
 
 ## 🎛️ Connection
 
