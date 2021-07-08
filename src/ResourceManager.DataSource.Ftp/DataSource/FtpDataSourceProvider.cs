@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ResourceManager.DataSource.Ftp.Configuration;
+using System;
 
 namespace ResourceManager.DataSource.Ftp
 {
@@ -18,13 +19,15 @@ namespace ResourceManager.DataSource.Ftp
             string userName = configuration["username"];
             System.Security.SecureString password = SecretString.DecryptString(configuration["password"]);
             int port = int.TryParse(configuration["port"], out int parsedPort) ? parsedPort : 0;
+            bool useConfigExpirationTime = int.TryParse(configuration["cacheexpiration"], out int parsedExpirationSeconds);
             FtpConnectionMonitor monitor = new FtpConnectionMonitor(host, new System.Net.NetworkCredential(userName, password), port);
             FtpDataSourceOptions options = new FtpDataSourceOptions() {
                 Host = host,
                 UserName = userName,
                 Password = password,
                 Port = port,
-                RelativePath = configuration["relativepath"]
+                RelativePath = configuration["relativepath"],
+                CacheExpirationTime = useConfigExpirationTime ? TimeSpan.FromSeconds(parsedExpirationSeconds) : BuilderOptions.CacheExpirationTime
             };
             FtpDataSource dataSource = new FtpDataSource(configuration, monitor, BuilderOptions.DescriptorService, BuilderOptions.Serializer, options);
             services.AddSingleton(dataSource);

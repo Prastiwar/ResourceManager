@@ -26,15 +26,15 @@ namespace ResourceManager.DataSource.Ftp
 
         protected ITextSerializer Serializer { get; }
 
-        private readonly IDictionary<Type, ResourcesEntry> entries = new Dictionary<Type, ResourcesEntry>();
+        private readonly IDictionary<Type, ResourcesEntry> cachedResources = new Dictionary<Type, ResourcesEntry>();
 
         public class ResourcesEntry
         {
-            public IList<FtpListItem> Files { get; set; }
+            public IList<string> Files { get; set; }
 
             public IList<object> Resources { get; set; }
 
-            //public CachingPolicy CachingPolicy { get; set; }
+            public CachingPolicy CachingPolicy { get; set; }
         }
 
         protected virtual FtpClient CreateClient() => new FtpClient() {
@@ -111,6 +111,14 @@ namespace ResourceManager.DataSource.Ftp
                         {
                             throw new FtpException("Add operation failed");
                         }
+                        if (cachedResources.TryGetValue(tracking.ResourceType, out ResourcesEntry entry))
+                        {
+                            if (!entry.CachingPolicy.IsExpired)
+                            {
+                                entry.Resources.Add(tracking.Resource);
+                                entry.Files.Add(targetPath);
+                            }
+                        }
                         break;
                     case ResourceState.Modified:
                         string updateContent = Serializer.Serialize(tracking.Resource, tracking.ResourceType);
@@ -131,6 +139,14 @@ namespace ResourceManager.DataSource.Ftp
                         break;
                     case ResourceState.Removed:
                         await client.DeleteFileAsync(targetPath);
+                        if (cachedResources.TryGetValue(tracking.ResourceType, out ResourcesEntry entryToRemove))
+                        {
+                            if (!entryToRemove.CachingPolicy.IsExpired)
+                            {
+                                entryToRemove.Resources.Remove(tracking.Resource);
+                                entryToRemove.Files.Remove(targetPath);
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -141,24 +157,23 @@ namespace ResourceManager.DataSource.Ftp
 
         public override IQueryable<object> Query(Type resourceType)
         {
-            // TODO: Optimize it with cache
-            ResourcesEntry entry = null;
-            //if (entries.TryGetValue(resourceType, out ResourcesEntry entry))
-            //{
-            //    if (!entry.CachingPolicy.IsExpired())
-            //    {
-            //        return entry.Resources.AsQueryable();
-            //    }
-            //    return entry.Resources.AsQueryable();
-            //}
-            entry = new ResourcesEntry();
+            if (cachedResources.TryGetValue(resourceType, out ResourcesEntry entry))
+            {
+                if (!entry.CachingPolicy.IsExpired)
+                {
+                    return entry.Resources.AsQueryable();
+                }
+            }
+            entry = new ResourcesEntry() { 
+                CachingPolicy = new CachingPolicy(Options.CacheExpirationTime)
+            };
             FtpClient client = CreateClient();
             LocationResourceDescriptor descriptor = DescriptorService.GetRequiredDescriptor<LocationResourceDescriptor>(resourceType);
             string path = Path.Combine(Options.RelativePath ?? "", descriptor.RelativeRootPath.TrimStart('/', '\\'));
             client.Connect();
-            entry.Files = client.GetListing(path, FtpListOption.Recursive).Where(item => item.Type == FtpFileSystemObjectType.File).ToList();
+            entry.Files = client.GetListing(path, FtpListOption.Recursive).Where(item => item.Type == FtpFileSystemObjectType.File).Select(item => item.FullName).ToList();
             entry.Resources = new List<object>(entry.Files.Count);
-            foreach (string resourcePath in entry.Files.Select(x => x.FullName))
+            foreach (string resourcePath in entry.Files)
             {
                 if (client.Download(out byte[] bytes, resourcePath))
                 {
@@ -175,7 +190,7 @@ namespace ResourceManager.DataSource.Ftp
                     entry.Resources.Add(resource);
                 }
             }
-            entries[resourceType] = entry;
+            cachedResources[resourceType] = entry;
             return entry.Resources.AsQueryable();
         }
     }

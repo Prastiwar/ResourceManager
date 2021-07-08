@@ -1,5 +1,6 @@
 ﻿using ResourceManager.Data;
 using ResourceManager.Services;
+using System;
 
 namespace ResourceManager.DataSource.Ftp
 {
@@ -10,5 +11,7 @@ namespace ResourceManager.DataSource.Ftp
         public ITextSerializer Serializer { get; set; }
 
         public IResourceDescriptorService DescriptorService { get; set; }
+
+        public TimeSpan CacheExpirationTime { get; set; }
     }
 }

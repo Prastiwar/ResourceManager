@@ -51,6 +51,7 @@ namespace RpgDataEditor.Wpf
             builder.AddFtpDataSource(o => {
                 o.DescriptorService = descriptorService;
                 o.Serializer = serializer;
+                o.CacheExpirationTime = TimeSpan.FromSeconds(180);
             });
 
             builder.AddSqlDataSource(o => {

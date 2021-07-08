@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿using System;
+using System.Security;
 
 namespace ResourceManager.DataSource.Ftp.Configuration
 {
@@ -13,5 +14,7 @@ namespace ResourceManager.DataSource.Ftp.Configuration
         public SecureString Password { get; set; }
 
         public int Port { get; set; }
+
+        public TimeSpan CacheExpirationTime { get; set; }
     }
 }
